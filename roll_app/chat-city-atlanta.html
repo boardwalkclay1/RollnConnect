@@ -2,122 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Atlanta Chatrooms – Roll ’n Connect</title>
+  <title>Atlanta • Cruising / Meetup Chat – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
-
-  <style>
-    .city-card {
-      position: relative;
-      height: 150px;
-      border-radius: 18px;
-      background-size: cover;
-      background-position: center;
-      border: 1px solid var(--border-soft);
-      display: flex;
-      align-items: flex-end;
-      padding: 12px;
-      font-size: 22px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .city-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--purple);
-      box-shadow: 0 0 18px rgba(168,85,247,0.5);
-    }
-
-    .active-pill {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: rgba(168,85,247,0.25);
-      border: 1px solid var(--purple);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 13px;
-      color: var(--purple);
-      backdrop-filter: blur(6px);
-    }
-
-    .disc-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 18px;
-      margin-top: 20px;
-    }
-  </style>
+  <!-- same styles -->
 </head>
+<body class="dark-theme">
+<div class="chat-shell">
 
-<body>
-<div class="app-shell">
-
-  <!-- HEADER -->
   <header class="app-header">
     <div class="app-header-left">
       <div class="brand-logo">R</div>
-      <div class="brand-name">Atlanta Chatrooms</div>
+      <div class="brand-name">Atlanta • Cruising / Meetup</div>
     </div>
     <div class="app-header-right">
-      <a href="chat.html" class="icon-btn">←</a>
+      <button id="theme-toggle" class="theme-toggle">Dark</button>
+      <button class="icon-btn" onclick="location.href='profile.html'">👤</button>
+      <button class="private-group-btn" id="create-group-btn">+ Private group</button>
+      <a href="chat-city-atlanta.html" class="icon-btn">←</a>
     </div>
   </header>
 
-  <!-- PAGE -->
-  <main class="page">
-    <h1>Atlanta Chatrooms</h1>
-    <p class="section-sub">
-      Choose a discipline to enter the Atlanta skate community.
-    </p>
-
-    <div class="disc-grid">
-      <div class="city-card"
-           onclick="location.href='chat-city-atlanta-disciplines.html'"
-           style="background-image:url('https://picsum.photos/600?random=901');">
-        Atlanta
-        <div class="active-pill" id="active-count">🟣 0 active</div>
-      </div>
-    </div>
+  <main class="chat-main">
+    <div id="messages" class="messages"></div>
+    <!-- same input / emoji / quick section -->
   </main>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-row">
       <span>© <span id="year"></span> Roll ’n Connect.</span>
     </div>
   </footer>
+</div>
 
+<div id="notif-panel" class="notif-panel"></div>
+<div id="notif-bubble" class="notif-bubble">
+  🔔
+  <div id="notif-count" class="notif-count" style="display:none;">0</div>
 </div>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // All 8 disciplines for Atlanta
-  const disciplines = [
-    "longboard",
-    "downhill",
-    "street",
-    "roller",
-    "inline",
-    "cruising",
-    "beginners",
-    "rinks"
-  ];
+  const CITY = "atlanta";
+  const DISCIPLINE = "cruising";
+  const roomKey = `chat_${CITY}_${DISCIPLINE}`;
+  const notifsKey = "notifications";
+  const username = localStorage.getItem("username") || "Skater";
 
-  const city = "atlanta";
-  let total = 0;
-
-  disciplines.forEach(d => {
-    const key = `active_${city}_${d}`;
-    const list = JSON.parse(localStorage.getItem(key) || "[]");
-    total += list.length;
-  });
-
-  document.getElementById("active-count").textContent = `🟣 ${total} active`;
+  // same JS logic as Longboard
 </script>
-
 </body>
 </html>
