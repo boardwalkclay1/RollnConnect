@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Profile – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="rollnconnect.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Roll ’n Connect</div>
+    </div>
+    <div class="app-header-right">
+      <a href="dashboard.html" class="icon-btn">👤</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1>Edit Profile</h1>
+
+    <div class="card max-w-narrow">
+      <form class="stack-md">
+        <div>
+          <label for="profile-pic">Profile picture</label>
+          <input id="profile-pic" type="file" accept="image/*" />
+        </div>
+
+        <div>
+          <label for="display-name">Display name</label>
+          <input id="display-name" type="text" placeholder="Your display name" />
+        </div>
+
+        <div>
+          <label for="username">Username</label>
+          <input id="username" type="text" placeholder="@yourhandle" />
+        </div>
+
+        <div>
+          <label for="bio">Bio</label>
+          <textarea id="bio" rows="3"
+            placeholder="Tell people your style, experience, and what you love about skating."></textarea>
+        </div>
+
+        <div>
+          <label for="location">Location</label>
+          <input id="location" type="text" placeholder="City, State / Country" />
+        </div>
+
+        <div>
+          <label for="primary-style">Primary style</label>
+          <select id="primary-style">
+            <option value="">Select a style</option>
+            <option>Longboard dance</option>
+            <option>Downhill</option>
+            <option>Street / Park</option>
+            <option>Roller rhythm</option>
+            <option>Inline urban</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="skill-level">Skill level</label>
+          <select id="skill-level">
+            <option>Beginner</option>
+            <option>Intermediate</option>
+            <option>Advanced</option>
+            <option>Pro</option>
+          </select>
+        </div>
+
+        <hr style="border:none; border-top:1px solid rgba(148,163,184,0.5);" />
+
+        <div>
+          <label style="display:flex; align-items:center; gap:8px; font-size:13px;">
+            <input type="checkbox" id="lessonsToggle" onchange="toggleLessonsSection()"
+                   style="width:16px; height:16px;">
+            Turn on <strong>Lessons</strong> on my profile
+          </label>
+          <p class="card-text" style="margin-top:4px;">
+            When this is on, your profile will show your rates, availability, and lesson clips,
+            and you’ll appear in the Student Hub for people to find as a teacher.
+          </p>
+        </div>
+
+        <div id="lessonsSection" style="display:none;">
+          <div>
+            <label for="lesson-rate">Rate (per session / per hour)</label>
+            <input id="lesson-rate" type="text" placeholder="$40 / hour, $60 / session, etc." />
+          </div>
+
+          <div>
+            <label for="lesson-availability">Availability</label>
+            <textarea id="lesson-availability" rows="3"
+              placeholder="Example: Weeknights after 6 PM, weekends afternoons, contact to confirm."></textarea>
+          </div>
+
+          <div>
+            <label for="lesson-location">Lesson location / format</label>
+            <input id="lesson-location" type="text"
+                   placeholder="Local park, rink, online (video), or travel options." />
+          </div>
+
+          <div>
+            <label for="lesson-videos">Lesson / riding videos (links)</label>
+            <textarea id="lesson-videos" rows="3"
+              placeholder="Paste links to your best clips (YouTube, Instagram, TikTok, etc.)."></textarea>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" style="width:100%;">
+          Save profile (front‑end only for now)
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+    </div>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🏠</div>
+      <span>Home</span>
+    </a>
+    <a href="spots-map.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🧭</div>
+      <span>Explore</span>
+    </a>
+    <a href="clips-feed.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">▶</div>
+      <span>Clips</span>
+    </a>
+    <a href="marketplace.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🛒</div>
+      <span>Market</span>
+    </a>
+    <a href="dashboard.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">👤</div>
+      <span>Profile</span>
+    </a>
+  </nav>
+</div>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function toggleLessonsSection() {
+    const checked = document.getElementById("lessonsToggle").checked;
+    document.getElementById("lessonsSection").style.display = checked ? "block" : "none";
+  }
+</script>
+</body>
+</html>
