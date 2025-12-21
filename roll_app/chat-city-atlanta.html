@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Atlanta Chatrooms – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="rollnconnect.css" />
+  <style>
+    .disc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .disc-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--glass);
+      border: 1px solid var(--border-soft);
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .disc-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--purple);
+      box-shadow: 0 0 18px rgba(168,85,247,0.5);
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Atlanta Chatrooms</div>
+    </div>
+    <div class="app-header-right">
+      <a href="chat-cities.html" class="icon-btn">←</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1>Atlanta Disciplines</h1>
+    <p class="section-sub">
+      Choose a discipline to enter the Atlanta skate chatrooms.
+    </p>
+
+    <div class="disc-grid">
+      <div class="disc-card" onclick="location.href='chat-room-atlanta-longboard.html'">Longboard Dance</div>
+      <div class="disc-card" onclick="location.href='chat-room-atlanta-downhill.html'">Downhill</div>
+      <div class="disc-card" onclick="location.href='chat-room-atlanta-street.html'">Street / Park</div>
+      <div class="disc-card" onclick="location.href='chat-room-atlanta-roller.html'">Roller Rhythm</div>
+      <div class="disc-card" onclick="location.href='chat-room-atlanta-inline.html'">Inline Urban</div>
+      <div class="disc-card" onclick="location.href='chat-room-atlanta-cruising.html'">Cruising / Meetup</div>
+      <div class="disc-card" onclick="location.href='chat-room-atlanta-beginners.html'">Beginners</div>
+      <div class="disc-card" onclick="location.href='chat-room-atlanta-rinks.html'">Rinks</div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+    </div>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="chat-cities.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">💬</div>
+      <span>Chat</span>
+    </a>
+  </nav>
+
+</div>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
