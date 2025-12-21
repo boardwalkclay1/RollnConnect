@@ -2,12 +2,108 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Marketplace – Roll ’n Connect</title>
+  <title>Item – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
+
+  <style>
+    .item-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .item-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .gallery-main {
+      width: 100%;
+      height: 320px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(168,85,247,0.4);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .gallery-thumbs {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .gallery-thumb {
+      height: 120px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(168,85,247,0.4);
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .gallery-thumb:hover {
+      transform: scale(1.03);
+      border-color: var(--purple);
+    }
+
+    .seller-card {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--glass);
+      border: 1px solid var(--border-soft);
+    }
+
+    .seller-name {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .recommend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .recommend-card {
+      background: var(--glass);
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .recommend-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--purple);
+    }
+
+    .recommend-img {
+      height: 120px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      margin-bottom: 8px;
+    }
+  </style>
 </head>
+
 <body>
 <div class="app-shell">
+
+  <!-- NAVBAR -->
   <header>
     <div class="brand">
       <div class="brand-logo">R</div>
@@ -25,72 +121,53 @@
     </nav>
   </header>
 
+  <!-- PAGE -->
   <main class="page">
-    <h1>Skate Marketplace</h1>
-    <p class="section-sub">
-      Browse and trade gear from skaters everywhere. These cards will later be driven by
-      real data.
-    </p>
+    <h1 id="itemTitle">Loading...</h1>
 
-    <section class="section">
-      <div class="market-grid">
-        <div class="market-card">
-          <div>
-            <div class="market-label">Longboard setup</div>
-            <div class="market-title">Dancing deck + 180mm trucks</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$180</div>
-            <a href="marketplace-item.html" class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
+    <div class="item-layout">
+
+      <!-- LEFT: GALLERY + DETAILS -->
+      <div>
+        <div class="gallery">
+          <div id="mainImage" class="gallery-main"></div>
+
+          <div class="gallery-thumbs">
+            <div id="thumb1" class="gallery-thumb"></div>
+            <div id="thumb2" class="gallery-thumb"></div>
           </div>
         </div>
 
-        <div class="market-card">
-          <div>
-            <div class="market-label">Roller skates</div>
-            <div class="market-title">Custom suede quads w/ LED wheels</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$220</div>
-            <a href="marketplace-item.html" class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
+        <div class="card" style="margin-top:20px;">
+          <h2>Details</h2>
+          <p id="itemPrice" class="card-text"></p>
+          <p id="itemCondition" class="card-text"></p>
+          <p id="itemCategory" class="card-text"></p>
+          <p id="itemLocation" class="card-text">Location: Atlanta, GA</p>
+
+          <button class="btn btn-primary" onclick="saveItem()">Save Item</button>
         </div>
 
-        <div class="market-card">
-          <div>
-            <div class="market-label">Skateboard</div>
-            <div class="market-title">Street deck w/ high trucks</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$95</div>
-            <a href="marketplace-item.html" class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
+        <h2 style="margin-top:30px;">You may also like</h2>
+        <div id="recommendGrid" class="recommend-grid"></div>
+      </div>
+
+      <!-- RIGHT: SELLER -->
+      <div>
+        <div class="seller-card">
+          <h3>Seller</h3>
+          <p class="seller-name">@SkateFlow</p>
+          <p class="card-text">Verified seller • 4.9 rating</p>
+          <a href="chat.html" class="btn btn-primary" style="margin-top:10px;">Message Seller</a>
         </div>
 
-        <div class="market-card">
-          <div>
-            <div class="market-label">Inline skates</div>
-            <div class="market-title">Urban freeskate with 80mm wheels</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$160</div>
-            <a href="marketplace-item.html" class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
+        <div class="card" style="margin-top:20px;">
+          <h3>Recently Viewed</h3>
+          <div id="recentItems"></div>
         </div>
       </div>
-    </section>
+
+    </div>
   </main>
 
   <footer>
@@ -104,10 +181,94 @@
       </div>
     </div>
   </footer>
+
 </div>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* -------------------------
+     ITEM DATA (same as marketplace)
+  ------------------------- */
+  const items = [
+    { id: 1, title: "Dancing Longboard", price: 180, category: "longboard", condition: "used" },
+    { id: 2, title: "Street Skateboard", price: 95, category: "skateboard", condition: "used" },
+    { id: 3, title: "Custom Roller Skates", price: 220, category: "roller", condition: "new" },
+    { id: 4, title: "Urban Inline Skates", price: 160, category: "inline", condition: "new" },
+    { id: 5, title: "Longboard Wheels", price: 40, category: "gear", condition: "new" },
+    { id: 6, title: "Skateboard Trucks", price: 55, category: "gear", condition: "used" },
+  ];
+
+  /* -------------------------
+     LOAD CURRENT ITEM
+  ------------------------- */
+  const currentId = JSON.parse(localStorage.getItem("currentItem")) || 1;
+  const item = items.find(i => i.id === currentId);
+
+  document.getElementById("itemTitle").textContent = item.title;
+  document.getElementById("itemPrice").textContent = "Price: $" + item.price;
+  document.getElementById("itemCondition").textContent = "Condition: " + item.condition;
+  document.getElementById("itemCategory").textContent = "Category: " + item.category;
+
+  /* Fake images */
+  document.getElementById("mainImage").style.backgroundImage = "url('https://picsum.photos/600?random=" + item.id + "')";
+  document.getElementById("thumb1").style.backgroundImage = "url('https://picsum.photos/300?random=" + (item.id+10) + "')";
+  document.getElementById("thumb2").style.backgroundImage = "url('https://picsum.photos/300?random=" + (item.id+20) + "')";
+
+  document.getElementById("thumb1").onclick = () => {
+    document.getElementById("mainImage").style.backgroundImage = document.getElementById("thumb1").style.backgroundImage;
+  };
+  document.getElementById("thumb2").onclick = () => {
+    document.getElementById("mainImage").style.backgroundImage = document.getElementById("thumb2").style.backgroundImage;
+  };
+
+  /* -------------------------
+     SAVE ITEM
+  ------------------------- */
+  function saveItem() {
+    let saved = JSON.parse(localStorage.getItem("savedItems") || "[]");
+    if (!saved.includes(item.id)) saved.push(item.id);
+    localStorage.setItem("savedItems", JSON.stringify(saved));
+    alert("Item saved!");
+  }
+
+  /* -------------------------
+     RECENTLY VIEWED
+  ------------------------- */
+  function loadRecent() {
+    const recent = JSON.parse(localStorage.getItem("recentItems") || "[]");
+    const container = document.getElementById("recentItems");
+
+    container.innerHTML = recent.map(id => {
+      const it = items.find(i => i.id === id);
+      return `<p>${it.title} – $${it.price}</p>`;
+    }).join("");
+  }
+  loadRecent();
+
+  /* -------------------------
+     RECOMMENDATIONS
+  ------------------------- */
+  const recommend = items.filter(i => i.id !== item.id).slice(0, 4);
+  const recGrid = document.getElementById("recommendGrid");
+
+  recommend.forEach(r => {
+    const div = document.createElement("div");
+    div.className = "recommend-card";
+    div.onclick = () => {
+      localStorage.setItem("currentItem", r.id);
+      window.location.reload();
+    };
+
+    div.innerHTML = `
+      <div class="recommend-img" style="background-image:url('https://picsum.photos/300?random=${r.id+30}')"></div>
+      <div>${r.title}</div>
+      <div style="color:#bfdbfe;">$${r.price}</div>
+    `;
+
+    recGrid.appendChild(div);
+  });
 </script>
+
 </body>
 </html>
