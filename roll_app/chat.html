@@ -15,22 +15,67 @@
       <div class="brand-name">Roll ’n Connect</div>
     </div>
     <div class="app-header-center">
-      <input class="app-search" placeholder="Search messages..." />
+      <input class="app-search" id="roomSearch" placeholder="Search rooms..." oninput="renderRooms()" />
+    </div>
+    <div class="app-header-right">
+      <a href="dashboard.html" class="icon-btn">👤</a>
     </div>
   </header>
 
   <main class="page">
-    <h1>Messages</h1>
+    <h1>Chat</h1>
 
-    <div class="card">
-      <p class="card-text">
-        This is where your DMs and crew chats will live. For now, it’s a placeholder for future real-time messaging.
-      </p>
-      <div style="margin-top:10px; font-size:13px; color:var(--text-soft);">
-        • @FlowRider — “Session tonight?”<br />
-        • @QuadQueen — “New skates arrived!”<br />
-        • @HillBomber — “Spotted a new hill near you.”
-      </div>
+    <div class="chat-layout">
+      <!-- LEFT: ROOMS + CREATE -->
+      <aside class="chat-sidebar">
+        <div class="card">
+          <div class="card-title">Rooms</div>
+          <div class="card-text">
+            Join public rooms or create your own. Max 200 people per room (enforced in backend later).
+          </div>
+
+          <div class="chat-room-list" id="roomList"></div>
+
+          <hr style="border:none; border-top:1px solid rgba(148,163,184,0.5); margin:10px 0;" />
+
+          <div class="card-title" style="font-size:14px;">Create a room</div>
+          <form onsubmit="createRoom(event)" class="stack-md">
+            <div>
+              <label for="newRoomName">Room name</label>
+              <input id="newRoomName" type="text" placeholder="ATL Night Riders" required />
+            </div>
+            <div>
+              <label for="newRoomTopic">Topic</label>
+              <input id="newRoomTopic" type="text" placeholder="City, style, or crew focus" />
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%; font-size:13px;">
+              Create room
+            </button>
+          </form>
+        </div>
+      </aside>
+
+      <!-- RIGHT: PRIVATE MESSAGES LIST -->
+      <section>
+        <div class="card">
+          <div class="card-title">Private messages</div>
+          <p class="card-text">
+            One‑on‑one chats. Pick a skater to start a DM.
+          </p>
+
+          <div class="chat-room-list" id="dmList">
+            <div class="chat-room-item" onclick="openDM('FlowRider')">
+              @FlowRider • Longboard dance
+            </div>
+            <div class="chat-room-item" onclick="openDM('QuadQueen')">
+              @QuadQueen • Roller rink
+            </div>
+            <div class="chat-room-item" onclick="openDM('HillBomber')">
+              @HillBomber • Downhill crew
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 
@@ -57,15 +102,81 @@
       <div class="bottom-nav-icon">🛒</div>
       <span>Market</span>
     </a>
-    <a href="dashboard.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
+    <a href="dashboard.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">💬</div>
+      <span>Chat</span>
     </a>
   </nav>
 </div>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  // Simulated public rooms (in real app this comes from backend)
+  let rooms = JSON.parse(localStorage.getItem("rc_rooms") || "[]");
+  if (rooms.length === 0) {
+    rooms = [
+      { id: 1, name: "ATL Night Riders", topic: "Night sessions in Atlanta", members: 143 },
+      { id: 2, name: "Quad Queens", topic: "Roller skates & rhythm", members: 89 },
+      { id: 3, name: "Hill Bombers", topic: "Downhill & speed", members: 52 }
+    ];
+  }
+
+  function saveRooms() {
+    localStorage.setItem("rc_rooms", JSON.stringify(rooms));
+  }
+
+  function renderRooms() {
+    const list = document.getElementById("roomList");
+    const search = (document.getElementById("roomSearch").value || "").toLowerCase();
+    list.innerHTML = "";
+
+    rooms
+      .filter(r => r.name.toLowerCase().includes(search) || (r.topic || "").toLowerCase().includes(search))
+      .forEach(room => {
+        const div = document.createElement("div");
+        div.className = "chat-room-item";
+        div.onclick = () => openRoom(room.id);
+        div.innerHTML = `
+          <strong>${room.name}</strong><br />
+          <span style="font-size:12px; color:var(--text-soft);">
+            ${room.topic || "No topic"} • ${room.members} skaters
+          </span>
+        `;
+        list.appendChild(div);
+      });
+  }
+
+  function createRoom(e) {
+    e.preventDefault();
+    const name = document.getElementById("newRoomName").value.trim();
+    const topic = document.getElementById("newRoomTopic").value.trim();
+    if (!name) return;
+
+    const id = Date.now();
+    rooms.push({ id, name, topic, members: 1 });
+    saveRooms();
+    renderRooms();
+
+    // Store chosen room and go to room chat
+    localStorage.setItem("rc_current_room", JSON.stringify({ id, name }));
+    window.location.href = "chat-room.html";
+  }
+
+  function openRoom(id) {
+    const room = rooms.find(r => r.id === id);
+    if (!room) return;
+    localStorage.setItem("rc_current_room", JSON.stringify({ id: room.id, name: room.name }));
+    window.location.href = "chat-room.html";
+  }
+
+  function openDM(username) {
+    localStorage.setItem("rc_current_dm", username);
+    window.location.href = "chat-private.html";
+  }
+
+  renderRooms();
+  saveRooms();
 </script>
 </body>
 </html>
