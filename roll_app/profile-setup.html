@@ -1,50 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Profile Setup – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
 </head>
 <body>
+<div class="app-shell">
+  <header>
+    <div class="brand">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Roll ’n Connect</div>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="marketplace.html" class="nav-link">Marketplace</a>
+      <a href="clips-feed.html" class="nav-link">Clips</a>
+      <a href="chat.html" class="nav-link">Chat</a>
+      <a href="events.html" class="nav-link">Events</a>
+      <a href="settings.html" class="nav-link">Settings</a>
+      <a href="login.html" class="nav-link nav-link-primary">Login</a>
+    </nav>
+  </header>
 
-<header>
-  <div class="brand">
-    <div class="brand-logo">R</div>
-    <div class="brand-name">Roll ’n Connect</div>
-  </div>
-</header>
+  <main class="page">
+    <h1>Set Up Your Profile</h1>
+    <div class="card max-w-narrow">
+      <form action="dashboard.html" class="stack-md">
+        <div>
+          <label for="avatar">Profile Picture</label>
+          <input id="avatar" type="file" accept="image/*" />
+        </div>
 
-<div class="page">
-  <h1>Set Up Your Profile</h1>
+        <div>
+          <label for="bio">Bio</label>
+          <textarea id="bio" rows="4"
+            placeholder="Tell the world about your style, your favorite spots, and what you love about rolling.">
+          </textarea>
+        </div>
 
-  <div class="card" style="max-width: 520px;">
-    <form action="dashboard.html">
-      <label>Profile Picture</label>
-      <input type="file" accept="image/*" />
+        <div>
+          <label for="location">Location (optional)</label>
+          <input id="location" type="text" placeholder="City, State / Country" />
+        </div>
 
-      <label>Bio</label>
-      <textarea rows="4" placeholder="Tell the world about your skate journey..."></textarea>
+        <div>
+          <label for="level">Skill Level</label>
+          <select id="level">
+            <option>Beginner</option>
+            <option>Intermediate</option>
+            <option>Advanced</option>
+            <option>Pro</option>
+          </select>
+        </div>
 
-      <label>Location (optional)</label>
-      <input type="text" placeholder="City, State" />
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Finish – Go to dashboard
+        </button>
+      </form>
+    </div>
+  </main>
 
-      <label>Skill Level</label>
-      <select>
-        <option>Beginner</option>
-        <option>Intermediate</option>
-        <option>Advanced</option>
-        <option>Pro</option>
-      </select>
-
-      <button class="btn btn-primary" style="width: 100%;">Finish</button>
-    </form>
-  </div>
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+      <div class="footer-links">
+        <button class="footer-link">About</button>
+        <button class="footer-link">Contact</button>
+        <button class="footer-link">Terms</button>
+        <button class="footer-link">Privacy</button>
+      </div>
+    </div>
+  </footer>
 </div>
 
-<footer>
-  <div class="footer-row">
-    <span>© 2025 Roll ’n Connect.</span>
-  </div>
-</footer>
-
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
