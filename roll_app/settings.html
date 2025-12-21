@@ -1,37 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Settings – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
 </head>
 <body>
+<div class="app-shell">
+  <header>
+    <div class="brand">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Roll ’n Connect</div>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="marketplace.html" class="nav-link">Marketplace</a>
+      <a href="clips-feed.html" class="nav-link">Clips</a>
+      <a href="chat.html" class="nav-link">Chat</a>
+      <a href="events.html" class="nav-link">Events</a>
+      <a href="settings.html" class="nav-link nav-link-primary">Settings</a>
+      <a href="login.html" class="nav-link">Logout</a>
+    </nav>
+  </header>
 
-<header>
-  <div class="brand">
-    <div class="brand-logo">R</div>
-    <div class="brand-name">Roll ’n Connect</div>
-  </div>
-</header>
+  <main class="page">
+    <h1>Settings</h1>
 
-<div class="page">
-  <h1>Settings</h1>
+    <div class="card max-w-narrow">
+      <form class="stack-md">
+        <div>
+          <label for="settings-email">Email</label>
+          <input id="settings-email" type="email" placeholder="you@example.com" />
+        </div>
 
-  <div class="card" style="max-width: 480px;">
-    <label>Email</label>
-    <input type="email" placeholder="your@email.com">
+        <div>
+          <label for="settings-password">New password</label>
+          <input id="settings-password" type="password" placeholder="Update password" />
+        </div>
 
-    <label>Password</label>
-    <input type="password" placeholder="New password">
+        <div>
+          <label for="settings-notify">Notifications</label>
+          <select id="settings-notify">
+            <option>All activity</option>
+            <option>Only mentions & DMs</option>
+            <option>No notifications</option>
+          </select>
+        </div>
 
-    <button class="btn btn-primary" style="width: 100%;">Save Changes</button>
-  </div>
+        <button type="button" class="btn btn-primary" style="width: 100%;">
+          Save changes (future wired)
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+      <div class="footer-links">
+        <button class="footer-link">About</button>
+        <button class="footer-link">Contact</button>
+        <button class="footer-link">Terms</button>
+        <button class="footer-link">Privacy</button>
+      </div>
+    </div>
+  </footer>
 </div>
 
-<footer>
-  <div class="footer-row">
-    <span>© 2025 Roll ’n Connect.</span>
-  </div>
-</footer>
-
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
