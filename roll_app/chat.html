@@ -8,48 +8,60 @@
 </head>
 <body>
 <div class="app-shell">
-  <header>
-    <div class="brand">
+
+  <header class="app-header">
+    <div class="app-header-left">
       <div class="brand-logo">R</div>
       <div class="brand-name">Roll ’n Connect</div>
     </div>
-    <nav class="nav-links">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="dashboard.html" class="nav-link">Dashboard</a>
-      <a href="marketplace.html" class="nav-link">Marketplace</a>
-      <a href="clips-feed.html" class="nav-link">Clips</a>
-      <a href="chat.html" class="nav-link nav-link-primary">Chat</a>
-      <a href="events.html" class="nav-link">Events</a>
-      <a href="settings.html" class="nav-link">Settings</a>
-      <a href="login.html" class="nav-link">Logout</a>
-    </nav>
+    <div class="app-header-center">
+      <input class="app-search" placeholder="Search messages..." />
+    </div>
   </header>
 
   <main class="page">
-    <h1>Community Chat</h1>
+    <h1>Messages</h1>
 
     <div class="card">
       <p class="card-text">
-        Here’s where global chat, crew chats, and DMs will live. For now, this is your
-        placeholder for future real-time messaging.
+        This is where your DMs and crew chats will live. For now, it’s a placeholder for future real-time messaging.
       </p>
-      <p class="card-text">
-        Future stack: WebSockets or real-time DB (Supabase, Firebase) to power live chat.
-      </p>
+      <div style="margin-top:10px; font-size:13px; color:var(--text-soft);">
+        • @FlowRider — “Session tonight?”<br />
+        • @QuadQueen — “New skates arrived!”<br />
+        • @HillBomber — “Spotted a new hill near you.”
+      </div>
     </div>
   </main>
 
   <footer>
     <div class="footer-row">
       <span>© <span id="year"></span> Roll ’n Connect.</span>
-      <div class="footer-links">
-        <button class="footer-link">About</button>
-        <button class="footer-link">Contact</button>
-        <button class="footer-link">Terms</button>
-        <button class="footer-link">Privacy</button>
-      </div>
     </div>
   </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🏠</div>
+      <span>Home</span>
+    </a>
+    <a href="spots-map.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🧭</div>
+      <span>Explore</span>
+    </a>
+    <a href="clips-feed.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">▶</div>
+      <span>Clips</span>
+    </a>
+    <a href="marketplace.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🛒</div>
+      <span>Market</span>
+    </a>
+    <a href="dashboard.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">👤</div>
+      <span>Profile</span>
+    </a>
+  </nav>
 </div>
 
 <script>
