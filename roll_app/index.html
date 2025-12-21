@@ -8,23 +8,57 @@
 </head>
 <body>
 <div class="app-shell">
+  <!-- NAVBAR -->
   <header>
     <div class="brand">
       <div class="brand-logo">R</div>
       <div class="brand-name">Roll ’n Connect</div>
     </div>
-    <nav class="nav-links">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="dashboard.html" class="nav-link">Dashboard</a>
-      <a href="marketplace.html" class="nav-link">Marketplace</a>
-      <a href="clips-feed.html" class="nav-link">Clips</a>
-      <a href="chat.html" class="nav-link">Chat</a>
-      <a href="events.html" class="nav-link">Events</a>
-      <a href="settings.html" class="nav-link">Settings</a>
-      <a href="login.html" class="nav-link nav-link-primary">Login</a>
+
+    <nav class="nav-links enhanced-nav">
+      <div class="nav-item">
+        <a href="index.html" class="nav-link">Home</a>
+      </div>
+
+      <div class="nav-item dropdown">
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <div class="dropdown-panel">
+          <a href="profile-setup.html">Edit Profile</a>
+          <a href="clips-feed.html">Your Clips</a>
+          <a href="events.html">Your Events</a>
+        </div>
+      </div>
+
+      <div class="nav-item dropdown">
+        <a href="marketplace.html" class="nav-link">Marketplace</a>
+        <div class="dropdown-panel">
+          <a href="marketplace.html">Browse All</a>
+          <a href="marketplace.html#longboards">Longboards</a>
+          <a href="marketplace.html#skateboards">Skateboards</a>
+          <a href="marketplace.html#roller">Roller Skates</a>
+          <a href="marketplace.html#inline">Inline Skates</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a href="clips-feed.html" class="nav-link">Clips</a>
+      </div>
+
+      <div class="nav-item">
+        <a href="chat.html" class="nav-link">Chat</a>
+      </div>
+
+      <div class="nav-item">
+        <a href="settings.html" class="nav-link">Settings</a>
+      </div>
+
+      <div class="nav-item">
+        <a href="login.html" class="nav-link nav-link-primary">Login</a>
+      </div>
     </nav>
   </header>
 
+  <!-- PAGE CONTENT -->
   <main class="page">
     <!-- HERO -->
     <section class="hero-layout">
@@ -159,85 +193,26 @@
       </div>
     </section>
 
-    <!-- MARKETPLACE PREVIEW -->
+    <!-- UPDATED MARKETPLACE PREVIEW -->
     <section id="marketplace" class="section">
       <div class="market-header-row">
-        <h2 class="section-title">The skate marketplace.</h2>
+        <h2 class="section-title">Featured Marketplace Gear</h2>
         <a href="marketplace.html"
            class="btn btn-outline"
            style="font-size: 12px; padding: 6px 12px;">
           View all gear
         </a>
       </div>
+
       <p class="section-sub">
-        Curated gear from the community: longboards, quads, decks, wheels, pads, custom
-        setups, and more. Buy, sell, and trade with skaters, not random resellers.
+        Fresh listings from skaters near you — longboards, quads, decks, wheels, and more.
       </p>
 
-      <div class="market-grid">
-        <div class="market-card">
-          <div>
-            <div class="market-label">Longboard setup</div>
-            <div class="market-title">Dancing deck + 180mm trucks</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$180</div>
-            <a href="marketplace-item.html"
-               class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
-        </div>
-
-        <div class="market-card">
-          <div>
-            <div class="market-label">Roller skates</div>
-            <div class="market-title">Custom suede quads w/ LED wheels</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$220</div>
-            <a href="marketplace-item.html"
-               class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
-        </div>
-
-        <div class="market-card">
-          <div>
-            <div class="market-label">Skateboard</div>
-            <div class="market-title">Street deck w/ high trucks</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$95</div>
-            <a href="marketplace-item.html"
-               class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
-        </div>
-
-        <div class="market-card">
-          <div>
-            <div class="market-label">Inline skates</div>
-            <div class="market-title">Urban freeskate with 80mm wheels</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$160</div>
-            <a href="marketplace-item.html"
-               class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
-        </div>
-      </div>
+      <div id="homeMarketGrid" class="market-grid"></div>
     </section>
   </main>
 
+  <!-- FOOTER -->
   <footer>
     <div class="footer-row">
       <span>© <span id="year"></span> Roll ’n Connect.</span>
@@ -253,6 +228,37 @@
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  /* Homepage featured marketplace items */
+  const homeItems = [
+    { id: 1, title: "Dancing Longboard", price: 180 },
+    { id: 3, title: "Custom Roller Skates", price: 220 },
+    { id: 2, title: "Street Skateboard", price: 95 },
+    { id: 4, title: "Urban Inline Skates", price: 160 },
+  ];
+
+  const homeGrid = document.getElementById("homeMarketGrid");
+
+  homeItems.forEach(i => {
+    const div = document.createElement("div");
+    div.className = "market-card enhanced-market-card";
+    div.onclick = () => {
+      localStorage.setItem("currentItem", i.id);
+      window.location.href = "marketplace-item.html";
+    };
+
+    div.innerHTML = `
+      <div class="item-img"
+           style="height:150px;
+                  background-image:url('https://picsum.photos/400?random=${i.id+50}');
+                  border-radius:12px;">
+      </div>
+      <div class="market-title">${i.title}</div>
+      <div class="market-price">$${i.price}</div>
+    `;
+
+    homeGrid.appendChild(div);
+  });
 </script>
 </body>
 </html>
