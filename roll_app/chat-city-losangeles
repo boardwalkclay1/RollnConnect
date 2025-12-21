@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Los Angeles Chatrooms – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="rollnconnect.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Los Angeles Chatrooms</div>
+    </div>
+    <div class="app-header-right">
+      <a href="chat-cities.html" class="icon-btn">←</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1>Los Angeles Disciplines</h1>
+    <p class="section-sub">Choose a discipline to enter the LA skate chatrooms.</p>
+
+    <div class="disc-grid">
+      <div class="disc-card" onclick="location.href='chat-room-losangeles-longboard.html'">Longboard Dance</div>
+      <div class="disc-card" onclick="location.href='chat-room-losangeles-downhill.html'">Downhill</div>
+      <div class="disc-card" onclick="location.href='chat-room-losangeles-street.html'">Street / Park</div>
+      <div class="disc-card" onclick="location.href='chat-room-losangeles-roller.html'">Roller Rhythm</div>
+      <div class="disc-card" onclick="location.href='chat-room-losangeles-inline.html'">Inline Urban</div>
+      <div class="disc-card" onclick="location.href='chat-room-losangeles-cruising.html'">Cruising / Meetup</div>
+      <div class="disc-card" onclick="location.href='chat-room-losangeles-beginners.html'">Beginners</div>
+      <div class="disc-card" onclick="location.href='chat-room-losangeles-rinks.html'">Rinks</div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
