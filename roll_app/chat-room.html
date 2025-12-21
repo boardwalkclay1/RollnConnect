@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Room Chat – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="rollnconnect.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Roll ’n Connect</div>
+    </div>
+    <div class="app-header-right">
+      <a href="chat.html" class="icon-btn">←</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1 id="roomTitle">Room</h1>
+
+    <div class="card">
+      <div class="chat-window">
+        <div id="chatMessages" class="chat-messages"></div>
+
+        <form class="chat-input-row" onsubmit="sendMessage(event)">
+          <input id="chatInput" type="text" placeholder="Say something..." required />
+          <button type="submit" class="btn btn-primary" style="padding:0 14px;">Send</button>
+        </form>
+      </div>
+      <p style="margin-top:8px; font-size:11px; color:var(--text-soft);">
+        This room UI caps at 500 messages in memory. Real-time multi‑user behavior comes once a backend is connected.
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+    </div>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🏠</div>
+      <span>Home</span>
+    </a>
+    <a href="spots-map.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🧭</div>
+      <span>Explore</span>
+    </a>
+    <a href="clips-feed.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">▶</div>
+      <span>Clips</span>
+    </a>
+    <a href="marketplace.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🛒</div>
+      <span>Market</span>
+    </a>
+    <a href="chat.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">💬</div>
+      <span>Chat</span>
+    </a>
+  </nav>
+</div>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  const room = JSON.parse(localStorage.getItem("rc_current_room") || "{}");
+  const roomId = room.id || "demo";
+  const roomTitle = room.name || "Unnamed Room";
+  document.getElementById("roomTitle").textContent = roomTitle;
+
+  const STORAGE_KEY = "rc_room_messages_" + roomId;
+  let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+  // Simulated current user
+  const currentUser = "@You";
+
+  function saveMessages() {
+    // keep only last 500
+    if (messages.length > 500) {
+      messages = messages.slice(messages.length - 500);
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  }
+
+  function renderMessages() {
+    const container = document.getElementById("chatMessages");
+    container.innerHTML = "";
+
+    messages.forEach(msg => {
+      const div = document.createElement("div");
+      div.className = "chat-message" + (msg.sender === currentUser ? " self" : "");
+      div.innerHTML = `
+        <div class="chat-avatar"></div>
+        <div class="chat-bubble">
+          <div class="chat-sender">${msg.sender}</div>
+          <div class="chat-text">${msg.text}</div>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function sendMessage(e) {
+    e.preventDefault();
+    const input = document.getElementById("chatInput");
+    const text = input.value.trim();
+    if (!text) return;
+
+    messages.push({
+      sender: currentUser,
+      text,
+      ts: Date.now()
+    });
+
+    saveMessages();
+    renderMessages();
+    input.value = "";
+  }
+
+  renderMessages();
+</script>
+</body>
+</html>
