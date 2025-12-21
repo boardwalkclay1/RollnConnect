@@ -1,46 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Sign Up – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
 </head>
 <body>
+<div class="app-shell">
 
-<header>
-  <div class="brand">
-    <div class="brand-logo">R</div>
-    <div class="brand-name">Roll ’n Connect</div>
-  </div>
-</header>
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Roll ’n Connect</div>
+    </div>
+  </header>
 
-<div class="page">
-  <h1>Create Your Account</h1>
+  <main class="page">
+    <div class="card max-w-narrow" style="margin: 30px auto 0;">
+      <h1 style="font-size:20px; margin-bottom:10px;">Create your account</h1>
+      <form action="profile-setup.html" class="stack-md">
+        <div>
+          <label for="username">Username</label>
+          <input id="username" type="text" placeholder="sk8r_name" required />
+        </div>
 
-  <div class="card" style="max-width: 420px;">
-    <form action="profile-setup.html">
-      <input type="text" placeholder="Username" required />
-      <input type="email" placeholder="Email" required />
-      <input type="password" placeholder="Password" required />
-      <input type="password" placeholder="Confirm Password" required />
+        <div>
+          <label for="signup-email">Email</label>
+          <input id="signup-email" type="email" placeholder="you@example.com" required />
+        </div>
 
-      <label>Choose your skate style</label>
-      <select required>
-        <option>Longboard</option>
-        <option>Roller Skates</option>
-        <option>Skateboard</option>
-        <option>Inline Skates</option>
-      </select>
+        <div>
+          <label for="signup-password">Password</label>
+          <input id="signup-password" type="password" placeholder="Create a password" required />
+        </div>
 
-      <button class="btn btn-primary" style="width: 100%;">Continue</button>
-    </form>
-  </div>
+        <div>
+          <label for="signup-confirm">Confirm Password</label>
+          <input id="signup-confirm" type="password" placeholder="Repeat your password" required />
+        </div>
+
+        <div>
+          <label for="style">Primary skate style</label>
+          <select id="style" required>
+            <option value="">Select a style</option>
+            <option>Longboard</option>
+            <option>Roller Skates</option>
+            <option>Skateboard</option>
+            <option>Inline Skates</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Continue – Set up profile
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+    </div>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🏠</div>
+      <span>Home</span>
+    </a>
+    <a href="spots-map.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🧭</div>
+      <span>Explore</span>
+    </a>
+    <a href="clips-feed.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">▶</div>
+      <span>Clips</span>
+    </a>
+    <a href="marketplace.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🛒</div>
+      <span>Market</span>
+    </a>
+    <a href="signup.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">👤</div>
+      <span>Sign up</span>
+    </a>
+  </nav>
 </div>
 
-<footer>
-  <div class="footer-row">
-    <span>© 2025 Roll ’n Connect.</span>
-  </div>
-</footer>
-
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
