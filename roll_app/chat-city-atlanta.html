@@ -5,78 +5,119 @@
   <title>Atlanta Chatrooms – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
+
   <style>
-    .disc-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
-    }
-    .disc-card {
-      padding: 16px;
+    .city-card {
+      position: relative;
+      height: 150px;
       border-radius: 18px;
-      background: var(--glass);
+      background-size: cover;
+      background-position: center;
       border: 1px solid var(--border-soft);
+      display: flex;
+      align-items: flex-end;
+      padding: 12px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
       cursor: pointer;
       transition: 0.2s;
-      font-size: 16px;
-      font-weight: 600;
     }
-    .disc-card:hover {
+
+    .city-card:hover {
       transform: translateY(-4px);
       border-color: var(--purple);
       box-shadow: 0 0 18px rgba(168,85,247,0.5);
     }
+
+    .active-pill {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(168,85,247,0.25);
+      border: 1px solid var(--purple);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--purple);
+      backdrop-filter: blur(6px);
+    }
+
+    .disc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
+    }
   </style>
 </head>
+
 <body>
 <div class="app-shell">
 
+  <!-- HEADER -->
   <header class="app-header">
     <div class="app-header-left">
       <div class="brand-logo">R</div>
       <div class="brand-name">Atlanta Chatrooms</div>
     </div>
     <div class="app-header-right">
-      <a href="chat-cities.html" class="icon-btn">←</a>
+      <a href="chat.html" class="icon-btn">←</a>
     </div>
   </header>
 
+  <!-- PAGE -->
   <main class="page">
-    <h1>Atlanta Disciplines</h1>
+    <h1>Atlanta Chatrooms</h1>
     <p class="section-sub">
-      Choose a discipline to enter the Atlanta skate chatrooms.
+      Choose a discipline to enter the Atlanta skate community.
     </p>
 
     <div class="disc-grid">
-      <div class="disc-card" onclick="location.href='chat-room-atlanta-longboard.html'">Longboard Dance</div>
-      <div class="disc-card" onclick="location.href='chat-room-atlanta-downhill.html'">Downhill</div>
-      <div class="disc-card" onclick="location.href='chat-room-atlanta-street.html'">Street / Park</div>
-      <div class="disc-card" onclick="location.href='chat-room-atlanta-roller.html'">Roller Rhythm</div>
-      <div class="disc-card" onclick="location.href='chat-room-atlanta-inline.html'">Inline Urban</div>
-      <div class="disc-card" onclick="location.href='chat-room-atlanta-cruising.html'">Cruising / Meetup</div>
-      <div class="disc-card" onclick="location.href='chat-room-atlanta-beginners.html'">Beginners</div>
-      <div class="disc-card" onclick="location.href='chat-room-atlanta-rinks.html'">Rinks</div>
+      <div class="city-card"
+           onclick="location.href='chat-city-atlanta-disciplines.html'"
+           style="background-image:url('https://picsum.photos/600?random=901');">
+        Atlanta
+        <div class="active-pill" id="active-count">🟣 0 active</div>
+      </div>
     </div>
   </main>
 
+  <!-- FOOTER -->
   <footer>
     <div class="footer-row">
       <span>© <span id="year"></span> Roll ’n Connect.</span>
     </div>
   </footer>
 
-  <nav class="bottom-nav">
-    <a href="chat-cities.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">💬</div>
-      <span>Chat</span>
-    </a>
-  </nav>
-
 </div>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  // All 8 disciplines for Atlanta
+  const disciplines = [
+    "longboard",
+    "downhill",
+    "street",
+    "roller",
+    "inline",
+    "cruising",
+    "beginners",
+    "rinks"
+  ];
+
+  const city = "atlanta";
+  let total = 0;
+
+  disciplines.forEach(d => {
+    const key = `active_${city}_${d}`;
+    const list = JSON.parse(localStorage.getItem(key) || "[]");
+    total += list.length;
+  });
+
+  document.getElementById("active-count").textContent = `🟣 ${total} active`;
 </script>
+
 </body>
 </html>
