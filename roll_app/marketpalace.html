@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Marketplace – Roll ’n Connect</title>
+  <title>Settings – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
 </head>
@@ -16,81 +16,44 @@
     <nav class="nav-links">
       <a href="index.html" class="nav-link">Home</a>
       <a href="dashboard.html" class="nav-link">Dashboard</a>
-      <a href="marketplace.html" class="nav-link nav-link-primary">Marketplace</a>
+      <a href="marketplace.html" class="nav-link">Marketplace</a>
       <a href="clips-feed.html" class="nav-link">Clips</a>
       <a href="chat.html" class="nav-link">Chat</a>
       <a href="events.html" class="nav-link">Events</a>
-      <a href="settings.html" class="nav-link">Settings</a>
+      <a href="settings.html" class="nav-link nav-link-primary">Settings</a>
       <a href="login.html" class="nav-link">Logout</a>
     </nav>
   </header>
 
   <main class="page">
-    <h1>Skate Marketplace</h1>
-    <p class="section-sub">
-      Browse and trade gear from skaters everywhere. These cards will later be driven by
-      real data.
-    </p>
+    <h1>Settings</h1>
 
-    <section class="section">
-      <div class="market-grid">
-        <div class="market-card">
-          <div>
-            <div class="market-label">Longboard setup</div>
-            <div class="market-title">Dancing deck + 180mm trucks</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$180</div>
-            <a href="marketplace-item.html" class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
+    <div class="card max-w-narrow">
+      <form class="stack-md">
+        <div>
+          <label for="settings-email">Email</label>
+          <input id="settings-email" type="email" placeholder="you@example.com" />
         </div>
 
-        <div class="market-card">
-          <div>
-            <div class="market-label">Roller skates</div>
-            <div class="market-title">Custom suede quads w/ LED wheels</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$220</div>
-            <a href="marketplace-item.html" class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
+        <div>
+          <label for="settings-password">New password</label>
+          <input id="settings-password" type="password" placeholder="Update password" />
         </div>
 
-        <div class="market-card">
-          <div>
-            <div class="market-label">Skateboard</div>
-            <div class="market-title">Street deck w/ high trucks</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$95</div>
-            <a href="marketplace-item.html" class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
+        <div>
+          <label for="settings-notify">Notifications</label>
+          <select id="settings-notify">
+            <option>All activity</option>
+            <option>Only mentions & DMs</option>
+            <option>No notifications</option>
+          </select>
         </div>
 
-        <div class="market-card">
-          <div>
-            <div class="market-label">Inline skates</div>
-            <div class="market-title">Urban freeskate with 80mm wheels</div>
-          </div>
-          <div class="market-bottom">
-            <div class="market-price">$160</div>
-            <a href="marketplace-item.html" class="btn btn-primary"
-               style="padding: 5px 10px; font-size: 11px;">
-              View item
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+        <button type="button" class="btn btn-primary" style="width: 100%;">
+          Save changes (future wired)
+        </button>
+      </form>
+    </div>
   </main>
 
   <footer>
