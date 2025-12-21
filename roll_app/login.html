@@ -1,41 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Login – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
 </head>
 <body>
+<div class="app-shell">
+  <header>
+    <div class="brand">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Roll ’n Connect</div>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="marketplace.html" class="nav-link">Marketplace</a>
+      <a href="clips-feed.html" class="nav-link">Clips</a>
+      <a href="chat.html" class="nav-link">Chat</a>
+      <a href="events.html" class="nav-link">Events</a>
+      <a href="settings.html" class="nav-link">Settings</a>
+      <a href="login.html" class="nav-link nav-link-primary">Login</a>
+    </nav>
+  </header>
 
-<header>
-  <div class="brand">
-    <div class="brand-logo">R</div>
-    <div class="brand-name">Roll ’n Connect</div>
-  </div>
-</header>
+  <main class="page">
+    <h1>Login</h1>
+    <div class="card max-w-narrow">
+      <form action="dashboard.html" class="stack-md">
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com" required />
+        </div>
 
-<div class="page">
-  <h1>Login</h1>
+        <div>
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Your password" required />
+        </div>
 
-  <div class="card" style="max-width: 420px;">
-    <form action="dashboard.html">
-      <input type="email" placeholder="Email" required />
-      <input type="password" placeholder="Password" required />
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          Login
+        </button>
+      </form>
 
-      <button class="btn btn-primary" style="width: 100%;">Login</button>
-    </form>
+      <p style="margin-top: 12px; font-size: 14px; color: var(--text-soft);">
+        Don’t have an account?
+        <a href="signup.html" style="color: var(--blue); text-decoration: none;">Sign up</a>
+      </p>
+    </div>
+  </main>
 
-    <p style="margin-top: 12px; font-size: 14px;">
-      Don’t have an account?
-      <a href="signup.html" style="color: var(--blue);">Sign up</a>
-    </p>
-  </div>
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+      <div class="footer-links">
+        <button class="footer-link">About</button>
+        <button class="footer-link">Contact</button>
+        <button class="footer-link">Terms</button>
+        <button class="footer-link">Privacy</button>
+      </div>
+    </div>
+  </footer>
 </div>
 
-<footer>
-  <div class="footer-row">
-    <span>© 2025 Roll ’n Connect.</span>
-  </div>
-</footer>
-
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
