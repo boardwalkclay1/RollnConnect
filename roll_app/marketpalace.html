@@ -2,75 +2,226 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Settings – Roll ’n Connect</title>
+  <title>Marketplace – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
 </head>
 <body>
 <div class="app-shell">
-  <header>
-    <div class="brand">
+
+  <header class="app-header">
+    <div class="app-header-left">
       <div class="brand-logo">R</div>
       <div class="brand-name">Roll ’n Connect</div>
     </div>
-    <nav class="nav-links">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="dashboard.html" class="nav-link">Dashboard</a>
-      <a href="marketplace.html" class="nav-link">Marketplace</a>
-      <a href="clips-feed.html" class="nav-link">Clips</a>
-      <a href="chat.html" class="nav-link">Chat</a>
-      <a href="events.html" class="nav-link">Events</a>
-      <a href="settings.html" class="nav-link nav-link-primary">Settings</a>
-      <a href="login.html" class="nav-link">Logout</a>
-    </nav>
+    <div class="app-header-center">
+      <input class="app-search" id="searchInput" placeholder="Search gear..." oninput="applyFilters()" />
+    </div>
+    <div class="app-header-right">
+      <a href="chat.html" class="icon-btn">✉</a>
+    </div>
   </header>
 
   <main class="page">
-    <h1>Settings</h1>
+    <h1>Marketplace</h1>
 
-    <div class="card max-w-narrow">
-      <form class="stack-md">
-        <div>
-          <label for="settings-email">Email</label>
-          <input id="settings-email" type="email" placeholder="you@example.com" />
+    <div class="marketplace-layout">
+      <!-- LEFT FILTERS -->
+      <aside class="sidebar-left">
+        <div class="card">
+          <h3>Categories</h3>
+
+          <button class="category-btn active-category" onclick="filterCategory(event, 'all')">All Items</button>
+          <button class="category-btn" onclick="filterCategory(event, 'longboard')">Longboards</button>
+          <button class="category-btn" onclick="filterCategory(event, 'skateboard')">Skateboards</button>
+          <button class="category-btn" onclick="filterCategory(event, 'roller')">Roller Skates</button>
+          <button class="category-btn" onclick="filterCategory(event, 'inline')">Inline Skates</button>
+          <button class="category-btn" onclick="filterCategory(event, 'gear')">Gear & Parts</button>
+
+          <div class="filter-section">
+            <div class="filter-title">Condition</div>
+            <label><input type="checkbox" onchange="applyFilters()" id="cond-new"> New</label><br>
+            <label><input type="checkbox" onchange="applyFilters()" id="cond-used"> Used</label>
+          </div>
+
+          <div class="filter-section">
+            <div class="filter-title">Price Range</div>
+            <input type="range" min="0" max="500" value="500" id="priceRange" oninput="applyFilters()">
+            <p id="priceLabel">$0 – $500</p>
+          </div>
+
+          <div class="filter-section">
+            <div class="filter-title">Sort By</div>
+            <select id="sortSelect" onchange="applyFilters()">
+              <option value="default">Default</option>
+              <option value="low">Price: Low to High</option>
+              <option value="high">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER GRID -->
+      <section>
+        <div id="itemGrid" class="item-grid"></div>
+      </section>
+
+      <!-- RIGHT SAVED / RECENT -->
+      <aside class="sidebar-right">
+        <div class="card">
+          <h3>Saved Items</h3>
+          <div id="savedItems"></div>
         </div>
 
-        <div>
-          <label for="settings-password">New password</label>
-          <input id="settings-password" type="password" placeholder="Update password" />
+        <div class="card" style="margin-top:20px;">
+          <h3>Recently Viewed</h3>
+          <div id="recentItems"></div>
         </div>
-
-        <div>
-          <label for="settings-notify">Notifications</label>
-          <select id="settings-notify">
-            <option>All activity</option>
-            <option>Only mentions & DMs</option>
-            <option>No notifications</option>
-          </select>
-        </div>
-
-        <button type="button" class="btn btn-primary" style="width: 100%;">
-          Save changes (future wired)
-        </button>
-      </form>
+      </aside>
     </div>
   </main>
 
   <footer>
     <div class="footer-row">
       <span>© <span id="year"></span> Roll ’n Connect.</span>
-      <div class="footer-links">
-        <button class="footer-link">About</button>
-        <button class="footer-link">Contact</button>
-        <button class="footer-link">Terms</button>
-        <button class="footer-link">Privacy</button>
-      </div>
     </div>
   </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🏠</div>
+      <span>Home</span>
+    </a>
+    <a href="spots-map.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🧭</div>
+      <span>Explore</span>
+    </a>
+    <a href="clips-feed.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">▶</div>
+      <span>Clips</span>
+    </a>
+    <a href="marketplace.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">🛒</div>
+      <span>Market</span>
+    </a>
+    <a href="dashboard.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">👤</div>
+      <span>Profile</span>
+    </a>
+  </nav>
 </div>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+
+  const items = [
+    { id: 1, title: "Dancing Longboard", price: 180, category: "longboard", condition: "used" },
+    { id: 2, title: "Street Skateboard", price: 95, category: "skateboard", condition: "used" },
+    { id: 3, title: "Custom Roller Skates", price: 220, category: "roller", condition: "new" },
+    { id: 4, title: "Urban Inline Skates", price: 160, category: "inline", condition: "new" },
+    { id: 5, title: "Longboard Wheels", price: 40, category: "gear", condition: "new" },
+    { id: 6, title: "Skateboard Trucks", price: 55, category: "gear", condition: "used" },
+  ];
+
+  let activeCategory = "all";
+
+  function renderItems(list) {
+    const grid = document.getElementById("itemGrid");
+    grid.innerHTML = "";
+
+    list.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "item-card";
+      card.onclick = () => viewItem(item);
+
+      card.innerHTML = `
+        <div class="item-img"
+             style="background-image:url('https://picsum.photos/400?random=${item.id+70}')"></div>
+        <div class="item-title">${item.title}</div>
+        <div class="item-price">$${item.price}</div>
+        <button class="save-btn" onclick="saveItem(event, ${item.id})">Save</button>
+      `;
+
+      grid.appendChild(card);
+    });
+  }
+
+  function filterCategory(e, cat) {
+    activeCategory = cat;
+    document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active-category"));
+    e.target.classList.add("active-category");
+    applyFilters();
+  }
+
+  function applyFilters() {
+    let filtered = [...items];
+
+    const search = document.getElementById("searchInput").value.toLowerCase();
+    filtered = filtered.filter(i => i.title.toLowerCase().includes(search));
+
+    if (activeCategory !== "all") {
+      filtered = filtered.filter(i => i.category === activeCategory);
+    }
+
+    const condNew = document.getElementById("cond-new").checked;
+    const condUsed = document.getElementById("cond-used").checked;
+    if (condNew || condUsed) {
+      filtered = filtered.filter(i =>
+        (condNew && i.condition === "new") ||
+        (condUsed && i.condition === "used")
+      );
+    }
+
+    const maxPrice = document.getElementById("priceRange").value;
+    document.getElementById("priceLabel").textContent = `$0 – $${maxPrice}`;
+    filtered = filtered.filter(i => i.price <= maxPrice);
+
+    const sort = document.getElementById("sortSelect").value;
+    if (sort === "low") filtered.sort((a, b) => a.price - b.price);
+    if (sort === "high") filtered.sort((a, b) => b.price - a.price);
+
+    renderItems(filtered);
+  }
+
+  function saveItem(e, id) {
+    e.stopPropagation();
+    let saved = JSON.parse(localStorage.getItem("savedItems") || "[]");
+    if (!saved.includes(id)) saved.push(id);
+    localStorage.setItem("savedItems", JSON.stringify(saved));
+    loadSavedItems();
+  }
+
+  function loadSavedItems() {
+    const saved = JSON.parse(localStorage.getItem("savedItems") || "[]");
+    const container = document.getElementById("savedItems");
+    container.innerHTML = saved.map(id => {
+      const item = items.find(i => i.id === id);
+      return `<p>${item.title} – $${item.price}</p>`;
+    }).join("");
+  }
+
+  function viewItem(item) {
+    let recent = JSON.parse(localStorage.getItem("recentItems") || "[]");
+    recent = recent.filter(i => i !== item.id);
+    recent.unshift(item.id);
+    recent = recent.slice(0, 5);
+    localStorage.setItem("recentItems", JSON.stringify(recent));
+    localStorage.setItem("currentItem", item.id);
+    window.location.href = "marketplace-item.html";
+  }
+
+  function loadRecentItems() {
+    const recent = JSON.parse(localStorage.getItem("recentItems") || "[]");
+    const container = document.getElementById("recentItems");
+    container.innerHTML = recent.map(id => {
+      const item = items.find(i => i.id === id);
+      return `<p>${item.title} – $${item.price}</p>`;
+    }).join("");
+  }
+
+  renderItems(items);
+  loadSavedItems();
+  loadRecentItems();
 </script>
 </body>
 </html>
