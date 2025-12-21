@@ -5,178 +5,161 @@
   <title>Chat – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
+
+  <style>
+    .city-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .city-card {
+      height: 150px;
+      border-radius: 18px;
+      background-size: cover;
+      background-position: center;
+      border: 1px solid var(--border-soft);
+      display: flex;
+      align-items: flex-end;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .city-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 18px rgba(168,85,247,0.5);
+      border-color: var(--purple);
+    }
+
+    .section-sub {
+      margin-bottom: 20px;
+      color: var(--text-soft);
+      font-size: 14px;
+    }
+  </style>
 </head>
+
 <body>
 <div class="app-shell">
 
+  <!-- HEADER -->
   <header class="app-header">
     <div class="app-header-left">
       <div class="brand-logo">R</div>
       <div class="brand-name">Roll ’n Connect</div>
     </div>
+
     <div class="app-header-center">
-      <input class="app-search" id="roomSearch" placeholder="Search rooms..." oninput="renderRooms()" />
+      <input class="app-search" placeholder="Search cities or rooms..." />
     </div>
+
     <div class="app-header-right">
       <a href="dashboard.html" class="icon-btn">👤</a>
     </div>
   </header>
 
+  <!-- PAGE -->
   <main class="page">
-    <h1>Chat</h1>
+    <h1>Chatrooms</h1>
 
-    <div class="chat-layout">
-      <!-- LEFT: ROOMS + CREATE -->
-      <aside class="chat-sidebar">
-        <div class="card">
-          <div class="card-title">Rooms</div>
-          <div class="card-text">
-            Join public rooms or create your own. Max 200 people per room (enforced in backend later).
-          </div>
+    <p class="section-sub">
+      Choose your city to enter the skate community.  
+      Each city has rooms for Longboard Dance, Downhill, Street/Park, Roller Rhythm, Inline Urban, Cruising, Beginners, and Rinks.
+    </p>
 
-          <div class="chat-room-list" id="roomList"></div>
+    <!-- CITY GRID -->
+    <div class="city-grid">
 
-          <hr style="border:none; border-top:1px solid rgba(148,163,184,0.5); margin:10px 0;" />
+      <div class="city-card"
+           onclick="location.href='chat-city-atlanta.html'"
+           style="background-image:url('https://picsum.photos/600?random=901');">
+        Atlanta
+      </div>
 
-          <div class="card-title" style="font-size:14px;">Create a room</div>
-          <form onsubmit="createRoom(event)" class="stack-md">
-            <div>
-              <label for="newRoomName">Room name</label>
-              <input id="newRoomName" type="text" placeholder="ATL Night Riders" required />
-            </div>
-            <div>
-              <label for="newRoomTopic">Topic</label>
-              <input id="newRoomTopic" type="text" placeholder="City, style, or crew focus" />
-            </div>
-            <button type="submit" class="btn btn-primary" style="width:100%; font-size:13px;">
-              Create room
-            </button>
-          </form>
-        </div>
-      </aside>
+      <div class="city-card"
+           onclick="location.href='chat-city-losangeles.html'"
+           style="background-image:url('https://picsum.photos/600?random=902');">
+        Los Angeles
+      </div>
 
-      <!-- RIGHT: PRIVATE MESSAGES LIST -->
-      <section>
-        <div class="card">
-          <div class="card-title">Private messages</div>
-          <p class="card-text">
-            One‑on‑one chats. Pick a skater to start a DM.
-          </p>
+      <div class="city-card"
+           onclick="location.href='chat-city-chicago.html'"
+           style="background-image:url('https://picsum.photos/600?random=903');">
+        Chicago
+      </div>
 
-          <div class="chat-room-list" id="dmList">
-            <div class="chat-room-item" onclick="openDM('FlowRider')">
-              @FlowRider • Longboard dance
-            </div>
-            <div class="chat-room-item" onclick="openDM('QuadQueen')">
-              @QuadQueen • Roller rink
-            </div>
-            <div class="chat-room-item" onclick="openDM('HillBomber')">
-              @HillBomber • Downhill crew
-            </div>
-          </div>
-        </div>
-      </section>
+      <div class="city-card"
+           onclick="location.href='chat-city-newyork.html'"
+           style="background-image:url('https://picsum.photos/600?random=904');">
+        New York
+      </div>
+
+      <div class="city-card"
+           onclick="location.href='chat-city-detroit.html'"
+           style="background-image:url('https://picsum.photos/600?random=905');">
+        Detroit
+      </div>
+
+      <div class="city-card"
+           onclick="location.href='chat-city-miami.html'"
+           style="background-image:url('https://picsum.photos/600?random=906');">
+        Miami
+      </div>
+
+      <div class="city-card"
+           onclick="location.href='chat-city-houston.html'"
+           style="background-image:url('https://picsum.photos/600?random=907');">
+        Houston
+      </div>
+
     </div>
   </main>
 
+  <!-- FOOTER -->
   <footer>
     <div class="footer-row">
       <span>© <span id="year"></span> Roll ’n Connect.</span>
     </div>
   </footer>
 
+  <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <a href="index.html" class="bottom-nav-link">
       <div class="bottom-nav-icon">🏠</div>
       <span>Home</span>
     </a>
+
     <a href="spots-map.html" class="bottom-nav-link">
       <div class="bottom-nav-icon">🧭</div>
       <span>Explore</span>
     </a>
-    <a href="clips-feed.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">▶</div>
-      <span>Clips</span>
+
+    <a href="chat.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">💬</div>
+      <span>Chat</span>
     </a>
+
     <a href="marketplace.html" class="bottom-nav-link">
       <div class="bottom-nav-icon">🛒</div>
       <span>Market</span>
     </a>
-    <a href="dashboard.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">💬</div>
-      <span>Chat</span>
+
+    <a href="dashboard.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">👤</div>
+      <span>Profile</span>
     </a>
   </nav>
+
 </div>
 
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
-
-  // Simulated public rooms (in real app this comes from backend)
-  let rooms = JSON.parse(localStorage.getItem("rc_rooms") || "[]");
-  if (rooms.length === 0) {
-    rooms = [
-      { id: 1, name: "ATL Night Riders", topic: "Night sessions in Atlanta", members: 143 },
-      { id: 2, name: "Quad Queens", topic: "Roller skates & rhythm", members: 89 },
-      { id: 3, name: "Hill Bombers", topic: "Downhill & speed", members: 52 }
-    ];
-  }
-
-  function saveRooms() {
-    localStorage.setItem("rc_rooms", JSON.stringify(rooms));
-  }
-
-  function renderRooms() {
-    const list = document.getElementById("roomList");
-    const search = (document.getElementById("roomSearch").value || "").toLowerCase();
-    list.innerHTML = "";
-
-    rooms
-      .filter(r => r.name.toLowerCase().includes(search) || (r.topic || "").toLowerCase().includes(search))
-      .forEach(room => {
-        const div = document.createElement("div");
-        div.className = "chat-room-item";
-        div.onclick = () => openRoom(room.id);
-        div.innerHTML = `
-          <strong>${room.name}</strong><br />
-          <span style="font-size:12px; color:var(--text-soft);">
-            ${room.topic || "No topic"} • ${room.members} skaters
-          </span>
-        `;
-        list.appendChild(div);
-      });
-  }
-
-  function createRoom(e) {
-    e.preventDefault();
-    const name = document.getElementById("newRoomName").value.trim();
-    const topic = document.getElementById("newRoomTopic").value.trim();
-    if (!name) return;
-
-    const id = Date.now();
-    rooms.push({ id, name, topic, members: 1 });
-    saveRooms();
-    renderRooms();
-
-    // Store chosen room and go to room chat
-    localStorage.setItem("rc_current_room", JSON.stringify({ id, name }));
-    window.location.href = "chat-room.html";
-  }
-
-  function openRoom(id) {
-    const room = rooms.find(r => r.id === id);
-    if (!room) return;
-    localStorage.setItem("rc_current_room", JSON.stringify({ id: room.id, name: room.name }));
-    window.location.href = "chat-room.html";
-  }
-
-  function openDM(username) {
-    localStorage.setItem("rc_current_dm", username);
-    window.location.href = "chat-private.html";
-  }
-
-  renderRooms();
-  saveRooms();
 </script>
+
 </body>
 </html>
