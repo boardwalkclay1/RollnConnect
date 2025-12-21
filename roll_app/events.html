@@ -1,31 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Events – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
 </head>
 <body>
+<div class="app-shell">
+  <header>
+    <div class="brand">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Roll ’n Connect</div>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="marketplace.html" class="nav-link">Marketplace</a>
+      <a href="clips-feed.html" class="nav-link">Clips</a>
+      <a href="chat.html" class="nav-link">Chat</a>
+      <a href="events.html" class="nav-link nav-link-primary">Events</a>
+      <a href="settings.html" class="nav-link">Settings</a>
+      <a href="login.html" class="nav-link">Logout</a>
+    </nav>
+  </header>
 
-<header>
-  <div class="brand">
-    <div class="brand-logo">R</div>
-    <div class="brand-name">Roll ’n Connect</div>
-  </div>
-</header>
+  <main class="page">
+    <h1>Events</h1>
 
-<div class="page">
-  <h1>Events</h1>
+    <div class="card">
+      <p class="card-text">
+        This page will host local meetups, group rides, competitions, and workshops —
+        all submitted by the community or organizers.
+      </p>
+      <p class="card-text">
+        Future sections: upcoming events, past events, your RSVP list, and “host an event”
+        flow.
+      </p>
+    </div>
+  </main>
 
-  <div class="card">
-    <p>Local meetups, competitions, and group rides will appear here.</p>
-  </div>
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+      <div class="footer-links">
+        <button class="footer-link">About</button>
+        <button class="footer-link">Contact</button>
+        <button class="footer-link">Terms</button>
+        <button class="footer-link">Privacy</button>
+      </div>
+    </div>
+  </footer>
 </div>
 
-<footer>
-  <div class="footer-row">
-    <span>© 2025 Roll ’n Connect.</span>
-  </div>
-</footer>
-
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
