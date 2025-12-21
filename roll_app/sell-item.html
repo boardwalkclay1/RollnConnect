@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sell an Item – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="rollnconnect.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Roll ’n Connect</div>
+    </div>
+    <div class="app-header-right">
+      <a href="marketplace.html" class="icon-btn">←</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1>Sell an item</h1>
+
+    <div class="card max-w-narrow">
+      <p class="card-text">
+        Create a listing tied to your profile. Later, we’ll wire this up so it appears in the main
+        marketplace grid and on your profile.
+      </p>
+
+      <form class="stack-md">
+        <div>
+          <label for="item-title">Item title</label>
+          <input id="item-title" type="text" placeholder="Example: 40\" dancing longboard setup" required />
+        </div>
+
+        <div>
+          <label for="item-category">Category</label>
+          <select id="item-category" required>
+            <option value="">Select a category</option>
+            <option>Longboard</option>
+            <option>Skateboard</option>
+            <option>Roller Skates</option>
+            <option>Inline Skates</option>
+            <option>Gear & Parts</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="item-condition">Condition</label>
+          <select id="item-condition" required>
+            <option>New</option>
+            <option>Used – Excellent</option>
+            <option>Used – Good</option>
+            <option>Used – Fair</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="item-price">Price</label>
+          <input id="item-price" type="number" min="0" step="1" placeholder="180" required />
+        </div>
+
+        <div>
+          <label for="item-location">Location</label>
+          <input id="item-location" type="text" placeholder="City, State / Country" />
+        </div>
+
+        <div>
+          <label for="item-photos">Photos</label>
+          <input id="item-photos" type="file" accept="image/*" multiple />
+        </div>
+
+        <div>
+          <label for="item-description">Description</label>
+          <textarea id="item-description" rows="4"
+            placeholder="Describe setup, components, wear, and anything a skater should know."></textarea>
+        </div>
+
+        <button type="button" class="btn btn-primary" style="width:100%;" onclick="fakeSubmit()">
+          Post listing (front‑end only for now)
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+    </div>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🏠</div>
+      <span>Home</span>
+    </a>
+    <a href="spots-map.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🧭</div>
+      <span>Explore</span>
+    </a>
+    <a href="clips-feed.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">▶</div>
+      <span>Clips</span>
+    </a>
+    <a href="marketplace.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">🛒</div>
+      <span>Market</span>
+    </a>
+    <a href="dashboard.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">👤</div>
+      <span>Profile</span>
+    </a>
+  </nav>
+</div>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function fakeSubmit() {
+    alert("Listing submitted (demo only). Later, this will save to the real marketplace backend.");
+  }
+</script>
+</body>
+</html>
