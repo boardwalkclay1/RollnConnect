@@ -2,52 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard – Roll ’n Connect</title>
+  <title>Profile – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
 </head>
 <body>
 <div class="app-shell">
-  <header>
-    <div class="brand">
+  <header class="app-header">
+    <div class="app-header-left">
       <div class="brand-logo">R</div>
       <div class="brand-name">Roll ’n Connect</div>
     </div>
-    <nav class="nav-links">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="dashboard.html" class="nav-link nav-link-primary">Dashboard</a>
-      <a href="marketplace.html" class="nav-link">Marketplace</a>
-      <a href="clips-feed.html" class="nav-link">Clips</a>
-      <a href="chat.html" class="nav-link">Chat</a>
-      <a href="events.html" class="nav-link">Events</a>
-      <a href="settings.html" class="nav-link">Settings</a>
-      <a href="login.html" class="nav-link">Logout</a>
-    </nav>
+    <div class="app-header-right">
+      <a href="settings.html" class="icon-btn">⚙</a>
+      <a href="login.html" class="icon-btn">↩</a>
+    </div>
   </header>
 
   <main class="page">
-    <h1>Your Dashboard</h1>
+    <div class="card" style="margin-bottom:18px;">
+      <div style="display:flex; gap:16px; align-items:center;">
+        <div style="width:78px; height:78px; border-radius:999px; border:3px solid var(--purple); box-shadow:0 0 12px rgba(168,85,247,0.7); background:radial-gradient(circle,var(--purple),var(--blue));"></div>
+        <div>
+          <div style="font-size:18px; font-weight:600;">@YourUsername</div>
+          <div style="font-size:13px; color:var(--text-soft);">Longboard • ATL • Night rides</div>
+          <div style="display:flex; gap:16px; margin-top:6px; font-size:12px;">
+            <span><strong>23</strong> clips</span>
+            <span><strong>148</strong> followers</span>
+            <span><strong>89</strong> following</span>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:10px; font-size:13px; color:var(--text-soft);">
+        Dancing down hills and chasing smooth pavement. Always down for a night session.
+      </p>
+      <a href="profile-setup.html" class="btn btn-outline" style="margin-top:8px; padding:6px 12px; font-size:12px;">
+        Edit profile
+      </a>
+    </div>
 
-    <div class="section">
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-card-title">Today’s overview</div>
-          <div class="feature-card-text">
-            See your latest clips, marketplace activity, and upcoming events as the app evolves.
-          </div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-title">Marketplace status</div>
-          <div class="feature-card-text">
-            Watch your listings, offers, and recent purchases once marketplace data is wired in.
-          </div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-card-title">Crew & chat</div>
-          <div class="feature-card-text">
-            Quick links into your crew chats and DMs will live here in future iterations.
-          </div>
-        </div>
+    <div class="card">
+      <div style="display:flex; gap:16px; margin-bottom:10px; font-size:13px;">
+        <button class="btn btn-outline" style="padding:4px 10px;">Clips</button>
+        <button class="btn btn-outline" style="padding:4px 10px;">Saved</button>
+        <button class="btn btn-outline" style="padding:4px 10px;">Marketplace</button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px;">
+        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=201'); background-size:cover;"></div>
+        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=202'); background-size:cover;"></div>
+        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=203'); background-size:cover;"></div>
+        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=204'); background-size:cover;"></div>
+        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=205'); background-size:cover;"></div>
+        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=206'); background-size:cover;"></div>
       </div>
     </div>
   </main>
@@ -55,14 +61,31 @@
   <footer>
     <div class="footer-row">
       <span>© <span id="year"></span> Roll ’n Connect.</span>
-      <div class="footer-links">
-        <button class="footer-link">About</button>
-        <button class="footer-link">Contact</button>
-        <button class="footer-link">Terms</button>
-        <button class="footer-link">Privacy</button>
-      </div>
     </div>
   </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🏠</div>
+      <span>Home</span>
+    </a>
+    <a href="spots-map.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🧭</div>
+      <span>Explore</span>
+    </a>
+    <a href="clips-feed.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">▶</div>
+      <span>Clips</span>
+    </a>
+    <a href="marketplace.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🛒</div>
+      <span>Market</span>
+    </a>
+    <a href="dashboard.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">👤</div>
+      <span>Profile</span>
+    </a>
+  </nav>
 </div>
 
 <script>
