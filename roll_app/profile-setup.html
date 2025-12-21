@@ -8,46 +8,36 @@
 </head>
 <body>
 <div class="app-shell">
-  <header>
-    <div class="brand">
+
+  <header class="app-header">
+    <div class="app-header-left">
       <div class="brand-logo">R</div>
       <div class="brand-name">Roll ’n Connect</div>
     </div>
-    <nav class="nav-links">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="dashboard.html" class="nav-link">Dashboard</a>
-      <a href="marketplace.html" class="nav-link">Marketplace</a>
-      <a href="clips-feed.html" class="nav-link">Clips</a>
-      <a href="chat.html" class="nav-link">Chat</a>
-      <a href="events.html" class="nav-link">Events</a>
-      <a href="settings.html" class="nav-link">Settings</a>
-      <a href="login.html" class="nav-link nav-link-primary">Login</a>
-    </nav>
   </header>
 
   <main class="page">
-    <h1>Set Up Your Profile</h1>
-    <div class="card max-w-narrow">
+    <div class="card max-w-narrow" style="margin: 24px auto 0;">
+      <h1 style="font-size:20px; margin-bottom:10px;">Set up your profile</h1>
       <form action="dashboard.html" class="stack-md">
         <div>
-          <label for="avatar">Profile Picture</label>
+          <label for="avatar">Profile picture</label>
           <input id="avatar" type="file" accept="image/*" />
         </div>
 
         <div>
           <label for="bio">Bio</label>
-          <textarea id="bio" rows="4"
-            placeholder="Tell the world about your style, your favorite spots, and what you love about rolling.">
-          </textarea>
+          <textarea id="bio" rows="3"
+            placeholder="Tell the world your skate style, favorite spots, and what you roll on."></textarea>
         </div>
 
         <div>
-          <label for="location">Location (optional)</label>
+          <label for="location">Location</label>
           <input id="location" type="text" placeholder="City, State / Country" />
         </div>
 
         <div>
-          <label for="level">Skill Level</label>
+          <label for="level">Skill level</label>
           <select id="level">
             <option>Beginner</option>
             <option>Intermediate</option>
@@ -57,7 +47,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary" style="width: 100%;">
-          Finish – Go to dashboard
+          Finish – Go to profile
         </button>
       </form>
     </div>
@@ -66,14 +56,31 @@
   <footer>
     <div class="footer-row">
       <span>© <span id="year"></span> Roll ’n Connect.</span>
-      <div class="footer-links">
-        <button class="footer-link">About</button>
-        <button class="footer-link">Contact</button>
-        <button class="footer-link">Terms</button>
-        <button class="footer-link">Privacy</button>
-      </div>
     </div>
   </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🏠</div>
+      <span>Home</span>
+    </a>
+    <a href="spots-map.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🧭</div>
+      <span>Explore</span>
+    </a>
+    <a href="clips-feed.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">▶</div>
+      <span>Clips</span>
+    </a>
+    <a href="marketplace.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🛒</div>
+      <span>Market</span>
+    </a>
+    <a href="dashboard.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">👤</div>
+      <span>Profile</span>
+    </a>
+  </nav>
 </div>
 
 <script>
