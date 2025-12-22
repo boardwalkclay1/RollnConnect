@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatrooms • Roll ’n Connect</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .section {
+      max-width: 1100px;
+      margin: 120px auto;
+      padding: 40px;
+      text-align: center;
+      animation: fadeIn 1.2s ease;
+    }
+
+    .city-select, .discipline-select {
+      margin-top: 50px;
+    }
+
+    .chatroom-card {
+      background: rgba(255,255,255,0.08);
+      padding: 30px;
+      border-radius: 20px;
+      margin: 20px auto;
+      max-width: 700px;
+      box-shadow: 0 0 25px rgba(120,80,255,0.4);
+      backdrop-filter: blur(15px);
+      transition: 0.3s;
+    }
+
+    .chatroom-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(160,120,255,0.8);
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Galaxy Background -->
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+<div class="nebula-haze"></div>
+
+<!-- MAIN SECTION -->
+<div class="section glass">
+  <h1 class="section-title">Chatrooms</h1>
+  <p style="opacity:0.9; font-size:1.3rem;">
+    Choose your city → choose your discipline → enter your cosmic chatroom.
+  </p>
+
+  <!-- STEP 1: CITY SELECT -->
+  <h2 class="section-title" style="margin-top:60px;">1. Choose Your City</h2>
+
+  <div class="city-grid city-select">
+    <div class="city-tile" onclick="selectCity('Atlanta')">Atlanta</div>
+    <div class="city-tile" onclick="selectCity('Chicago')">Chicago</div>
+    <div class="city-tile" onclick="selectCity('Los Angeles')">Los Angeles</div>
+    <div class="city-tile" onclick="selectCity('Miami')">Miami</div>
+    <div class="city-tile" onclick="selectCity('Detroit')">Detroit</div>
+    <div class="city-tile" onclick="selectCity('Houston')">Houston</div>
+  </div>
+
+  <!-- STEP 2: DISCIPLINE SELECT -->
+  <h2 class="section-title" style="margin-top:80px;">2. Choose Your Discipline</h2>
+
+  <div class="bubble-row discipline-select">
+    <div class="bubble" onclick="selectDiscipline('Longboard')">Longboard</div>
+    <div class="bubble" onclick="selectDiscipline('Inline')">Inline</div>
+    <div class="bubble" onclick="selectDiscipline('Roller Skates')">Roller Skates</div>
+    <div class="bubble" onclick="selectDiscipline('Street')">Street</div>
+    <div class="bubble" onclick="selectDiscipline('Cruising')">Cruising</div>
+  </div>
+
+  <!-- STEP 3: CHATROOM RESULT -->
+  <h2 class="section-title" style="margin-top:80px;">3. Enter Chatroom</h2>
+
+  <div id="chatroom-output" style="margin-top:40px;"></div>
+
+</div>
+
+<script>
+  let selectedCity = null;
+  let selectedDiscipline = null;
+
+  function selectCity(city) {
+    selectedCity = city;
+    updateChatroomLink();
+  }
+
+  function selectDiscipline(discipline) {
+    selectedDiscipline = discipline;
+    updateChatroomLink();
+  }
+
+  function updateChatroomLink() {
+    if (!selectedCity || !selectedDiscipline) return;
+
+    const fileName =
+      `chat-room-${selectedCity.toLowerCase().replace(/ /g,'')}-${selectedDiscipline.toLowerCase().replace(/ /g,'')}.html`;
+
+    document.getElementById("chatroom-output").innerHTML = `
+      <div class="chatroom-card">
+        <h3 style="font-size:1.8rem; color:#e0e4ff;">
+          ${selectedCity} • ${selectedDiscipline}
+        </h3>
+        <p style="opacity:0.85; margin-bottom:20px;">
+          Your cosmic chatroom is ready.
+        </p>
+        <a href="${fileName}" class="btn-primary" style="font-size:1.3rem;">
+          Enter Chatroom
+        </a>
+      </div>
+    `;
+  }
+</script>
+
+</body>
+</html>
