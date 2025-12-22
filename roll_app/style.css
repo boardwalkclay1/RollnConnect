@@ -1,7 +1,7 @@
-/* ===========================
-   ROLL & CONNECT — GLOBAL THEME
-   Blue + White Spacey Futuristic
-   =========================== */
+/* ============================================
+   ROLL & CONNECT — GLOBAL FUTURISTIC THEME
+   Blue + White Spacey Aesthetic
+   ============================================ */
 
 :root {
   --blue-primary: #1A6DFF;
@@ -22,7 +22,7 @@
   --font-main: 'Inter', 'Space Grotesk', sans-serif;
 }
 
-/* Global Reset */
+/* GLOBAL RESET */
 body {
   margin: 0;
   padding: 0;
@@ -32,7 +32,22 @@ body {
   overflow-x: hidden;
 }
 
-/* Frosted Glass Panel */
+/* STARFIELD BACKGROUND */
+.stars-bg {
+  position: fixed;
+  inset: 0;
+  background: url('assets/stars.png') repeat;
+  opacity: 0.25;
+  animation: floatStars 40s linear infinite;
+  z-index: -1;
+}
+
+@keyframes floatStars {
+  from { background-position: 0 0; }
+  to { background-position: 0 -2000px; }
+}
+
+/* FROSTED GLASS PANEL */
 .glass {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(14px);
@@ -41,7 +56,7 @@ body {
   box-shadow: var(--shadow-soft);
 }
 
-/* Buttons */
+/* BUTTONS */
 .btn-primary {
   background: var(--blue-primary);
   color: var(--white-pure);
@@ -59,7 +74,7 @@ body {
   box-shadow: var(--glow-accent);
 }
 
-/* Inputs */
+/* INPUTS */
 .input {
   padding: 14px 20px;
   border-radius: var(--radius);
@@ -70,30 +85,75 @@ body {
   backdrop-filter: blur(10px);
 }
 
-/* Discipline Tile */
-.discipline-tile {
+/* SECTION HEADERS */
+.section-title {
+  text-align: center;
+  font-size: 2.4rem;
+  margin-top: 60px;
+  text-shadow: var(--glow-blue);
+}
+
+/* GRID LAYOUT */
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  padding: 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* DISCIPLINE / CITY TILE */
+.tile {
   background: rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 24px;
   text-align: center;
   cursor: pointer;
   transition: var(--transition);
   box-shadow: var(--shadow-soft);
+  font-size: 1.3rem;
+  color: var(--white-pure);
 }
 
-.discipline-tile:hover {
+.tile:hover {
   transform: translateY(-6px);
   box-shadow: var(--glow-blue);
 }
 
-/* Floating Glow Animation */
+/* MARKETPLACE CARD */
+.market-card {
+  padding: 20px;
+  width: 260px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* FLOATING ICONS */
+.floating-icons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.float-icon {
+  width: 60px;
+  opacity: 0.85;
+  animation: floatGlow 4s ease-in-out infinite;
+}
+
 @keyframes floatGlow {
   0% { transform: translateY(0); opacity: 0.9; }
   50% { transform: translateY(-10px); opacity: 1; }
   100% { transform: translateY(0); opacity: 0.9; }
 }
 
-/* Fade In */
+/* FADE IN */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
