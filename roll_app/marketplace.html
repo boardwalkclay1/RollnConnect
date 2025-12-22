@@ -1,227 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>marketplace – Roll ’n Connect</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
+  <meta charset="UTF-8">
+  <title>Marketplace • Roll ’n Connect</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .section {
+      max-width: 1200px;
+      margin: 120px auto;
+      padding: 40px;
+      text-align: center;
+      animation: fadeIn 1.2s ease;
+    }
+
+    .search-bar {
+      width: 80%;
+      padding: 18px;
+      border-radius: 16px;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      font-size: 1.2rem;
+      backdrop-filter: blur(12px);
+      margin-top: 30px;
+    }
+
+    .category-row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      margin-top: 50px;
+    }
+
+    .category-bubble {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 25px rgba(120,80,255,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      color: #e0e4ff;
+      cursor: pointer;
+      transition: 0.3s;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .category-bubble:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 35px rgba(160,120,255,0.9);
+    }
+
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .item-card {
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 25px rgba(120,80,255,0.4);
+      transition: 0.3s;
+    }
+
+    .item-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(160,120,255,0.8);
+    }
+
+    .item-title {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      color: #e0e4ff;
+    }
+
+    .item-price {
+      font-size: 1.2rem;
+      opacity: 0.85;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
+
 <body>
-<div class="app-shell">
 
-  <header class="app-header">
-    <div class="app-header-left">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
+<!-- Galaxy Background -->
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+<div class="nebula-haze"></div>
+
+<!-- MAIN SECTION -->
+<div class="section glass">
+
+  <h1 class="section-title">Marketplace</h1>
+  <p style="opacity:0.9; font-size:1.3rem;">
+    Explore gear across the galaxy — boards, skates, wheels, pads, and more.
+  </p>
+
+  <!-- SEARCH BAR -->
+  <input type="text" class="search-bar" placeholder="Search gear, brands, or categories...">
+
+  <!-- CATEGORY BUBBLES -->
+  <h2 class="section-title" style="margin-top:60px;">Categories</h2>
+
+  <div class="category-row">
+    <div class="category-bubble" onclick="filterCategory('Boards')">Boards</div>
+    <div class="category-bubble" onclick="filterCategory('Skates')">Skates</div>
+    <div class="category-bubble" onclick="filterCategory('Wheels')">Wheels</div>
+    <div class="category-bubble" onclick="filterCategory('Safety Gear')">Safety Gear</div>
+    <div class="category-bubble" onclick="filterCategory('Accessories')">Accessories</div>
+  </div>
+
+  <!-- FEATURED ITEMS -->
+  <h2 class="section-title" style="margin-top:80px;">Featured Items</h2>
+
+  <div class="item-grid" id="item-grid">
+
+    <div class="item-card">
+      <div class="item-title">Loaded Dervish Sama</div>
+      <div class="item-price">$220</div>
+      <button class="btn-primary">View Item</button>
     </div>
-    <div class="app-header-center">
-      <input class="app-search" id="searchInput" placeholder="Search gear..." oninput="applyFilters()" />
+
+    <div class="item-card">
+      <div class="item-title">Impala Roller Skates</div>
+      <div class="item-price">$99</div>
+      <button class="btn-primary">View Item</button>
     </div>
-    <div class="app-header-right">
-      <a href="chat.html" class="icon-btn">✉</a>
+
+    <div class="item-card">
+      <div class="item-title">Bones Reds Bearings</div>
+      <div class="item-price">$18</div>
+      <button class="btn-primary">View Item</button>
     </div>
-  </header>
 
-  <main class="page">
-    <h1>Marketplace</h1>
-
-    <div class="marketplace-layout">
-      <!-- LEFT FILTERS -->
-      <aside class="sidebar-left">
-        <div class="card">
-          <h3>Categories</h3>
-
-          <button class="category-btn active-category" onclick="filterCategory(event, 'all')">All Items</button>
-          <button class="category-btn" onclick="filterCategory(event, 'longboard')">Longboards</button>
-          <button class="category-btn" onclick="filterCategory(event, 'skateboard')">Skateboards</button>
-          <button class="category-btn" onclick="filterCategory(event, 'roller')">Roller Skates</button>
-          <button class="category-btn" onclick="filterCategory(event, 'inline')">Inline Skates</button>
-          <button class="category-btn" onclick="filterCategory(event, 'gear')">Gear & Parts</button>
-
-          <div class="filter-section">
-            <div class="filter-title">Condition</div>
-            <label><input type="checkbox" onchange="applyFilters()" id="cond-new"> New</label><br>
-            <label><input type="checkbox" onchange="applyFilters()" id="cond-used"> Used</label>
-          </div>
-
-          <div class="filter-section">
-            <div class="filter-title">Price Range</div>
-            <input type="range" min="0" max="500" value="500" id="priceRange" oninput="applyFilters()">
-            <p id="priceLabel">$0 – $500</p>
-          </div>
-
-          <div class="filter-section">
-            <div class="filter-title">Sort By</div>
-            <select id="sortSelect" onchange="applyFilters()">
-              <option value="default">Default</option>
-              <option value="low">Price: Low to High</option>
-              <option value="high">Price: High to Low</option>
-            </select>
-          </div>
-        </div>
-      </aside>
-
-      <!-- CENTER GRID -->
-      <section>
-        <div id="itemGrid" class="item-grid"></div>
-      </section>
-
-      <!-- RIGHT SAVED / RECENT -->
-      <aside class="sidebar-right">
-        <div class="card">
-          <h3>Saved Items</h3>
-          <div id="savedItems"></div>
-        </div>
-
-        <div class="card" style="margin-top:20px;">
-          <h3>Recently Viewed</h3>
-          <div id="recentItems"></div>
-        </div>
-      </aside>
+    <div class="item-card">
+      <div class="item-title">Triple 8 Helmet</div>
+      <div class="item-price">$45</div>
+      <button class="btn-primary">View Item</button>
     </div>
-  </main>
 
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
+    <div class="item-card">
+      <div class="item-title">Orangatang Stimulus Wheels</div>
+      <div class="item-price">$55</div>
+      <button class="btn-primary">View Item</button>
     </div>
-  </footer>
 
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-    <a href="spots-map.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🧭</div>
-      <span>Explore</span>
-    </a>
-    <a href="clips-feed.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">▶</div>
-      <span>Clips</span>
-    </a>
-    <a href="marketplace.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-    <a href="dashboard.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
-    </a>
-  </nav>
+    <div class="item-card">
+      <div class="item-title">Knee & Elbow Pad Set</div>
+      <div class="item-price">$35</div>
+      <button class="btn-primary">View Item</button>
+    </div>
+
+  </div>
+
 </div>
 
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  const items = [
-    { id: 1, title: "Dancing Longboard", price: 180, category: "longboard", condition: "used" },
-    { id: 2, title: "Street Skateboard", price: 95, category: "skateboard", condition: "used" },
-    { id: 3, title: "Custom Roller Skates", price: 220, category: "roller", condition: "new" },
-    { id: 4, title: "Urban Inline Skates", price: 160, category: "inline", condition: "new" },
-    { id: 5, title: "Longboard Wheels", price: 40, category: "gear", condition: "new" },
-    { id: 6, title: "Skateboard Trucks", price: 55, category: "gear", condition: "used" },
-  ];
-
-  let activeCategory = "all";
-
-  function renderItems(list) {
-    const grid = document.getElementById("itemGrid");
-    grid.innerHTML = "";
-
-    list.forEach(item => {
-      const card = document.createElement("div");
-      card.className = "item-card";
-      card.onclick = () => viewItem(item);
-
-      card.innerHTML = `
-        <div class="item-img"
-             style="background-image:url('https://picsum.photos/400?random=${item.id+70}')"></div>
-        <div class="item-title">${item.title}</div>
-        <div class="item-price">$${item.price}</div>
-        <button class="save-btn" onclick="saveItem(event, ${item.id})">Save</button>
-      `;
-
-      grid.appendChild(card);
-    });
+  function filterCategory(category) {
+    alert("Filtering by: " + category + " (dynamic filtering coming soon)");
   }
-
-  function filterCategory(e, cat) {
-    activeCategory = cat;
-    document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active-category"));
-    e.target.classList.add("active-category");
-    applyFilters();
-  }
-
-  function applyFilters() {
-    let filtered = [...items];
-
-    const search = document.getElementById("searchInput").value.toLowerCase();
-    filtered = filtered.filter(i => i.title.toLowerCase().includes(search));
-
-    if (activeCategory !== "all") {
-      filtered = filtered.filter(i => i.category === activeCategory);
-    }
-
-    const condNew = document.getElementById("cond-new").checked;
-    const condUsed = document.getElementById("cond-used").checked;
-    if (condNew || condUsed) {
-      filtered = filtered.filter(i =>
-        (condNew && i.condition === "new") ||
-        (condUsed && i.condition === "used")
-      );
-    }
-
-    const maxPrice = document.getElementById("priceRange").value;
-    document.getElementById("priceLabel").textContent = `$0 – $${maxPrice}`;
-    filtered = filtered.filter(i => i.price <= maxPrice);
-
-    const sort = document.getElementById("sortSelect").value;
-    if (sort === "low") filtered.sort((a, b) => a.price - b.price);
-    if (sort === "high") filtered.sort((a, b) => b.price - a.price);
-
-    renderItems(filtered);
-  }
-
-  function saveItem(e, id) {
-    e.stopPropagation();
-    let saved = JSON.parse(localStorage.getItem("savedItems") || "[]");
-    if (!saved.includes(id)) saved.push(id);
-    localStorage.setItem("savedItems", JSON.stringify(saved));
-    loadSavedItems();
-  }
-
-  function loadSavedItems() {
-    const saved = JSON.parse(localStorage.getItem("savedItems") || "[]");
-    const container = document.getElementById("savedItems");
-    container.innerHTML = saved.map(id => {
-      const item = items.find(i => i.id === id);
-      return `<p>${item.title} – $${item.price}</p>`;
-    }).join("");
-  }
-
-  function viewItem(item) {
-    let recent = JSON.parse(localStorage.getItem("recentItems") || "[]");
-    recent = recent.filter(i => i !== item.id);
-    recent.unshift(item.id);
-    recent = recent.slice(0, 5);
-    localStorage.setItem("recentItems", JSON.stringify(recent));
-    localStorage.setItem("currentItem", item.id);
-    window.location.href = "marketplace-item.html";
-  }
-
-  function loadRecentItems() {
-    const recent = JSON.parse(localStorage.getItem("recentItems") || "[]");
-    const container = document.getElementById("recentItems");
-    container.innerHTML = recent.map(id => {
-      const item = items.find(i => i.id === id);
-      return `<p>${item.title} – $${item.price}</p>`;
-    }).join("");
-  }
-
-  renderItems(items);
-  loadSavedItems();
-  loadRecentItems();
 </script>
+
 </body>
 </html>
