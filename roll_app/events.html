@@ -1,71 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Chat – Roll ’n Connect</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
+  <meta charset="UTF-8">
+  <title>Events • Roll ’n Connect</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .section {
+      max-width: 900px;
+      margin: 120px auto;
+      padding: 40px;
+      text-align: center;
+      animation: fadeIn 1.2s ease;
+    }
+
+    .event-card {
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 22px;
+      margin-top: 18px;
+      text-align: left;
+      box-shadow: 0 0 22px rgba(120,80,255,0.4);
+    }
+
+    .event-name {
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+      color: #e0e4ff;
+    }
+
+    .event-meta {
+      font-size: 0.98rem;
+      opacity: 0.9;
+      margin-bottom: 6px;
+    }
+
+    .event-tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      font-size: 0.85rem;
+      margin-right: 6px;
+    }
+  </style>
 </head>
+
 <body>
-<div class="app-shell">
 
-  <header class="app-header">
-    <div class="app-header-left">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+<div class="nebula-haze"></div>
+
+<div class="section glass">
+  <h1 class="section-title">Events</h1>
+  <p style="opacity:0.9; font-size:1.15rem;">
+    Stay in the loop with group rides, meetups, workshops, and competitions.
+  </p>
+
+  <div class="event-card">
+    <div class="event-name">Atlanta Night Ride</div>
+    <div class="event-meta">Friday • 8:00 PM • Downtown → BeltLine</div>
+    <div class="event-meta">Host: Roll ’n Connect • Skill level: All</div>
+    <div>
+      <span class="event-tag">Group Ride</span>
+      <span class="event-tag">Longboard</span>
+      <span class="event-tag">Cruising</span>
     </div>
-    <div class="app-header-center">
-      <input class="app-search" placeholder="Search messages..." />
+  </div>
+
+  <div class="event-card">
+    <div class="event-name">Beginner Dance Workshop</div>
+    <div class="event-meta">Saturday • 2:00 PM • Galaxy Lot</div>
+    <div class="event-meta">Host: Local Instructor • Skill level: Beginner</div>
+    <div>
+      <span class="event-tag">Workshop</span>
+      <span class="event-tag">Dance</span>
     </div>
-  </header>
+  </div>
 
-  <main class="page">
-    <h1>Messages</h1>
-
-    <div class="card">
-      <p class="card-text">
-        This is where your DMs and crew chats will live. For now, it’s a placeholder for future real-time messaging.
-      </p>
-      <div style="margin-top:10px; font-size:13px; color:var(--text-soft);">
-        • @FlowRider — “Session tonight?”<br />
-        • @QuadQueen — “New skates arrived!”<br />
-        • @HillBomber — “Spotted a new hill near you.”
-      </div>
+  <div class="event-card">
+    <div class="event-name">Street Jam Session</div>
+    <div class="event-meta">Sunday • 4:00 PM • Downtown Plaza</div>
+    <div class="event-meta">Host: Community • Skill level: Intermediate+</div>
+    <div>
+      <span class="event-tag">Street</span>
+      <span class="event-tag">Jam</span>
     </div>
-  </main>
+  </div>
 
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-    </div>
-  </footer>
-
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-    <a href="spots-map.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🧭</div>
-      <span>Explore</span>
-    </a>
-    <a href="clips-feed.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">▶</div>
-      <span>Clips</span>
-    </a>
-    <a href="marketplace.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-    <a href="dashboard.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
-    </a>
-  </nav>
 </div>
 
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
 </body>
 </html>
