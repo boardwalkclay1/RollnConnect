@@ -6,28 +6,52 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    /* Galaxy Background */
+    /* FULL COSMIC BACKGROUND */
     body {
-      background: radial-gradient(circle at 20% 20%, #4b2bb3, #0a0f2f 60%, #000000);
+      background: radial-gradient(circle at 30% 20%, #5a3cff, #1a0b3d 40%, #000010 80%);
       color: var(--white-frost);
       overflow-x: hidden;
     }
 
-    /* Starfield Layer */
-    .galaxy-stars {
+    /* MULTI-LAYER STARFIELD */
+    .stars-layer {
       position: fixed;
       inset: 0;
       background: url('assets/stars.png') repeat;
-      opacity: 0.35;
-      animation: floatStars 60s linear infinite;
+      opacity: 0.4;
+      animation: driftStars 120s linear infinite;
+      z-index: -3;
+    }
+
+    .stars-layer2 {
+      position: fixed;
+      inset: 0;
+      background: url('assets/stars.png') repeat;
+      opacity: 0.2;
+      animation: driftStars2 180s linear infinite;
+      z-index: -2;
+    }
+
+    .nebula-haze {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 60% 70%, rgba(120, 60, 255, 0.35), transparent 60%),
+                  radial-gradient(circle at 20% 30%, rgba(0, 180, 255, 0.25), transparent 70%);
       z-index: -1;
+      filter: blur(40px);
     }
 
-    @keyframes floatStars {
+    @keyframes driftStars {
       from { background-position: 0 0; }
-      to { background-position: 0 -3000px; }
+      to { background-position: 0 -4000px; }
     }
 
+    @keyframes driftStars2 {
+      from { background-position: 0 0; }
+      to { background-position: -3000px -2000px; }
+    }
+
+    /* AUTH BUTTONS */
     .auth-buttons {
       display: flex;
       justify-content: center;
@@ -38,25 +62,33 @@
     .remember-box {
       margin-top: 10px;
       text-align: center;
-      opacity: 0.8;
+      opacity: 0.85;
+    }
+
+    /* SECTION SPACING */
+    section {
+      animation: fadeIn 1.2s ease;
     }
   </style>
 </head>
 
 <body>
 
-<div class="galaxy-stars"></div>
+<!-- GALAXY BACKGROUND LAYERS -->
+<div class="stars-layer"></div>
+<div class="stars-layer2"></div>
+<div class="nebula-haze"></div>
 
 <!-- HERO SECTION -->
-<section class="hero glass" style="margin-top:80px; padding:60px; text-align:center; animation:fadeIn 1.2s ease;">
+<section class="hero glass" style="margin-top:90px; padding:70px; text-align:center;">
   
-  <h1 class="title" style="font-size:4rem; margin-bottom:10px; color:#c7d4ff;">
+  <h1 class="title" style="font-size:4.4rem; margin-bottom:10px; color:#d6d8ff; text-shadow:0 0 25px #6a4bff;">
     Roll ’n Connect
   </h1>
 
-  <p class="subtitle" style="font-size:1.4rem; opacity:0.9;">
-    Step into the galaxy of skating — meet your crew, explore your city,  
-    join chatrooms, and discover gear across the universe.
+  <p class="subtitle" style="font-size:1.5rem; opacity:0.95; max-width:700px; margin:auto;">
+    Enter the cosmic network of skating — explore galaxies of cities,  
+    join glowing chatrooms, and discover gear across the universe.
   </p>
 
   <!-- AUTH BUTTONS -->
@@ -74,8 +106,10 @@
 
 
 <!-- FEATURE STRIP -->
-<section style="margin-top:60px; text-align:center;">
-  <h2 class="section-title" style="color:#d8e0ff;">What You Can Do</h2>
+<section style="margin-top:80px; text-align:center;">
+  <h2 class="section-title" style="color:#e0e4ff; text-shadow:0 0 20px #7a5cff;">
+    What You Can Do
+  </h2>
 
   <div class="grid-3" style="margin-top:20px;">
 
@@ -102,8 +136,10 @@
 
 
 <!-- CITY SELECTOR -->
-<section id="cities" style="margin-top:80px;">
-  <h2 class="section-title" style="color:#d8e0ff;">Choose Your City</h2>
+<section id="cities" style="margin-top:100px;">
+  <h2 class="section-title" style="color:#e0e4ff; text-shadow:0 0 20px #7a5cff;">
+    Choose Your City
+  </h2>
 
   <div class="grid-3">
 
@@ -119,8 +155,10 @@
 
 
 <!-- MARKETPLACE PREVIEW -->
-<section style="margin-top:80px;">
-  <h2 class="section-title" style="color:#d8e0ff;">Featured Marketplace</h2>
+<section style="margin-top:100px;">
+  <h2 class="section-title" style="color:#e0e4ff; text-shadow:0 0 20px #7a5cff;">
+    Featured Marketplace
+  </h2>
 
   <div style="display:flex; justify-content:center; gap:30px; padding:40px; flex-wrap:wrap;">
 
@@ -147,7 +185,7 @@
 
 
 <!-- FOOTER -->
-<p style="text-align:center; margin-top:60px; opacity:0.5;">
+<p style="text-align:center; margin-top:80px; opacity:0.5;">
   © 2025 Roll ’n Connect — Built for the community.
 </p>
 
