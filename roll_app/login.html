@@ -1,79 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Login – Roll ’n Connect</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
+  <meta charset="UTF-8">
+  <title>Login • Roll ’n Connect</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .auth-container {
+      max-width: 480px;
+      margin: 140px auto;
+      padding: 40px;
+      text-align: center;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 35px rgba(160,120,255,0.4);
+      animation: fadeIn 1.2s ease;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 16px;
+      margin-top: 18px;
+      border-radius: 14px;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-size: 1.1rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .auth-input::placeholder {
+      color: #d0d0ff;
+    }
+
+    .remember-box {
+      margin-top: 15px;
+      font-size: 1rem;
+      opacity: 0.85;
+    }
+
+    .auth-footer {
+      margin-top: 25px;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+  </style>
 </head>
+
 <body>
-<div class="app-shell">
 
-  <header class="app-header">
-    <div class="app-header-left">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
-    </div>
-  </header>
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+<div class="nebula-haze"></div>
 
-  <main class="page">
-    <div class="card max-w-narrow" style="margin: 40px auto 0;">
-      <h1 style="font-size:20px; margin-bottom:10px;">Login</h1>
-      <form action="dashboard.html" class="stack-md">
-        <div>
-          <label for="email">Email</label>
-          <input id="email" type="email" placeholder="you@example.com" required />
-        </div>
+<div class="auth-container glass">
+  <h1 style="font-size:2.6rem; color:#e0e4ff; text-shadow:0 0 20px #8a6cff;">
+    Welcome Back
+  </h1>
 
-        <div>
-          <label for="password">Password</label>
-          <input id="password" type="password" placeholder="Your password" required />
-        </div>
+  <p style="opacity:0.9; margin-bottom:20px;">
+    Log in to your cosmic skating universe.
+  </p>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%;">
-          Login
-        </button>
-      </form>
+  <input type="email" class="auth-input" placeholder="Email">
+  <input type="password" class="auth-input" placeholder="Password">
 
-      <p style="margin-top: 12px; font-size: 13px; color: var(--text-soft);">
-        Don’t have an account?
-        <a href="signup.html" style="color: var(--blue); text-decoration: none;">Sign up</a>
-      </p>
-    </div>
-  </main>
+  <div class="remember-box">
+    <input type="checkbox" id="remember">
+    <label for="remember">Remember this device</label>
+  </div>
 
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-    </div>
-  </footer>
+  <button class="btn-primary" style="margin-top:25px; width:100%; font-size:1.3rem;">
+    Login
+  </button>
 
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-    <a href="spots-map.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🧭</div>
-      <span>Explore</span>
-    </a>
-    <a href="clips-feed.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">▶</div>
-      <span>Clips</span>
-    </a>
-    <a href="marketplace.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-    <a href="login.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Login</span>
-    </a>
-  </nav>
+  <div class="auth-footer">
+    New here? <a href="signup.html" style="color:#9bb3ff;">Create an account</a>
+  </div>
 </div>
 
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
 </body>
 </html>
