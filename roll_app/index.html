@@ -7,19 +7,103 @@
 
 <body>
 
-<div class="landing-container">
+<!-- STARFIELD BACKGROUND -->
+<div class="stars-bg"></div>
 
-  <div class="hero glass">
-    <h1 class="title">Roll ’n Connect</h1>
-    <p class="subtitle">Find your crew. Explore your city. Roll together.</p>
+<!-- MAIN HERO SECTION -->
+<div class="hero glass" style="margin-top: 60px; text-align:center; padding:50px; animation:fadeIn 1.2s ease;">
+  
+  <h1 class="title" style="font-size:3.6rem; margin-bottom:10px;">
+    Roll ’n Connect
+  </h1>
 
-    <div class="city-search">
-      <input class="input" placeholder="Enter your city...">
-      <button class="btn-primary">Explore</button>
-    </div>
+  <p class="subtitle" style="font-size:1.3rem; margin-bottom:30px;">
+    Your universe of skating — community, gear, lessons, and endless vibes.
+  </p>
+
+  <!-- QUICK ACTION BUTTONS -->
+  <div style="display:flex; justify-content:center; gap:20px; margin-top:20px;">
+    <a href="marketplace.html" class="btn-primary">Marketplace</a>
+    <a href="#chatrooms" class="btn-primary">Chatrooms</a>
   </div>
 
 </div>
+
+
+<!-- FLOATING DISCIPLINE ICONS -->
+<div class="floating-icons">
+  <img src="assets/longboard.png" class="float-icon">
+  <img src="assets/inline.png" class="float-icon">
+  <img src="assets/roller.png" class="float-icon">
+  <img src="assets/street.png" class="float-icon">
+</div>
+
+
+<!-- CHATROOM SECTION -->
+<h2 id="chatrooms" style="text-align:center; margin-top:80px; font-size:2.4rem;">
+  Explore Chatrooms by City
+</h2>
+
+<p style="text-align:center; margin-top:10px; opacity:0.8;">
+  Jump straight into the conversation — choose your city.
+</p>
+
+<div style="
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:30px;
+  padding:40px;
+  max-width:1000px;
+  margin:0 auto;
+">
+
+  <a href="chat-city-atlanta.html" class="discipline-tile">Atlanta</a>
+  <a href="chat-city-chicago.html" class="discipline-tile">Chicago</a>
+  <a href="chat-city-losangeles.html" class="discipline-tile">Los Angeles</a>
+  <a href="chat-city-miami.html" class="discipline-tile">Miami</a>
+  <a href="chat-city-detroit.html" class="discipline-tile">Detroit</a>
+  <a href="chat-city-houston.html" class="discipline-tile">Houston</a>
+
+</div>
+
+
+<!-- MARKETPLACE PREVIEW -->
+<h2 style="text-align:center; margin-top:40px; font-size:2.4rem;">
+  Featured Marketplace
+</h2>
+
+<div style="
+  display:flex;
+  justify-content:center;
+  gap:30px;
+  padding:40px;
+">
+
+  <div class="glass" style="padding:20px; width:260px; text-align:center;">
+    <h3>Boards</h3>
+    <p style="opacity:0.8;">Longboards, cruisers, street decks</p>
+    <a href="marketplace.html" class="btn-primary">Shop</a>
+  </div>
+
+  <div class="glass" style="padding:20px; width:260px; text-align:center;">
+    <h3>Skates</h3>
+    <p style="opacity:0.8;">Inline, quads, dance skates</p>
+    <a href="marketplace.html" class="btn-primary">Shop</a>
+  </div>
+
+  <div class="glass" style="padding:20px; width:260px; text-align:center;">
+    <h3>Gear</h3>
+    <p style="opacity:0.8;">Pads, helmets, wheels, bearings</p>
+    <a href="marketplace.html" class="btn-primary">Shop</a>
+  </div>
+
+</div>
+
+
+<!-- FOOTER -->
+<p style="text-align:center; margin-top:40px; opacity:0.5;">
+  Roll ’n Connect — Built for the community.
+</p>
 
 </body>
 </html>
