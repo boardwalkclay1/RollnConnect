@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Find Spots • Roll ’n Connect</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .section {
+      max-width: 1200px;
+      margin: 120px auto;
+      padding: 40px;
+      text-align: center;
+      animation: fadeIn 1.2s ease;
+    }
+
+    .spots-layout {
+      display: grid;
+      grid-template-columns: 2fr 1.4fr;
+      gap: 30px;
+      margin-top: 50px;
+    }
+
+    .map-panel {
+      height: 420px;
+      border-radius: 22px;
+      background: rgba(0,0,0,0.5);
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #b0c4ff;
+      font-size: 1.1rem;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .spot-card {
+      background: rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 14px;
+      text-align: left;
+      box-shadow: 0 0 20px rgba(120,80,255,0.4);
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .spot-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 28px rgba(160,120,255,0.8);
+    }
+
+    .spot-name {
+      font-size: 1.25rem;
+      color: #e0e4ff;
+      margin-bottom: 4px;
+    }
+
+    .spot-meta {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .filter-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .filter-chip {
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      font-size: 0.98rem;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .filter-chip:hover {
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 0 18px rgba(150,110,255,0.7);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+<div class="nebula-haze"></div>
+
+<div class="section glass">
+  <h1 class="section-title">Find Spots</h1>
+  <p style="opacity:0.9; font-size:1.2rem; max-width:800px; margin:auto;">
+    Discover hills, parks, plazas, and secret lines across your city.  
+    Filter by terrain and session style, then roll out with your crew.
+  </p>
+
+  <!-- Filters -->
+  <div class="filter-row">
+    <div class="filter-chip" onclick="filterSpots('All')">All</div>
+    <div class="filter-chip" onclick="filterSpots('Hills')">Hills</div>
+    <div class="filter-chip" onclick="filterSpots('Parks')">Parks</div>
+    <div class="filter-chip" onclick="filterSpots('Plazas')">Plazas</div>
+    <div class="filter-chip" onclick="filterSpots('Cruising')">Cruising Paths</div>
+    <div class="filter-chip" onclick="filterSpots('Dance')">Dance‑Friendly</div>
+  </div>
+
+  <!-- Layout -->
+  <div class="spots-layout">
+    <!-- Map / Visual Panel -->
+    <div class="map-panel">
+      <div class="map-placeholder" id="map-placeholder">
+        Map integration coming soon — this panel will show  
+        skate spots, routes, and meetup locations in your city.
+      </div>
+    </div>
+
+    <!-- Spot List -->
+    <div>
+      <div class="spot-card" data-type="Hills">
+        <div class="spot-name">Peachtree Downhill Run</div>
+        <div class="spot-meta">Hills • Longboard • Atlanta Midtown</div>
+        <div class="spot-meta">Smooth pavement • Medium traffic • Sunset runs</div>
+      </div>
+
+      <div class="spot-card" data-type="Parks">
+        <div class="spot-name">SkatePark West</div>
+        <div class="spot-meta">Parks • Street & Park • Bowls + rails</div>
+        <div class="spot-meta">Lights at night • Good for clips</div>
+      </div>
+
+      <div class="spot-card" data-type="Cruising">
+        <div class="spot-name">Riverwalk Path</div>
+        <div class="spot-meta">Cruising • Scenic route • Long pavement stretch</div>
+        <div class="spot-meta">Perfect for chill sessions and group rides</div>
+      </div>
+
+      <div class="spot-card" data-type="Plazas">
+        <div class="spot-name">Downtown Plaza Lines</div>
+        <div class="spot-meta">Plazas • Street • Ledges & flatground</div>
+        <div class="spot-meta">Late night sessions • Security aware</div>
+      </div>
+
+      <div class="spot-card" data-type="Dance">
+        <div class="spot-name">Galaxy Lot</div>
+        <div class="spot-meta">Dance • Flat, smooth asphalt • Low traffic</div>
+        <div class="spot-meta">Great lighting • Music‑friendly</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function filterSpots(type) {
+    const cards = document.querySelectorAll('.spot-card');
+    cards.forEach(card => {
+      if (type === 'All' || card.dataset.type === type) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
