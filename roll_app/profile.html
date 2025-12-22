@@ -2,46 +2,106 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Events • Roll ’n Connect</title>
+  <title>Your Profile • Roll ’n Connect</title>
   <link rel="stylesheet" href="style.css">
 
   <style>
     .section {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 120px auto;
       padding: 40px;
-      text-align: center;
       animation: fadeIn 1.2s ease;
     }
 
-    .event-card {
-      background: rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 22px;
-      margin-top: 18px;
-      text-align: left;
-      box-shadow: 0 0 22px rgba(120,80,255,0.4);
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 30px;
     }
 
-    .event-name {
-      font-size: 1.4rem;
-      margin-bottom: 6px;
+    .avatar-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #8a6cff, #3b1b8f);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      color: #ffffff;
+      box-shadow: 0 0 25px rgba(120,80,255,0.8);
+    }
+
+    .profile-name {
+      font-size: 2rem;
       color: #e0e4ff;
     }
 
-    .event-meta {
-      font-size: 0.98rem;
+    .profile-handle {
       opacity: 0.9;
-      margin-bottom: 6px;
     }
 
-    .event-tag {
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 0 25px rgba(120,80,255,0.4);
+    }
+
+    .panel-title {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      color: #e0e4ff;
+    }
+
+    .badge {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 6px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.16);
-      font-size: 0.85rem;
-      margin-right: 6px;
+      background: rgba(255,255,255,0.15);
+      font-size: 0.9rem;
+      margin: 4px;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.98rem;
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 0.98rem;
+    }
+
+    .toggle-pill {
+      width: 46px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.25);
+      position: relative;
+    }
+
+    .toggle-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #ffffff;
+      position: absolute;
+      top: 2px;
+      left: 24px; /* “On” look */
     }
   </style>
 </head>
@@ -49,47 +109,82 @@
 <body>
 
 <div class="stars1"></div>
-<div class="stars2"></div>
+div class="stars2"></div>
 <div class="stars3"></div>
 <div class="nebula-haze"></div>
 
 <div class="section glass">
-  <h1 class="section-title">Events</h1>
-  <p style="opacity:0.9; font-size:1.15rem;">
-    Stay in the loop with group rides, meetups, workshops, and competitions.
-  </p>
-
-  <div class="event-card">
-    <div class="event-name">Atlanta Night Ride</div>
-    <div class="event-meta">Friday • 8:00 PM • Downtown → BeltLine</div>
-    <div class="event-meta">Host: Roll ’n Connect • Skill level: All</div>
+  <div class="profile-header">
+    <div class="avatar-circle">R</div>
     <div>
-      <span class="event-tag">Group Ride</span>
-      <span class="event-tag">Longboard</span>
-      <span class="event-tag">Cruising</span>
+      <div class="profile-name">Your Cosmic Profile</div>
+      <div class="profile-handle">@rollnconnect</div>
+      <div style="margin-top:6px; opacity:0.9;">
+        City: Atlanta • Main discipline: Longboard Dance
+      </div>
     </div>
   </div>
 
-  <div class="event-card">
-    <div class="event-name">Beginner Dance Workshop</div>
-    <div class="event-meta">Saturday • 2:00 PM • Galaxy Lot</div>
-    <div class="event-meta">Host: Local Instructor • Skill level: Beginner</div>
+  <div class="profile-grid">
+    <!-- Left: Activity & Badges -->
     <div>
-      <span class="event-tag">Workshop</span>
-      <span class="event-tag">Dance</span>
+      <div class="panel">
+        <div class="panel-title">Badges</div>
+        <div>
+          <span class="badge">Day One Rider</span>
+          <span class="badge">Night Sessions</span>
+          <span class="badge">Marketplace Seller</span>
+          <span class="badge">Chatroom Host</span>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:20px;">
+        <div class="panel-title">Session Stats</div>
+        <div class="stat-row">
+          <span>Chatrooms joined</span><span>12</span>
+        </div>
+        <div class="stat-row">
+          <span>Marketplace listings</span><span>5</span>
+        </div>
+        <div class="stat-row">
+          <span>Events attended</span><span>7</span>
+        </div>
+        <div class="stat-row">
+          <span>Spots saved</span><span>9</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Settings -->
+    <div>
+      <div class="panel">
+        <div class="panel-title">Account Settings</div>
+
+        <div class="setting-row">
+          <span>Remember this device</span>
+          <div class="toggle-pill">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <span>Email notifications</span>
+          <div class="toggle-pill">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <span>Event reminders</span>
+          <div class="toggle-pill">
+            <div class="toggle-thumb"></div>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="margin-top:18px; width:100%;">Edit Profile</button>
+      </div>
     </div>
   </div>
-
-  <div class="event-card">
-    <div class="event-name">Street Jam Session</div>
-    <div class="event-meta">Sunday • 4:00 PM • Downtown Plaza</div>
-    <div class="event-meta">Host: Community • Skill level: Intermediate+</div>
-    <div>
-      <span class="event-tag">Street</span>
-      <span class="event-tag">Jam</span>
-    </div>
-  </div>
-
 </div>
 
 </body>
