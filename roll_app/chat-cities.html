@@ -1,126 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Select City – Roll ’n Connect Chat</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
-  <style>
-    .city-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
-    }
-    .city-card {
-      height: 140px;
-      border-radius: 18px;
-      background-size: cover;
-      background-position: center;
-      border: 1px solid var(--border-soft);
-      display: flex;
-      align-items: flex-end;
-      padding: 12px;
-      font-size: 18px;
-      font-weight: 600;
-      color: #fff;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .city-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 0 18px rgba(168,85,247,0.5);
-      border-color: var(--purple);
-    }
-  </style>
+  <title>Select Your City</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<div class="app-shell">
 
-  <header class="app-header">
-    <div class="app-header-left">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
-    </div>
-    <div class="app-header-right">
-      <a href="dashboard.html" class="icon-btn">👤</a>
-    </div>
-  </header>
+<h1 style="text-align:center; margin-top:40px;">Choose Your City</h1>
 
-  <main class="page">
-    <h1>Select Your City</h1>
-    <p class="section-sub">
-      Choose a skate city to enter its chatrooms. Each city has rooms for every discipline — longboard,
-      quads, street, inline, rinks, and more.
-    </p>
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:30px; padding:40px;">
 
-    <div class="city-grid">
-      <div class="city-card" onclick="location.href='chat-city-atlanta.html'"
-        style="background-image:url('https://picsum.photos/600?random=901');">
-        Atlanta
-      </div>
-
-      <div class="city-card" onclick="location.href='chat-city-losangeles.html'"
-        style="background-image:url('https://picsum.photos/600?random=902');">
-        Los Angeles
-      </div>
-
-      <div class="city-card" onclick="location.href='chat-city-chicago.html'"
-        style="background-image:url('https://picsum.photos/600?random=903');">
-        Chicago
-      </div>
-
-      <div class="city-card" onclick="location.href='chat-city-newyork.html'"
-        style="background-image:url('https://picsum.photos/600?random=904');">
-        New York
-      </div>
-
-      <div class="city-card" onclick="location.href='chat-city-detroit.html'"
-        style="background-image:url('https://picsum.photos/600?random=905');">
-        Detroit
-      </div>
-
-      <div class="city-card" onclick="location.href='chat-city-miami.html'"
-        style="background-image:url('https://picsum.photos/600?random=906');">
-        Miami
-      </div>
-
-      <div class="city-card" onclick="location.href='chat-city-houston.html'"
-        style="background-image:url('https://picsum.photos/600?random=907');">
-        Houston
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-    </div>
-  </footer>
-
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-    <a href="chat-cities.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">💬</div>
-      <span>Chat</span>
-    </a>
-    <a href="marketplace.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-    <a href="dashboard.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
-    </a>
-  </nav>
+  <a href="chat-city-atlanta.html" class="discipline-tile">Atlanta</a>
+  <a href="chat-city-chicago.html" class="discipline-tile">Chicago</a>
+  <a href="chat-city-detroit.html" class="discipline-tile">Detroit</a>
+  <a href="chat-city-losangeles.html" class="discipline-tile">Los Angeles</a>
+  <a href="chat-city-miami.html" class="discipline-tile">Miami</a>
+  <a href="chat-city-newyork.html" class="discipline-tile">New York</a>
 
 </div>
 
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
 </body>
 </html>
