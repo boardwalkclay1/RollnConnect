@@ -2,44 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Chat – Roll ’n Connect</title>
+  <title>Roll ’n Connect – Cities</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
 
   <style>
     .city-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px;
       margin-top: 20px;
     }
 
     .city-card {
-      height: 150px;
-      border-radius: 18px;
-      background-size: cover;
-      background-position: center;
+      background: var(--glass);
       border: 1px solid var(--border-soft);
-      display: flex;
-      align-items: flex-end;
-      padding: 12px;
-      font-size: 18px;
-      font-weight: 600;
-      color: #fff;
+      border-radius: 18px;
+      padding: 16px;
       cursor: pointer;
       transition: 0.2s;
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
     }
 
     .city-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 0 18px rgba(168,85,247,0.5);
       border-color: var(--purple);
-    }
-
-    .section-sub {
-      margin-bottom: 20px;
-      color: var(--text-soft);
-      font-size: 14px;
+      box-shadow: 0 0 18px rgba(168,85,247,0.5);
     }
   </style>
 </head>
@@ -47,113 +37,58 @@
 <body>
 <div class="app-shell">
 
-  <!-- HEADER -->
   <header class="app-header">
     <div class="app-header-left">
       <div class="brand-logo">R</div>
       <div class="brand-name">Roll ’n Connect</div>
     </div>
-
-    <div class="app-header-center">
-      <input class="app-search" placeholder="Search cities or rooms..." />
-    </div>
-
     <div class="app-header-right">
-      <a href="dashboard.html" class="icon-btn">👤</a>
+      <a href="profile.html" class="icon-btn">👤</a>
     </div>
   </header>
 
-  <!-- PAGE -->
   <main class="page">
-    <h1>Chatrooms</h1>
+    <h1>Select Your City</h1>
+    <p class="section-sub">Choose a skate community to explore.</p>
 
-    <p class="section-sub">
-      Choose your city to enter the skate community.  
-      Each city has rooms for Longboard Dance, Downhill, Street/Park, Roller Rhythm, Inline Urban, Cruising, Beginners, and Rinks.
-    </p>
-
-    <!-- CITY GRID -->
     <div class="city-grid">
 
-      <div class="city-card"
-           onclick="location.href='chat-city-atlanta.html'"
-           style="background-image:url('https://picsum.photos/600?random=901');">
+      <div class="city-card" onclick="location.href='chat-city-atlanta.html'">
         Atlanta
       </div>
 
-      <div class="city-card"
-           onclick="location.href='chat-city-losangeles.html'"
-           style="background-image:url('https://picsum.photos/600?random=902');">
+      <div class="city-card" onclick="location.href='chat-city-losangeles.html'">
         Los Angeles
       </div>
 
-      <div class="city-card"
-           onclick="location.href='chat-city-chicago.html'"
-           style="background-image:url('https://picsum.photos/600?random=903');">
+      <div class="city-card" onclick="location.href='chat-city-chicago.html'">
         Chicago
       </div>
 
-      <div class="city-card"
-           onclick="location.href='chat-city-newyork.html'"
-           style="background-image:url('https://picsum.photos/600?random=904');">
+      <div class="city-card" onclick="location.href='chat-city-newyork.html'">
         New York
       </div>
 
-      <div class="city-card"
-           onclick="location.href='chat-city-detroit.html'"
-           style="background-image:url('https://picsum.photos/600?random=905');">
+      <div class="city-card" onclick="location.href='chat-city-detroit.html'">
         Detroit
       </div>
 
-      <div class="city-card"
-           onclick="location.href='chat-city-miami.html'"
-           style="background-image:url('https://picsum.photos/600?random=906');">
+      <div class="city-card" onclick="location.href='chat-city-miami.html'">
         Miami
       </div>
 
-      <div class="city-card"
-           onclick="location.href='chat-city-houston.html'"
-           style="background-image:url('https://picsum.photos/600?random=907');">
+      <div class="city-card" onclick="location.href='chat-city-houston.html'">
         Houston
       </div>
 
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer>
     <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
+      © <span id="year"></span> Roll ’n Connect.
     </div>
   </footer>
-
-  <!-- BOTTOM NAV -->
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-
-    <a href="spots-map.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🧭</div>
-      <span>Explore</span>
-    </a>
-
-    <a href="chat.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">💬</div>
-      <span>Chat</span>
-    </a>
-
-    <a href="marketplace.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-
-    <a href="dashboard.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
-    </a>
-  </nav>
 
 </div>
 
