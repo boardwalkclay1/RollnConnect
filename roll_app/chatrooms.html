@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Chatrooms • Roll ’n Connect</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- Updated style folder -->
+  <link rel="stylesheet" href="styles/style.css">
 
   <style>
-    .section {
-      max-width: 1200px;
-      margin: 120px auto;
-      padding: 40px;
+    /* Page-specific tweaks */
+    .city-title {
+      font-size: 2rem;
+      margin-top: 80px;
+      color: #ffffff;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
       text-align: center;
-      animation: fadeIn 1.2s ease;
     }
 
     .discipline-grid {
@@ -19,105 +22,104 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 30px;
       margin-top: 40px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .chatroom-card {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.12);
       padding: 30px;
       border-radius: 20px;
-      box-shadow: 0 0 25px rgba(120,80,255,0.4);
-      backdrop-filter: blur(15px);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(20px);
       transition: 0.3s;
       cursor: pointer;
+      color: #ffffff;
+      text-align: center;
+      font-size: 1.2rem;
+      text-decoration: none;
     }
 
     .chatroom-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 35px rgba(160,120,255,0.8);
-    }
-
-    .city-title {
-      font-size: 2rem;
-      margin-top: 80px;
-      color: #e0e4ff;
-      text-shadow: 0 0 20px #7a5cff;
+      transform: scale(1.08);
+      box-shadow: 0 0 45px rgba(255, 255, 255, 0.9);
     }
   </style>
 </head>
 
 <body>
 
-<!-- Galaxy Background -->
+<!-- WHITE STARFIELDS -->
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
-<div class="nebula-haze"></div>
 
-<div class="section glass">
+<div class="glass" style="max-width:1100px; margin:120px auto; padding:40px;">
 
-  <h1 class="section-title">Chatrooms</h1>
-  <p style="opacity:0.9; font-size:1.3rem;">
+  <h1 class="section-title" style="text-align:center;">Chatrooms</h1>
+  <p style="text-align:center; opacity:0.9; font-size:1.2rem;">
     Choose your city → choose your discipline → enter your cosmic chatroom.
   </p>
 
-  <!-- CITY 1 -->
+  <!-- CITY: ATLANTA -->
   <h2 class="city-title">Atlanta</h2>
   <div class="discipline-grid">
     <a href="chat-room-atlanta-longboard.html" class="chatroom-card">Longboard</a>
     <a href="chat-room-atlanta-inline.html" class="chatroom-card">Inline</a>
-    <a href="chat-room-atlanta-rollerskates.html" class="chatroom-card">Roller Skates</a>
+    <a href="chat-room-atlanta-roller.html" class="chatroom-card">Roller Skates</a>
     <a href="chat-room-atlanta-street.html" class="chatroom-card">Street</a>
     <a href="chat-room-atlanta-cruising.html" class="chatroom-card">Cruising</a>
   </div>
 
-  <!-- CITY 2 -->
+  <!-- CITY: CHICAGO -->
   <h2 class="city-title">Chicago</h2>
   <div class="discipline-grid">
     <a href="chat-room-chicago-longboard.html" class="chatroom-card">Longboard</a>
     <a href="chat-room-chicago-inline.html" class="chatroom-card">Inline</a>
-    <a href="chat-room-chicago-rollerskates.html" class="chatroom-card">Roller Skates</a>
+    <a href="chat-room-chicago-roller.html" class="chatroom-card">Roller Skates</a>
     <a href="chat-room-chicago-street.html" class="chatroom-card">Street</a>
     <a href="chat-room-chicago-cruising.html" class="chatroom-card">Cruising</a>
   </div>
 
-  <!-- CITY 3 -->
+  <!-- CITY: LOS ANGELES -->
   <h2 class="city-title">Los Angeles</h2>
   <div class="discipline-grid">
     <a href="chat-room-losangeles-longboard.html" class="chatroom-card">Longboard</a>
     <a href="chat-room-losangeles-inline.html" class="chatroom-card">Inline</a>
-    <a href="chat-room-losangeles-rollerskates.html" class="chatroom-card">Roller Skates</a>
+    <a href="chat-room-losangeles-roller.html" class="chatroom-card">Roller Skates</a>
     <a href="chat-room-losangeles-street.html" class="chatroom-card">Street</a>
     <a href="chat-room-losangeles-cruising.html" class="chatroom-card">Cruising</a>
   </div>
 
-  <!-- CITY 4 -->
+  <!-- CITY: MIAMI -->
   <h2 class="city-title">Miami</h2>
   <div class="discipline-grid">
     <a href="chat-room-miami-longboard.html" class="chatroom-card">Longboard</a>
     <a href="chat-room-miami-inline.html" class="chatroom-card">Inline</a>
-    <a href="chat-room-miami-rollerskates.html" class="chatroom-card">Roller Skates</a>
+    <a href="chat-room-miami-roller.html" class="chatroom-card">Roller Skates</a>
     <a href="chat-room-miami-street.html" class="chatroom-card">Street</a>
     <a href="chat-room-miami-cruising.html" class="chatroom-card">Cruising</a>
   </div>
 
-  <!-- CITY 5 -->
+  <!-- CITY: DETROIT -->
   <h2 class="city-title">Detroit</h2>
   <div class="discipline-grid">
     <a href="chat-room-detroit-longboard.html" class="chatroom-card">Longboard</a>
     <a href="chat-room-detroit-inline.html" class="chatroom-card">Inline</a>
-    <a href="chat-room-detroit-rollerskates.html" class="chatroom-card">Roller Skates</a>
+    <a href="chat-room-detroit-roller.html" class="chatroom-card">Roller Skates</a>
     <a href="chat-room-detroit-street.html" class="chatroom-card">Street</a>
     <a href="chat-room-detroit-cruising.html" class="chatroom-card">Cruising</a>
   </div>
 
-  <!-- CITY 6 -->
+  <!-- CITY: HOUSTON -->
   <h2 class="city-title">Houston</h2>
   <div class="discipline-grid">
     <a href="chat-room-houston-longboard.html" class="chatroom-card">Longboard</a>
-    <a href="chat-room-houston-inline.html" class="chatroom-card">Inline</a>
-    <a href="chat-room-houston-rollerskates.html" class="chatroom-card">Roller Skates</a>
-    <a href="chat-room-houston-street.html" class="chatroom-card">Street</a>
-    <a href="chat-room-houston-cruising.html" class="chatroom-card">Cruising</a>
+    <a href="#" class="chatroom-card">Inline</a>
+    <a href="#" class="chatroom-card">Roller Skates</a>
+    <a href="#" class="chatroom-card">Street</a>
+    <a href="#" class="chatroom-card">Cruising</a>
   </div>
 
 </div>
