@@ -3,24 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <title>Roll ’n Connect</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- UPDATED STYLE FOLDER -->
+  <link rel="stylesheet" href="styles/style.css">
 
   <style>
-    /* PURE BLACK + BLUE SPACE BACKGROUND */
+    /* PURE BLACK BACKGROUND */
     body {
       background: #000000;
-      color: #dce8ff;
+      color: #ffffff;
       margin: 0;
       padding: 0;
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
     }
 
-    /* BLUE STARFIELDS */
+    /* WHITE STARFIELDS */
     .stars1, .stars2, .stars3 {
       position: fixed;
       inset: 0;
-      background: url('assets/blue-stars.png') repeat;
+      background: url('styles/stars-white.png') repeat;
       z-index: -3;
     }
     .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
@@ -36,32 +38,32 @@
       margin-top: 140px;
       text-align: center;
       padding: 60px;
-      background: rgba(0, 80, 160, 0.18);
+      background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(20px);
       border-radius: 24px;
       max-width: 900px;
       margin-left: auto;
       margin-right: auto;
-      box-shadow: 0 0 50px rgba(0, 140, 255, 0.5);
+      box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
     }
 
     /* BUTTONS */
     .btn-primary {
-      background: linear-gradient(135deg, #0077ff, #00c8ff);
+      background: #ffffff;
+      color: #000000;
       padding: 16px 32px;
       border-radius: 16px;
-      color: white;
       font-size: 1.3rem;
       border: none;
       cursor: pointer;
       transition: 0.3s;
-      box-shadow: 0 0 25px rgba(0, 150, 255, 0.8);
       text-decoration: none;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
     }
 
     .btn-primary:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 40px rgba(0, 200, 255, 1);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
     }
 
     /* NAV BUBBLES */
@@ -77,15 +79,15 @@
       width: 180px;
       height: 180px;
       border-radius: 50%;
-      background: rgba(0, 100, 200, 0.22);
+      background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(20px);
-      box-shadow: 0 0 35px rgba(0, 150, 255, 0.7);
+      box-shadow: 0 0 35px rgba(255, 255, 255, 0.4);
       display: flex;
       justify-content: center;
       align-items: center;
       font-size: 1.3rem;
       text-align: center;
-      color: #dce8ff;
+      color: #ffffff;
       cursor: pointer;
       animation: float 6s ease-in-out infinite;
       transition: 0.3s;
@@ -94,7 +96,7 @@
 
     .bubble:hover {
       transform: scale(1.18);
-      box-shadow: 0 0 50px rgba(0, 200, 255, 1);
+      box-shadow: 0 0 50px rgba(255, 255, 255, 0.9);
     }
 
     @keyframes float {
@@ -107,14 +109,14 @@
 
 <body>
 
-<!-- BLUE STARFIELDS -->
+<!-- WHITE STARFIELDS -->
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
 
 <!-- HERO -->
 <div class="hero">
-  <h1 style="font-size:4rem; color:#e0f4ff;">Roll ’n Connect</h1>
+  <h1 style="font-size:4rem;">Roll ’n Connect</h1>
   <p style="font-size:1.4rem; opacity:0.9;">
     Your cosmic skating universe — chatrooms, spots, events, marketplace, and more.
   </p>
