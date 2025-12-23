@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Houston Longboard Chat • Roll ’n Connect</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      background: radial-gradient(circle at 30% 20%, #12052a, #04000f 70%, #000006 100%);
+      color: #e8ecff;
+      overflow-x: hidden;
+    }
+
+    .stars1, .stars2, .stars3 {
+      position: fixed;
+      inset: 0;
+      background: url('assets/stars.png') repeat;
+      z-index: -3;
+    }
+    .stars1 { opacity: 0.45; animation: drift1 120s linear infinite; }
+    .stars2 { opacity: 0.25; animation: drift2 180s linear infinite; }
+    .stars3 { opacity: 0.15; animation: drift3 240s linear infinite; }
+
+    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -4000px;} }
+    @keyframes drift2 { from {background-position:0 0;} to {background-position:-3000px -2000px;} }
+    @keyframes drift3 { from {background-position:0 0;} to {background-position:2000px 3000px;} }
+
+    .chat-box {
+      max-width: 900px;
+      margin: 120px auto;
+      padding: 40px;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 0 40px rgba(120,80,255,0.4);
+    }
+
+    .message {
+      background: rgba(255,255,255,0.1);
+      padding: 14px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 14px;
+      border-radius: 14px;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+
+<div class="chat-box">
+  <h1 style="font-size:2.4rem; color:#dcdcff;">Houston • Longboard Chat</h1>
+
+  <div id="messages">
+    <div class="message">Welcome to the Houston Longboard Chatroom!</div>
+  </div>
+
+  <div class="input-row">
+    <input id="chatInput" class="chat-input" placeholder="Type your message...">
+    <button class="btn-primary" onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+  function sendMessage() {
+    const input = document.getElementById("chatInput");
+    if (input.value.trim() === "") return;
+
+    const msg = document.createElement("div");
+    msg.className = "message";
+    msg.textContent = input.value;
+
+    document.getElementById("messages").appendChild(msg);
+    input.value = "";
+  }
+</script>
+
+</body>
+</html>
