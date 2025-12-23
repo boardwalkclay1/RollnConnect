@@ -6,46 +6,48 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+    /* PURE BLACK + BLUE SPACE BACKGROUND */
     body {
-      background: radial-gradient(circle at 50% 20%, #001122, #000814 60%, #000000 100%);
-      color: #e8ecff;
-      overflow-x: hidden;
+      background: #000000;
+      color: #dce8ff;
       margin: 0;
       padding: 0;
       font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
     }
 
-    /* Blue Starfields */
+    /* BLUE STARFIELDS */
     .stars1, .stars2, .stars3 {
       position: fixed;
       inset: 0;
       background: url('assets/blue-stars.png') repeat;
       z-index: -3;
     }
-    .stars1 { opacity: 0.5; animation: drift1 120s linear infinite; }
-    .stars2 { opacity: 0.3; animation: drift2 180s linear infinite; }
-    .stars3 { opacity: 0.15; animation: drift3 240s linear infinite; }
+    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
+    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
+    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
 
-    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -4000px;} }
-    @keyframes drift2 { from {background-position:0 0;} to {background-position:-3000px -2000px;} }
-    @keyframes drift3 { from {background-position:0 0;} to {background-position:2000px 3000px;} }
+    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
+    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
+    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
 
-    /* Hero Panel */
+    /* HERO PANEL */
     .hero {
-      margin-top: 120px;
+      margin-top: 140px;
       text-align: center;
       padding: 60px;
-      background: rgba(0, 40, 90, 0.25);
+      background: rgba(0, 80, 160, 0.18);
       backdrop-filter: blur(20px);
       border-radius: 24px;
       max-width: 900px;
       margin-left: auto;
       margin-right: auto;
-      box-shadow: 0 0 40px rgba(0, 120, 255, 0.4);
+      box-shadow: 0 0 50px rgba(0, 140, 255, 0.5);
     }
 
+    /* BUTTONS */
     .btn-primary {
-      background: linear-gradient(135deg, #0055ff, #00aaff);
+      background: linear-gradient(135deg, #0077ff, #00c8ff);
       padding: 16px 32px;
       border-radius: 16px;
       color: white;
@@ -53,31 +55,31 @@
       border: none;
       cursor: pointer;
       transition: 0.3s;
-      box-shadow: 0 0 20px rgba(0, 120, 255, 0.7);
+      box-shadow: 0 0 25px rgba(0, 150, 255, 0.8);
       text-decoration: none;
     }
 
     .btn-primary:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 30px rgba(0, 180, 255, 0.9);
+      transform: scale(1.1);
+      box-shadow: 0 0 40px rgba(0, 200, 255, 1);
     }
 
-    /* Navigation Bubbles */
+    /* NAV BUBBLES */
     .bubble-row {
       display: flex;
       justify-content: center;
       gap: 40px;
       flex-wrap: wrap;
-      margin-top: 60px;
+      margin-top: 70px;
     }
 
     .bubble {
       width: 180px;
       height: 180px;
       border-radius: 50%;
-      background: rgba(0, 60, 120, 0.25);
+      background: rgba(0, 100, 200, 0.22);
       backdrop-filter: blur(20px);
-      box-shadow: 0 0 25px rgba(0, 120, 255, 0.6);
+      box-shadow: 0 0 35px rgba(0, 150, 255, 0.7);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -91,8 +93,8 @@
     }
 
     .bubble:hover {
-      transform: scale(1.15);
-      box-shadow: 0 0 35px rgba(0, 180, 255, 0.9);
+      transform: scale(1.18);
+      box-shadow: 0 0 50px rgba(0, 200, 255, 1);
     }
 
     @keyframes float {
@@ -105,12 +107,14 @@
 
 <body>
 
+<!-- BLUE STARFIELDS -->
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
 
+<!-- HERO -->
 <div class="hero">
-  <h1 style="font-size:4rem; color:#dce8ff;">Roll ’n Connect</h1>
+  <h1 style="font-size:4rem; color:#e0f4ff;">Roll ’n Connect</h1>
   <p style="font-size:1.4rem; opacity:0.9;">
     Your cosmic skating universe — chatrooms, spots, events, marketplace, and more.
   </p>
@@ -123,6 +127,7 @@
 
 <!-- MAIN NAVIGATION -->
 <div class="bubble-row">
+
   <!-- FIXED CHATROOM LINK -->
   <a href="chatrooms.html" class="bubble">Chatrooms</a>
 
