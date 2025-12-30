@@ -1,51 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Edit Profile</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <title>Edit Profile – Roll ’n Connect</title>
+  <link rel="stylesheet" href="styles/style.css">
+
+  <style>
+    body { background:#000; color:#fff; margin:0; padding:0; font-family:'Inter',sans-serif; overflow-x:hidden; display:flex; }
+    .page-wrapper { width:100%; padding-right:260px; padding-top:120px; }
+    .edit-card { max-width:900px; margin:0 auto; padding:40px; background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); border-radius:24px; }
+    .field-group { margin-bottom:20px; }
+    .field-label { font-size:0.9rem; opacity:0.7; margin-bottom:6px; }
+    .field-input, .field-textarea, .field-select { width:100%; padding:12px; border-radius:12px; border:none; background:rgba(255,255,255,0.12); color:#fff; }
+    .field-textarea { min-height:80px; }
+  </style>
 </head>
+
 <body>
 
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
 
-<div id="hamburger" class="hamburger">
-  <span></span><span></span><span></span>
-</div>
-
-<div id="sidebar" class="sidebar">
-  <div class="sidebar-header"><h2>Menu</h2></div>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="profile.html">My Profile</a>
-  <a href="profile-edit.html">Edit Profile</a>
-  <a href="chatrooms.html">Chatrooms</a>
-  <a href="calendar.html">Calendar</a>
-  <a href="settings.html">Settings</a>
-</div>
-
-<div class="cosmic-wrapper">
-
-  <div class="glass" style="margin-bottom:40px;">
-    <h1 class="section-title">Edit Profile</h1>
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="logo-orb">🛼</div>
+    <div class="nav-title">Roll ’n Connect</div>
   </div>
 
-  <div class="glass" style="padding:30px;">
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="calendar.html">🗓️ Calendar</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+    <li><a href="settings.html">⚙️ Settings</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+
+  <div class="edit-card">
+
+    <h2>Edit Profile</h2>
 
     <div class="field-group">
       <div class="field-label">Name</div>
-      <input id="editName" class="field-input" />
+      <input id="editName" class="field-input">
     </div>
 
     <div class="field-group">
       <div class="field-label">Handle</div>
-      <input id="editHandle" class="field-input" />
+      <input id="editHandle" class="field-input">
     </div>
 
     <div class="field-group">
       <div class="field-label">Location</div>
-      <input id="editLocation" class="field-input" />
+      <input id="editLocation" class="field-input">
     </div>
 
     <div class="field-group">
@@ -55,38 +68,40 @@
 
     <div class="field-group">
       <div class="field-label">Tags</div>
-      <input id="editTags" class="field-input" />
+      <input id="editTags" class="field-input">
     </div>
 
     <div class="field-group">
       <div class="field-label">Avatar URL</div>
-      <input id="editAvatarUrl" class="field-input" />
+      <input id="editAvatarUrl" class="field-input">
     </div>
 
     <button id="saveProfile" class="btn-primary">Save Profile</button>
 
-    <hr style="margin:30px 0; border-color:rgba(255,255,255,0.3);" />
+    <hr style="margin:40px 0; border-color:rgba(255,255,255,0.3);">
+
+    <h2>Lessons</h2>
 
     <div class="field-group" style="display:flex; justify-content:space-between;">
       <div class="field-label">Offer Lessons</div>
-      <input id="lessonsEnable" type="checkbox" />
+      <input id="lessonsEnable" type="checkbox">
     </div>
 
     <div id="lessonsBlock" style="display:none;">
 
       <div class="field-group">
         <div class="field-label">Lesson Title</div>
-        <input id="lessonsTitle" class="field-input" />
+        <input id="lessonsTitle" class="field-input">
       </div>
 
       <div class="field-group">
         <div class="field-label">Price</div>
-        <input id="lessonsPrice" class="field-input" type="number" />
+        <input id="lessonsPrice" class="field-input" type="number">
       </div>
 
       <div class="field-group">
         <div class="field-label">Duration</div>
-        <input id="lessonsDuration" class="field-input" />
+        <input id="lessonsDuration" class="field-input">
       </div>
 
       <div class="field-group">
@@ -99,8 +114,8 @@
 
       <div class="field-group">
         <div class="field-label">Time Range</div>
-        <input id="lessonsStart" class="field-input" type="time" />
-        <input id="lessonsEnd" class="field-input" type="time" />
+        <input id="lessonsStart" class="field-input" type="time">
+        <input id="lessonsEnd" class="field-input" type="time">
       </div>
 
       <div class="field-group">
@@ -117,12 +132,7 @@
 </div>
 
 <script src="profile.js"></script>
-<script>
-  RC.initProfileEdit();
-  const h = document.getElementById("hamburger");
-  const s = document.getElementById("sidebar");
-  h.onclick = () => { h.classList.toggle("active"); s.classList.toggle("open"); };
-</script>
+<script>RC.initProfileEdit();</script>
 
 </body>
 </html>
