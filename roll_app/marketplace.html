@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Marketplace • Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- GLOBAL STYLES -->
   <link rel="stylesheet" href="styles/style.css">
@@ -99,9 +100,8 @@
       margin: auto;
     }
 
-    /* ORIGINAL MARKETPLACE STYLES (UNCHANGED) */
+    /* MARKETPLACE SECTION */
     .section {
-      padding: 40px;
       text-align: center;
       animation: fadeIn 1.2s ease;
     }
@@ -118,6 +118,7 @@
       margin-top: 30px;
     }
 
+    /* CATEGORY BUBBLES */
     .category-row {
       display: flex;
       justify-content: center;
@@ -148,6 +149,7 @@
       box-shadow: 0 0 35px rgba(160,120,255,0.9);
     }
 
+    /* ITEM GRID */
     .item-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -162,6 +164,7 @@
       backdrop-filter: blur(14px);
       box-shadow: 0 0 25px rgba(120,80,255,0.4);
       transition: 0.3s;
+      cursor: pointer;
     }
 
     .item-card:hover {
@@ -204,6 +207,7 @@
     <li><a href="marketplace.html">🛒 Marketplace</a></li>
     <li><a href="find-spots.html">📍 Find Spots</a></li>
     <li><a href="events.html">📅 Events</a></li>
+    <li><a href="clips-feed.html">🎥 Clips Feed</a></li>
     <li><a href="profile.html">👤 Your Profile</a></li>
     <li><a href="settings.html">⚙️ Settings</a></li>
   </ul>
@@ -212,9 +216,12 @@
 <!-- MAIN CONTENT -->
 <main class="page-content">
 
-  <div class="section glass">
+  <div class="section">
 
-    <h1 class="section-title">Marketplace</h1>
+    <h1 class="section-title" style="font-size:2.6rem; text-shadow:0 0 20px rgba(255,255,255,0.4);">
+      Marketplace
+    </h1>
+
     <p style="opacity:0.9; font-size:1.3rem;">
       Explore gear across the galaxy — boards, skates, wheels, pads, and more.
     </p>
@@ -236,39 +243,39 @@
     <!-- FEATURED ITEMS -->
     <h2 class="section-title" style="margin-top:80px;">Featured Items</h2>
 
-    <div class="item-grid" id="item-grid">
+    <div class="item-grid">
 
-      <div class="item-card">
+      <div class="item-card" onclick="openItem(1)">
         <div class="item-title">Loaded Dervish Sama</div>
         <div class="item-price">$220</div>
         <button class="btn-primary">View Item</button>
       </div>
 
-      <div class="item-card">
+      <div class="item-card" onclick="openItem(2)">
         <div class="item-title">Impala Roller Skates</div>
         <div class="item-price">$99</div>
         <button class="btn-primary">View Item</button>
       </div>
 
-      <div class="item-card">
+      <div class="item-card" onclick="openItem(3)">
         <div class="item-title">Bones Reds Bearings</div>
         <div class="item-price">$18</div>
         <button class="btn-primary">View Item</button>
       </div>
 
-      <div class="item-card">
+      <div class="item-card" onclick="openItem(4)">
         <div class="item-title">Triple 8 Helmet</div>
         <div class="item-price">$45</div>
         <button class="btn-primary">View Item</button>
       </div>
 
-      <div class="item-card">
+      <div class="item-card" onclick="openItem(5)">
         <div class="item-title">Orangatang Stimulus Wheels</div>
         <div class="item-price">$55</div>
         <button class="btn-primary">View Item</button>
       </div>
 
-      <div class="item-card">
+      <div class="item-card" onclick="openItem(6)">
         <div class="item-title">Knee & Elbow Pad Set</div>
         <div class="item-price">$35</div>
         <button class="btn-primary">View Item</button>
@@ -283,6 +290,11 @@
 <script>
   function filterCategory(category) {
     alert("Filtering by: " + category + " (dynamic filtering coming soon)");
+  }
+
+  function openItem(id) {
+    localStorage.setItem("currentItem", id);
+    window.location.href = "marketplace-item.html";
   }
 </script>
 
