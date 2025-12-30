@@ -1,249 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Sell an Item • Roll ’n Connect</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- GLOBAL STYLES -->
-  <link rel="stylesheet" href="styles/style.css">
+  <meta charset="UTF-8">
+  <title>Sell Item – Roll ’n Connect</title>
 
   <style>
-    body {
-      background: #000;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-      display: flex;
+    body{
+      background:#000;color:#fff;margin:0;padding:0;
+      font-family:'Inter',sans-serif;overflow-x:hidden;overflow-y:auto;
     }
 
-    /* STARFIELDS */
-    .stars1, .stars2, .stars3 {
-      position: fixed;
-      inset: 0;
-      background: url('styles/stars-white.png') repeat;
-      z-index: -3;
+    .stars1,.stars2,.stars3{
+      position:fixed;inset:0;
+      background:url('styles/stars-white.png') repeat;
+      z-index:-3;pointer-events:none;
     }
-    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
-    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
-    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2;animation:drift3 260s linear infinite;}
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
-    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
-    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
-
-    /* RIGHT-SIDE NAVIGATION */
-    .side-nav {
-      width: 260px;
-      height: 100vh;
-      position: fixed;
-      right: 0;
-      top: 0;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(20px);
-      border-left: 1px solid rgba(255,255,255,0.15);
-      padding: 30px 20px;
-      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
-      display: flex;
-      flex-direction: column;
-      z-index: 10;
+    .sidebar{
+      position:fixed;top:0;left:0;height:100vh;width:260px;
+      background:rgba(10,10,20,0.92);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:26px 20px;
+      box-shadow:10px 0 40px rgba(0,0,0,0.7);
+      z-index:9000;
     }
 
-    .nav-header {
-      text-align: center;
-      margin-bottom: 40px;
+    .nav-header{text-align:center;margin-bottom:24px;}
+    .logo-orb{font-size:2.4rem;margin-bottom:6px;text-shadow:0 0 20px rgba(255,255,255,0.9);}
+    .nav-title{font-size:1.2rem;font-weight:600;text-shadow:0 0 10px rgba(255,255,255,0.7);}
+    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;}
+    .nav-links a{
+      display:block;color:#fff;text-decoration:none;font-size:0.95rem;
+      padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);
+      box-shadow:0 0 10px rgba(255,255,255,0.15);transition:0.25s;
+    }
+    .nav-links a:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(5px);
+      box-shadow:0 0 18px rgba(255,255,255,0.4);
     }
 
-    .logo-orb {
-      font-size: 3rem;
-      margin-bottom: 10px;
+    .main{
+      margin-left:260px;
+      padding:40px;
+      min-height:100vh;
     }
 
-    .nav-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      letter-spacing: 1px;
+    .page-title{
+      font-size:2.6rem;
+      margin-bottom:8px;
+      text-shadow:0 0 30px rgba(255,255,255,0.8);
     }
 
-    .nav-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
+    .page-sub{opacity:0.85;margin-bottom:30px;}
+
+    .form-card{
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      padding:26px;border-radius:20px;
+      box-shadow:0 0 50px rgba(255,255,255,0.3);
+      max-width:700px;
     }
 
-    .nav-links a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1.15rem;
-      padding: 10px 14px;
-      border-radius: 12px;
-      transition: 0.25s;
-      display: block;
+    label{font-size:0.85rem;opacity:0.85;display:block;margin-bottom:4px;}
+    input,textarea,select{
+      width:100%;padding:10px 12px;margin-bottom:16px;
+      border:none;border-radius:12px;
+      background:rgba(255,255,255,0.16);color:#fff;font-size:0.95rem;
+    }
+    textarea{resize:vertical;}
+
+    .row-flex{display:flex;gap:12px;}
+    .row-flex > div{flex:1;}
+
+    .toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+    .toggle-row input[type="checkbox"]{width:auto;height:auto;}
+
+    .btn-primary{
+      padding:10px 18px;background:#fff;color:#000;
+      border-radius:12px;border:none;font-weight:600;cursor:pointer;
     }
 
-    .nav-links a:hover {
-      background: rgba(255,255,255,0.15);
-      transform: translateX(-6px);
-    }
-
-    /* MAIN CONTENT AREA */
-    .page-content {
-      flex: 1;
-      padding: 60px;
-      padding-right: 320px;
-      max-width: 800px;
-      margin: auto;
-    }
-
-    /* FORM CARD */
-    .card {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 0 35px rgba(160,120,255,0.3);
-      animation: fadeIn 1.2s ease;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 0.95rem;
-      opacity: 0.85;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: none;
-      background: rgba(255,255,255,0.12);
-      color: #fff;
-      font-size: 1rem;
-      backdrop-filter: blur(10px);
-      margin-bottom: 18px;
-    }
-
-    textarea {
-      resize: none;
-    }
-
-    .btn-primary {
-      width: 100%;
-      background: #ffffff;
-      color: #000000;
-      padding: 16px;
-      border-radius: 16px;
-      font-size: 1.2rem;
-      border: none;
-      cursor: pointer;
-      transition: 0.3s;
-      box-shadow: 0 0 20px rgba(255,255,255,0.4);
-    }
-
-    .btn-primary:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(255,255,255,0.8);
-    }
+    .status-msg{margin-top:10px;font-size:0.9rem;opacity:0.9;}
   </style>
 </head>
-
 <body>
 
-<!-- STARFIELDS -->
-<div class="stars1"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
 
-<!-- RIGHT NAV -->
-<nav class="side-nav">
+<nav class="sidebar">
   <div class="nav-header">
-    <div class="logo-orb">🛼</div>
-    <div class="nav-title">Roll ’n Connect</div>
+    <div class="logo-orb">➕</div>
+    <div class="nav-title">Sell Item</div>
   </div>
-
   <ul class="nav-links">
+    <li><a href="marketplace.html">⬅ Marketplace</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
     <li><a href="index.html">🏠 Home</a></li>
-    <li><a href="dashboard.html">📊 Dashboard</a></li>
-    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
-    <li><a href="marketplace.html">🛒 Marketplace</a></li>
-    <li><a href="find-spots.html">📍 Find Spots</a></li>
-    <li><a href="events.html">📅 Events</a></li>
-    <li><a href="clips-feed.html">🎥 Clips Feed</a></li>
-    <li><a href="profile.html">👤 Your Profile</a></li>
-    <li><a href="settings.html">⚙️ Settings</a></li>
   </ul>
 </nav>
 
-<!-- MAIN CONTENT -->
-<main class="page-content">
+<div class="main">
+  <div class="page-title">Sell an Item</div>
+  <div class="page-sub">List your gear, label your discipline, and optionally donate it to the Giveaway pool.</div>
 
-  <h1 style="font-size:2.4rem; text-shadow:0 0 20px rgba(255,255,255,0.4);">
-    Sell an Item
-  </h1>
+  <div class="form-card">
+    <label>Title</label>
+    <input id="itemTitle" placeholder="Nebula Dancer Deck">
 
-  <div class="card">
+    <div class="row-flex">
+      <div>
+        <label>Price (USD)</label>
+        <input id="itemPrice" placeholder="199.99">
+      </div>
+      <div>
+        <label>Discipline</label>
+        <select id="itemDiscipline">
+          <option value="">Select</option>
+          <option value="Quads">Quads</option>
+          <option value="Blades">Blades</option>
+          <option value="Longboard">Longboard</option>
+          <option value="Skateboard">Skateboard</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
 
-    <p style="opacity:0.85; margin-bottom:20px;">
-      Create a listing tied to your profile.  
-      Soon this will publish to the main marketplace and your profile page.
-    </p>
+    <label>Description</label>
+    <textarea id="itemDescription" rows="3" placeholder="Condition, story, sizing, etc."></textarea>
 
-    <form>
+    <label>Image</label>
+    <input id="itemImage" type="file" accept="image/*">
 
-      <label for="item-title">Item Title</label>
-      <input id="item-title" type="text" placeholder="Example: 40&quot; dancing longboard setup" required />
+    <div class="toggle-row">
+      <input type="checkbox" id="itemDonate">
+      <label for="itemDonate">Donate this item to the Giveaway pool</label>
+    </div>
 
-      <label for="item-category">Category</label>
-      <select id="item-category" required>
-        <option value="">Select a category</option>
-        <option>Longboard</option>
-        <option>Skateboard</option>
-        <option>Roller Skates</option>
-        <option>Inline Skates</option>
-        <option>Gear & Parts</option>
-      </select>
-
-      <label for="item-condition">Condition</label>
-      <select id="item-condition" required>
-        <option>New</option>
-        <option>Used – Excellent</option>
-        <option>Used – Good</option>
-        <option>Used – Fair</option>
-      </select>
-
-      <label for="item-price">Price</label>
-      <input id="item-price" type="number" min="0" step="1" placeholder="180" required />
-
-      <label for="item-location">Location</label>
-      <input id="item-location" type="text" placeholder="City, State / Country" />
-
-      <label for="item-photos">Photos</label>
-      <input id="item-photos" type="file" accept="image/*" multiple />
-
-      <label for="item-description">Description</label>
-      <textarea id="item-description" rows="4"
-        placeholder="Describe setup, components, wear, and anything a skater should know."></textarea>
-
-      <button type="button" class="btn-primary" onclick="fakeSubmit()">
-        Post Listing (demo only)
-      </button>
-
-    </form>
-
+    <button class="btn-primary" id="addItemBtn">List Item</button>
+    <div class="status-msg" id="statusMsg"></div>
   </div>
-
-</main>
+</div>
 
 <script>
-  function fakeSubmit() {
-    alert("Listing submitted (demo only). Backend integration coming soon.");
+  function getProfile(){
+    try{return JSON.parse(localStorage.getItem("rc_profile")||"{}");}
+    catch(e){return {};}
   }
+  function getItems(){
+    try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}
+    catch(e){return [];}
+  }
+  function saveItems(items){
+    localStorage.setItem("rc_marketplace_items",JSON.stringify(items));
+  }
+
+  const titleEl=document.getElementById("itemTitle");
+  const priceEl=document.getElementById("itemPrice");
+  const discEl=document.getElementById("itemDiscipline");
+  const descEl=document.getElementById("itemDescription");
+  const imgEl=document.getElementById("itemImage");
+  const donateEl=document.getElementById("itemDonate");
+  const addBtn=document.getElementById("addItemBtn");
+  const statusMsg=document.getElementById("statusMsg");
+
+  addBtn.onclick=()=>{
+    const profile=getProfile();
+    if(!profile.id || !profile.name){
+      statusMsg.textContent="Set up your profile first (name + id) before listing items.";
+      return;
+    }
+
+    const title=titleEl.value.trim();
+    const price=priceEl.value.trim();
+    const discipline=discEl.value;
+    const description=descEl.value.trim();
+    const donate=donateEl.checked;
+
+    if(!title || !price || !discipline){
+      statusMsg.textContent="Title, price, and discipline are required.";
+      return;
+    }
+
+    const items=getItems();
+    const id=Date.now().toString()+"-"+Math.random().toString(36).slice(2);
+    const file=imgEl.files[0];
+
+    function finish(imageDataUrl){
+      items.push({
+        id,
+        title,
+        price,
+        discipline,
+        description,
+        imageDataUrl,
+        donateToGiveaway:donate,
+        sellerName:profile.name || "Unknown",
+        sellerId:profile.id || "",
+        timestamp:Date.now()
+      });
+      saveItems(items);
+      statusMsg.textContent="Item listed. Redirecting...";
+      setTimeout(()=>{window.location.href="marketplace.html";},800);
+    }
+
+    if(file){
+      const reader=new FileReader();
+      reader.onload=e=>finish(e.target.result);
+      reader.readAsDataURL(file);
+    }else{
+      finish("");
+    }
+  };
 </script>
 
 </body>
