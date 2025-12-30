@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Chatrooms – Roll ’n Connect</title>
-
+  <title>Longboard – Roll ’n Connect</title>
   <link rel="stylesheet" href="styles/style.css">
 
   <style>
@@ -30,13 +29,31 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
+    /* FLOATING FUTURISTIC SIDEBAR */
+    .sidebar {
+      position:fixed;
+      top:50%;
+      left:-260px;
+      transform:translateY(-50%);
+      width:260px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:30px 20px;
+      border-radius:0 20px 20px 0;
+      box-shadow:10px 0 40px rgba(255,255,255,0.25);
+      transition:0.35s ease;
+      z-index:9998;
+    }
+    .sidebar.open { left:0; }
+
     /* BURGER */
     .hamburger {
       position:fixed;
       top:25px;
       left:25px;
-      width:36px;
-      height:28px;
+      width:40px;
+      height:30px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
@@ -48,206 +65,147 @@
       width:100%;
       background:#fff;
       border-radius:4px;
-      box-shadow:0 0 10px rgba(255,255,255,0.8);
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
       transition:0.3s;
     }
-    .hamburger.active span:nth-child(1){transform:translateY(12px) rotate(45deg);}
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
     .hamburger.active span:nth-child(2){opacity:0;}
-    .hamburger.active span:nth-child(3){transform:translateY(-12px) rotate(-45deg);}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
 
-    /* SIDEBAR */
-    .sidebar {
-      position:fixed;
-      top:0;
-      left:-260px;
-      width:260px;
-      height:100vh;
-      background:rgba(255,255,255,0.06);
-      backdrop-filter:blur(20px);
-      border-right:1px solid rgba(255,255,255,0.15);
-      padding:30px 20px;
-      box-shadow:5px 0 25px rgba(255,255,255,0.15);
+    /* NAV LINKS */
+    .nav-header{text-align:center;margin-bottom:30px;}
+    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
+    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
+
+    .nav-links {
+      list-style:none;
+      padding:0;
+      margin:0;
       display:flex;
       flex-direction:column;
-      z-index:9998;
-      transition:0.35s ease;
+      gap:18px;
     }
-    .sidebar.open { left:0; }
-
-    .nav-header{text-align:center;margin-bottom:40px;}
-    .logo-orb{font-size:3rem;margin-bottom:10px;}
-    .nav-title{font-size:1.4rem;font-weight:600;}
-
-    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;}
-    .nav-links a{
-      color:#fff;text-decoration:none;font-size:1.15rem;
-      padding:10px 14px;border-radius:12px;transition:0.25s;
+    .nav-links a {
+      color:#fff;
+      text-decoration:none;
+      font-size:1.15rem;
+      padding:10px 14px;
+      border-radius:12px;
+      transition:0.25s;
+      display:block;
+      background:rgba(255,255,255,0.05);
+      box-shadow:0 0 12px rgba(255,255,255,0.15);
     }
-    .nav-links a:hover{
-      background:rgba(255,255,255,0.15);
-      transform:translateX(6px);
+    .nav-links a:hover {
+      background:rgba(255,255,255,0.2);
+      transform:translateX(8px);
+      box-shadow:0 0 20px rgba(255,255,255,0.4);
     }
 
     /* PAGE WRAPPER */
     .page-wrapper {
-      width:100%;
       padding-top:120px;
-      text-align:center;
       padding-bottom:80px;
+      text-align:center;
     }
 
     /* HERO */
     .hero {
-      margin:0 auto 60px auto;
-      padding:50px;
+      margin:0 auto 40px auto;
+      padding:40px;
       max-width:900px;
       background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(20px);
+      backdrop-filter:blur(25px);
       border-radius:24px;
-      box-shadow:0 0 50px rgba(255,255,255,0.2);
+      box-shadow:0 0 60px rgba(255,255,255,0.3);
     }
 
-    /* GRID */
-    .chatrooms-grid {
+    /* SUBCATEGORY GRID */
+    .sub-grid {
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
       gap:40px;
       padding:0 40px;
     }
 
-    .chatroom-card {
+    .sub-card {
       background:rgba(255,255,255,0.12);
-      backdrop-filter:blur(20px);
-      padding:30px;
+      backdrop-filter:blur(25px);
+      padding:24px;
       border-radius:20px;
-      box-shadow:0 0 35px rgba(255,255,255,0.25);
+      box-shadow:0 0 40px rgba(255,255,255,0.3);
       transition:0.3s;
-      text-align:center;
+      text-align:left;
     }
-    .chatroom-card:hover {
-      transform:scale(1.05);
-      box-shadow:0 0 50px rgba(255,255,255,0.5);
+    .sub-card:hover {
+      transform:scale(1.06);
+      box-shadow:0 0 60px rgba(255,255,255,0.5);
     }
 
     .enter-btn {
       display:inline-block;
-      margin-top:20px;
-      padding:12px 20px;
+      margin-top:14px;
+      padding:10px 18px;
       background:#fff;
       color:#000;
       border-radius:12px;
       text-decoration:none;
-      font-size:1rem;
-      transition:0.25s;
-    }
-    .enter-btn:hover {
-      transform:scale(1.1);
-      box-shadow:0 0 30px rgba(255,255,255,0.8);
+      font-weight:600;
     }
   </style>
 </head>
 
 <body>
 
-<div class="stars1"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
 
 <!-- BURGER -->
-<div id="hamburger" class="hamburger">
-  <span></span><span></span><span></span>
-</div>
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
 
-<!-- SIDEBAR -->
+<!-- FLOATING SIDEBAR -->
 <nav id="sidebar" class="sidebar">
   <div class="nav-header">
-    <div class="logo-orb">🛼</div>
-    <div class="nav-title">Roll ’n Connect</div>
+    <div class="logo-orb">🛹</div>
+    <div class="nav-title">Longboard</div>
   </div>
 
   <ul class="nav-links">
-    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="chatrooms.html">⬅ Back to Chatrooms</a></li>
     <li><a href="dashboard.html">📊 Dashboard</a></li>
-    <li><a href="events.html">📅 Events</a></li>
-    <li><a href="calendar.html">🗓️ Calendar</a></li>
-    <li><a href="find-spots.html">📍 Find Spots</a></li>
     <li><a href="profile.html">👤 Your Profile</a></li>
     <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
-    <li><a href="settings.html">⚙️ Settings</a></li>
   </ul>
 </nav>
 
 <div class="page-wrapper">
 
   <div class="hero">
-    <h1 style="font-size:3rem;">Chatrooms</h1>
-    <p style="font-size:1.2rem;opacity:0.9;">
-      Every discipline has its own world.  
-      Each world has sub‑categories.  
-      Each sub‑category leads to a souped‑up chatroom with:
-      <br><br>
-      🔥 **Emoji blasts**  
-      🌀 **Message effects** (slam, quiet, reveal, normal)  
-      🎨 **Font & style options**  
-      🔔 **Per‑room notification toggles**  
-      💬 **Live chat that uses your profile name + avatar**  
-      <br><br>
-      Choose your discipline to enter its universe.
+    <h1 style="font-size:3rem;">Longboard Chat Realms</h1>
+    <p style="font-size:1.05rem;opacity:0.9;line-height:1.7;">
+      Longboarding splits into three major styles.  
+      Each one leads to a chatroom with message effects, emoji blasts,  
+      reveal messages, slam messages, quiet messages, and per‑room notifications.
     </p>
   </div>
 
-  <section class="chatrooms-grid">
+  <section class="sub-grid">
 
-    <!-- LONGBOARD -->
-    <div class="chatroom-card">
-      <h2>Longboard</h2>
-      <p>Dancing • Cruising • Downhill</p>
-      <p style="opacity:0.8;font-size:0.9rem;">
-        Flow, footwork, speed, and smooth cruising.  
-        Enter to choose your longboard style.
-      </p>
-      <a href="longboard.html" class="enter-btn">Enter</a>
+    <div class="sub-card">
+      <h2>Dancing</h2>
+      <p>Flow, footwork, combos, and boardwalk‑style movement.</p>
+      <a href="chatroom.html?room=longboard-dancing" class="enter-btn">Enter Dancing Chat</a>
     </div>
 
-    <!-- BLADES -->
-    <div class="chatroom-card">
-      <h2>Blades</h2>
-      <p>Urban Flow • Slalom</p>
-      <p style="opacity:0.8;font-size:0.9rem;">
-        Inline skating culture — fast lines, cones, and precision.
-      </p>
-      <a href="blades.html" class="enter-btn">Enter</a>
+    <div class="sub-card">
+      <h2>Cruising</h2>
+      <p>Chill rides, smooth pushes, city laps, and mellow flow.</p>
+      <a href="chatroom.html?room=longboard-cruising" class="enter-btn">Enter Cruising Chat</a>
     </div>
 
-    <!-- QUADS -->
-    <div class="chatroom-card">
-      <h2>Quads</h2>
-      <p>Dance Skating • Rink Culture • Outdoor Rink</p>
-      <p style="opacity:0.8;font-size:0.9rem;">
-        Rhythm, dance, speed, and outdoor rink energy.
-      </p>
-      <a href="quads.html" class="enter-btn">Enter</a>
-    </div>
-
-    <!-- SKATEBOARD -->
-    <div class="chatroom-card">
-      <h2>Skateboard</h2>
-      <p>Street • Park • Vert</p>
-      <p style="opacity:0.8;font-size:0.9rem;">
-        Classic skateboarding — rails, bowls, transitions, and vert.
-      </p>
-      <a href="skateboard.html" class="enter-btn">Enter</a>
-    </div>
-
-    <!-- VIRTUAL SKATE PARK -->
-    <div class="chatroom-card">
-      <h2>Virtual Skate Park</h2>
-      <p>All Disciplines • Shared Space</p>
-      <p style="opacity:0.8;font-size:0.9rem;">
-        A digital skatepark where every discipline meets, chats,  
-        shares clips, and builds community together.
-      </p>
-      <a href="virtual.html" class="enter-btn">Enter</a>
+    <div class="sub-card">
+      <h2>Downhill</h2>
+      <p>Speed, freeride, slides, and hill bombing.</p>
+      <a href="chatroom.html?room=longboard-downhill" class="enter-btn">Enter Downhill Chat</a>
     </div>
 
   </section>
