@@ -15,156 +15,114 @@
       overflow-x:hidden;
     }
 
-    /* STARFIELDS */
-    .stars1,.stars2,.stars3 {
-      position:fixed; inset:0;
+    .stars1,.stars2,.stars3{
+      position:fixed;inset:0;
       background:url('styles/stars-white.png') repeat;
       z-index:-3;
     }
     .stars1{opacity:.55;animation:drift1 140s linear infinite;}
     .stars2{opacity:.35;animation:drift2 200s linear infinite;}
-    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
-
+    .stars3{opacity:.2;animation:drift3 260s linear infinite;}
     @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* FLOATING SIDEBAR */
-    .sidebar {
-      position:fixed;
-      top:50%;
-      left:-260px;
-      transform:translateY(-50%);
-      width:260px;
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(25px);
+    .sidebar{
+      position:fixed;top:50%;left:-260px;transform:translateY(-50%);
+      width:260px;background:rgba(255,255,255,0.08);backdrop-filter:blur(25px);
       border-right:1px solid rgba(255,255,255,0.25);
-      padding:30px 20px;
-      border-radius:0 20px 20px 0;
+      padding:30px 20px;border-radius:0 20px 20px 0;
       box-shadow:10px 0 40px rgba(255,255,255,0.25);
-      transition:0.35s ease;
-      z-index:9998;
+      transition:0.35s ease;z-index:9998;
     }
-    .sidebar.open { left:0; }
+    .sidebar.open{left:0;}
 
-    /* BURGER */
-    .hamburger {
-      position:fixed;
-      top:25px;
-      left:25px;
-      width:40px;
-      height:30px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      cursor:pointer;
-      z-index:9999;
+    .hamburger{
+      position:fixed;top:25px;left:25px;width:40px;height:30px;
+      display:flex;flex-direction:column;justify-content:space-between;
+      cursor:pointer;z-index:9999;
     }
-    .hamburger span {
-      height:4px;
-      width:100%;
-      background:#fff;
-      border-radius:4px;
-      box-shadow:0 0 12px rgba(255,255,255,0.9);
-      transition:0.3s;
+    .hamburger span{
+      height:4px;width:100%;background:#fff;border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);transition:0.3s;
     }
     .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
     .hamburger.active span:nth-child(2){opacity:0;}
     .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
 
-    /* PAGE WRAPPER */
-    .page-wrapper {
-      padding-top:120px;
-      padding-bottom:80px;
-      max-width:900px;
-      margin:0 auto;
+    .nav-header{text-align:center;margin-bottom:30px;}
+    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
+    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
+    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;}
+    .nav-links a{
+      color:#fff;text-decoration:none;font-size:1.05rem;
+      padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);
+      box-shadow:0 0 12px rgba(255,255,255,0.15);transition:0.25s;
     }
+    .nav-links a:hover{background:rgba(255,255,255,0.2);transform:translateX(8px);box-shadow:0 0 20px rgba(255,255,255,0.4);}
 
-    /* FORM */
-    .form-card {
+    .page-wrapper{
+      padding-top:120px;padding-bottom:80px;
+      max-width:900px;margin:0 auto;
+    }
+    .form-card{
       background:rgba(255,255,255,0.08);
       backdrop-filter:blur(25px);
-      padding:40px;
-      border-radius:24px;
+      padding:40px;border-radius:24px;
       box-shadow:0 0 60px rgba(255,255,255,0.3);
     }
 
-    input, textarea, select {
-      width:100%;
-      padding:12px;
-      margin-bottom:20px;
-      border:none;
-      border-radius:12px;
-      background:rgba(255,255,255,0.15);
-      color:#fff;
-      font-size:1rem;
+    label{font-size:0.85rem;opacity:0.85;display:block;margin-bottom:4px;}
+    input,textarea,select{
+      width:100%;padding:10px 12px;margin-bottom:16px;
+      border:none;border-radius:12px;
+      background:rgba(255,255,255,0.16);color:#fff;font-size:0.95rem;
     }
 
-    .save-btn {
-      padding:14px 22px;
-      background:#fff;
-      color:#000;
-      border-radius:12px;
-      font-weight:600;
-      cursor:pointer;
-      transition:0.25s;
-    }
-    .save-btn:hover {
-      transform:scale(1.05);
-      box-shadow:0 0 25px rgba(255,255,255,0.8);
+    .save-btn{
+      padding:12px 20px;background:#fff;color:#000;
+      border-radius:12px;font-weight:600;border:none;cursor:pointer;
+      margin-top:10px;
     }
 
-    /* LESSON EDITOR */
-    .lesson-editor {
-      margin-top:40px;
+    .section-title{
+      margin-top:26px;margin-bottom:8px;font-size:1.2rem;
     }
 
-    .lesson-item {
+    .posts-list,.lessons-list{margin-top:10px;}
+
+    .post-item,.lesson-item{
       background:rgba(255,255,255,0.12);
-      padding:20px;
-      border-radius:18px;
-      margin-bottom:20px;
-      position:relative;
+      padding:14px;border-radius:14px;
+      margin-bottom:10px;position:relative;
     }
 
-    .delete-btn {
-      position:absolute;
-      top:10px;
-      right:10px;
-      background:#ff4444;
-      color:#fff;
-      border:none;
-      padding:6px 10px;
-      border-radius:8px;
-      cursor:pointer;
+    .delete-btn{
+      position:absolute;top:10px;right:10px;
+      background:#ff4b4b;color:#fff;border:none;
+      padding:4px 8px;border-radius:8px;font-size:0.75rem;cursor:pointer;
     }
 
-    .add-btn {
-      padding:12px 18px;
-      background:#fff;
-      color:#000;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:600;
-      margin-top:20px;
+    .row-flex{display:flex;gap:10px;}
+    .row-flex input{flex:1;}
+
+    .add-btn{
+      padding:10px 16px;background:#fff;color:#000;border-radius:12px;
+      border:none;cursor:pointer;font-weight:600;margin-bottom:10px;
     }
   </style>
 </head>
-
 <body>
 
 <div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
 
-<!-- BURGER -->
 <div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
 
-<!-- SIDEBAR -->
 <nav id="sidebar" class="sidebar">
   <div class="nav-header">
     <div class="logo-orb">✏️</div>
     <div class="nav-title">Edit Profile</div>
   </div>
-
   <ul class="nav-links">
     <li><a href="profile.html">⬅ Back to Profile</a></li>
     <li><a href="dashboard.html">📊 Dashboard</a></li>
@@ -173,38 +131,166 @@
 </nav>
 
 <div class="page-wrapper">
-
   <div class="form-card">
+    <h1 style="text-align:center;margin-bottom:24px;">Edit Profile</h1>
 
-    <h1 style="text-align:center;margin-bottom:30px;">Edit Your Profile</h1>
-
+    <!-- Basic Info -->
+    <label for="name">Name</label>
     <input id="name" placeholder="Your Name">
-    <input id="avatarUrl" placeholder="Avatar Image URL">
-    <textarea id="bio" placeholder="Your Bio" rows="4"></textarea>
 
-    <h2 style="margin-top:30px;">Your Lessons</h2>
+    <label for="avatarUrl">Avatar Image URL</label>
+    <input id="avatarUrl" placeholder="https://...">
 
-    <div id="lessonList"></div>
+    <label for="bio">Bio</label>
+    <textarea id="bio" rows="3" placeholder="Your bio"></textarea>
 
-    <button class="add-btn" id="addLesson">+ Add Lesson</button>
+    <label for="link">Link</label>
+    <input id="link" placeholder="https://your-site-or-link">
 
-    <button class="save-btn" id="saveProfile">Save Profile</button>
+    <!-- POSTS -->
+    <div class="section-title">Posts (Images & Clips)</div>
+    <div id="postsList" class="posts-list"></div>
 
+    <div style="margin-top:10px;">
+      <label>New Post URL</label>
+      <input id="newPostUrl" placeholder="https://image-or-video-url">
+      <label>Type</label>
+      <select id="newPostType">
+        <option value="image">Image</option>
+        <option value="video">Video</option>
+      </select>
+      <label>Caption</label>
+      <textarea id="newPostCaption" rows="2" placeholder="Caption"></textarea>
+      <button class="add-btn" id="addPostBtn">+ Add Post</button>
+    </div>
+
+    <!-- LESSONS -->
+    <div class="section-title">Lessons Offered</div>
+    <div id="lessonsList" class="lessons-list"></div>
+
+    <div style="margin-top:10px;">
+      <label>Lesson Title</label>
+      <input id="lessonTitle" placeholder="Beginner Dance Lesson">
+
+      <div class="row-flex">
+        <div>
+          <label>Price</label>
+          <input id="lessonPrice" placeholder="40">
+        </div>
+        <div>
+          <label>Duration (minutes)</label>
+          <input id="lessonDuration" placeholder="60">
+        </div>
+      </div>
+
+      <label>Description</label>
+      <textarea id="lessonDescription" rows="2" placeholder="What you cover, level, etc."></textarea>
+      <button class="add-btn" id="addLessonBtn">+ Add Lesson</button>
+    </div>
+
+    <button class="save-btn" id="saveProfileBtn">Save Profile</button>
   </div>
-
 </div>
 
 <script>
-  /* SIDEBAR */
-  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+  const h=document.getElementById("hamburger"), s=document.getElementById("sidebar");
   h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
 
-  /* LOAD PROFILE */
   let profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+  profile.posts = profile.posts || [];
+  profile.lessons = profile.lessons || [];
 
-  document.getElementById("name").value = profile.name || "";
-  document.getElementById("avatarUrl").value = profile.avatarUrl || "";
-  document.getElementById("bio").value = profile.bio || "";
+  const nameEl = document.getElementById("name");
+  const avatarEl = document.getElementById("avatarUrl");
+  const bioEl = document.getElementById("bio");
+  const linkEl = document.getElementById("link");
+  const postsList = document.getElementById("postsList");
+  const lessonsList = document.getElementById("lessonsList");
 
-  const lessonList = document.getElementById("lessonList");
-  let lessons = profile.less
+  nameEl.value = profile.name || "";
+  avatarEl.value = profile.avatarUrl || "";
+  bioEl.value = profile.bio || "";
+  linkEl.value = profile.link || "";
+
+  function renderPosts(){
+    postsList.innerHTML="";
+    profile.posts.forEach((p,idx)=>{
+      const div=document.createElement("div");
+      div.className="post-item";
+      div.innerHTML = `
+        <div><strong>${p.type.toUpperCase()}</strong> – ${p.url}</div>
+        <div style="font-size:0.9rem;opacity:0.9;">${p.caption || ""}</div>
+        <button class="delete-btn" data-idx="${idx}">Delete</button>
+      `;
+      postsList.appendChild(div);
+    });
+    postsList.querySelectorAll(".delete-btn").forEach(btn=>{
+      btn.onclick=()=>{
+        const i=parseInt(btn.dataset.idx,10);
+        profile.posts.splice(i,1);
+        renderPosts();
+      };
+    });
+  }
+
+  function renderLessons(){
+    lessonsList.innerHTML="";
+    profile.lessons.forEach((ls,idx)=>{
+      const div=document.createElement("div");
+      div.className="lesson-item";
+      div.innerHTML = `
+        <div><strong>${ls.title}</strong> – $${ls.price}, ${ls.duration} min</div>
+        <div style="font-size:0.9rem;opacity:0.9;">${ls.description}</div>
+        <button class="delete-btn" data-idx="${idx}">Delete</button>
+      `;
+      lessonsList.appendChild(div);
+    });
+    lessonsList.querySelectorAll(".delete-btn").forEach(btn=>{
+      btn.onclick=()=>{
+        const i=parseInt(btn.dataset.idx,10);
+        profile.lessons.splice(i,1);
+        renderLessons();
+      };
+    });
+  }
+
+  renderPosts();
+  renderLessons();
+
+  document.getElementById("addPostBtn").onclick=()=>{
+    const url=document.getElementById("newPostUrl").value.trim();
+    const type=document.getElementById("newPostType").value;
+    const caption=document.getElementById("newPostCaption").value.trim();
+    if(!url) return;
+    profile.posts.push({url,type,caption,comments:[]});
+    document.getElementById("newPostUrl").value="";
+    document.getElementById("newPostCaption").value="";
+    renderPosts();
+  };
+
+  document.getElementById("addLessonBtn").onclick=()=>{
+    const title=document.getElementById("lessonTitle").value.trim();
+    const price=document.getElementById("lessonPrice").value.trim();
+    const duration=document.getElementById("lessonDuration").value.trim();
+    const description=document.getElementById("lessonDescription").value.trim();
+    if(!title) return;
+    profile.lessons.push({title,price,duration,description});
+    document.getElementById("lessonTitle").value="";
+    document.getElementById("lessonPrice").value="";
+    document.getElementById("lessonDuration").value="";
+    document.getElementById("lessonDescription").value="";
+    renderLessons();
+  };
+
+  document.getElementById("saveProfileBtn").onclick=()=>{
+    profile.name=nameEl.value.trim() || "Your Name";
+    profile.avatarUrl=avatarEl.value.trim();
+    profile.bio=bioEl.value.trim();
+    profile.link=linkEl.value.trim();
+    localStorage.setItem("rc_profile",JSON.stringify(profile));
+    window.location.href="profile.html";
+  };
+</script>
+
+</body>
+</html>
