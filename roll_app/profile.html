@@ -6,38 +6,211 @@
   <link rel="stylesheet" href="styles/style.css">
 
   <style>
-    body { background:#000; color:#fff; margin:0; padding:0; font-family:'Inter',sans-serif; overflow-x:hidden; display:flex; }
-    .page-wrapper { width:100%; padding-right:260px; padding-top:120px; }
-    .profile-card { max-width:900px; margin:0 auto; padding:40px; background:rgba(255,255,255,0.08); backdrop-filter:blur(20px); border-radius:24px; }
-    .profile-header { display:flex; gap:20px; align-items:center; }
-    .profile-avatar { width:100px; height:100px; border-radius:50%; background-size:cover; background-position:center; box-shadow:0 0 30px rgba(255,255,255,0.5); }
-    .tag-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
-    .tag-pill { padding:4px 10px; border-radius:999px; border:1px solid rgba(255,255,255,0.4); font-size:0.8rem; }
-    .wheels-track { display:flex; gap:20px; overflow-x:auto; margin-top:20px; }
-    .wheel-card { min-width:200px; border-radius:20px; overflow:hidden; background:rgba(255,255,255,0.12); }
-    .wheel-card img { width:100%; height:200px; object-fit:cover; }
+    body {
+      background:#000;
+      color:#fff;
+      margin:0;
+      padding:0;
+      font-family:'Inter',sans-serif;
+      overflow-x:hidden;
+    }
+
+    /* STARFIELDS */
+    .stars1,.stars2,.stars3 {
+      position:fixed; inset:0;
+      background:url('styles/stars-white.png') repeat;
+      z-index:-3;
+    }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
+
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+    /* FLOATING SIDEBAR */
+    .sidebar {
+      position:fixed;
+      top:50%;
+      left:-260px;
+      transform:translateY(-50%);
+      width:260px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:30px 20px;
+      border-radius:0 20px 20px 0;
+      box-shadow:10px 0 40px rgba(255,255,255,0.25);
+      transition:0.35s ease;
+      z-index:9998;
+    }
+    .sidebar.open { left:0; }
+
+    /* BURGER */
+    .hamburger {
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:9999;
+    }
+    .hamburger span {
+      height:4px;
+      width:100%;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+    /* NAV LINKS */
+    .nav-header{text-align:center;margin-bottom:30px;}
+    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
+    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
+
+    .nav-links {
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .nav-links a {
+      color:#fff;
+      text-decoration:none;
+      font-size:1.15rem;
+      padding:10px 14px;
+      border-radius:12px;
+      transition:0.25s;
+      display:block;
+      background:rgba(255,255,255,0.05);
+      box-shadow:0 0 12px rgba(255,255,255,0.15);
+    }
+    .nav-links a:hover {
+      background:rgba(255,255,255,0.2);
+      transform:translateX(8px);
+      box-shadow:0 0 20px rgba(255,255,255,0.4);
+    }
+
+    /* PAGE WRAPPER */
+    .page-wrapper {
+      padding-top:120px;
+      padding-bottom:80px;
+      text-align:center;
+    }
+
+    /* PROFILE CARD */
+    .profile-card {
+      margin:0 auto 40px auto;
+      padding:40px;
+      max-width:900px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      border-radius:24px;
+      box-shadow:0 0 60px rgba(255,255,255,0.3);
+      text-align:center;
+    }
+
+    .avatar {
+      width:140px;
+      height:140px;
+      border-radius:50%;
+      background-size:cover;
+      background-position:center;
+      margin:0 auto 20px auto;
+      box-shadow:0 0 25px rgba(255,255,255,0.7);
+    }
+
+    .edit-btn {
+      display:inline-block;
+      margin-top:20px;
+      padding:12px 20px;
+      background:#fff;
+      color:#000;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:600;
+      transition:0.25s;
+    }
+    .edit-btn:hover {
+      transform:scale(1.05);
+      box-shadow:0 0 25px rgba(255,255,255,0.8);
+    }
+
+    /* LESSONS SECTION */
+    .lessons-section {
+      margin:40px auto;
+      max-width:900px;
+      text-align:left;
+    }
+
+    .lesson-card {
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(25px);
+      padding:20px;
+      border-radius:18px;
+      margin-bottom:20px;
+      box-shadow:0 0 40px rgba(255,255,255,0.25);
+      transition:0.3s;
+    }
+    .lesson-card:hover {
+      transform:scale(1.03);
+      box-shadow:0 0 60px rgba(255,255,255,0.4);
+    }
+
+    .lesson-title {
+      font-size:1.3rem;
+      font-weight:600;
+      margin-bottom:6px;
+    }
+
+    .lesson-meta {
+      opacity:0.85;
+      margin-bottom:10px;
+    }
+
+    .book-btn {
+      display:inline-block;
+      padding:10px 16px;
+      background:#fff;
+      color:#000;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:600;
+    }
   </style>
 </head>
 
 <body>
 
-<div class="stars1"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
 
-<nav class="side-nav">
+<!-- BURGER -->
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar" class="sidebar">
   <div class="nav-header">
-    <div class="logo-orb">🛼</div>
-    <div class="nav-title">Roll ’n Connect</div>
+    <div class="logo-orb">👤</div>
+    <div class="nav-title">Your Profile</div>
   </div>
 
   <ul class="nav-links">
-    <li><a href="index.html">🏠 Home</a></li>
     <li><a href="dashboard.html">📊 Dashboard</a></li>
     <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
     <li><a href="events.html">📅 Events</a></li>
     <li><a href="calendar.html">🗓️ Calendar</a></li>
-    <li><a href="profile.html">👤 Your Profile</a></li>
     <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
     <li><a href="settings.html">⚙️ Settings</a></li>
   </ul>
@@ -45,47 +218,54 @@
 
 <div class="page-wrapper">
 
+  <!-- PROFILE CARD -->
   <div class="profile-card">
+    <div id="avatar" class="avatar"></div>
+    <h1 id="username" style="font-size:2.4rem;">Your Name</h1>
+    <p id="bio" style="opacity:0.85;max-width:600px;margin:10px auto;">
+      Your bio goes here. Tell the world who you are.
+    </p>
 
-    <div class="profile-header">
-      <div id="pAvatar" class="profile-avatar"></div>
-      <div>
-        <h2 id="pName"></h2>
-        <p id="pHandle" style="opacity:0.7;"></p>
-        <p id="pLocation" style="opacity:0.7;"></p>
-        <div id="pTags" class="tag-row"></div>
-      </div>
-    </div>
+    <a href="profile-edit.html" class="edit-btn">Edit Profile</a>
+  </div>
 
-    <p id="pBio" style="margin-top:20px; opacity:0.85;"></p>
+  <!-- LESSONS SECTION -->
+  <div class="lessons-section">
+    <h2 style="font-size:2rem;margin-bottom:20px;">Lessons Offered</h2>
 
-    <h3 style="margin-top:40px;">Clip Wheels</h3>
-    <button id="addMediaBtn" class="btn-primary" style="margin-bottom:20px;">Add Clip</button>
-    <div id="wheelsTrack" class="wheels-track"></div>
-
-    <div id="lessonsSection" style="margin-top:40px; display:none;">
-      <h3>Lessons</h3>
-      <p id="lessonsSummary"></p>
-      <div id="lessonsCards"></div>
-    </div>
-
-    <h3 style="margin-top:40px;">Reviews</h3>
-    <div id="reviewsList"></div>
-    <input id="reviewName" class="chat-input" placeholder="Your name">
-    <textarea id="reviewText" class="chat-input" placeholder="Write review..."></textarea>
-    <button id="reviewSubmit" class="btn-primary">Submit</button>
-
-    <h3 style="margin-top:40px;">Messages</h3>
-    <div id="messagesThread" class="messages-thread"></div>
-    <input id="messageInput" class="chat-input" placeholder="Message...">
-    <button id="messageSend" class="btn-primary">Send</button>
-
+    <div id="lessonsList"></div>
   </div>
 
 </div>
 
-<script src="profile.js"></script>
-<script>RC.initProfile();</script>
+<script>
+  /* SIDEBAR */
+  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+
+  /* LOAD PROFILE */
+  const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+
+  document.getElementById("avatar").style.backgroundImage = `url('${profile.avatarUrl || "styles/default-avatar.png"}')`;
+  document.getElementById("username").textContent = profile.name || "Your Name";
+  document.getElementById("bio").textContent = profile.bio || "Your bio goes here.";
+
+  /* LOAD LESSONS */
+  const lessons = profile.lessons || [];
+  const list = document.getElementById("lessonsList");
+
+  lessons.forEach(lesson=>{
+    const card = document.createElement("div");
+    card.className="lesson-card";
+    card.innerHTML = `
+      <div class="lesson-title">${lesson.title}</div>
+      <div class="lesson-meta">💲 ${lesson.price} • ⏱ ${lesson.duration} minutes</div>
+      <div style="opacity:0.85;margin-bottom:10px;">${lesson.description}</div>
+      <a class="book-btn">Book Lesson</a>
+    `;
+    list.appendChild(card);
+  });
+</script>
 
 </body>
 </html>
