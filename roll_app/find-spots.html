@@ -2,93 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Find Spots • Roll ’n Connect</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Find Spots – Roll ’n Connect</title>
+
+  <link rel="stylesheet" href="styles/style.css">
+
+  <!-- MAPBOX -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
 
   <style>
-    .section {
-      max-width: 1200px;
-      margin: 120px auto;
-      padding: 40px;
-      text-align: center;
-      animation: fadeIn 1.2s ease;
+    body {
+      background:#000;
+      color:#fff;
+      margin:0;
+      padding:0;
+      font-family:'Inter',sans-serif;
+      overflow:hidden;
     }
 
-    .spots-layout {
-      display: grid;
-      grid-template-columns: 2fr 1.4fr;
-      gap: 30px;
-      margin-top: 50px;
+    /* STARFIELDS */
+    .stars1,.stars2,.stars3 {
+      position:fixed; inset:0;
+      background:url('styles/stars-white.png') repeat;
+      z-index:-3;
+    }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
+
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+    /* HAMBURGER */
+    .hamburger {
+      position: fixed;
+      top: 25px;
+      left: 25px;
+      width: 36px;
+      height: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      z-index: 9999;
+    }
+    .hamburger span {
+      height: 4px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.8);
+      transition: 0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(12px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-12px) rotate(-45deg);}
+
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100vh;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255,255,255,0.15);
+      padding: 30px 20px;
+      box-shadow: 5px 0 25px rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 9998;
+      transition: 0.35s ease;
+    }
+    .sidebar.open { left: 0; }
+
+    .nav-header{text-align:center;margin-bottom:40px;}
+    .logo-orb{font-size:3rem;margin-bottom:10px;}
+    .nav-title{font-size:1.4rem;font-weight:600;}
+
+    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;}
+    .nav-links a{
+      color:#fff;text-decoration:none;font-size:1.15rem;
+      padding:10px 14px;border-radius:12px;transition:0.25s;
+    }
+    .nav-links a:hover{
+      background:rgba(255,255,255,0.15);
+      transform:translateX(6px);
     }
 
-    .map-panel {
-      height: 420px;
-      border-radius: 22px;
-      background: rgba(0,0,0,0.5);
-      box-shadow: 0 0 30px rgba(0,0,0,0.7);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .map-placeholder {
+    /* MAP */
+    #map {
       position: absolute;
-      inset: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #b0c4ff;
-      font-size: 1.1rem;
-      text-align: center;
-      padding: 20px;
+      top: 0;
+      left: 0;
+      width: calc(100% - 0px);
+      height: 100vh;
+      z-index: 1;
     }
 
-    .spot-card {
-      background: rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 14px;
-      text-align: left;
-      box-shadow: 0 0 20px rgba(120,80,255,0.4);
-      cursor: pointer;
-      transition: 0.25s;
+    /* SEARCH BAR */
+    .search-box {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      z-index: 9999;
+      background: rgba(0,0,0,0.6);
+      padding: 12px 18px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(255,255,255,0.3);
     }
-
-    .spot-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 0 28px rgba(160,120,255,0.8);
-    }
-
-    .spot-name {
-      font-size: 1.25rem;
-      color: #e0e4ff;
-      margin-bottom: 4px;
-    }
-
-    .spot-meta {
-      font-size: 0.95rem;
-      opacity: 0.9;
-    }
-
-    .filter-row {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 30px;
-    }
-
-    .filter-chip {
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.1);
-      font-size: 0.98rem;
-      cursor: pointer;
-      transition: 0.25s;
-    }
-
-    .filter-chip:hover {
-      background: rgba(255,255,255,0.2);
-      box-shadow: 0 0 18px rgba(150,110,255,0.7);
+    .search-box input {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
     }
   </style>
 </head>
@@ -98,81 +129,100 @@
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
-<div class="nebula-haze"></div>
 
-<div class="section glass">
-  <h1 class="section-title">Find Spots</h1>
-  <p style="opacity:0.9; font-size:1.2rem; max-width:800px; margin:auto;">
-    Discover hills, parks, plazas, and secret lines across your city.  
-    Filter by terrain and session style, then roll out with your crew.
-  </p>
-
-  <!-- Filters -->
-  <div class="filter-row">
-    <div class="filter-chip" onclick="filterSpots('All')">All</div>
-    <div class="filter-chip" onclick="filterSpots('Hills')">Hills</div>
-    <div class="filter-chip" onclick="filterSpots('Parks')">Parks</div>
-    <div class="filter-chip" onclick="filterSpots('Plazas')">Plazas</div>
-    <div class="filter-chip" onclick="filterSpots('Cruising')">Cruising Paths</div>
-    <div class="filter-chip" onclick="filterSpots('Dance')">Dance‑Friendly</div>
-  </div>
-
-  <!-- Layout -->
-  <div class="spots-layout">
-    <!-- Map / Visual Panel -->
-    <div class="map-panel">
-      <div class="map-placeholder" id="map-placeholder">
-        Map integration coming soon — this panel will show  
-        skate spots, routes, and meetup locations in your city.
-      </div>
-    </div>
-
-    <!-- Spot List -->
-    <div>
-      <div class="spot-card" data-type="Hills">
-        <div class="spot-name">Peachtree Downhill Run</div>
-        <div class="spot-meta">Hills • Longboard • Atlanta Midtown</div>
-        <div class="spot-meta">Smooth pavement • Medium traffic • Sunset runs</div>
-      </div>
-
-      <div class="spot-card" data-type="Parks">
-        <div class="spot-name">SkatePark West</div>
-        <div class="spot-meta">Parks • Street & Park • Bowls + rails</div>
-        <div class="spot-meta">Lights at night • Good for clips</div>
-      </div>
-
-      <div class="spot-card" data-type="Cruising">
-        <div class="spot-name">Riverwalk Path</div>
-        <div class="spot-meta">Cruising • Scenic route • Long pavement stretch</div>
-        <div class="spot-meta">Perfect for chill sessions and group rides</div>
-      </div>
-
-      <div class="spot-card" data-type="Plazas">
-        <div class="spot-name">Downtown Plaza Lines</div>
-        <div class="spot-meta">Plazas • Street • Ledges & flatground</div>
-        <div class="spot-meta">Late night sessions • Security aware</div>
-      </div>
-
-      <div class="spot-card" data-type="Dance">
-        <div class="spot-name">Galaxy Lot</div>
-        <div class="spot-meta">Dance • Flat, smooth asphalt • Low traffic</div>
-        <div class="spot-meta">Great lighting • Music‑friendly</div>
-      </div>
-    </div>
-  </div>
+<!-- HAMBURGER -->
+<div id="hamburger" class="hamburger">
+  <span></span><span></span><span></span>
 </div>
 
+<!-- SIDEBAR -->
+<nav id="sidebar" class="sidebar">
+  <div class="nav-header">
+    <div class="logo-orb">🛼</div>
+    <div class="nav-title">Roll ’n Connect</div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="calendar.html">🗓️ Calendar</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+    <li><a href="settings.html">⚙️ Settings</a></li>
+  </ul>
+</nav>
+
+<!-- SEARCH BAR -->
+<div class="search-box">
+  <input id="searchInput" placeholder="Search: skatepark, rink, trail, lot...">
+</div>
+
+<!-- MAP -->
+<div id="map"></div>
+
 <script>
-  function filterSpots(type) {
-    const cards = document.querySelectorAll('.spot-card');
-    cards.forEach(card => {
-      if (type === 'All' || card.dataset.type === type) {
-        card.style.display = 'block';
-      } else {
-        card.style.display = 'none';
-      }
+  // SIDEBAR TOGGLE
+  const h = document.getElementById("hamburger");
+  const s = document.getElementById("sidebar");
+  h.onclick = () => { h.classList.toggle("active"); s.classList.toggle("open"); };
+
+  // MAPBOX INIT
+  mapboxgl.accessToken = "YOUR_MAPBOX_KEY_HERE";
+
+  const map = new mapboxgl.Map({
+    container: "map",
+    style: "mapbox://styles/mapbox/dark-v11",
+    center: [-84.3, 33.8], // Atlanta default
+    zoom: 11
+  });
+
+  // USER LOCATION
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const { latitude, longitude } = pos.coords;
+
+      map.setCenter([longitude, latitude]);
+
+      // Load profile avatar
+      const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+      const avatar = profile.avatarUrl || "styles/default-avatar.png";
+
+      // Custom marker with avatar
+      const el = document.createElement("div");
+      el.style.width = "40px";
+      el.style.height = "40px";
+      el.style.borderRadius = "50%";
+      el.style.backgroundImage = `url('${avatar}')`;
+      el.style.backgroundSize = "cover";
+      el.style.boxShadow = "0 0 10px rgba(255,255,255,0.8)";
+
+      new mapboxgl.Marker(el)
+        .setLngLat([longitude, latitude])
+        .addTo(map);
     });
   }
+
+  // SEARCH FUNCTION
+  document.getElementById("searchInput").addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      const q = e.target.value;
+      fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${q}.json?proximity=ip&access_token=${mapboxgl.accessToken}`)
+        .then(r => r.json())
+        .then(data => {
+          if (!data.features.length) return;
+
+          const spot = data.features[0];
+          map.flyTo({ center: spot.center, zoom: 14 });
+
+          new mapboxgl.Marker()
+            .setLngLat(spot.center)
+            .setPopup(new mapboxgl.Popup().setHTML(`<strong>${spot.text}</strong><br>${spot.place_name}`))
+            .addTo(map);
+        });
+    }
+  });
 </script>
 
 </body>
