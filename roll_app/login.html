@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login • Roll ’n Connect</title>
+  <meta charset="UTF-8" />
+  <title>Dashboard • Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- GLOBAL STYLES -->
   <link rel="stylesheet" href="styles/style.css">
@@ -95,51 +96,37 @@
       flex: 1;
       padding: 60px;
       padding-right: 320px; /* space for right nav */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      max-width: 900px;
+      margin: auto;
     }
 
-    /* LOGIN CARD */
-    .auth-container {
-      width: 100%;
-      max-width: 480px;
-      padding: 40px;
-      text-align: center;
-      border-radius: 24px;
+    /* DASHBOARD CARDS */
+    .card {
       background: rgba(255,255,255,0.08);
       backdrop-filter: blur(20px);
-      box-shadow: 0 0 35px rgba(160,120,255,0.4);
-      animation: fadeIn 1.2s ease;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 35px rgba(160,120,255,0.3);
     }
 
-    .auth-input {
-      width: 100%;
-      padding: 16px;
-      margin-top: 18px;
-      border-radius: 14px;
-      border: none;
-      background: rgba(255,255,255,0.15);
-      color: white;
-      font-size: 1.1rem;
-      backdrop-filter: blur(10px);
+    .section-title {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
-    .auth-input::placeholder {
-      color: #d0d0ff;
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.4);
+      background: transparent;
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.25s;
     }
 
-    .remember-box {
-      margin-top: 15px;
-      font-size: 1rem;
-      opacity: 0.85;
-    }
-
-    .auth-footer {
-      margin-top: 25px;
-      font-size: 1rem;
-      opacity: 0.8;
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.2);
     }
   </style>
 </head>
@@ -174,31 +161,62 @@
   <!-- MAIN CONTENT -->
   <main class="page-content">
 
-    <div class="auth-container glass">
-      <h1 style="font-size:2.6rem; color:#e0e4ff; text-shadow:0 0 20px #8a6cff;">
-        Welcome Back
-      </h1>
+    <!-- USER SUMMARY -->
+    <div class="card">
+      <div style="display:flex; gap:16px; align-items:center;">
+        <div style="
+          width:78px; height:78px; border-radius:999px;
+          border:3px solid #a855f7;
+          box-shadow:0 0 12px rgba(168,85,247,0.7);
+          background:radial-gradient(circle,#a855f7,#3b82f6);
+        "></div>
 
-      <p style="opacity:0.9; margin-bottom:20px;">
-        Log in to your cosmic skating universe.
-      </p>
+        <div>
+          <div style="font-size:18px; font-weight:600;">@YourUsername</div>
+          <div style="font-size:13px; opacity:0.7;">Longboard • ATL • Night rides</div>
 
-      <input type="email" class="auth-input" placeholder="Email">
-      <input type="password" class="auth-input" placeholder="Password">
-
-      <div class="remember-box">
-        <input type="checkbox" id="remember">
-        <label for="remember">Remember this device</label>
+          <div style="display:flex; gap:16px; margin-top:6px; font-size:12px;">
+            <span><strong>23</strong> clips</span>
+            <span><strong>148</strong> followers</span>
+            <span><strong>89</strong> following</span>
+          </div>
+        </div>
       </div>
+    </div>
 
-      <button class="btn-primary"
-              style="margin-top:25px; width:100%; font-size:1.3rem;"
-              onclick="window.location.href='profile.html'">
-        Login
-      </button>
+    <!-- QUICK LINKS -->
+    <div class="card">
+      <div class="section-title">Quick Access</div>
 
-      <div class="auth-footer">
-        New here? <a href="signup.html" style="color:#9bb3ff;">Create an account</a>
+      <div style="display:flex; gap:16px; flex-wrap:wrap;">
+        <a href="chatrooms.html" class="btn-outline" style="padding:8px 14px;">💬 Chatrooms</a>
+        <a href="events.html" class="btn-outline" style="padding:8px 14px;">📅 Events</a>
+        <a href="spots-map.html" class="btn-outline" style="padding:8px 14px;">📍 Spots Map</a>
+        <a href="clips-feed.html" class="btn-outline" style="padding:8px 14px;">🎥 Clips Feed</a>
+        <a href="marketplace.html" class="btn-outline" style="padding:8px 14px;">🛒 Marketplace</a>
+      </div>
+    </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div class="card">
+      <div class="section-title">Recent Activity</div>
+
+      <ul style="list-style:none; padding:0; margin:0; font-size:14px; opacity:0.85;">
+        <li style="margin-bottom:10px;">🛼 You joined <strong>ATL Longboard Chat</strong></li>
+        <li style="margin-bottom:10px;">🎥 You uploaded a new clip</li>
+        <li style="margin-bottom:10px;">📍 You saved a new spot</li>
+        <li style="margin-bottom:10px;">🛒 You listed an item in Marketplace</li>
+      </ul>
+    </div>
+
+    <!-- SUGGESTED CHATS -->
+    <div class="card">
+      <div class="section-title">Suggested Chats</div>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <a href="chat-city-atlanta.html" class="btn-outline" style="padding:10px;">🌆 ATL Riders</a>
+        <a href="chat-city-miami.html" class="btn-outline" style="padding:10px;">🌴 Miami Cruisers</a>
+        <a href="chat-city-chicago.html" class="btn-outline" style="padding:10px;">🌬 Chicago Inline</a>
       </div>
     </div>
 
