@@ -90,7 +90,7 @@
     /* CENTER TITLE */
     .title-wrapper {
       position:absolute;
-      top:50%;
+      top:20%;
       left:50%;
       transform:translate(-50%, -50%);
       text-align:center;
@@ -99,15 +99,15 @@
     }
 
     .main-title {
-      font-size:8rem;
+      font-size:9rem;
       font-weight:900;
       letter-spacing:4px;
-      text-shadow:0 0 60px rgba(255,255,255,1);
+      text-shadow:0 0 80px rgba(255,255,255,1);
       margin-bottom:20px;
     }
 
     .subtitle {
-      font-size:1.8rem;
+      font-size:2rem;
       opacity:0.9;
       max-width:900px;
       margin:0 auto;
@@ -138,6 +138,71 @@
       transform:scale(1.12);
       box-shadow:0 0 60px rgba(255,255,255,1);
     }
+
+    /* FULL-WIDTH PANELS */
+    .panel {
+      width:100%;
+      padding:80px 40px;
+      background:rgba(255,255,255,0.06);
+      backdrop-filter:blur(20px);
+      box-shadow:0 0 60px rgba(255,255,255,0.25);
+      margin-top:600px;
+      border-top:1px solid rgba(255,255,255,0.2);
+      border-bottom:1px solid rgba(255,255,255,0.2);
+      position:relative;
+      z-index:2;
+    }
+
+    .panel-title {
+      font-size:3rem;
+      text-align:center;
+      margin-bottom:40px;
+      text-shadow:0 0 30px rgba(255,255,255,0.8);
+    }
+
+    .items-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:30px;
+      max-width:1400px;
+      margin:0 auto;
+    }
+
+    .item-card {
+      background:rgba(255,255,255,0.12);
+      padding:20px;
+      border-radius:20px;
+      box-shadow:0 0 40px rgba(255,255,255,0.3);
+      text-align:center;
+    }
+
+    .item-img {
+      width:100%;
+      height:180px;
+      background:rgba(255,255,255,0.2);
+      border-radius:16px;
+      margin-bottom:14px;
+    }
+
+    .item-title { font-size:1.3rem;font-weight:600;margin-bottom:6px; }
+    .item-price { opacity:0.85;margin-bottom:10px; }
+    .item-btn {
+      padding:10px 16px;
+      background:#fff;
+      color:#000;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    /* SIGNATURE */
+    .signature {
+      text-align:center;
+      margin-top:80px;
+      font-size:1.4rem;
+      opacity:0.8;
+      padding-bottom:40px;
+    }
   </style>
 </head>
 <body>
@@ -163,16 +228,15 @@
     <li><a href="calendar.html">🗓️ Calendar</a></li>
     <li><a href="profile.html">👤 Your Profile</a></li>
     <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
-    <li><a href="settings.html">⚙️ Settings</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="giveaways.html">🎁 Giveaways</a></li>
   </ul>
 </nav>
 
 <!-- CENTER TITLE -->
 <div class="title-wrapper">
   <div class="main-title">ROLL ’N CONNECT</div>
-  <div class="subtitle">
-    The cosmic skating universe — floating, glowing, alive.
-  </div>
+  <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
 </div>
 
 <!-- FLOATING BOUNCING BUTTONS -->
@@ -180,6 +244,70 @@
 <a href="find-spots.html" class="bubble" id="b2">Find Spots</a>
 <a href="events.html" class="bubble" id="b3">Events</a>
 <a href="profile.html" class="bubble" id="b4">Your Profile</a>
+<a href="marketplace.html" class="bubble" id="b5">Marketplace</a>
+<a href="giveaways.html" class="bubble" id="b6">Giveaways</a>
+
+<!-- MARKETPLACE PANEL -->
+<div class="panel">
+  <div class="panel-title">Marketplace Sneak Peek</div>
+
+  <div class="items-grid">
+    <div class="item-card">
+      <div class="item-img"></div>
+      <div class="item-title">Galaxy Rhythm Wheels (Quads)</div>
+      <div class="item-price">$89.99</div>
+      <a class="item-btn">View Item</a>
+    </div>
+
+    <div class="item-card">
+      <div class="item-img"></div>
+      <div class="item-title">Urban Flow Frames (Blades)</div>
+      <div class="item-price">$129.99</div>
+      <a class="item-btn">View Item</a>
+    </div>
+
+    <div class="item-card">
+      <div class="item-img"></div>
+      <div class="item-title">Nebula Dancer Deck (Longboard)</div>
+      <div class="item-price">$199.99</div>
+      <a class="item-btn">View Item</a>
+    </div>
+
+    <div class="item-card">
+      <div class="item-img"></div>
+      <div class="item-title">Cosmic Street Pop Deck (Skateboard)</div>
+      <div class="item-price">$79.99</div>
+      <a class="item-btn">View Item</a>
+    </div>
+  </div>
+</div>
+
+<!-- GIVEAWAY PANEL -->
+<div class="panel">
+  <div class="panel-title">Giveaways</div>
+
+  <div class="items-grid">
+    <div class="item-card">
+      <div class="item-title">Enter Giveaway</div>
+      <div class="item-price">Win gear, lessons, and more</div>
+      <a class="item-btn">Enter Now</a>
+    </div>
+
+    <div class="item-card">
+      <div class="item-title">Past Winners</div>
+      <div class="item-price">See who won last month</div>
+      <a class="item-btn">View Winners</a>
+    </div>
+
+    <div class="item-card">
+      <div class="item-title">Rules</div>
+      <div class="item-price">How giveaways work</div>
+      <a class="item-btn">Read Rules</a>
+    </div>
+  </div>
+</div>
+
+<div class="signature">by Boardwalk Clay</div>
 
 <script>
   /* SIDEBAR */
@@ -192,11 +320,13 @@
     { el: document.getElementById("b2"), x:500, y:200, vx:-2.5, vy:2.1 },
     { el: document.getElementById("b3"), x:900, y:150, vx:2.8, vy:-1.9 },
     { el: document.getElementById("b4"), x:300, y:450, vx:-2.3, vy:-1.6 },
+    { el: document.getElementById("b5"), x:700, y:600, vx:2.4, vy:2.2 },
+    { el: document.getElementById("b6"), x:200, y:800, vx:-2.1, vy:2.4 },
   ];
 
   function animate() {
     const w = window.innerWidth;
-    const h = window.innerHeight;
+    const h = window.innerHeight * 3; /* allow bouncing over full page */
 
     for (let b of bubbles) {
       b.x += b.vx;
