@@ -1,66 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chatrooms</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+
+<div id="hamburger" class="hamburger">
+  <span></span><span></span><span></span>
+</div>
+
+<div id="sidebar" class="sidebar">
+  <div class="sidebar-header"><h2>Menu</h2></div>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="profile.html">My Profile</a>
+  <a href="profile-edit.html">Edit Profile</a>
+  <a href="chatrooms.html">Chatrooms</a>
+  <a href="calendar.html">Calendar</a>
+  <a href="settings.html">Settings</a>
+</div>
+
 <div class="cosmic-wrapper">
 
-  <!-- Top Navigation -->
-  <nav class="cosmic-nav">
-    <a href="/login" class="nav-btn">Login</a>
-    <a href="/signup" class="nav-btn">Sign Up</a>
-  </nav>
-
-  <!-- Comic Book Description -->
   <section class="comic-description">
-    <h1>WELCOME TO THE ROLL ’N CONNECT MULTIVERSE</h1>
-    <p>
-      Step into a galaxy where wheels rule the cosmos.  
-      Choose your realm, meet your crew, drop emojis,  
-      and ride the neon highways of community energy.  
-      Every chatroom is a universe — and you’re the hero.
-    </p>
+    <h1>WELCOME TO THE MULTIVERSE</h1>
+    <p>Choose your realm.</p>
   </section>
 
-  <!-- Chatroom Cards -->
   <section class="chatrooms-grid">
 
     <div class="chatroom-card">
       <h2>Longboard</h2>
-      <p>Street cruising, dancing, downhill, and community rides.</p>
-      <a href="/chatrooms/longboard" class="enter-btn">Enter</a>
+      <p>Dancing, cruising, downhill.</p>
+      <a href="chatroom-longboard.html" class="enter-btn">Enter</a>
     </div>
 
     <div class="chatroom-card">
       <h2>Blades</h2>
-      <p>Inline skating, urban flow, slalom, and night sessions.</p>
-      <a href="/chatrooms/blades" class="enter-btn">Enter</a>
+      <p>Urban flow, slalom.</p>
+      <a href="chatroom-blades.html" class="enter-btn">Enter</a>
     </div>
 
     <div class="chatroom-card">
       <h2>Quads</h2>
-      <p>Dance skating, rink culture, jam skating, and meetups.</p>
-      <a href="/chatrooms/quads" class="enter-btn">Enter</a>
+      <p>Dance skating.</p>
+      <a href="chatroom-quads.html" class="enter-btn">Enter</a>
     </div>
 
     <div class="chatroom-card">
       <h2>Skateboard</h2>
-      <p>Street, park, vert, and local skate community sessions.</p>
-      <a href="/chatrooms/skateboard" class="enter-btn">Enter</a>
+      <p>Street, park, vert.</p>
+      <a href="chatroom-skateboard.html" class="enter-btn">Enter</a>
     </div>
 
     <div class="chatroom-card">
       <h2>Party Room</h2>
-      <p>Music, vibes, events, and community hangouts.</p>
-      <a href="/chatrooms/party" class="enter-btn">Enter</a>
+      <p>Music, vibes.</p>
+      <a href="chatroom-party.html" class="enter-btn">Enter</a>
     </div>
 
   </section>
 
-  <!-- Emoji Instructions -->
-  <section class="emoji-instructions">
-    <h3>HOW TO SEND EMOJIS</h3>
-    <p>
-      Inside any chatroom, just type your emoji like this:  
-      <strong>🔥 😎 🛹 🌟 💬</strong>  
-      Your keyboard emoji picker works everywhere.  
-      Tap, click, or press <strong>Windows + .</strong> to open the emoji panel.
-    </p>
-  </section>
-
 </div>
+
+<script>
+  const h = document.getElementById("hamburger");
+  const s = document.getElementById("sidebar");
+  h.onclick = () => { h.classList.toggle("active"); s.classList.toggle("open"); };
+</script>
+
+</body>
+</html>
