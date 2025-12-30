@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Notifications – Roll ’n Connect</title>
+
+  <style>
+    body{
+      background:#000;color:#fff;margin:0;padding:0;
+      font-family:'Inter',sans-serif;overflow-x:hidden;overflow-y:auto;
+    }
+
+    .stars1,.stars2,.stars3{
+      position:fixed;inset:0;
+      background:url('styles/stars-white.png') repeat;
+      z-index:-3;pointer-events:none;
+    }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2;animation:drift3 260s linear infinite;}
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+    .sidebar{
+      position:fixed;top:0;left:0;height:100vh;width:260px;
+      background:rgba(10,10,20,0.92);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:26px 20px;
+      box-shadow:10px 0 40px rgba(0,0,0,0.7);
+      z-index:9000;
+    }
+
+    .nav-header{text-align:center;margin-bottom:24px;}
+    .logo-orb{font-size:2.4rem;margin-bottom:6px;text-shadow:0 0 20px rgba(255,255,255,0.9);}
+    .nav-title{font-size:1.2rem;font-weight:600;text-shadow:0 0 10px rgba(255,255,255,0.7);}
+    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;}
+    .nav-links a{
+      display:block;color:#fff;text-decoration:none;font-size:0.95rem;
+      padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);
+      box-shadow:0 0 10px rgba(255,255,255,0.15);transition:0.25s;
+    }
+    .nav-links a:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(5px);
+      box-shadow:0 0 18px rgba(255,255,255,0.4);
+    }
+
+    .main{
+      margin-left:260px;
+      padding:40px;
+      min-height:100vh;
+    }
+
+    .page-title{
+      font-size:2.6rem;margin-bottom:10px;
+      text-shadow:0 0 30px rgba(255,255,255,0.8);
+    }
+    .page-sub{opacity:0.85;margin-bottom:30px;}
+
+    .notif-column{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:20px;
+    }
+
+    .notif-card{
+      background:rgba(255,255,255,0.1);
+      padding:16px;border-radius:16px;
+      box-shadow:0 0 30px rgba(255,255,255,0.25);
+    }
+
+    .notif-title{font-weight:600;margin-bottom:6px;}
+    .notif-meta{font-size:0.85rem;opacity:0.85;margin-bottom:8px;}
+    .notif-status{font-size:0.9rem;margin-bottom:10px;}
+
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap;}
+    .btn{
+      padding:8px 12px;border-radius:10px;border:none;
+      font-weight:600;cursor:pointer;font-size:0.85rem;
+    }
+    .btn-accept{background:#fff;color:#000;}
+    .btn-decline{background:#ff4b4b;color:#fff;}
+  </style>
+</head>
+<body>
+
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
+
+<nav class="sidebar">
+  <div class="nav-header">
+    <div class="logo-orb">🔔</div>
+    <div class="nav-title">Notifications</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="marketplace.html">Marketplace</a></li>
+    <li><a href="sell-item.html">Sell Item</a></li>
+    <li><a href="index.html">🏠 Home</a></li>
+  </ul>
+</nav>
+
+<div class="main">
+  <div class="page-title">Notifications</div>
+  <div class="page-sub">Buy requests and updates for your marketplace items.</div>
+
+  <h3>Your Incoming Requests</h3>
+  <div class="notif-column" id="incomingBox"></div>
+
+  <h3 style="margin-top:40px;">Requests You Sent</h3>
+  <div class="notif-column" id="sentBox"></div>
+</div>
+
+<script>
+  function getProfile(){
+    try{return JSON.parse(localStorage.getItem("rc_profile")||"{}");}
+    catch(e){return {};}
+  }
+  function getNotifications(){
+    try{return JSON.parse(localStorage.getItem("rc_notifications")||"[]");}
+    catch(e){return [];}
+  }
+  function saveNotifications(list){
+    localStorage.setItem("rc_notifications",JSON.stringify(list));
+  }
+
+  const profile=getProfile();
+  const incomingBox=document.getElementById("incomingBox");
+  const sentBox=document.getElementById("sentBox");
+
+  function render(){
+    const notifs=getNotifications();
+    incomingBox.innerHTML="";
+    sentBox.innerHTML="";
+
+    const myName=profile.name || "";
+
+    const incoming=notifs.filter(n=>n.sellerName===myName);
+    const sent=notifs.filter(n=>n.buyerName===myName);
+
+    if(!incoming.length){
+      incomingBox.innerHTML="<div style='opacity:0.8;'>No incoming requests yet.</div>";
+    }else{
+      incoming.forEach(n=>incomingBox.appendChild(makeIncomingCard(n)));
+    }
+
+    if(!sent.length){
+      sentBox.innerHTML="<div style='opacity:0.8;'>No requests sent yet.</div>";
+    }else{
+      sent.forEach(n=>sentBox.appendChild(makeSentCard(n)));
+    }
+  }
+
+  function statusLabel(n){
+    if(n.status==="pending") return "Pending";
+    if(n.status==="accepted") return "Accepted";
+    if(n.status==="declined") return "Declined";
+    return n.status;
+  }
+
+  function makeIncomingCard(n){
+    const div=document.createElement("div");
+    div.className="notif-card";
+    const date=new Date(n.timestamp).toLocaleString();
+    div.innerHTML=`
+      <div class="notif-title">${n.buyerName} wants to buy: ${n.itemTitle}</div>
+      <div class="notif-meta">Requested on ${date}</div>
+      <div class="notif-status">Status: <strong>${statusLabel(n)}</strong></div>
+      <div class="btn-row"></div>
+    `;
+    const btnRow=div.querySelector(".btn-row");
+    if(n.status==="pending"){
+      const accept=document.createElement("button");
+      accept.className="btn btn-accept";
+      accept.textContent="Accept";
+      accept.onclick=()=>updateStatus(n.id,"accepted");
+
+      const decline=document.createElement("button");
+      decline.className="btn btn-decline";
+      decline.textContent="Decline";
+      decline.onclick=()=>updateStatus(n.id,"declined");
+
+      btnRow.appendChild(accept);
+      btnRow.appendChild(decline);
+    }else{
+      btnRow.innerHTML="<span style='opacity:0.8;'>No further action needed.</span>";
+    }
+    return div;
+  }
+
+  function makeSentCard(n){
+    const div=document.createElement("div");
+    div.className="notif-card";
+    const date=new Date(n.timestamp).toLocaleString();
+    div.innerHTML=`
+      <div class="notif-title">You requested to buy: ${n.itemTitle}</div>
+      <div class="notif-meta">From ${n.sellerName || "Seller"} • Sent on ${date}</div>
+      <div class="notif-status">Status: <strong>${statusLabel(n)}</strong></div>
+    `;
+    return div;
+  }
+
+  function updateStatus(id,newStatus){
+    const notifs=getNotifications();
+    const idx=notifs.findIndex(n=>n.id===id);
+    if(idx===-1)return;
+    notifs[idx].status=newStatus;
+    saveNotifications(notifs);
+    render();
+  }
+
+  render();
+</script>
+
+</body>
+</html>
