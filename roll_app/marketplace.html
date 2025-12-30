@@ -10,6 +10,7 @@
       font-family:'Inter',sans-serif;overflow-x:hidden;overflow-y:auto;
     }
 
+    /* STARFIELD */
     .stars1,.stars2,.stars3{
       position:fixed;inset:0;
       background:url('styles/stars-white.png') repeat;
@@ -22,37 +23,25 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
+    /* SIDEBAR */
     .sidebar{
-      position:fixed;top:50%;left:-260px;transform:translateY(-50%);
-      width:260px;background:rgba(10,10,20,0.9);
+      position:fixed;top:0;left:0;height:100vh;width:260px;
+      background:rgba(10,10,20,0.92);
       backdrop-filter:blur(25px);
       border-right:1px solid rgba(255,255,255,0.25);
-      padding:26px 20px;border-radius:0 20px 20px 0;
+      padding:26px 20px;
       box-shadow:10px 0 40px rgba(0,0,0,0.7);
-      transition:0.35s ease;z-index:9000;
+      z-index:9000;
     }
-    .sidebar.open{left:0;}
-
-    .hamburger{
-      position:fixed;top:25px;left:25px;width:40px;height:30px;
-      display:flex;flex-direction:column;justify-content:space-between;
-      cursor:pointer;z-index:9500;
-    }
-    .hamburger span{
-      height:3px;width:100%;background:#fff;border-radius:4px;
-      box-shadow:0 0 8px rgba(255,255,255,0.9);transition:0.3s;
-    }
-    .hamburger.active span:nth-child(1){transform:translateY(12px) rotate(45deg);}
-    .hamburger.active span:nth-child(2){opacity:0;}
-    .hamburger.active span:nth-child(3){transform:translateY(-12px) rotate(-45deg);}
 
     .nav-header{text-align:center;margin-bottom:24px;}
     .logo-orb{font-size:2.4rem;margin-bottom:6px;text-shadow:0 0 20px rgba(255,255,255,0.9);}
     .nav-title{font-size:1.2rem;font-weight:600;text-shadow:0 0 10px rgba(255,255,255,0.7);}
+
     .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;}
     .nav-links a{
       display:block;color:#fff;text-decoration:none;font-size:0.95rem;
-      padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.05);
+      padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);
       box-shadow:0 0 10px rgba(255,255,255,0.15);transition:0.25s;
     }
     .nav-links a:hover{
@@ -61,73 +50,96 @@
       box-shadow:0 0 18px rgba(255,255,255,0.4);
     }
 
-    .page-wrapper{
-      max-width:1200px;margin:0 auto;padding:120px 20px 80px;
+    /* RED DOT FOR NOTIFICATIONS */
+    .notif-dot{
+      display:inline-block;
+      width:10px;height:10px;
+      background:#ff3b3b;border-radius:50%;
+      margin-left:6px;
+      box-shadow:0 0 10px #ff3b3b;
     }
 
-    .section-title{
-      font-size:2.4rem;margin-bottom:10px;text-shadow:0 0 30px rgba(255,255,255,0.8);
+    /* MAIN CONTENT */
+    .main{
+      margin-left:260px;
+      padding:40px;
+      min-height:100vh;
     }
-    .section-sub{
+
+    .page-title{
+      font-size:3rem;
+      margin-bottom:10px;
+      text-shadow:0 0 30px rgba(255,255,255,0.8);
+    }
+
+    .page-sub{
       opacity:0.85;margin-bottom:30px;
     }
 
-    .form-card{
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(25px);
-      padding:26px;border-radius:20px;
-      box-shadow:0 0 50px rgba(255,255,255,0.3);
-      margin-bottom:40px;
+    /* TOP FILTER BAR */
+    .filter-bar{
+      display:flex;align-items:center;gap:20px;
+      margin-bottom:30px;flex-wrap:wrap;
     }
 
-    label{font-size:0.85rem;opacity:0.85;display:block;margin-bottom:4px;}
-    input,textarea,select{
-      width:100%;padding:10px 12px;margin-bottom:16px;
-      border:none;border-radius:12px;
-      background:rgba(255,255,255,0.16);color:#fff;font-size:0.95rem;
-    }
-    textarea{resize:vertical;}
-
-    .row-flex{display:flex;gap:12px;}
-    .row-flex > div{flex:1;}
-
-    .toggle-row{
-      display:flex;align-items:center;gap:10px;margin-bottom:16px;
-    }
-    .toggle-row input[type="checkbox"]{
-      width:auto;height:auto;
+    .search-box input{
+      padding:10px 14px;border-radius:12px;border:none;
+      background:rgba(255,255,255,0.15);color:#fff;
+      width:260px;
     }
 
-    .btn-primary{
-      padding:10px 18px;background:#fff;color:#000;
-      border-radius:12px;border:none;font-weight:600;
-      cursor:pointer;
+    .sort-box select{
+      padding:10px 14px;border-radius:12px;border:none;
+      background:rgba(255,255,255,0.15);color:#fff;
     }
 
+    /* DISCIPLINE TABS */
+    .tabs{
+      display:flex;gap:14px;margin-bottom:30px;flex-wrap:wrap;
+    }
+    .tab{
+      padding:10px 16px;border-radius:12px;
+      background:rgba(255,255,255,0.12);
+      cursor:pointer;transition:0.25s;
+    }
+    .tab.active{
+      background:#fff;color:#000;font-weight:700;
+      box-shadow:0 0 20px rgba(255,255,255,0.8);
+    }
+
+    /* ITEMS GRID */
     .items-grid{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
       gap:24px;
     }
+
     .item-card{
       background:rgba(255,255,255,0.12);
       padding:18px;border-radius:18px;
       box-shadow:0 0 40px rgba(255,255,255,0.3);
       text-align:center;
     }
+
     .item-img{
       width:100%;height:180px;border-radius:16px;
       background:rgba(255,255,255,0.2);
       margin-bottom:10px;overflow:hidden;
     }
     .item-img img{width:100%;height:100%;object-fit:cover;}
+
     .item-title{font-size:1.2rem;font-weight:600;margin-bottom:4px;}
     .item-disc{font-size:0.9rem;opacity:0.8;margin-bottom:4px;}
     .item-price{opacity:0.9;margin-bottom:8px;}
-    .item-meta{font-size:0.8rem;opacity:0.75;margin-bottom:10px;}
     .item-btn{
       padding:8px 14px;background:#fff;color:#000;
       border-radius:10px;text-decoration:none;font-weight:600;font-size:0.9rem;
+    }
+
+    /* SECTION HEADERS */
+    .section-header{
+      font-size:2rem;margin-top:60px;margin-bottom:20px;
+      text-shadow:0 0 20px rgba(255,255,255,0.8);
     }
   </style>
 </head>
@@ -135,144 +147,157 @@
 
 <div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
 
-<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
-
-<nav id="sidebar" class="sidebar">
+<!-- SIDEBAR -->
+<nav class="sidebar">
   <div class="nav-header">
     <div class="logo-orb">🛒</div>
     <div class="nav-title">Marketplace</div>
   </div>
+
   <ul class="nav-links">
+    <li><a href="marketplace.html">All Items</a></li>
+    <li><a href="sell-item.html">Sell Item</a></li>
+    <li><a href="marketplace.html#your">Your Listings</a></li>
+    <li><a href="marketplace.html#giveaways">Giveaways</a></li>
+    <li><a href="notifications.html">Notifications <span id="notifDot"></span></a></li>
     <li><a href="index.html">🏠 Home</a></li>
-    <li><a href="dashboard.html">📊 Dashboard</a></li>
-    <li><a href="profile.html">👤 Profile</a></li>
-    <li><a href="giveaways.html">🎁 Giveaways</a></li>
   </ul>
 </nav>
 
-<div class="page-wrapper">
-  <div class="section-title">Marketplace</div>
-  <div class="section-sub">Sell gear, label your discipline, and optionally donate items to the community giveaways.</div>
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="page-title">Marketplace</div>
+  <div class="page-sub">Buy, sell, and donate gear across all disciplines.</div>
 
-  <div class="form-card">
-    <h2 style="margin-top:0;margin-bottom:14px;">Add Item</h2>
-
-    <label>Title</label>
-    <input id="itemTitle" placeholder="Nebula Dancer Deck">
-
-    <div class="row-flex">
-      <div>
-        <label>Price (USD)</label>
-        <input id="itemPrice" placeholder="199.99">
-      </div>
-      <div>
-        <label>Discipline</label>
-        <select id="itemDiscipline">
-          <option value="">Select</option>
-          <option value="Quads">Quads</option>
-          <option value="Blades">Blades</option>
-          <option value="Longboard">Longboard</option>
-          <option value="Skateboard">Skateboard</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <div class="search-box">
+      <input id="searchInput" placeholder="Search items...">
     </div>
 
-    <label>Description</label>
-    <textarea id="itemDescription" rows="3" placeholder="Condition, size, story, etc."></textarea>
-
-    <label>Image</label>
-    <input id="itemImage" type="file" accept="image/*">
-
-    <div class="toggle-row">
-      <input type="checkbox" id="itemDonate">
-      <label for="itemDonate">Donate this item to the Giveaway pool</label>
+    <div class="sort-box">
+      <select id="sortSelect">
+        <option value="newest">Newest</option>
+        <option value="priceLow">Price: Low → High</option>
+        <option value="priceHigh">Price: High → Low</option>
+      </select>
     </div>
-
-    <button class="btn-primary" id="addItemBtn">Add Item</button>
   </div>
 
-  <h2 style="margin-bottom:16px;">Items</h2>
+  <!-- DISCIPLINE TABS -->
+  <div class="tabs">
+    <div class="tab active" data-disc="All">All</div>
+    <div class="tab" data-disc="Quads">Quads</div>
+    <div class="tab" data-disc="Blades">Blades</div>
+    <div class="tab" data-disc="Longboard">Longboard</div>
+    <div class="tab" data-disc="Skateboard">Skateboard</div>
+    <div class="tab" data-disc="Other">Other</div>
+  </div>
+
+  <!-- ITEMS GRID -->
   <div class="items-grid" id="itemsGrid"></div>
+
+  <!-- GIVEAWAYS -->
+  <div class="section-header" id="giveaways">Giveaway Items</div>
+  <div class="items-grid" id="giveawayGrid"></div>
+
+  <!-- YOUR LISTINGS -->
+  <div class="section-header" id="your">Your Listings</div>
+  <div class="items-grid" id="yourGrid"></div>
 </div>
 
 <script>
-  const hb=document.getElementById("hamburger"), sb=document.getElementById("sidebar");
-  hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
+  function getProfile(){
+    try{return JSON.parse(localStorage.getItem("rc_profile")||"{}");}
+    catch(e){return {};}
+  }
 
   function getItems(){
-    try{return JSON.parse(localStorage.getItem("rc_marketplace_items") || "[]");}
+    try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}
     catch(e){return [];}
   }
-  function saveItems(items){
-    localStorage.setItem("rc_marketplace_items",JSON.stringify(items));
+
+  function getNotifications(){
+    try{return JSON.parse(localStorage.getItem("rc_notifications")||"[]");}
+    catch(e){return [];}
   }
 
-  const titleEl=document.getElementById("itemTitle");
-  const priceEl=document.getElementById("itemPrice");
-  const discEl=document.getElementById("itemDiscipline");
-  const descEl=document.getElementById("itemDescription");
-  const imgEl=document.getElementById("itemImage");
-  const donateEl=document.getElementById("itemDonate");
-  const addBtn=document.getElementById("addItemBtn");
-  const grid=document.getElementById("itemsGrid");
+  function renderNotifDot(){
+    const dot=document.getElementById("notifDot");
+    const notifs=getNotifications();
+    const unread=notifs.some(n=>n.status==="pending");
+    dot.innerHTML = unread ? "<span class='notif-dot'></span>" : "";
+  }
 
-  function renderItems(){
+  renderNotifDot();
+
+  const itemsGrid=document.getElementById("itemsGrid");
+  const giveawayGrid=document.getElementById("giveawayGrid");
+  const yourGrid=document.getElementById("yourGrid");
+
+  const searchInput=document.getElementById("searchInput");
+  const sortSelect=document.getElementById("sortSelect");
+
+  let activeDisc="All";
+
+  document.querySelectorAll(".tab").forEach(tab=>{
+    tab.onclick=()=>{
+      document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+      tab.classList.add("active");
+      activeDisc=tab.dataset.disc;
+      renderAll();
+    };
+  });
+
+  searchInput.oninput=renderAll;
+  sortSelect.onchange=renderAll;
+
+  function renderAll(){
+    const profile=getProfile();
     const items=getItems();
-    grid.innerHTML="";
-    if(!items.length){
-      grid.innerHTML="<div style='opacity:0.8;'>No items yet. Add something above.</div>";
-      return;
-    }
-    items.slice().reverse().forEach(item=>{
-      const card=document.createElement("div");
-      card.className="item-card";
-      card.innerHTML = `
-        <div class="item-img">${item.imageDataUrl ? `<img src="${item.imageDataUrl}">` : ""}</div>
-        <div class="item-title">${item.title}</div>
-        <div class="item-disc">${item.discipline || "Unlabeled"}</div>
-        <div class="item-price">$${item.price}</div>
-        <div class="item-meta">${item.donateToGiveaway ? "Donated to Giveaway" : "&nbsp;"}</div>
-        <a class="item-btn" href="marketplace-item.html?id=${encodeURIComponent(item.id)}">View / Edit</a>
-      `;
-      grid.appendChild(card);
+
+    const search=searchInput.value.toLowerCase();
+
+    let filtered=items.filter(i=>{
+      const matchesDisc = activeDisc==="All" || i.discipline===activeDisc;
+      const matchesSearch = i.title.toLowerCase().includes(search);
+      return matchesDisc && matchesSearch;
+    });
+
+    if(sortSelect.value==="priceLow") filtered.sort((a,b)=>parseFloat(a.price)-parseFloat(b.price));
+    if(sortSelect.value==="priceHigh") filtered.sort((a,b)=>parseFloat(b.price)-parseFloat(a.price));
+    if(sortSelect.value==="newest") filtered.sort((a,b)=>b.timestamp-a.timestamp);
+
+    itemsGrid.innerHTML="";
+    filtered.forEach(item=>{
+      itemsGrid.appendChild(makeCard(item));
+    });
+
+    giveawayGrid.innerHTML="";
+    items.filter(i=>i.donateToGiveaway).forEach(item=>{
+      giveawayGrid.appendChild(makeCard(item));
+    });
+
+    yourGrid.innerHTML="";
+    items.filter(i=>i.sellerId===profile.id).forEach(item=>{
+      yourGrid.appendChild(makeCard(item));
     });
   }
 
-  addBtn.onclick=()=>{
-    const title=titleEl.value.trim();
-    const price=priceEl.value.trim();
-    const discipline=discEl.value;
-    const description=descEl.value.trim();
-    const donate=donateEl.checked;
-    if(!title || !price || !discipline) return;
+  function makeCard(item){
+    const div=document.createElement("div");
+    div.className="item-card";
+    div.innerHTML=`
+      <div class="item-img">${item.imageDataUrl?`<img src="${item.imageDataUrl}">`:""}</div>
+      <div class="item-title">${item.title}</div>
+      <div class="item-disc">${item.discipline}</div>
+      <div class="item-price">$${item.price}</div>
+      <a class="item-btn" href="marketplace-item.html?id=${item.id}">View Item</a>
+    `;
+    return div;
+  }
 
-    const file=imgEl.files[0];
-    const items=getItems();
-    const id=Date.now().toString()+"-"+Math.random().toString(36).slice(2);
-
-    function finish(imageDataUrl){
-      items.push({id,title,price,discipline,description,imageDataUrl,donateToGiveaway:donate});
-      saveItems(items);
-      titleEl.value="";
-      priceEl.value="";
-      discEl.value="";
-      descEl.value="";
-      imgEl.value="";
-      donateEl.checked=false;
-      renderItems();
-    }
-
-    if(file){
-      const reader=new FileReader();
-      reader.onload=e=>finish(e.target.result);
-      reader.readAsDataURL(file);
-    }else{
-      finish("");
-    }
-  };
-
-  renderItems();
+  renderAll();
 </script>
 
 </body>
