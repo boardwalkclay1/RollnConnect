@@ -2,58 +2,172 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Clips – Roll ’n Connect</title>
+  <title>Clips • Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
+
+  <!-- GLOBAL STYLES -->
+  <link rel="stylesheet" href="styles/style.css">
+
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    /* STARFIELDS */
+    .stars1, .stars2, .stars3 {
+      position: fixed;
+      inset: 0;
+      background: url('styles/stars-white.png') repeat;
+      z-index: -3;
+    }
+    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
+    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
+    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
+
+    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
+    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
+    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
+
+    /* RIGHT-SIDE NAVIGATION */
+    .side-nav {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      right: 0;
+      top: 0;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(255,255,255,0.15);
+      padding: 30px 20px;
+      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .nav-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-orb {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.15rem;
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: 0.25s;
+      display: block;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateX(-6px);
+    }
+
+    /* MAIN CONTENT AREA */
+    .page-content {
+      flex: 1;
+      padding: 60px;
+      padding-right: 320px; /* space for right nav */
+      max-width: 900px;
+      margin: auto;
+    }
+
+    /* CLIPS CARD */
+    .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 30px;
+      margin-top: 20px;
+      box-shadow: 0 0 35px rgba(160,120,255,0.3);
+      animation: fadeIn 1.2s ease;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+
+    .card-text {
+      font-size: 1.2rem;
+      opacity: 0.85;
+      margin-bottom: 12px;
+    }
+  </style>
 </head>
+
 <body>
-<div class="app-shell">
-  <header>
-    <div class="brand">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
-    </div>
-    <nav class="nav-links">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="dashboard.html" class="nav-link">Dashboard</a>
-      <a href="marketplace.html" class="nav-link">Marketplace</a>
-      <a href="clips-feed.html" class="nav-link nav-link-primary">Clips</a>
-      <a href="chat.html" class="nav-link">Chat</a>
-      <a href="events.html" class="nav-link">Events</a>
-      <a href="settings.html" class="nav-link">Settings</a>
-      <a href="login.html" class="nav-link">Logout</a>
-    </nav>
-  </header>
 
-  <main class="page">
-    <h1>Clips Feed</h1>
+<!-- STARFIELDS -->
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
 
-    <div class="card">
-      <p class="card-text">
-        Eventually this will be a scrollable feed of videos and photos from the community,
-        filterable by style and location.
-      </p>
-      <p class="card-text">
-        Future controls: upload clip, like, comment, share, and tag skate spots.
-      </p>
-    </div>
-  </main>
+<!-- RIGHT NAV -->
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="logo-orb">🛼</div>
+    <div class="nav-title">Roll ’n Connect</div>
+  </div>
 
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-      <div class="footer-links">
-        <button class="footer-link">About</button>
-        <button class="footer-link">Contact</button>
-        <button class="footer-link">Terms</button>
-        <button class="footer-link">Privacy</button>
-      </div>
-    </div>
-  </footer>
-</div>
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="clips-feed.html">🎥 Clips Feed</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="settings.html">⚙️ Settings</a></li>
+  </ul>
+</nav>
 
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+<!-- MAIN CONTENT -->
+<main class="page-content">
+
+  <h1>Clips Feed</h1>
+
+  <div class="card">
+    <p class="card-text">
+      Soon this will be a scrollable galaxy of videos and photos from the community —
+      filterable by style, location, and discipline.
+    </p>
+    <p class="card-text">
+      Future features: upload clips, like, comment, share, tag skate spots, and follow creators.
+    </p>
+  </div>
+
+</main>
+
 </body>
 </html>
