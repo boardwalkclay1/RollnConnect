@@ -1,303 +1,66 @@
-<!-- profile.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>RollnConnect – Profile</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    /* Minimal extra layout helpers that match your style */
-    .page-shell {
-      min-height: 100vh;
-      padding: 40px 20px 80px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: left;
-    }
-    .profile-layout {
-      max-width: 1200px;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 2fr 1.2fr;
-      gap: 30px;
-    }
-    @media (max-width: 900px) {
-      .profile-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-    .profile-header {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    .profile-avatar {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background-size: cover;
-      background-position: center;
-      box-shadow: 0 0 30px rgba(255, 255, 255, 0.7);
-      border: 2px solid rgba(255, 255, 255, 0.7);
-    }
-    .profile-meta {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .profile-name {
-      font-size: 1.8rem;
-      font-weight: 600;
-    }
-    .profile-handle {
-      font-size: 0.95rem;
-      opacity: 0.7;
-    }
-    .tag-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .tag-pill {
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      opacity: 0.9;
-    }
-    .profile-bio {
-      font-size: 0.95rem;
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
-    /* Wheels slider */
-    .wheels-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .wheels-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-    .wheels-track {
-      display: flex;
-      gap: 16px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: none;
-    }
-    .wheels-track::-webkit-scrollbar {
-      display: none;
-    }
-    .wheel-panel {
-      min-width: 190px;
-      max-width: 190px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: 0 0 30px rgba(255, 255, 255, 0.35);
-      padding: 4px;
-      cursor: pointer;
-    }
-    .wheel-inner {
-      border-radius: 999px;
-      overflow: hidden;
-      position: relative;
-    }
-    .wheel-media {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-    }
-    .wheel-label {
-      position: absolute;
-      left: 10px;
-      bottom: 10px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      background: rgba(0, 0, 0, 0.75);
-    }
-    /* Lessons */
-    .lessons-section {
-      margin-top: 30px;
-    }
-    .lessons-section-title {
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 10px;
-    }
-    .lesson-card {
-      margin-top: 10px;
-    }
-    /* Reviews */
-    .reviews-list {
-      max-height: 200px;
-      overflow-y: auto;
-      margin-top: 10px;
-    }
-    .review-meta {
-      font-size: 0.75rem;
-      opacity: 0.7;
-      margin-bottom: 4px;
-    }
-    /* Messaging */
-    .messages-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .messages-title {
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-    }
-    .messages-thread {
-      max-height: 260px;
-      overflow-y: auto;
-      margin-bottom: 14px;
-    }
-    .message-bubble {
-      padding: 10px 12px;
-      border-radius: 16px;
-      font-size: 0.9rem;
-      margin-bottom: 8px;
-      max-width: 80%;
-    }
-    .message-me {
-      margin-left: auto;
-      background: #ffffff;
-      color: #000000;
-    }
-    .message-them {
-      margin-right: auto;
-      background: rgba(255, 255, 255, 0.12);
-    }
-    .message-meta {
-      font-size: 0.7rem;
-      opacity: 0.7;
-      margin-top: 3px;
-      text-align: right;
-    }
-    .messages-input-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-  </style>
-</head>
-<body>
-  <!-- Starfield layers -->
-  <div class="stars1"></div>
-  <div class="stars2"></div>
-  <div class="stars3"></div>
+<div class="cosmic-wrapper">
 
-  <div class="page-shell">
-    <div class="glass" style="max-width: 1200px; width: 100%; margin-bottom: 30px; display:flex; justify-content:space-between; align-items:center;">
-      <div>
-        <h1 class="section-title" style="font-size:2rem; margin-bottom:4px;">Profile</h1>
-        <p style="opacity:0.7; font-size:0.9rem;">Your clips, lessons, and bookings in one cosmic panel.</p>
-      </div>
-      <div style="display:flex; gap:12px;">
-        <button class="btn-primary" onclick="window.location.href='dashboard.html'">Dashboard</button>
-        <button class="btn-primary" style="background:transparent;color:#ffffff;border:1px solid rgba(255,255,255,0.7);" onclick="window.location.href='profile-edit.html'">Edit Profile</button>
-      </div>
+  <!-- Top Navigation -->
+  <nav class="cosmic-nav">
+    <a href="/login" class="nav-btn">Login</a>
+    <a href="/signup" class="nav-btn">Sign Up</a>
+  </nav>
+
+  <!-- Comic Book Description -->
+  <section class="comic-description">
+    <h1>WELCOME TO THE ROLL ’N CONNECT MULTIVERSE</h1>
+    <p>
+      Step into a galaxy where wheels rule the cosmos.  
+      Choose your realm, meet your crew, drop emojis,  
+      and ride the neon highways of community energy.  
+      Every chatroom is a universe — and you’re the hero.
+    </p>
+  </section>
+
+  <!-- Chatroom Cards -->
+  <section class="chatrooms-grid">
+
+    <div class="chatroom-card">
+      <h2>Longboard</h2>
+      <p>Street cruising, dancing, downhill, and community rides.</p>
+      <a href="/chatrooms/longboard" class="enter-btn">Enter</a>
     </div>
 
-    <div class="profile-layout">
-      <!-- LEFT: profile + clips + lessons -->
-      <div class="glass">
-        <div class="profile-header">
-          <div id="pAvatar" class="profile-avatar" style="background-image:url('default-avatar.png');"></div>
-          <div class="profile-meta">
-            <div id="pName" class="profile-name">Rider Name</div>
-            <div id="pHandle" class="profile-handle">@handle</div>
-            <div id="pLocation" style="font-size:0.9rem; opacity:0.7;">Location</div>
-            <div id="pTags" class="tag-row"></div>
-          </div>
-        </div>
-
-        <div id="pBio" class="profile-bio">
-          Bio will show here. Add your style, city, and vibe.
-        </div>
-
-        <!-- Wheels slider for clips/photos -->
-        <div class="wheels-header">
-          <div class="wheels-title">Clip Wheels</div>
-          <button id="addMediaBtn" class="btn-primary" style="padding:8px 16px; font-size:0.85rem;">Add clip / photo</button>
-        </div>
-        <div id="wheelsTrack" class="wheels-track"></div>
-
-        <!-- Lessons section -->
-        <div id="lessonsSection" class="lessons-section" style="display:none;">
-          <div class="lessons-section-title">Lessons & bookings</div>
-          <p id="lessonsSummary" style="font-size:0.9rem; opacity:0.8;"></p>
-
-          <div id="lessonsCards"></div>
-
-          <!-- Reviews -->
-          <div style="margin-top:16px;">
-            <div class="lessons-section-title" style="font-size:1rem;">Lesson reviews</div>
-            <div id="reviewsList" class="reviews-list"></div>
-
-            <div style="margin-top:10px;">
-              <input id="reviewName" class="chat-input" type="text" placeholder="Your name / handle" style="margin-bottom:8px; width:100%;" />
-              <textarea id="reviewText" class="chat-input" placeholder="Share your experience..." style="margin-bottom:8px; width:100%; min-height:70px;"></textarea>
-              <button id="reviewSubmit" class="btn-primary" style="padding:8px 16px; font-size:0.85rem;">Submit review</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: calendar preview + messaging -->
-      <div class="glass">
-        <div class="messages-header">
-          <div class="messages-title">Calendar</div>
-          <button class="btn-primary" style="padding:8px 16px; font-size:0.85rem; background:transparent;color:#ffffff;border:1px solid rgba(255,255,255,0.7);" onclick="window.location.href='calendar.html'">
-            Open full calendar
-          </button>
-        </div>
-        <p style="font-size:0.9rem; opacity:0.8; margin-bottom:8px;">
-          Local-only overview of your lessons and bookmarked events.
-        </p>
-        <ul id="calendarList" style="list-style:none; padding-left:0; font-size:0.9rem; margin-bottom:18px;"></ul>
-
-        <div style="margin-bottom:20px;">
-          <label style="display:flex; align-items:center; gap:10px; font-size:0.9rem;">
-            <input id="notifToggle" type="checkbox" />
-            <span>Opt in to local calendar notifications</span>
-          </label>
-          <p id="notifStatus" style="font-size:0.8rem; opacity:0.7; margin-top:4px;">Notifications off</p>
-        </div>
-
-        <hr style="border:none; border-top:1px solid rgba(255,255,255,0.25); margin:14px 0;" />
-
-        <div class="messages-header">
-          <div class="messages-title">Messages</div>
-          <div style="font-size:0.75rem; opacity:0.7;">Local • resets every 24h</div>
-        </div>
-
-        <div id="messagesThread" class="messages-thread"></div>
-
-        <div class="messages-input-row">
-          <input id="messageInput" class="chat-input" type="text" placeholder="Send a message (saved on this device only)..." />
-          <button id="messageSend" class="btn-primary" style="padding:10px 16px; font-size:0.9rem;">Send</button>
-        </div>
-      </div>
+    <div class="chatroom-card">
+      <h2>Blades</h2>
+      <p>Inline skating, urban flow, slalom, and night sessions.</p>
+      <a href="/chatrooms/blades" class="enter-btn">Enter</a>
     </div>
-  </div>
 
-  <script src="profile.js"></script>
-  <script>
-    RC.initProfile();
-  </script>
-</body>
-</html>
+    <div class="chatroom-card">
+      <h2>Quads</h2>
+      <p>Dance skating, rink culture, jam skating, and meetups.</p>
+      <a href="/chatrooms/quads" class="enter-btn">Enter</a>
+    </div>
+
+    <div class="chatroom-card">
+      <h2>Skateboard</h2>
+      <p>Street, park, vert, and local skate community sessions.</p>
+      <a href="/chatrooms/skateboard" class="enter-btn">Enter</a>
+    </div>
+
+    <div class="chatroom-card">
+      <h2>Party Room</h2>
+      <p>Music, vibes, events, and community hangouts.</p>
+      <a href="/chatrooms/party" class="enter-btn">Enter</a>
+    </div>
+
+  </section>
+
+  <!-- Emoji Instructions -->
+  <section class="emoji-instructions">
+    <h3>HOW TO SEND EMOJIS</h3>
+    <p>
+      Inside any chatroom, just type your emoji like this:  
+      <strong>🔥 😎 🛹 🌟 💬</strong>  
+      Your keyboard emoji picker works everywhere.  
+      Tap, click, or press <strong>Windows + .</strong> to open the emoji panel.
+    </p>
+  </section>
+
+</div>
