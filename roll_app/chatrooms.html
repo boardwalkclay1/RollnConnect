@@ -14,9 +14,9 @@
       padding: 0;
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
-      display: flex;
     }
 
+    /* STARFIELDS */
     .stars1, .stars2, .stars3 {
       position: fixed;
       inset: 0;
@@ -31,22 +31,49 @@
     @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
     @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
 
-    /* RIGHT SIDEBAR */
-    .side-nav {
-      width: 260px;
-      height: 100vh;
+    /* HAMBURGER */
+    .hamburger {
       position: fixed;
-      right: 0;
-      top: 0;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(20px);
-      border-left: 1px solid rgba(255,255,255,0.15);
-      padding: 30px 20px;
-      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
+      top: 25px;
+      left: 25px;
+      width: 36px;
+      height: 28px;
       display: flex;
       flex-direction: column;
-      z-index: 10;
+      justify-content: space-between;
+      cursor: pointer;
+      z-index: 9999;
     }
+    .hamburger span {
+      height: 4px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.8);
+      transition: 0.3s;
+    }
+    .hamburger.active span:nth-child(1) { transform: translateY(12px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-12px) rotate(-45deg); }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100vh;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255,255,255,0.15);
+      padding: 30px 20px;
+      box-shadow: 5px 0 25px rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 9998;
+      transition: 0.35s ease;
+    }
+    .sidebar.open { left: 0; }
 
     .nav-header { text-align: center; margin-bottom: 40px; }
     .logo-orb { font-size: 3rem; margin-bottom: 10px; }
@@ -60,7 +87,6 @@
       flex-direction: column;
       gap: 18px;
     }
-
     .nav-links a {
       color: #fff;
       text-decoration: none;
@@ -70,20 +96,19 @@
       transition: 0.25s;
       display: block;
     }
-
     .nav-links a:hover {
       background: rgba(255,255,255,0.15);
-      transform: translateX(-6px);
+      transform: translateX(6px);
     }
 
-    /* PAGE CONTENT */
+    /* PAGE WRAPPER */
     .page-wrapper {
       width: 100%;
-      padding-right: 260px;
       padding-top: 120px;
       text-align: center;
     }
 
+    /* HERO */
     .hero {
       margin: 0 auto 60px auto;
       padding: 50px;
@@ -94,11 +119,12 @@
       box-shadow: 0 0 50px rgba(255,255,255,0.2);
     }
 
+    /* GRID */
     .chatrooms-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 40px;
-      padding: 0 40px;
+      padding: 0 40px 80px 40px;
     }
 
     .chatroom-card {
@@ -110,7 +136,6 @@
       transition: 0.3s;
       text-align: center;
     }
-
     .chatroom-card:hover {
       transform: scale(1.05);
       box-shadow: 0 0 50px rgba(255,255,255,0.5);
@@ -127,7 +152,6 @@
       font-size: 1rem;
       transition: 0.25s;
     }
-
     .enter-btn:hover {
       transform: scale(1.1);
       box-shadow: 0 0 30px rgba(255,255,255,0.8);
@@ -141,8 +165,13 @@
 <div class="stars2"></div>
 <div class="stars3"></div>
 
-<!-- RIGHT SIDEBAR -->
-<nav class="side-nav">
+<!-- HAMBURGER -->
+<div id="hamburger" class="hamburger">
+  <span></span><span></span><span></span>
+</div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar" class="sidebar">
   <div class="nav-header">
     <div class="logo-orb">🛼</div>
     <div class="nav-title">Roll ’n Connect</div>
@@ -165,45 +194,55 @@
   <div class="hero">
     <h1 style="font-size:3rem;">Chatrooms</h1>
     <p style="font-size:1.2rem; opacity:0.9;">
-      Choose your realm. Your profile info automatically appears when you chat.
+      Choose your realm.  
+      Your profile info automatically appears when you chat.  
+      Each room is a different culture, vibe, and style of skating.
     </p>
   </div>
 
   <section class="chatrooms-grid">
 
+    <!-- OUTDOOR CULTURE -->
     <div class="chatroom-card">
-      <h2>Longboard</h2>
-      <p>Dancing • Cruising • Downhill</p>
-      <a href="chatroom-longboard.html" class="enter-btn">Enter</a>
+      <h2>Outdoor Culture</h2>
+      <p>Trails • Streets • Hills • Community rides</p>
+      <a href="chatroom-outdoor.html" class="enter-btn">Enter</a>
     </div>
 
+    <!-- RINK CULTURE -->
     <div class="chatroom-card">
-      <h2>Blades</h2>
-      <p>Urban Flow • Slalom</p>
-      <a href="chatroom-blades.html" class="enter-btn">Enter</a>
+      <h2>Rink Culture</h2>
+      <p>Quads only • Rhythm • Dance skating • Rink vibes</p>
+      <a href="chatroom-rink.html" class="enter-btn">Enter</a>
     </div>
 
+    <!-- BOWL SECTION (QUADS ONLY) -->
     <div class="chatroom-card">
-      <h2>Quads</h2>
-      <p>Dance Skating • Rink Culture</p>
-      <a href="chatroom-quads.html" class="enter-btn">Enter</a>
+      <h2>Bowl Section</h2>
+      <p>Quads only • Bowls • Parks • Carving • Flow</p>
+      <a href="chatroom-bowl.html" class="enter-btn">Enter</a>
     </div>
 
+    <!-- VIRTUAL SKATE PARK -->
     <div class="chatroom-card">
-      <h2>Skateboard</h2>
-      <p>Street • Park • Vert</p>
-      <a href="chatroom-skateboard.html" class="enter-btn">Enter</a>
-    </div>
-
-    <div class="chatroom-card">
-      <h2>Party Room</h2>
-      <p>Music • Vibes • Hangouts</p>
-      <a href="chatroom-party.html" class="enter-btn">Enter</a>
+      <h2>Virtual Skate Park</h2>
+      <p>
+        All disciplines welcome.  
+        A shared digital skatepark where everyone meets, chats,  
+        shares clips, and builds community together.
+      </p>
+      <a href="chatroom-virtual.html" class="enter-btn">Enter</a>
     </div>
 
   </section>
 
 </div>
+
+<script>
+  const h = document.getElementById("hamburger");
+  const s = document.getElementById("sidebar");
+  h.onclick = () => { h.classList.toggle("active"); s.classList.toggle("open"); };
+</script>
 
 </body>
 </html>
