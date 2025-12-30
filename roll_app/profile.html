@@ -15,7 +15,6 @@
       overflow-x:hidden;
     }
 
-    /* STARFIELDS */
     .stars1,.stars2,.stars3 {
       position:fixed; inset:0;
       background:url('styles/stars-white.png') repeat;
@@ -28,44 +27,24 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* FLOATING SIDEBAR */
     .sidebar {
-      position:fixed;
-      top:50%;
-      left:-260px;
-      transform:translateY(-50%);
-      width:260px;
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(25px);
+      position:fixed;top:50%;left:-260px;transform:translateY(-50%);
+      width:260px;background:rgba(255,255,255,0.08);backdrop-filter:blur(25px);
       border-right:1px solid rgba(255,255,255,0.25);
-      padding:30px 20px;
-      border-radius:0 20px 20px 0;
+      padding:30px 20px;border-radius:0 20px 20px 0;
       box-shadow:10px 0 40px rgba(255,255,255,0.25);
-      transition:0.35s ease;
-      z-index:9998;
+      transition:0.35s ease;z-index:9998;
     }
-    .sidebar.open { left:0; }
+    .sidebar.open{left:0;}
 
-    /* BURGER */
-    .hamburger {
-      position:fixed;
-      top:25px;
-      left:25px;
-      width:40px;
-      height:30px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      cursor:pointer;
-      z-index:9999;
+    .hamburger{
+      position:fixed;top:25px;left:25px;width:40px;height:30px;
+      display:flex;flex-direction:column;justify-content:space-between;
+      cursor:pointer;z-index:9999;
     }
-    .hamburger span {
-      height:4px;
-      width:100%;
-      background:#fff;
-      border-radius:4px;
-      box-shadow:0 0 12px rgba(255,255,255,0.9);
-      transition:0.3s;
+    .hamburger span{
+      height:4px;width:100%;background:#fff;border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);transition:0.3s;
     }
     .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
     .hamburger.active span:nth-child(2){opacity:0;}
@@ -82,96 +61,93 @@
     }
     .nav-links a:hover{background:rgba(255,255,255,0.2);transform:translateX(8px);box-shadow:0 0 20px rgba(255,255,255,0.4);}
 
-    /* PAGE WRAPPER */
-    .page-wrapper {
-      padding-top:120px;
-      padding-bottom:80px;
-      max-width:1000px;
-      margin:0 auto;
+    .page-wrapper{
+      padding-top:120px;padding-bottom:80px;
+      max-width:1000px;margin:0 auto;
     }
 
-    /* PROFILE HEADER */
-    .profile-header {
-      display:flex;
-      gap:30px;
+    .profile-header{
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:24px;
       align-items:center;
       background:rgba(255,255,255,0.08);
       backdrop-filter:blur(25px);
-      padding:30px;
+      padding:26px;
       border-radius:24px;
       box-shadow:0 0 50px rgba(255,255,255,0.3);
       margin-bottom:30px;
+      position:relative;
     }
 
-    .avatar {
-      width:140px;
-      height:140px;
-      border-radius:50%;
-      background-size:cover;
-      background-position:center;
-      box-shadow:0 0 25px rgba(255,255,255,0.7);
-      flex-shrink:0;
-    }
-
-    .profile-main {
-      flex:1;
-      text-align:left;
-    }
-
-    .profile-top-row {
+    .avatar-block{
       display:flex;
+      flex-direction:column;
+      gap:10px;
       align-items:center;
-      gap:20px;
-      margin-bottom:10px;
     }
 
-    .profile-name {
-      font-size:2rem;
-      font-weight:600;
+    .avatar{
+      width:140px;height:140px;border-radius:50%;
+      background-size:cover;background-position:center;
+      box-shadow:0 0 25px rgba(255,255,255,0.7);
     }
 
-    .edit-btn {
-      padding:10px 18px;
-      background:#fff;
-      color:#000;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:600;
-      font-size:0.95rem;
-      box-shadow:0 0 20px rgba(255,255,255,0.8);
+    .clip-frame{
+      width:140px;height:140px;border-radius:24px;
+      background:#111;overflow:hidden;
+      box-shadow:0 0 25px rgba(0,200,255,0.8);
+    }
+    .clip-frame video{
+      width:100%;height:100%;object-fit:cover;
     }
 
-    .profile-stats {
-      display:flex;
-      gap:20px;
-      margin-bottom:10px;
-      font-size:0.95rem;
+    .media-buttons{
+      display:flex;flex-direction:column;gap:8px;
+    }
+    .small-btn{
+      padding:6px 10px;border-radius:10px;
+      border:none;background:#fff;color:#000;
+      font-size:0.8rem;font-weight:600;
+      cursor:pointer;
     }
 
-    .profile-bio {
-      opacity:0.9;
-      margin-bottom:6px;
+    .profile-main{ text-align:left; }
+
+    .top-row{
+      display:flex;align-items:center;gap:14px;margin-bottom:8px;
     }
-    .profile-link a {
-      color:#8ab4ff;
-      text-decoration:none;
-      font-size:0.9rem;
+    .profile-name{font-size:2rem;font-weight:600;}
+
+    .edit-btn{
+      padding:8px 14px;background:#fff;color:#000;
+      border-radius:12px;text-decoration:none;font-weight:600;
+      font-size:0.9rem;box-shadow:0 0 20px rgba(255,255,255,0.8);
     }
 
-    /* POSTS GRID */
+    .stats-row{
+      display:flex;gap:20px;margin-bottom:8px;font-size:0.95rem;
+    }
+
+    .bio{opacity:0.9;margin-bottom:4px;}
+    .link a{color:#8ab4ff;text-decoration:none;font-size:0.9rem;}
+
+    .insta-link{
+      position:absolute;top:12px;right:16px;
+      font-size:0.9rem;opacity:0.9;
+    }
+    .insta-link a{color:#ff9cf5;text-decoration:none;}
+
     .section-title{
-      font-size:1.4rem;
-      margin:30px 0 15px 0;
-      text-align:left;
+      font-size:1.4rem;margin:30px 0 15px 0;text-align:left;
     }
 
-    .posts-grid {
+    .posts-grid{
       display:grid;
       grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
       gap:12px;
     }
-
-    .post-tile {
+    .post-tile{
       position:relative;
       padding-top:100%;
       border-radius:16px;
@@ -181,131 +157,83 @@
       box-shadow:0 0 25px rgba(255,255,255,0.25);
       cursor:pointer;
     }
-    .post-tile img,
-    .post-tile video {
-      position:absolute;
-      top:0;left:0;
-      width:100%;height:100%;
-      object-fit:cover;
+    .post-tile img,.post-tile video{
+      position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;
     }
 
-    /* LESSONS */
-    .lesson-card {
+    .lesson-card{
       background:rgba(255,255,255,0.12);
       backdrop-filter:blur(22px);
-      padding:18px;
-      border-radius:18px;
-      margin-bottom:16px;
+      padding:18px;border-radius:18px;margin-bottom:16px;
       box-shadow:0 0 35px rgba(255,255,255,0.28);
     }
     .lesson-title{font-weight:600;margin-bottom:4px;}
     .lesson-meta{opacity:0.9;font-size:0.9rem;margin-bottom:6px;}
     .lesson-desc{opacity:0.85;font-size:0.9rem;margin-bottom:8px;}
     .book-btn{
-      display:inline-block;
-      padding:8px 14px;
-      background:#fff;
-      color:#000;
-      border-radius:10px;
-      font-size:0.85rem;
-      text-decoration:none;
-      font-weight:600;
+      display:inline-block;padding:8px 14px;
+      background:#fff;color:#000;border-radius:10px;
+      font-size:0.85rem;text-decoration:none;font-weight:600;
     }
 
-    /* POST MODAL */
-    .modal-backdrop{
+    .fab{
       position:fixed;
-      inset:0;
+      bottom:26px;right:26px;
+      width:60px;height:60px;border-radius:50%;
+      background:#fff;color:#000;
+      display:flex;align-items:center;justify-content:center;
+      font-size:2rem;font-weight:700;
+      box-shadow:0 0 40px rgba(255,255,255,0.9);
+      cursor:pointer;z-index:9996;
+    }
+
+    .modal-backdrop{
+      position:fixed;inset:0;
       background:rgba(0,0,0,0.85);
-      display:none;
-      align-items:center;
-      justify-content:center;
+      display:none;align-items:center;justify-content:center;
       z-index:9997;
     }
     .modal-backdrop.open{display:flex;}
-
-    .modal-content{
-      width:90%;
-      max-width:900px;
-      max-height:80vh;
+    .modal-box{
+      width:90%;max-width:420px;
       background:rgba(20,20,20,0.95);
       border-radius:24px;
-      display:flex;
-      overflow:hidden;
+      padding:24px;
+      box-shadow:0 0 40px rgba(255,255,255,0.6);
+    }
+    .modal-box h2{margin-top:0;margin-bottom:12px;}
+    .modal-close{
+      position:absolute;top:18px;right:26px;
+      font-size:1.4rem;cursor:pointer;text-shadow:0 0 15px #fff;
+    }
+    .modal-box input,.modal-box textarea,.modal-box select{
+      width:100%;padding:8px 10px;margin-bottom:10px;
+      border:none;border-radius:10px;
+      background:rgba(255,255,255,0.16);color:#fff;
+    }
+    .modal-box button{
+      padding:10px 16px;border-radius:10px;border:none;
+      background:#fff;color:#000;font-weight:600;
+      cursor:pointer;
+    }
+
+    .modal-content{
+      width:90%;max-width:900px;max-height:80vh;
+      background:rgba(20,20,20,0.95);
+      border-radius:24px;display:flex;overflow:hidden;
       box-shadow:0 0 40px rgba(255,255,255,0.5);
     }
-
-    .modal-media{
-      flex:1;
-      background:#000;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .modal-media img,
-    .modal-media video{
-      max-width:100%;
-      max-height:80vh;
-      object-fit:contain;
-    }
-
-    .modal-side{
-      width:320px;
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      background:rgba(255,255,255,0.05);
-      backdrop-filter:blur(20px);
-    }
-
-    .modal-caption{
-      font-size:0.95rem;
-      margin-bottom:10px;
-      opacity:0.9;
-    }
-
-    .modal-comments{
-      flex:1;
-      overflow-y:auto;
-      margin-bottom:10px;
-      font-size:0.9rem;
-    }
-    .comment-line{
-      margin-bottom:6px;
-      border-bottom:1px solid rgba(255,255,255,0.08);
-      padding-bottom:4px;
-    }
-
-    .comment-input{
-      width:100%;
-      padding:8px;
-      border-radius:10px;
-      border:none;
-      background:rgba(255,255,255,0.12);
-      color:#fff;
-      margin-bottom:6px;
-    }
-
-    .comment-btn{
-      width:100%;
-      padding:8px;
-      border-radius:10px;
-      background:#fff;
-      color:#000;
-      border:none;
-      font-weight:600;
-      cursor:pointer;
-    }
-
-    .modal-close{
-      position:absolute;
-      top:20px;
-      right:30px;
-      cursor:pointer;
-      font-size:1.4rem;
-      text-shadow:0 0 15px #fff;
-    }
-
+    .modal-media{flex:1;display:flex;align-items:center;justify-content:center;background:#000;}
+    .modal-media img,.modal-media video{max-width:100%;max-height:80vh;object-fit:contain;}
+    .modal-side{width:320px;padding:16px;display:flex;flex-direction:column;background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);}
+    .modal-caption{font-size:0.95rem;margin-bottom:10px;opacity:0.9;}
+    .modal-comments{flex:1;overflow-y:auto;margin-bottom:10px;font-size:0.9rem;}
+    .comment-line{margin-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:4px;}
+    .comment-input{width:100%;padding:8px;border-radius:10px;border:none;background:rgba(255,255,255,0.12);color:#fff;margin-bottom:6px;}
+    .comment-btn{width:100%;padding:8px;border-radius:10px;background:#fff;color:#000;border:none;font-weight:600;cursor:pointer;}
+    .like-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+    .like-btn{padding:4px 10px;border-radius:999px;border:none;background:#fff;color:#000;cursor:pointer;font-size:0.85rem;font-weight:600;}
+    .like-count{font-size:0.85rem;opacity:0.9;}
     @media(max-width:820px){
       .modal-content{flex-direction:column;}
       .modal-side{width:100%;max-height:40vh;}
@@ -337,42 +265,98 @@
 
 <div class="page-wrapper">
 
-  <!-- PROFILE HEADER -->
   <div class="profile-header">
-    <div id="avatar" class="avatar"></div>
-    <div class="profile-main">
-      <div class="profile-top-row">
-        <div class="profile-name" id="profileName">Your Name</div>
-        <a href="profile-edit.html" class="edit-btn">Edit Profile</a>
+    <div class="avatar-block">
+      <div id="avatar" class="avatar"></div>
+      <div class="media-buttons">
+        <button class="small-btn" id="changePhotoBtn">Change Photo</button>
+        <button class="small-btn" id="changeClipBtn">3s Clip</button>
       </div>
-      <div class="profile-stats">
-        <div><span id="statPosts">0</span> posts</div>
-        <div><span id="statFollowers">0</span> followers</div>
-        <div><span id="statFollowing">0</span> following</div>
-      </div>
-      <div class="profile-bio" id="profileBio">Your bio goes here.</div>
-      <div class="profile-link" id="profileLink"></div>
     </div>
+
+    <div class="clip-frame">
+      <video id="profileClip" muted loop></video>
+    </div>
+
+    <div class="profile-main">
+      <div class="top-row">
+        <div class="profile-name" id="profileName">Your Name</div>
+        <a href="profile-edit.html" class="edit-btn">Edit</a>
+      </div>
+      <div class="stats-row">
+        <div><span id="statPosts">0</span> posts</div>
+        <div>❤️ <span id="statLikes">0</span> likes</div>
+        <div>👁️ <span id="statViews">0</span> views</div>
+      </div>
+      <div class="bio" id="profileBio">Your bio goes here.</div>
+      <div class="link" id="profileLink"></div>
+    </div>
+
+    <div class="insta-link" id="instaLink"></div>
   </div>
 
-  <!-- POSTS -->
   <div class="section-title">Posts</div>
   <div class="posts-grid" id="postsGrid"></div>
 
-  <!-- LESSONS -->
   <div class="section-title">Lessons Offered</div>
   <div id="lessonsList"></div>
 
 </div>
 
-<!-- POST MODAL -->
+<div class="fab" id="fabPost">+</div>
+
+<!-- Post modal -->
 <div id="postModal" class="modal-backdrop">
-  <div class="modal-close" id="modalClose">✕</div>
+  <div class="modal-box">
+    <div class="modal-close" id="closePostModal">✕</div>
+    <h2>New Post</h2>
+    <label style="font-size:0.85rem;opacity:0.85;">Media</label>
+    <input type="file" id="postFile" accept="image/*,video/*">
+    <label style="font-size:0.85rem;opacity:0.85;">Caption</label>
+    <textarea id="postCaption" rows="2"></textarea>
+    <button id="savePostBtn" style="margin-top:10px;">Post</button>
+  </div>
+</div>
+
+<!-- Avatar modal -->
+<div id="avatarModal" class="modal-backdrop">
+  <div class="modal-box">
+    <div class="modal-close" id="closeAvatarModal">✕</div>
+    <h2>Change Profile Photo</h2>
+    <input type="file" id="avatarFile" accept="image/*">
+    <button id="saveAvatarBtn" style="margin-top:10px;">Save Photo</button>
+  </div>
+</div>
+
+<!-- Clip modal -->
+<div id="clipModal" class="modal-backdrop">
+  <div class="modal-box">
+    <div class="modal-close" id="closeClipModal">✕</div>
+    <h2>3s Clip</h2>
+    <p style="font-size:0.85rem;opacity:0.9;margin-bottom:8px;">Record or upload a 3‑second video.</p>
+
+    <button id="startRecordBtn" style="margin-bottom:8px;">Record 3s</button>
+    <video id="recordPreview" style="width:100%;max-height:180px;margin-bottom:8px;" muted></video>
+
+    <label style="font-size:0.85rem;opacity:0.85;">Or upload</label>
+    <input type="file" id="clipFile" accept="video/*">
+
+    <button id="saveClipBtn" style="margin-top:10px;">Save Clip</button>
+  </div>
+</div>
+
+<!-- Post viewer modal -->
+<div id="viewModal" class="modal-backdrop">
+  <div class="modal-close" id="viewClose">✕</div>
   <div class="modal-content">
-    <div class="modal-media" id="modalMedia"></div>
+    <div class="modal-media" id="viewMedia"></div>
     <div class="modal-side">
-      <div class="modal-caption" id="modalCaption"></div>
-      <div class="modal-comments" id="modalComments"></div>
+      <div class="like-row">
+        <button id="likeBtn" class="like-btn">❤️ Like</button>
+        <div class="like-count">Likes: <span id="viewLikes">0</span> • Views: <span id="viewViews">0</span></div>
+      </div>
+      <div class="modal-caption" id="viewCaption"></div>
+      <div class="modal-comments" id="viewComments"></div>
       <input id="commentInput" class="comment-input" placeholder="Add a comment...">
       <button id="commentBtn" class="comment-btn">Post Comment</button>
     </div>
@@ -380,19 +364,39 @@
 </div>
 
 <script>
-  // Sidebar
-  const h=document.getElementById("hamburger"), s=document.getElementById("sidebar");
-  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+  const hb=document.getElementById("hamburger"), sb=document.getElementById("sidebar");
+  hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
 
-  function loadProfile(){
-    const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+  let profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+  if(!profile.posts) profile.posts = [];
+  if(!profile.lessons) profile.lessons = [];
 
-    const avatarUrl = profile.avatarUrl || "styles/default-avatar.png";
-    document.getElementById("avatar").style.backgroundImage = `url('${avatarUrl}')`;
-    document.getElementById("profileName").textContent = profile.name || "Your Name";
-    document.getElementById("profileBio").textContent = profile.bio || "Your bio goes here.";
+  const avatarEl = document.getElementById("avatar");
+  const clipEl = document.getElementById("profileClip");
+  const nameEl = document.getElementById("profileName");
+  const bioEl = document.getElementById("profileBio");
+  const linkEl = document.getElementById("profileLink");
+  const instaEl = document.getElementById("instaLink");
+  const postsGrid = document.getElementById("postsGrid");
+  const lessonsList = document.getElementById("lessonsList");
+  const statPosts = document.getElementById("statPosts");
+  const statLikes = document.getElementById("statLikes");
+  const statViews = document.getElementById("statViews");
 
-    const linkEl = document.getElementById("profileLink");
+  function calcTotals(){
+    let likes=0, views=0;
+    profile.posts.forEach(p=>{
+      likes += p.likes || 0;
+      views += p.views || 0;
+    });
+    statLikes.textContent = likes;
+    statViews.textContent = views;
+  }
+
+  function renderProfile(){
+    avatarEl.style.backgroundImage = `url('${profile.avatarDataUrl || "styles/default-avatar.png"}')`;
+    nameEl.textContent = profile.name || "Your Name";
+    bioEl.textContent = profile.bio || "Your bio goes here.";
     linkEl.innerHTML = "";
     if(profile.link){
       const a=document.createElement("a");
@@ -401,119 +405,239 @@
       a.textContent=profile.link;
       linkEl.appendChild(a);
     }
+    instaEl.innerHTML = "";
+    if(profile.instagram){
+      const a=document.createElement("a");
+      a.href="https://instagram.com/"+profile.instagram;
+      a.target="_blank";
+      a.textContent="@" + profile.instagram;
+      instaEl.innerHTML="📷 ";
+      instaEl.appendChild(a);
+    }
+    if(profile.clipDataUrl){
+      clipEl.src = profile.clipDataUrl;
+      clipEl.play().catch(()=>{});
+    }
 
-    const posts = profile.posts || [];
-    document.getElementById("statPosts").textContent = posts.length;
-    // placeholders
-    document.getElementById("statFollowers").textContent = profile.followers || 0;
-    document.getElementById("statFollowing").textContent = profile.following || 0;
+    statPosts.textContent = profile.posts.length;
+    calcTotals();
 
-    const grid = document.getElementById("postsGrid");
-    grid.innerHTML="";
-    posts.forEach((p,idx)=>{
+    postsGrid.innerHTML="";
+    profile.posts.forEach((p,i)=>{
       const tile=document.createElement("div");
       tile.className="post-tile";
       if(p.type==="video"){
         const v=document.createElement("video");
-        v.src=p.url;
-        v.muted=true;
-        v.loop=true;
-        v.autoplay=true;
+        v.src=p.url;v.muted=true;v.loop=true;v.autoplay=true;
         tile.appendChild(v);
       }else{
         const img=document.createElement("img");
-        img.src=p.url;
-        tile.appendChild(img);
+        img.src=p.url;tile.appendChild(img);
       }
-      tile.onclick=()=>openModal(idx);
-      grid.appendChild(tile);
+      tile.onclick=()=>openViewModal(i);
+      postsGrid.appendChild(tile);
     });
 
-    const lessons = profile.lessons || [];
-    const lWrap = document.getElementById("lessonsList");
-    lWrap.innerHTML="";
-    lessons.forEach(ls=>{
+    lessonsList.innerHTML="";
+    profile.lessons.forEach(ls=>{
       const card=document.createElement("div");
       card.className="lesson-card";
-      card.innerHTML=`
+      card.innerHTML = `
         <div class="lesson-title">${ls.title}</div>
         <div class="lesson-meta">💲 ${ls.price} • ⏱ ${ls.duration} minutes</div>
         <div class="lesson-desc">${ls.description}</div>
         <a class="book-btn">Book Lesson</a>
       `;
-      lWrap.appendChild(card);
+      lessonsList.appendChild(card);
     });
-
-    window.__profile = profile;
   }
 
-  // Modal logic
-  const modal=document.getElementById("postModal");
-  const modalMedia=document.getElementById("modalMedia");
-  const modalCaption=document.getElementById("modalCaption");
-  const modalComments=document.getElementById("modalComments");
+  renderProfile();
+
+  // FAB Post
+  const fabPost=document.getElementById("fabPost");
+  const postModal=document.getElementById("postModal");
+  const closePostModal=document.getElementById("closePostModal");
+  const postFile=document.getElementById("postFile");
+  const postCaption=document.getElementById("postCaption");
+  const savePostBtn=document.getElementById("savePostBtn");
+
+  fabPost.onclick=()=>{postModal.classList.add("open");};
+  closePostModal.onclick=()=>{postModal.classList.remove("open");postFile.value="";postCaption.value="";};
+  postModal.onclick=e=>{if(e.target===postModal) closePostModal.onclick();};
+
+  savePostBtn.onclick=()=>{
+    const file = postFile.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = e=>{
+      const url=e.target.result;
+      const type=file.type.startsWith("video") ? "video" : "image";
+      profile.posts.push({url,type,caption:postCaption.value.trim(),likes:0,views:0,comments:[]});
+      localStorage.setItem("rc_profile",JSON.stringify(profile));
+      renderProfile();
+      closePostModal.onclick();
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Avatar change
+  const avatarModal=document.getElementById("avatarModal");
+  const changePhotoBtn=document.getElementById("changePhotoBtn");
+  const closeAvatarModal=document.getElementById("closeAvatarModal");
+  const avatarFile=document.getElementById("avatarFile");
+  const saveAvatarBtn=document.getElementById("saveAvatarBtn");
+
+  changePhotoBtn.onclick=()=>{avatarModal.classList.add("open");};
+  closeAvatarModal.onclick=()=>{avatarModal.classList.remove("open");avatarFile.value="";};
+  avatarModal.onclick=e=>{if(e.target===avatarModal) closeAvatarModal.onclick();};
+
+  saveAvatarBtn.onclick=()=>{
+    const file=avatarFile.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      profile.avatarDataUrl = e.target.result;
+      localStorage.setItem("rc_profile",JSON.stringify(profile));
+      renderProfile();
+      closeAvatarModal.onclick();
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Clip change (record + upload)
+  const clipModal=document.getElementById("clipModal");
+  const changeClipBtn=document.getElementById("changeClipBtn");
+  const closeClipModal=document.getElementById("closeClipModal");
+  const clipFile=document.getElementById("clipFile");
+  const saveClipBtn=document.getElementById("saveClipBtn");
+  const startRecordBtn=document.getElementById("startRecordBtn");
+  const recordPreview=document.getElementById("recordPreview");
+  let mediaStream=null, mediaRecorder=null, recordedChunks=[];
+
+  changeClipBtn.onclick=()=>{clipModal.classList.add("open");};
+  closeClipModal.onclick=()=>{
+    clipModal.classList.remove("open");
+    clipFile.value="";
+    if(mediaRecorder && mediaRecorder.state!=="inactive") mediaRecorder.stop();
+    if(mediaStream) mediaStream.getTracks().forEach(t=>t.stop());
+  };
+  clipModal.onclick=e=>{if(e.target===clipModal) closeClipModal.onclick();};
+
+  startRecordBtn.onclick=async()=>{
+    try{
+      mediaStream = await navigator.mediaDevices.getUserMedia({video:true,audio:true});
+      recordPreview.srcObject = mediaStream;
+      recordPreview.play();
+      recordedChunks=[];
+      mediaRecorder = new MediaRecorder(mediaStream);
+      mediaRecorder.ondataavailable=e=>{if(e.data.size>0) recordedChunks.push(e.data);};
+      mediaRecorder.onstop=()=>{
+        const blob=new Blob(recordedChunks,{type:"video/webm"});
+        const reader=new FileReader();
+        reader.onload=e=>{
+          profile.clipDataUrl = e.target.result;
+          localStorage.setItem("rc_profile",JSON.stringify(profile));
+        };
+        reader.readAsDataURL(blob);
+        mediaStream.getTracks().forEach(t=>t.stop());
+        recordPreview.srcObject=null;
+      };
+      mediaRecorder.start();
+      setTimeout(()=>{ if(mediaRecorder && mediaRecorder.state==="recording") mediaRecorder.stop(); },3000);
+    }catch(err){
+      console.error(err);
+    }
+  };
+
+  saveClipBtn.onclick=()=>{
+    const file=clipFile.files[0];
+    if(!file){
+      // if recorded clip already saved, just close
+      closeClipModal.onclick();
+      renderProfile();
+      return;
+    }
+    const reader=new FileReader();
+    reader.onload=e=>{
+      profile.clipDataUrl = e.target.result;
+      localStorage.setItem("rc_profile",JSON.stringify(profile));
+      renderProfile();
+      closeClipModal.onclick();
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // View post modal
+  const viewModal=document.getElementById("viewModal");
+  const viewClose=document.getElementById("viewClose");
+  const viewMedia=document.getElementById("viewMedia");
+  const viewCaption=document.getElementById("viewCaption");
+  const viewComments=document.getElementById("viewComments");
+  const viewLikes=document.getElementById("viewLikes");
+  const viewViews=document.getElementById("viewViews");
+  const likeBtn=document.getElementById("likeBtn");
   const commentInput=document.getElementById("commentInput");
   const commentBtn=document.getElementById("commentBtn");
-  const modalClose=document.getElementById("modalClose");
   let currentPostIndex=null;
 
-  function openModal(idx){
-    const profile=window.__profile || {};
-    const posts=profile.posts || [];
-    const post=posts[idx];
-    if(!post) return;
-    currentPostIndex=idx;
-    modalMedia.innerHTML="";
-    if(post.type==="video"){
+  function openViewModal(idx){
+    currentPostIndex = idx;
+    const p=profile.posts[idx];
+    if(!p) return;
+    // views++
+    p.views = (p.views || 0)+1;
+    localStorage.setItem("rc_profile",JSON.stringify(profile));
+
+    viewMedia.innerHTML="";
+    if(p.type==="video"){
       const v=document.createElement("video");
-      v.src=post.url;
-      v.controls=true;
-      modalMedia.appendChild(v);
+      v.src=p.url;v.controls=true;
+      viewMedia.appendChild(v);
     }else{
       const img=document.createElement("img");
-      img.src=post.url;
-      modalMedia.appendChild(img);
+      img.src=p.url;viewMedia.appendChild(img);
     }
-    modalCaption.textContent=post.caption || "";
+    viewCaption.textContent=p.caption || "";
     renderComments();
-    modal.classList.add("open");
+    viewLikes.textContent=p.likes || 0;
+    viewViews.textContent=p.views || 0;
+    calcTotals();
+    viewModal.classList.add("open");
   }
 
   function renderComments(){
-    const profile=window.__profile || {};
-    const posts=profile.posts || [];
-    const post=posts[currentPostIndex];
-    modalComments.innerHTML="";
-    (post.comments || []).forEach(c=>{
+    const p=profile.posts[currentPostIndex];
+    viewComments.innerHTML="";
+    (p.comments || []).forEach(c=>{
       const line=document.createElement("div");
       line.className="comment-line";
       line.textContent=c;
-      modalComments.appendChild(line);
+      viewComments.appendChild(line);
     });
   }
 
-  commentBtn.onclick=function(){
+  likeBtn.onclick=()=>{
+    const p=profile.posts[currentPostIndex];
+    p.likes = (p.likes || 0)+1;
+    localStorage.setItem("rc_profile",JSON.stringify(profile));
+    viewLikes.textContent=p.likes;
+    calcTotals();
+  };
+
+  commentBtn.onclick=()=>{
     const txt=(commentInput.value || "").trim();
     if(!txt) return;
-    const profile=window.__profile || {};
-    profile.posts = profile.posts || [];
-    const post=profile.posts[currentPostIndex];
-    post.comments = post.comments || [];
-    post.comments.push(txt);
+    const p=profile.posts[currentPostIndex];
+    p.comments = p.comments || [];
+    p.comments.push(txt);
     localStorage.setItem("rc_profile",JSON.stringify(profile));
-    window.__profile=profile;
     commentInput.value="";
     renderComments();
   };
 
-  modalClose.onclick=function(){
-    modal.classList.remove("open");
-  };
-  modal.onclick=function(e){
-    if(e.target===modal){modal.classList.remove("open");}
-  };
-
-  loadProfile();
+  viewClose.onclick=()=>{viewModal.classList.remove("open");};
+  viewModal.onclick=e=>{if(e.target===viewModal) viewClose.onclick();};
 </script>
 
 </body>
