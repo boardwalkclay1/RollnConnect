@@ -1,160 +1,172 @@
+<!-- profile-edit.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Edit Profile – Roll ’n Connect</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
+  <title>RollnConnect – Edit Profile</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .page-shell {
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .edit-layout {
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.4fr 1.2fr;
+      gap: 30px;
+    }
+    @media (max-width: 900px) {
+      .edit-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .field-group {
+      margin-bottom: 16px;
+    }
+    .field-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.7;
+      margin-bottom: 6px;
+    }
+    .field-input,
+    .field-textarea,
+    .field-select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: none;
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+    .field-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+  </style>
 </head>
 <body>
-<div class="app-shell">
+  <div class="stars1"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
 
-  <header class="app-header">
-    <div class="app-header-left">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
+  <div class="page-shell">
+    <div class="glass" style="max-width:1100px; width:100%; margin-bottom:30px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <h1 class="section-title" style="font-size:2rem; margin-bottom:4px;">Edit Profile</h1>
+        <p style="opacity:0.7; font-size:0.9rem;">Update your profile and lessons. Saved locally for now.</p>
+      </div>
+      <button class="btn-primary" onclick="window.location.href='profile.html'">
+        View Profile
+      </button>
     </div>
-    <div class="app-header-right">
-      <a href="dashboard.html" class="icon-btn">👤</a>
-    </div>
-  </header>
 
-  <main class="page">
-    <h1>Edit Profile</h1>
+    <div class="edit-layout">
+      <!-- LEFT: profile basics -->
+      <div class="glass">
+        <h2 class="section-title" style="font-size:1.4rem; margin-bottom:20px;">Profile basics</h2>
 
-    <div class="card max-w-narrow">
-      <form class="stack-md">
-        <div>
-          <label for="profile-pic">Profile picture</label>
-          <input id="profile-pic" type="file" accept="image/*" />
+        <div class="field-group">
+          <div class="field-label">Display name</div>
+          <input id="editName" class="field-input" type="text" placeholder="Your name" />
         </div>
 
-        <div>
-          <label for="display-name">Display name</label>
-          <input id="display-name" type="text" placeholder="Your display name" />
+        <div class="field-group">
+          <div class="field-label">Handle</div>
+          <input id="editHandle" class="field-input" type="text" placeholder="@yourhandle" />
         </div>
 
-        <div>
-          <label for="username">Username</label>
-          <input id="username" type="text" placeholder="@yourhandle" />
+        <div class="field-group">
+          <div class="field-label">Location</div>
+          <input id="editLocation" class="field-input" type="text" placeholder="City, Country" />
         </div>
 
-        <div>
-          <label for="bio">Bio</label>
-          <textarea id="bio" rows="3"
-            placeholder="Tell people your style, experience, and what you love about skating."></textarea>
+        <div class="field-group">
+          <div class="field-label">Bio</div>
+          <textarea id="editBio" class="field-textarea" placeholder="Describe your style, what you ride, what you teach..."></textarea>
         </div>
 
-        <div>
-          <label for="location">Location</label>
-          <input id="location" type="text" placeholder="City, State / Country" />
+        <div class="field-group">
+          <div class="field-label">Tags (comma separated)</div>
+          <input id="editTags" class="field-input" type="text" placeholder="Freestyle, Dance, Beginner friendly" />
         </div>
 
-        <div>
-          <label for="primary-style">Primary style</label>
-          <select id="primary-style">
-            <option value="">Select a style</option>
-            <option>Longboard dance</option>
-            <option>Downhill</option>
-            <option>Street / Park</option>
-            <option>Roller rhythm</option>
-            <option>Inline urban</option>
-          </select>
+        <div class="field-group">
+          <div class="field-label">Avatar image URL</div>
+          <input id="editAvatarUrl" class="field-input" type="text" placeholder="default-avatar.png or assets/yourface.png" />
+          <p style="font-size:0.8rem; opacity:0.7; margin-top:4px;">For now, paste a local path or URL. Upload flow can be added later.</p>
         </div>
 
-        <div>
-          <label for="skill-level">Skill level</label>
-          <select id="skill-level">
-            <option>Beginner</option>
-            <option>Intermediate</option>
-            <option>Advanced</option>
-            <option>Pro</option>
-          </select>
+        <button id="saveProfile" class="btn-primary" style="margin-top:10px;">Save profile</button>
+      </div>
+
+      <!-- RIGHT: lessons setup -->
+      <div class="glass">
+        <h2 class="section-title" style="font-size:1.4rem; margin-bottom:20px;">Lessons setup</h2>
+
+        <div class="field-group" style="display:flex; align-items:center; justify-content:space-between;">
+          <div class="field-label" style="margin-bottom:0;">Offer lessons</div>
+          <input id="lessonsEnable" type="checkbox" />
         </div>
 
-        <hr style="border:none; border-top:1px solid rgba(148,163,184,0.5);" />
-
-        <div>
-          <label style="display:flex; align-items:center; gap:8px; font-size:13px;">
-            <input type="checkbox" id="lessonsToggle" onchange="toggleLessonsSection()"
-                   style="width:16px; height:16px;">
-            Turn on <strong>Lessons</strong> on my profile
-          </label>
-          <p class="card-text" style="margin-top:4px;">
-            When this is on, your profile will show your rates, availability, and lesson clips,
-            and you’ll appear in the Student Hub for people to find as a teacher.
-          </p>
-        </div>
-
-        <div id="lessonsSection" style="display:none;">
-          <div>
-            <label for="lesson-rate">Rate (per session / per hour)</label>
-            <input id="lesson-rate" type="text" placeholder="$40 / hour, $60 / session, etc." />
+        <div id="lessonsBlock" style="display:none;">
+          <div class="field-group">
+            <div class="field-label">Lesson title</div>
+            <input id="lessonsTitle" class="field-input" type="text" placeholder="Longboard dance basics, Freestyle foundations..." />
           </div>
 
-          <div>
-            <label for="lesson-availability">Availability</label>
-            <textarea id="lesson-availability" rows="3"
-              placeholder="Example: Weeknights after 6 PM, weekends afternoons, contact to confirm."></textarea>
+          <div class="field-group">
+            <div class="field-label">Price per session (USD)</div>
+            <input id="lessonsPrice" class="field-input" type="number" min="0" />
           </div>
 
-          <div>
-            <label for="lesson-location">Lesson location / format</label>
-            <input id="lesson-location" type="text"
-                   placeholder="Local park, rink, online (video), or travel options." />
+          <div class="field-group">
+            <div class="field-label">Session length</div>
+            <input id="lessonsDuration" class="field-input" type="text" placeholder="60 minutes" />
           </div>
 
-          <div>
-            <label for="lesson-videos">Lesson / riding videos (links)</label>
-            <textarea id="lesson-videos" rows="3"
-              placeholder="Paste links to your best clips (YouTube, Instagram, TikTok, etc.)."></textarea>
+          <div class="field-group">
+            <div class="field-label">Available days</div>
+            <select id="lessonsDays" class="field-select" multiple>
+              <option value="Mon">Monday</option>
+              <option value="Tue">Tuesday</option>
+              <option value="Wed">Wednesday</option>
+              <option value="Thu">Thursday</option>
+              <option value="Fri">Friday</option>
+              <option value="Sat">Saturday</option>
+              <option value="Sun">Sunday</option>
+            </select>
+            <p style="font-size:0.8rem; opacity:0.7; margin-top:4px;">Hold Ctrl/Cmd to select multiple.</p>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">Time range</div>
+            <div style="display:flex; gap:10px;">
+              <input id="lessonsStart" class="field-input" type="time" />
+              <input id="lessonsEnd" class="field-input" type="time" />
+            </div>
+          </div>
+
+          <div class="field-group">
+            <div class="field-label">Lesson description</div>
+            <textarea id="lessonsDescription" class="field-textarea" placeholder="What riders will learn, level, what to bring..."></textarea>
           </div>
         </div>
 
-        <button type="button" class="btn btn-primary" style="width:100%;">
-          Save profile (front‑end only for now)
-        </button>
-      </form>
+        <button id="saveLessons" class="btn-primary" style="margin-top:10px;">Save lesson settings</button>
+      </div>
     </div>
-  </main>
+  </div>
 
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-    </div>
-  </footer>
-
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-    <a href="spots-map.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🧭</div>
-      <span>Explore</span>
-    </a>
-    <a href="clips-feed.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">▶</div>
-      <span>Clips</span>
-    </a>
-    <a href="marketplace.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-    <a href="dashboard.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
-    </a>
-  </nav>
-</div>
-
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  function toggleLessonsSection() {
-    const checked = document.getElementById("lessonsToggle").checked;
-    document.getElementById("lessonsSection").style.display = checked ? "block" : "none";
-  }
-</script>
+  <script src="profile.js"></script>
+  <script>
+    RC.initProfileEdit();
+  </script>
 </body>
 </html>
