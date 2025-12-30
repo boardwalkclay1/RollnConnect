@@ -1,191 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Your Profile • Roll ’n Connect</title>
-  <link rel="stylesheet" href="style.css">
-
-  <style>
-    .section {
-      max-width: 1200px;
-      margin: 120px auto;
-      padding: 40px;
-      animation: fadeIn 1.2s ease;
-    }
-
-    .profile-header {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 30px;
-    }
-
-    .avatar-circle {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #8a6cff, #3b1b8f);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 2rem;
-      color: #ffffff;
-      box-shadow: 0 0 25px rgba(120,80,255,0.8);
-    }
-
-    .profile-name {
-      font-size: 2rem;
-      color: #e0e4ff;
-    }
-
-    .profile-handle {
-      opacity: 0.9;
-    }
-
-    .profile-grid {
-      display: grid;
-      grid-template-columns: 2fr 1.2fr;
-      gap: 30px;
-      margin-top: 20px;
-    }
-
-    .panel {
-      background: rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 0 25px rgba(120,80,255,0.4);
-    }
-
-    .panel-title {
-      font-size: 1.4rem;
-      margin-bottom: 12px;
-      color: #e0e4ff;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.15);
-      font-size: 0.9rem;
-      margin: 4px;
-    }
-
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 0.98rem;
-    }
-
-    .setting-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      font-size: 0.98rem;
-    }
-
-    .toggle-pill {
-      width: 46px;
-      height: 24px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.25);
-      position: relative;
-    }
-
-    .toggle-thumb {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #ffffff;
-      position: absolute;
-      top: 2px;
-      left: 24px; /* “On” look */
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>RollnConnect – Profile</title>
+  <link rel="stylesheet" href="rc-theme.css" />
 </head>
-
 <body>
-
-<div class="stars1"></div>
-div class="stars2"></div>
-<div class="stars3"></div>
-<div class="nebula-haze"></div>
-
-<div class="section glass">
-  <div class="profile-header">
-    <div class="avatar-circle">R</div>
-    <div>
-      <div class="profile-name">Your Cosmic Profile</div>
-      <div class="profile-handle">@rollnconnect</div>
-      <div style="margin-top:6px; opacity:0.9;">
-        City: Atlanta • Main discipline: Longboard Dance
+  <div class="rc-shell">
+    <header class="rc-shell-header">
+      <div class="rc-brand">
+        <div class="rc-brand-logo"></div>
+        <div class="rc-brand-text">RollnConnect</div>
       </div>
-    </div>
+      <button class="rc-btn-secondary" onclick="window.location.href='dashboard.html'">
+        Back to Dashboard
+      </button>
+    </header>
+
+    <main class="rc-shell-main">
+      <!-- LEFT: Profile + media + lessons -->
+      <section class="rc-panel">
+        <div class="rc-profile-header">
+          <div
+            id="rcProfileAvatar"
+            class="rc-profile-avatar"
+            style="background-image: url('assets/images/default-avatar.jpg');"
+          ></div>
+
+          <div class="rc-profile-meta">
+            <div id="rcProfileName" class="rc-profile-name">Rider Name</div>
+            <div id="rcProfileHandle" class="rc-profile-handle">@handle</div>
+            <div class="rc-profile-tags" id="rcProfileTags">
+              <!-- dynamic tags, e.g. "Freestyle", "Dance", "Beginner Friendly" -->
+            </div>
+            <div style="margin-top: 6px;">
+              <button class="rc-btn" onclick="window.location.href='edit_profile.html'">
+                Edit Profile
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="rcProfileBio" style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+          Bio will show here. Add your style, city, and vibe.
+        </div>
+
+        <!-- Wheels media slider -->
+        <div class="rc-wheels">
+          <div class="rc-panel-title-row">
+            <div class="rc-panel-title">Clip wheels</div>
+            <button class="rc-btn-secondary" id="rcAddMediaBtn">Add clip / photo</button>
+          </div>
+          <div class="rc-wheels-track" id="rcWheelsTrack">
+            <!-- dynamic media cards -->
+          </div>
+        </div>
+
+        <!-- Lessons section at bottom of profile -->
+        <div class="rc-lessons-section" id="rcLessonsSection" style="display: none;">
+          <div class="rc-panel-title-row">
+            <div class="rc-panel-title">Lessons & bookings</div>
+          </div>
+          <div id="rcLessonsSummary" style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
+            <!-- dynamic summary: price, style, city -->
+          </div>
+          <div class="rc-lessons-grid" id="rcLessonsGrid">
+            <!-- dynamic lesson cards -->
+          </div>
+
+          <div style="margin-top: 10px;">
+            <div class="rc-panel-title-row">
+              <div class="rc-panel-title">Lesson reviews</div>
+            </div>
+            <div id="rcReviewsList" class="rc-reviews-list"></div>
+
+            <div class="rc-form-group" style="margin-top: 10px;">
+              <label class="rc-label">Leave a review</label>
+              <input
+                id="rcReviewName"
+                class="rc-input"
+                type="text"
+                placeholder="Your name or handle"
+              />
+              <textarea
+                id="rcReviewText"
+                class="rc-textarea"
+                placeholder="Share your experience..."
+              ></textarea>
+              <button class="rc-btn" id="rcSubmitReviewBtn">Submit review</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Calendar + messaging -->
+      <section class="rc-panel">
+        <div class="rc-panel-title-row">
+          <div class="rc-panel-title">Calendar & messages</div>
+          <div class="rc-chip">
+            <span id="rcCalendarNotificationsChip">Notifications off</span>
+          </div>
+        </div>
+
+        <!-- Calendar preview -->
+        <div style="margin-bottom: 14px;">
+          <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 6px;">
+            Upcoming lessons & events (local view)
+          </div>
+          <ul id="rcCalendarList" style="list-style: none; padding-left: 0; margin: 0; font-size: 13px;">
+            <!-- dynamic upcoming entries -->
+          </ul>
+          <div style="margin-top: 8px;">
+            <button class="rc-btn-secondary" onclick="window.location.href='calendar.html'">
+              Open full calendar
+            </button>
+          </div>
+        </div>
+
+        <!-- Notifications opt in -->
+        <div class="rc-form-group" style="margin-bottom: 12px;">
+          <div class="rc-toggle-row">
+            <span>Opt in to local calendar notifications</span>
+            <input type="checkbox" id="rcNotificationsToggle" />
+          </div>
+          <div style="font-size: 11px; color: var(--text-muted);">
+            Notifications are local to your device. You can opt out anytime.
+          </div>
+        </div>
+
+        <!-- Messaging -->
+        <div class="rc-panel-title-row" style="margin-top: 4px;">
+          <div class="rc-panel-title">Messages</div>
+          <div class="rc-chip">
+            Local • resets every 24h
+          </div>
+        </div>
+
+        <div id="rcMessagesThread" class="rc-messages-thread"></div>
+
+        <div class="rc-message-input-row">
+          <input
+            id="rcMessageInput"
+            type="text"
+            placeholder="Send a message to this rider (local only)..."
+          />
+          <button class="rc-btn" id="rcSendMessageBtn">Send</button>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <div class="profile-grid">
-    <!-- Left: Activity & Badges -->
-    <div>
-      <div class="panel">
-        <div class="panel-title">Badges</div>
-        <div>
-          <span class="badge">Day One Rider</span>
-          <span class="badge">Night Sessions</span>
-          <span class="badge">Marketplace Seller</span>
-          <span class="badge">Chatroom Host</span>
-        </div>
-      </div>
-
-      <div class="panel" style="margin-top:20px;">
-        <div class="panel-title">Session Stats</div>
-        <div class="stat-row">
-          <span>Chatrooms joined</span><span>12</span>
-        </div>
-        <div class="stat-row">
-          <span>Marketplace listings</span><span>5</span>
-        </div>
-        <div class="stat-row">
-          <span>Events attended</span><span>7</span>
-        </div>
-        <div class="stat-row">
-          <span>Spots saved</span><span>9</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right: Settings -->
-    <div>
-      <div class="panel">
-        <div class="panel-title">Account Settings</div>
-
-        <div class="setting-row">
-          <span>Remember this device</span>
-          <div class="toggle-pill">
-            <div class="toggle-thumb"></div>
-          </div>
-        </div>
-
-        <div class="setting-row">
-          <span>Email notifications</span>
-          <div class="toggle-pill">
-            <div class="toggle-thumb"></div>
-          </div>
-        </div>
-
-        <div class="setting-row">
-          <span>Event reminders</span>
-          <div class="toggle-pill">
-            <div class="toggle-thumb"></div>
-          </div>
-        </div>
-
-        <button class="btn-primary" style="margin-top:18px; width:100%;">Edit Profile</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+  <script src="rc-profile.js"></script>
+  <script>
+    // Initialize profile page
+    RcProfile.initProfilePage();
+  </script>
 </body>
 </html>
