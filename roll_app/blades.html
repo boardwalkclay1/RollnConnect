@@ -1,0 +1,100 @@
+<!-- blades.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blades – Roll ’n Connect</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <style>
+    body{background:#000;color:#fff;margin:0;padding:0;font-family:'Inter',sans-serif;overflow-x:hidden;}
+    .page-wrapper{padding-top:120px;padding-bottom:80px;text-align:center;}
+    .hero{
+      margin:0 auto 40px auto;padding:40px;max-width:900px;
+      background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);
+      border-radius:24px;box-shadow:0 0 50px rgba(255,255,255,0.2);
+    }
+    .sub-grid{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:30px;padding:0 40px;
+    }
+    .sub-card{
+      background:rgba(255,255,255,0.12);backdrop-filter:blur(20px);
+      padding:24px;border-radius:20px;box-shadow:0 0 35px rgba(255,255,255,0.25);
+      transition:0.3s;text-align:left;
+    }
+    .sub-card:hover{transform:scale(1.05);box-shadow:0 0 50px rgba(255,255,255,0.5);}
+    .enter-btn{
+      display:inline-block;margin-top:14px;padding:10px 18px;
+      background:#fff;color:#000;border-radius:12px;text-decoration:none;
+    }
+    .stars1,.stars2,.stars3{
+      position:fixed;inset:0;background:url('styles/stars-white.png') repeat;z-index:-3;
+    }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2;animation:drift3 260s linear infinite;}
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+  </style>
+</head>
+<body>
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
+
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+
+<nav id="sidebar" class="sidebar">
+  <div class="nav-header"><div class="logo-orb">🛼</div><div class="nav-title">Blades</div></div>
+  <ul class="nav-links">
+    <li><a href="chatrooms.html">⬅ Back to Chatrooms</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+  <div class="hero">
+    <h1 style="font-size:3rem;">Blades Chat Realms</h1>
+    <p style="font-size:1.05rem;opacity:0.9;line-height:1.7;">
+      Blade chatrooms let inline skaters split up by how they ride: urban flow or slalom.  
+      Inside each chat, your profile name/avatar show next to your messages,  
+      and you can use effects and emojis to match the energy of the session.
+    </p>
+  </div>
+
+  <section class="sub-grid">
+    <div class="sub-card">
+      <h2>Urban Flow</h2>
+      <p style="opacity:0.9;font-size:0.95rem;">
+        City skating, fast lines, stair bombs, gaps, and real‑world obstacles.
+      </p>
+      <p style="opacity:0.8;font-size:0.9rem;">
+        Use slam messages for big clip drops, reveal messages for spot locations,  
+        and quiet messages when you’re just checking in between runs.  
+        Notifications can be toggled on to stay tuned for night ride calls.
+      </p>
+      <a href="chatroom.html?room=blades-urban" class="enter-btn">Enter Urban Flow Chatroom</a>
+    </div>
+
+    <div class="sub-card">
+      <h2>Slalom</h2>
+      <p style="opacity:0.9;font-size:0.95rem;">
+        Cones, precision, flatground patterns, and freestyle line building.
+      </p>
+      <p style="opacity:0.8;font-size:0.9rem;">
+        Share cone setups, drills, and progress clips.  
+        Use reveal messages for line diagrams and keep notifications on for local practice sessions  
+        or off when you’re deep in training.
+      </p>
+      <a href="chatroom.html?room=blades-slalom" class="enter-btn">Enter Slalom Chatroom</a>
+    </div>
+  </section>
+</div>
+
+<script>
+  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+</script>
+</body>
+</html>
