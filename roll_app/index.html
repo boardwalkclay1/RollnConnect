@@ -6,45 +6,67 @@
   <link rel="stylesheet" href="styles/style.css">
 
   <style>
-    body{
+    body {
       background:#000;
       color:#fff;
       margin:0;
       padding:0;
       font-family:'Inter',sans-serif;
-      overflow-x:hidden;
+      overflow:hidden;
     }
-    .stars1,.stars2,.stars3{
-      position:fixed;inset:0;
+
+    /* STARFIELDS */
+    .stars1,.stars2,.stars3 {
+      position:fixed; inset:0;
       background:url('styles/stars-white.png') repeat;
       z-index:-3;
     }
     .stars1{opacity:.55;animation:drift1 140s linear infinite;}
     .stars2{opacity:.35;animation:drift2 200s linear infinite;}
-    .stars3{opacity:.2;animation:drift3 260s linear infinite;}
+    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
+
     @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    .sidebar{
-      position:fixed;top:50%;left:-260px;transform:translateY(-50%);
-      width:260px;background:rgba(255,255,255,0.08);
+    /* SIDEBAR */
+    .sidebar {
+      position:fixed;
+      top:50%;
+      left:-260px;
+      transform:translateY(-50%);
+      width:260px;
+      background:rgba(255,255,255,0.08);
       backdrop-filter:blur(25px);
       border-right:1px solid rgba(255,255,255,0.25);
-      padding:30px 20px;border-radius:0 20px 20px 0;
+      padding:30px 20px;
+      border-radius:0 20px 20px 0;
       box-shadow:10px 0 40px rgba(255,255,255,0.25);
-      transition:0.35s ease;z-index:9998;
+      transition:0.35s ease;
+      z-index:9998;
     }
-    .sidebar.open{left:0;}
+    .sidebar.open { left:0; }
 
-    .hamburger{
-      position:fixed;top:25px;left:25px;width:40px;height:30px;
-      display:flex;flex-direction:column;justify-content:space-between;
-      cursor:pointer;z-index:9999;
+    /* BURGER */
+    .hamburger {
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:9999;
     }
-    .hamburger span{
-      height:4px;width:100%;background:#fff;border-radius:4px;
-      box-shadow:0 0 12px rgba(255,255,255,0.9);transition:0.3s;
+    .hamburger span {
+      height:4px;
+      width:100%;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
     }
     .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
     .hamburger.active span:nth-child(2){opacity:0;}
@@ -59,83 +81,75 @@
       padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);
       box-shadow:0 0 12px rgba(255,255,255,0.15);transition:0.25s;
     }
-    .nav-links a:hover{background:rgba(255,255,255,0.2);transform:translateX(8px);box-shadow:0 0 20px rgba(255,255,255,0.4);}
+    .nav-links a:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(8px);
+      box-shadow:0 0 20px rgba(255,255,255,0.4);
+    }
 
-    .page-wrapper{
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
+    /* CENTER TITLE */
+    .title-wrapper {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
       text-align:center;
-      padding:40px 20px;
+      z-index:5;
+      pointer-events:none;
     }
 
-    .hero{
-      max-width:900px;
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(25px);
-      padding:50px 40px;
-      border-radius:30px;
-      box-shadow:0 0 70px rgba(255,255,255,0.35);
+    .main-title {
+      font-size:8rem;
+      font-weight:900;
+      letter-spacing:4px;
+      text-shadow:0 0 60px rgba(255,255,255,1);
+      margin-bottom:20px;
     }
 
-    .hero h1{
-      font-size:3.6rem;
-      margin-bottom:12px;
-    }
-    .hero p{
-      font-size:1.1rem;
+    .subtitle {
+      font-size:1.8rem;
       opacity:0.9;
-      margin-bottom:24px;
+      max-width:900px;
+      margin:0 auto;
+      text-shadow:0 0 30px rgba(255,255,255,0.8);
     }
 
-    .hero-buttons{
-      display:flex;
-      justify-content:center;
-      gap:18px;
-      flex-wrap:wrap;
-      margin-bottom:30px;
-    }
-
-    .btn-primary{
-      padding:14px 26px;
-      border-radius:18px;
-      background:#fff;
-      color:#000;
-      text-decoration:none;
-      font-weight:600;
-      box-shadow:0 0 30px rgba(255,255,255,0.8);
-      transition:0.25s;
-    }
-    .btn-primary:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(255,255,255,1);}
-
-    .bubble-row{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:20px;
-      margin-top:20px;
-    }
-
-    .bubble{
-      width:170px;height:170px;border-radius:50%;
+    /* FLOATING BOUNCING BUTTONS */
+    .bubble {
+      position:absolute;
+      width:200px;
+      height:200px;
+      border-radius:50%;
       background:rgba(255,255,255,0.12);
       backdrop-filter:blur(22px);
-      box-shadow:0 0 35px rgba(255,255,255,0.4);
-      display:flex;align-items:center;justify-content:center;
-      text-decoration:none;color:#fff;font-size:1rem;
-      text-align:center;padding:10px;transition:0.3s;
+      box-shadow:0 0 40px rgba(255,255,255,0.5);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:#fff;
+      font-size:1.4rem;
+      text-align:center;
+      padding:10px;
+      transition:0.3s;
+      z-index:4;
     }
-    .bubble:hover{transform:scale(1.08);box-shadow:0 0 50px rgba(255,255,255,0.9);}
+    .bubble:hover {
+      transform:scale(1.12);
+      box-shadow:0 0 60px rgba(255,255,255,1);
+    }
   </style>
 </head>
 <body>
 
-<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
 
+<!-- BURGER -->
 <div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
 
+<!-- SIDEBAR -->
 <nav id="sidebar" class="sidebar">
   <div class="nav-header">
     <div class="logo-orb">🛼</div>
@@ -153,31 +167,65 @@
   </ul>
 </nav>
 
-<div class="page-wrapper">
-  <div class="hero">
-    <h1>Roll ’n Connect</h1>
-    <p>
-      Your cosmic skating universe — profiles, clips, chatrooms, lessons, spots, events, and more.  
-      Built for every discipline, everywhere you roll.
-    </p>
-
-    <div class="hero-buttons">
-      <a href="signup.html" class="btn-primary">Sign Up</a>
-      <a href="login.html" class="btn-primary">Login</a>
-    </div>
-
-    <div class="bubble-row">
-      <a href="chatrooms.html" class="bubble">💬 Chatrooms</a>
-      <a href="find-spots.html" class="bubble">📍 Find Spots</a>
-      <a href="events.html" class="bubble">📅 Events</a>
-      <a href="profile.html" class="bubble">👤 Your Profile</a>
-    </div>
+<!-- CENTER TITLE -->
+<div class="title-wrapper">
+  <div class="main-title">ROLL ’N CONNECT</div>
+  <div class="subtitle">
+    The cosmic skating universe — floating, glowing, alive.
   </div>
 </div>
 
+<!-- FLOATING BOUNCING BUTTONS -->
+<a href="chatrooms.html" class="bubble" id="b1">Chatrooms</a>
+<a href="find-spots.html" class="bubble" id="b2">Find Spots</a>
+<a href="events.html" class="bubble" id="b3">Events</a>
+<a href="profile.html" class="bubble" id="b4">Your Profile</a>
+
 <script>
+  /* SIDEBAR */
   const h=document.getElementById("hamburger"), s=document.getElementById("sidebar");
   h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+
+  /* BOUNCING BUTTONS */
+  const bubbles = [
+    { el: document.getElementById("b1"), x:100, y:100, vx:2.2, vy:1.7 },
+    { el: document.getElementById("b2"), x:500, y:200, vx:-2.5, vy:2.1 },
+    { el: document.getElementById("b3"), x:900, y:150, vx:2.8, vy:-1.9 },
+    { el: document.getElementById("b4"), x:300, y:450, vx:-2.3, vy:-1.6 },
+  ];
+
+  function animate() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+
+    for (let b of bubbles) {
+      b.x += b.vx;
+      b.y += b.vy;
+
+      if (b.x <= 0 || b.x + 200 >= w) b.vx *= -1;
+      if (b.y <= 0 || b.y + 200 >= h) b.vy *= -1;
+
+      for (let other of bubbles) {
+        if (other === b) continue;
+        const dx = (b.x + 100) - (other.x + 100);
+        const dy = (b.y + 100) - (other.y + 100);
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 200) {
+          b.vx *= -1;
+          b.vy *= -1;
+          other.vx *= -1;
+          other.vy *= -1;
+        }
+      }
+
+      b.el.style.left = b.x + "px";
+      b.el.style.top = b.y + "px";
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
 </script>
 
 </body>
