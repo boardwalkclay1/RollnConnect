@@ -2,30 +2,179 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Profile – Roll ’n Connect</title>
+  <title>Dashboard • Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
-</head>
-<body>
-<div class="app-shell">
-  <header class="app-header">
-    <div class="app-header-left">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
-    </div>
-    <div class="app-header-right">
-      <a href="settings.html" class="icon-btn">⚙</a>
-      <a href="login.html" class="icon-btn">↩</a>
-    </div>
-  </header>
 
-  <main class="page">
-    <div class="card" style="margin-bottom:18px;">
+  <!-- GLOBAL STYLES -->
+  <link rel="stylesheet" href="styles/style.css">
+
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    /* STARFIELDS */
+    .stars1, .stars2, .stars3 {
+      position: fixed;
+      inset: 0;
+      background: url('styles/stars-white.png') repeat;
+      z-index: -3;
+    }
+    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
+    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
+    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
+
+    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
+    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
+    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
+
+    /* RIGHT-SIDE NAVIGATION */
+    .side-nav {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      right: 0;
+      top: 0;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(255,255,255,0.15);
+      padding: 30px 20px;
+      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .nav-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-orb {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.15rem;
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: 0.25s;
+      display: block;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateX(-6px);
+    }
+
+    /* MAIN CONTENT AREA */
+    .page-content {
+      flex: 1;
+      padding: 60px;
+      padding-right: 320px; /* space for right nav */
+      max-width: 900px;
+      margin: auto;
+    }
+
+    /* DASHBOARD CARDS */
+    .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 35px rgba(160,120,255,0.3);
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.4);
+      background: transparent;
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- STARFIELDS -->
+  <div class="stars1"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
+
+  <!-- RIGHT-SIDE NAVIGATION -->
+  <nav class="side-nav">
+    <div class="nav-header">
+      <div class="logo-orb">🛼</div>
+      <div class="nav-title">Roll ’n Connect</div>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="profile.html">👤 Profile</a></li>
+      <li><a href="dashboard.html">📊 Dashboard</a></li>
+      <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+      <li><a href="events.html">📅 Events</a></li>
+      <li><a href="spots-map.html">📍 Spots Map</a></li>
+      <li><a href="clips-feed.html">🎥 Clips Feed</a></li>
+      <li><a href="marketplace.html">🛒 Marketplace</a></li>
+      <li><a href="settings.html">⚙️ Settings</a></li>
+    </ul>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="page-content">
+
+    <!-- USER SUMMARY -->
+    <div class="card">
       <div style="display:flex; gap:16px; align-items:center;">
-        <div style="width:78px; height:78px; border-radius:999px; border:3px solid var(--purple); box-shadow:0 0 12px rgba(168,85,247,0.7); background:radial-gradient(circle,var(--purple),var(--blue));"></div>
+        <div style="
+          width:78px; height:78px; border-radius:999px;
+          border:3px solid #a855f7;
+          box-shadow:0 0 12px rgba(168,85,247,0.7);
+          background:radial-gradient(circle,#a855f7,#3b82f6);
+        "></div>
+
         <div>
           <div style="font-size:18px; font-weight:600;">@YourUsername</div>
-          <div style="font-size:13px; color:var(--text-soft);">Longboard • ATL • Night rides</div>
+          <div style="font-size:13px; opacity:0.7;">Longboard • ATL • Night rides</div>
+
           <div style="display:flex; gap:16px; margin-top:6px; font-size:12px;">
             <span><strong>23</strong> clips</span>
             <span><strong>148</strong> followers</span>
@@ -33,63 +182,45 @@
           </div>
         </div>
       </div>
-      <p style="margin-top:10px; font-size:13px; color:var(--text-soft);">
-        Dancing down hills and chasing smooth pavement. Always down for a night session.
-      </p>
-      <a href="profile-setup.html" class="btn btn-outline" style="margin-top:8px; padding:6px 12px; font-size:12px;">
-        Edit profile
-      </a>
     </div>
 
+    <!-- QUICK LINKS -->
     <div class="card">
-      <div style="display:flex; gap:16px; margin-bottom:10px; font-size:13px;">
-        <button class="btn btn-outline" style="padding:4px 10px;">Clips</button>
-        <button class="btn btn-outline" style="padding:4px 10px;">Saved</button>
-        <button class="btn btn-outline" style="padding:4px 10px;">Marketplace</button>
-      </div>
-      <div style="display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px;">
-        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=201'); background-size:cover;"></div>
-        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=202'); background-size:cover;"></div>
-        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=203'); background-size:cover;"></div>
-        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=204'); background-size:cover;"></div>
-        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=205'); background-size:cover;"></div>
-        <div style="height:110px; border-radius:10px; background-image:url('https://picsum.photos/300?random=206'); background-size:cover;"></div>
+      <div class="section-title">Quick Access</div>
+
+      <div style="display:flex; gap:16px; flex-wrap:wrap;">
+        <a href="chatrooms.html" class="btn-outline" style="padding:8px 14px;">💬 Chatrooms</a>
+        <a href="events.html" class="btn-outline" style="padding:8px 14px;">📅 Events</a>
+        <a href="spots-map.html" class="btn-outline" style="padding:8px 14px;">📍 Spots Map</a>
+        <a href="clips-feed.html" class="btn-outline" style="padding:8px 14px;">🎥 Clips Feed</a>
+        <a href="marketplace.html" class="btn-outline" style="padding:8px 14px;">🛒 Marketplace</a>
       </div>
     </div>
+
+    <!-- RECENT ACTIVITY -->
+    <div class="card">
+      <div class="section-title">Recent Activity</div>
+
+      <ul style="list-style:none; padding:0; margin:0; font-size:14px; opacity:0.85;">
+        <li style="margin-bottom:10px;">🛼 You joined <strong>ATL Longboard Chat</strong></li>
+        <li style="margin-bottom:10px;">🎥 You uploaded a new clip</li>
+        <li style="margin-bottom:10px;">📍 You saved a new spot</li>
+        <li style="margin-bottom:10px;">🛒 You listed an item in Marketplace</li>
+      </ul>
+    </div>
+
+    <!-- SUGGESTED CHATS -->
+    <div class="card">
+      <div class="section-title">Suggested Chats</div>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <a href="chat-city-atlanta.html" class="btn-outline" style="padding:10px;">🌆 ATL Riders</a>
+        <a href="chat-city-miami.html" class="btn-outline" style="padding:10px;">🌴 Miami Cruisers</a>
+        <a href="chat-city-chicago.html" class="btn-outline" style="padding:10px;">🌬 Chicago Inline</a>
+      </div>
+    </div>
+
   </main>
 
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-    </div>
-  </footer>
-
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-    <a href="spots-map.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🧭</div>
-      <span>Explore</span>
-    </a>
-    <a href="clips-feed.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">▶</div>
-      <span>Clips</span>
-    </a>
-    <a href="marketplace.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-    <a href="dashboard.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
-    </a>
-  </nav>
-</div>
-
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
 </body>
 </html>
