@@ -1,226 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Dashboard • Roll ’n Connect</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<div class="cosmic-wrapper">
 
-  <!-- GLOBAL STYLES -->
-  <link rel="stylesheet" href="styles/style.css">
-
-  <style>
-    body {
-      background: #000;
-      color: #fff;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-      display: flex;
-    }
-
-    /* STARFIELDS */
-    .stars1, .stars2, .stars3 {
-      position: fixed;
-      inset: 0;
-      background: url('styles/stars-white.png') repeat;
-      z-index: -3;
-    }
-    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
-    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
-    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
-
-    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
-    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
-    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
-
-    /* RIGHT-SIDE NAVIGATION */
-    .side-nav {
-      width: 260px;
-      height: 100vh;
-      position: fixed;
-      right: 0;
-      top: 0;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(20px);
-      border-left: 1px solid rgba(255,255,255,0.15);
-      padding: 30px 20px;
-      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
-      display: flex;
-      flex-direction: column;
-      z-index: 10;
-    }
-
-    .nav-header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .logo-orb {
-      font-size: 3rem;
-      margin-bottom: 10px;
-    }
-
-    .nav-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      letter-spacing: 1px;
-    }
-
-    .nav-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .nav-links a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1.15rem;
-      padding: 10px 14px;
-      border-radius: 12px;
-      transition: 0.25s;
-      display: block;
-    }
-
-    .nav-links a:hover {
-      background: rgba(255,255,255,0.15);
-      transform: translateX(-6px);
-    }
-
-    /* MAIN CONTENT AREA */
-    .page-content {
-      flex: 1;
-      padding: 60px;
-      padding-right: 320px; /* space for right nav */
-      max-width: 900px;
-      margin: auto;
-    }
-
-    /* DASHBOARD CARDS */
-    .card {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 0 35px rgba(160,120,255,0.3);
-    }
-
-    .section-title {
-      font-size: 1.4rem;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .btn-outline {
-      border: 1px solid rgba(255,255,255,0.4);
-      background: transparent;
-      color: #fff;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.25s;
-    }
-
-    .btn-outline:hover {
-      background: rgba(255,255,255,0.2);
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- STARFIELDS -->
-  <div class="stars1"></div>
-  <div class="stars2"></div>
-  <div class="stars3"></div>
-
-  <!-- RIGHT-SIDE NAVIGATION -->
-  <nav class="side-nav">
-    <div class="nav-header">
-      <div class="logo-orb">🛼</div>
-      <div class="nav-title">Roll ’n Connect</div>
-    </div>
-
-    <ul class="nav-links">
-      <li><a href="index.html">🏠 Home</a></li>
-      <li><a href="profile.html">👤 Profile</a></li>
-      <li><a href="dashboard.html">📊 Dashboard</a></li>
-      <li><a href="chatrooms.html">💬 Chatrooms</a></li>
-      <li><a href="events.html">📅 Events</a></li>
-      <li><a href="spots-map.html">📍 Spots Map</a></li>
-      <li><a href="clips-feed.html">🎥 Clips Feed</a></li>
-      <li><a href="marketplace.html">🛒 Marketplace</a></li>
-      <li><a href="settings.html">⚙️ Settings</a></li>
-    </ul>
+  <!-- Top Navigation -->
+  <nav class="cosmic-nav">
+    <a href="/login" class="nav-btn">Login</a>
+    <a href="/signup" class="nav-btn">Sign Up</a>
   </nav>
 
-  <!-- MAIN CONTENT -->
-  <main class="page-content">
+  <!-- Comic Book Description -->
+  <section class="comic-description">
+    <h1>WELCOME TO THE ROLL ’N CONNECT MULTIVERSE</h1>
+    <p>
+      Step into a galaxy where wheels rule the cosmos.  
+      Choose your realm, meet your crew, drop emojis,  
+      and ride the neon highways of community energy.  
+      Every chatroom is a universe — and you’re the hero.
+    </p>
+  </section>
 
-    <!-- USER SUMMARY -->
-    <div class="card">
-      <div style="display:flex; gap:16px; align-items:center;">
-        <div style="
-          width:78px; height:78px; border-radius:999px;
-          border:3px solid #a855f7;
-          box-shadow:0 0 12px rgba(168,85,247,0.7);
-          background:radial-gradient(circle,#a855f7,#3b82f6);
-        "></div>
+  <!-- Chatroom Cards -->
+  <section class="chatrooms-grid">
 
-        <div>
-          <div style="font-size:18px; font-weight:600;">@YourUsername</div>
-          <div style="font-size:13px; opacity:0.7;">Longboard • ATL • Night rides</div>
-
-          <div style="display:flex; gap:16px; margin-top:6px; font-size:12px;">
-            <span><strong>23</strong> clips</span>
-            <span><strong>148</strong> followers</span>
-            <span><strong>89</strong> following</span>
-          </div>
-        </div>
-      </div>
+    <div class="chatroom-card">
+      <h2>Longboard</h2>
+      <p>Street cruising, dancing, downhill, and community rides.</p>
+      <a href="/chatrooms/longboard" class="enter-btn">Enter</a>
     </div>
 
-    <!-- QUICK LINKS -->
-    <div class="card">
-      <div class="section-title">Quick Access</div>
-
-      <div style="display:flex; gap:16px; flex-wrap:wrap;">
-        <a href="chatrooms.html" class="btn-outline" style="padding:8px 14px;">💬 Chatrooms</a>
-        <a href="events.html" class="btn-outline" style="padding:8px 14px;">📅 Events</a>
-        <a href="spots-map.html" class="btn-outline" style="padding:8px 14px;">📍 Spots Map</a>
-        <a href="clips-feed.html" class="btn-outline" style="padding:8px 14px;">🎥 Clips Feed</a>
-        <a href="marketplace.html" class="btn-outline" style="padding:8px 14px;">🛒 Marketplace</a>
-      </div>
+    <div class="chatroom-card">
+      <h2>Blades</h2>
+      <p>Inline skating, urban flow, slalom, and night sessions.</p>
+      <a href="/chatrooms/blades" class="enter-btn">Enter</a>
     </div>
 
-    <!-- RECENT ACTIVITY -->
-    <div class="card">
-      <div class="section-title">Recent Activity</div>
-
-      <ul style="list-style:none; padding:0; margin:0; font-size:14px; opacity:0.85;">
-        <li style="margin-bottom:10px;">🛼 You joined <strong>ATL Longboard Chat</strong></li>
-        <li style="margin-bottom:10px;">🎥 You uploaded a new clip</li>
-        <li style="margin-bottom:10px;">📍 You saved a new spot</li>
-        <li style="margin-bottom:10px;">🛒 You listed an item in Marketplace</li>
-      </ul>
+    <div class="chatroom-card">
+      <h2>Quads</h2>
+      <p>Dance skating, rink culture, jam skating, and meetups.</p>
+      <a href="/chatrooms/quads" class="enter-btn">Enter</a>
     </div>
 
-    <!-- SUGGESTED CHATS -->
-    <div class="card">
-      <div class="section-title">Suggested Chats</div>
-
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <a href="chat-city-atlanta.html" class="btn-outline" style="padding:10px;">🌆 ATL Riders</a>
-        <a href="chat-city-miami.html" class="btn-outline" style="padding:10px;">🌴 Miami Cruisers</a>
-        <a href="chat-city-chicago.html" class="btn-outline" style="padding:10px;">🌬 Chicago Inline</a>
-      </div>
+    <div class="chatroom-card">
+      <h2>Skateboard</h2>
+      <p>Street, park, vert, and local skate community sessions.</p>
+      <a href="/chatrooms/skateboard" class="enter-btn">Enter</a>
     </div>
 
-  </main>
+    <div class="chatroom-card">
+      <h2>Party Room</h2>
+      <p>Music, vibes, events, and community hangouts.</p>
+      <a href="/chatrooms/party" class="enter-btn">Enter</a>
+    </div>
 
-</body>
-</html>
+  </section>
+
+  <!-- Emoji Instructions -->
+  <section class="emoji-instructions">
+    <h3>HOW TO SEND EMOJIS</h3>
+    <p>
+      Inside any chatroom, just type your emoji like this:  
+      <strong>🔥 😎 🛹 🌟 💬</strong>  
+      Your keyboard emoji picker works everywhere.  
+      Tap, click, or press <strong>Windows + .</strong> to open the emoji panel.
+    </p>
+  </section>
+
+</div>
