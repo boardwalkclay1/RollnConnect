@@ -2,10 +2,105 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Item – Roll ’n Connect</title>
+  <title>Item • Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
+
+  <!-- GLOBAL STYLES -->
+  <link rel="stylesheet" href="styles/style.css">
+
   <style>
+    body {
+      background: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    /* STARFIELDS */
+    .stars1, .stars2, .stars3 {
+      position: fixed;
+      inset: 0;
+      background: url('styles/stars-white.png') repeat;
+      z-index: -3;
+    }
+    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
+    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
+    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
+
+    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
+    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
+    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
+
+    /* RIGHT-SIDE NAVIGATION */
+    .side-nav {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      right: 0;
+      top: 0;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(255,255,255,0.15);
+      padding: 30px 20px;
+      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .nav-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-orb {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.15rem;
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: 0.25s;
+      display: block;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateX(-6px);
+    }
+
+    /* MAIN CONTENT AREA */
+    .page-content {
+      flex: 1;
+      padding: 60px;
+      padding-right: 320px; /* space for right nav */
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    /* ITEM LAYOUT */
     .item-layout {
       display: grid;
       grid-template-columns: 1fr 320px;
@@ -16,25 +111,32 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* GALLERY */
     .gallery {
       display: flex;
       flex-direction: column;
       gap: 14px;
     }
+
     .gallery-main {
       width: 100%;
-      height: 320px;
-      border-radius: 18px;
+      height: 340px;
+      border-radius: 20px;
       background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
       border: 1px solid rgba(168,85,247,0.4);
       background-size: cover;
       background-position: center;
+      box-shadow: 0 0 35px rgba(160,120,255,0.3);
     }
+
     .gallery-thumbs {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
     }
+
     .gallery-thumb {
       height: 120px;
       border-radius: 14px;
@@ -44,111 +146,170 @@
       background-position: center;
       cursor: pointer;
       transition: 0.2s;
+      box-shadow: 0 0 20px rgba(255,255,255,0.2);
     }
+
     .gallery-thumb:hover {
-      transform: scale(1.03);
-      border-color: var(--purple);
+      transform: scale(1.05);
+      border-color: #fff;
     }
+
+    /* CARDS */
+    .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 24px;
+      margin-top: 20px;
+      box-shadow: 0 0 35px rgba(160,120,255,0.3);
+    }
+
     .seller-card {
       margin-top: 20px;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 0 25px rgba(160,120,255,0.3);
+    }
+
+    /* BUTTONS */
+    .btn-primary {
+      background: #ffffff;
+      color: #000000;
+      padding: 14px 20px;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(255,255,255,0.8);
+    }
+
+    /* RECOMMENDATIONS GRID */
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .market-card {
+      background: rgba(255,255,255,0.08);
       padding: 16px;
-      border-radius: 18px;
-      background: var(--glass);
-      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      backdrop-filter: blur(14px);
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 25px rgba(160,120,255,0.3);
+    }
+
+    .market-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(255,255,255,0.8);
+    }
+
+    .market-title {
+      font-size: 1.1rem;
+      margin-top: 8px;
+    }
+
+    .market-price {
+      opacity: 0.85;
+      margin-top: 4px;
     }
   </style>
 </head>
+
 <body>
-<div class="app-shell">
 
-  <header class="app-header">
-    <div class="app-header-left">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
-    </div>
-    <div class="app-header-right">
-      <a href="marketplace.html" class="icon-btn">←</a>
-      <a href="chat.html" class="icon-btn">✉</a>
-    </div>
-  </header>
+<!-- STARFIELDS -->
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
 
-  <main class="page">
-    <h1 id="itemTitle">Loading...</h1>
+<!-- RIGHT NAV -->
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="logo-orb">🛼</div>
+    <div class="nav-title">Roll ’n Connect</div>
+  </div>
 
-    <div class="item-layout">
-      <div>
-        <div class="gallery">
-          <div id="mainImage" class="gallery-main"></div>
-          <div class="gallery-thumbs">
-            <div id="thumb1" class="gallery-thumb"></div>
-            <div id="thumb2" class="gallery-thumb"></div>
-          </div>
-        </div>
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="clips-feed.html">🎥 Clips Feed</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="settings.html">⚙️ Settings</a></li>
+  </ul>
+</nav>
 
-        <div class="card" style="margin-top:20px;">
-          <h2>Details</h2>
-          <p id="itemPrice" class="card-text"></p>
-          <p id="itemCondition" class="card-text"></p>
-          <p id="itemCategory" class="card-text"></p>
-          <p id="itemLocation" class="card-text">Location: Atlanta, GA</p>
+<!-- MAIN CONTENT -->
+<main class="page-content">
 
-          <button class="btn btn-primary" onclick="saveItem()" style="margin-top:6px;">
-            Save item
-          </button>
-        </div>
+  <h1 id="itemTitle" style="font-size:2.4rem; text-shadow:0 0 20px rgba(255,255,255,0.4);">
+    Loading...
+  </h1>
 
-        <h2 style="margin-top:28px;">You may also like</h2>
-        <div id="recommendGrid" class="market-grid"></div>
-      </div>
+  <div class="item-layout">
 
-      <div>
-        <div class="seller-card">
-          <h3>Seller</h3>
-          <p style="font-size:14px; font-weight:600;">@SkateFlow</p>
-          <p class="card-text">Verified seller • 4.9 rating</p>
-          <a href="chat.html" class="btn btn-primary" style="margin-top:10px;">Message seller</a>
-        </div>
-
-        <div class="card" style="margin-top:20px;">
-          <h3>Recently Viewed</h3>
-          <div id="recentItems"></div>
+    <!-- LEFT SIDE: GALLERY + DETAILS -->
+    <div>
+      <div class="gallery">
+        <div id="mainImage" class="gallery-main"></div>
+        <div class="gallery-thumbs">
+          <div id="thumb1" class="gallery-thumb"></div>
+          <div id="thumb2" class="gallery-thumb"></div>
         </div>
       </div>
-    </div>
-  </main>
 
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-    </div>
-  </footer>
+      <div class="card">
+        <h2>Details</h2>
+        <p id="itemPrice"></p>
+        <p id="itemCondition"></p>
+        <p id="itemCategory"></p>
+        <p id="itemLocation">Location: Atlanta, GA</p>
 
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-    <a href="spots-map.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🧭</div>
-      <span>Explore</span>
-    </a>
-    <a href="clips-feed.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">▶</div>
-      <span>Clips</span>
-    </a>
-    <a href="marketplace.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-    <a href="dashboard.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
-    </a>
-  </nav>
-</div>
+        <button class="btn-primary" onclick="saveItem()" style="margin-top:10px;">
+          Save Item
+        </button>
+      </div>
+
+      <h2 style="margin-top:28px;">You may also like</h2>
+      <div id="recommendGrid" class="market-grid"></div>
+    </div>
+
+    <!-- RIGHT SIDE: SELLER + RECENT -->
+    <div>
+      <div class="seller-card">
+        <h3>Seller</h3>
+        <p style="font-size:14px; font-weight:600;">@SkateFlow</p>
+        <p style="opacity:0.8;">Verified seller • 4.9 rating</p>
+        <a href="chatrooms.html" class="btn-primary" style="margin-top:10px;">Message Seller</a>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <h3>Recently Viewed</h3>
+        <div id="recentItems"></div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
 
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
+  document.getElementById("year")?.textContent = new Date().getFullYear();
 
   const items = [
     { id: 1, title: "Dancing Longboard", price: 180, category: "longboard", condition: "used" },
@@ -167,15 +328,23 @@
   document.getElementById("itemCondition").textContent = "Condition: " + item.condition;
   document.getElementById("itemCategory").textContent = "Category: " + item.category;
 
-  document.getElementById("mainImage").style.backgroundImage = "url('https://picsum.photos/600?random=" + (item.id+10) + "')";
-  document.getElementById("thumb1").style.backgroundImage = "url('https://picsum.photos/300?random=" + (item.id+20) + "')";
-  document.getElementById("thumb2").style.backgroundImage = "url('https://picsum.photos/300?random=" + (item.id+30) + "')";
+  document.getElementById("mainImage").style.backgroundImage =
+    "url('https://picsum.photos/600?random=" + (item.id+10) + "')";
+
+  document.getElementById("thumb1").style.backgroundImage =
+    "url('https://picsum.photos/300?random=" + (item.id+20) + "')";
+
+  document.getElementById("thumb2").style.backgroundImage =
+    "url('https://picsum.photos/300?random=" + (item.id+30) + "')";
 
   document.getElementById("thumb1").onclick = () => {
-    document.getElementById("mainImage").style.backgroundImage = document.getElementById("thumb1").style.backgroundImage;
+    document.getElementById("mainImage").style.backgroundImage =
+      document.getElementById("thumb1").style.backgroundImage;
   };
+
   document.getElementById("thumb2").onclick = () => {
-    document.getElementById("mainImage").style.backgroundImage = document.getElementById("thumb2").style.backgroundImage;
+    document.getElementById("mainImage").style.backgroundImage =
+      document.getElementById("thumb2").style.backgroundImage;
   };
 
   function saveItem() {
@@ -188,18 +357,21 @@
   function loadRecent() {
     const recent = JSON.parse(localStorage.getItem("recentItems") || "[]");
     const container = document.getElementById("recentItems");
-    container.innerHTML = recent.map(id => {
-      const it = items.find(i => i.id === id);
-      return `<p>${it.title} – $${it.price}</p>`;
-    }).join("");
+    container.innerHTML = recent
+      .map(id => {
+        const it = items.find(i => i.id === id);
+        return `<p>${it.title} – $${it.price}</p>`;
+      })
+      .join("");
   }
   loadRecent();
 
   const recommend = items.filter(i => i.id !== item.id).slice(0, 4);
   const recGrid = document.getElementById("recommendGrid");
+
   recommend.forEach(r => {
     const div = document.createElement("div");
-    div.className = "market-card enhanced-market-card";
+    div.className = "market-card";
     div.onclick = () => {
       localStorage.setItem("currentItem", r.id);
       window.location.reload();
@@ -213,5 +385,6 @@
     recGrid.appendChild(div);
   });
 </script>
+
 </body>
 </html>
