@@ -1,0 +1,71 @@
+<!-- calendar.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RollnConnect – Calendar</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .page-shell {
+      min-height: 100vh;
+      padding: 40px 20px 80px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+    .calendar-list {
+      list-style:none;
+      padding-left:0;
+    }
+    .calendar-item-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:6px;
+    }
+    .calendar-date {
+      font-size:0.85rem;
+      opacity:0.8;
+    }
+    .calendar-title {
+      font-size:1rem;
+      font-weight:600;
+    }
+  </style>
+</head>
+<body>
+  <div class="stars1"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
+
+  <div class="page-shell">
+    <div class="glass" style="max-width:900px; width:100%; margin-bottom:30px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <h1 class="section-title" style="font-size:2rem; margin-bottom:4px;">Calendar</h1>
+        <p style="opacity:0.7; font-size:0.9rem;">Your lessons and bookmarked RollnConnect events (local-only for now).</p>
+      </div>
+      <button class="btn-primary" onclick="window.location.href='profile.html'">
+        Back to Profile
+      </button>
+    </div>
+
+    <div class="glass" style="max-width:900px; width:100%;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div>
+          <h2 class="section-title" style="font-size:1.4rem; margin-bottom:4px;">Upcoming</h2>
+          <p style="opacity:0.7; font-size:0.85rem;">Tap events to toggle notifications.</p>
+        </div>
+        <div style="font-size:0.8rem; opacity:0.7;">Local notifications only</div>
+      </div>
+
+      <ul id="calendarFullList" class="calendar-list"></ul>
+      <p id="calendarEmpty" style="display:none; opacity:0.7; font-size:0.9rem;">No events saved yet.</p>
+    </div>
+  </div>
+
+  <script src="profile.js"></script>
+  <script>
+    RC.initCalendar();
+  </script>
+</body>
+</html>
