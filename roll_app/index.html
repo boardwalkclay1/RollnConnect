@@ -3,216 +3,182 @@
 <head>
   <meta charset="UTF-8">
   <title>Roll ’n Connect</title>
-
-  <!-- UPDATED STYLE FOLDER -->
   <link rel="stylesheet" href="styles/style.css">
 
   <style>
-    /* PURE BLACK BACKGROUND */
-    body {
-      background: #000000;
-      color: #ffffff;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-      display: flex;
+    body{
+      background:#000;
+      color:#fff;
+      margin:0;
+      padding:0;
+      font-family:'Inter',sans-serif;
+      overflow-x:hidden;
+    }
+    .stars1,.stars2,.stars3{
+      position:fixed;inset:0;
+      background:url('styles/stars-white.png') repeat;
+      z-index:-3;
+    }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2;animation:drift3 260s linear infinite;}
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+    .sidebar{
+      position:fixed;top:50%;left:-260px;transform:translateY(-50%);
+      width:260px;background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:30px 20px;border-radius:0 20px 20px 0;
+      box-shadow:10px 0 40px rgba(255,255,255,0.25);
+      transition:0.35s ease;z-index:9998;
+    }
+    .sidebar.open{left:0;}
+
+    .hamburger{
+      position:fixed;top:25px;left:25px;width:40px;height:30px;
+      display:flex;flex-direction:column;justify-content:space-between;
+      cursor:pointer;z-index:9999;
+    }
+    .hamburger span{
+      height:4px;width:100%;background:#fff;border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);transition:0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+    .nav-header{text-align:center;margin-bottom:30px;}
+    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
+    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
+    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;}
+    .nav-links a{
+      color:#fff;text-decoration:none;font-size:1.05rem;
+      padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);
+      box-shadow:0 0 12px rgba(255,255,255,0.15);transition:0.25s;
+    }
+    .nav-links a:hover{background:rgba(255,255,255,0.2);transform:translateX(8px);box-shadow:0 0 20px rgba(255,255,255,0.4);}
+
+    .page-wrapper{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:40px 20px;
     }
 
-    /* WHITE STARFIELDS */
-    .stars1, .stars2, .stars3 {
-      position: fixed;
-      inset: 0;
-      background: url('styles/stars-white.png') repeat;
-      z-index: -3;
-    }
-    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
-    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
-    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
-
-    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
-    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
-    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
-
-    /* RIGHT-SIDE NAVIGATION (ADDED WITHOUT TOUCHING ORIGINAL LAYOUT) */
-    .side-nav {
-      width: 260px;
-      height: 100vh;
-      position: fixed;
-      right: 0;
-      top: 0;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(20px);
-      border-left: 1px solid rgba(255,255,255,0.15);
-      padding: 30px 20px;
-      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
-      display: flex;
-      flex-direction: column;
-      z-index: 10;
+    .hero{
+      max-width:900px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      padding:50px 40px;
+      border-radius:30px;
+      box-shadow:0 0 70px rgba(255,255,255,0.35);
     }
 
-    .nav-header {
-      text-align: center;
-      margin-bottom: 40px;
+    .hero h1{
+      font-size:3.6rem;
+      margin-bottom:12px;
+    }
+    .hero p{
+      font-size:1.1rem;
+      opacity:0.9;
+      margin-bottom:24px;
     }
 
-    .logo-orb {
-      font-size: 3rem;
-      margin-bottom: 10px;
+    .hero-buttons{
+      display:flex;
+      justify-content:center;
+      gap:18px;
+      flex-wrap:wrap;
+      margin-bottom:30px;
     }
 
-    .nav-title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      letter-spacing: 1px;
+    .btn-primary{
+      padding:14px 26px;
+      border-radius:18px;
+      background:#fff;
+      color:#000;
+      text-decoration:none;
+      font-weight:600;
+      box-shadow:0 0 30px rgba(255,255,255,0.8);
+      transition:0.25s;
+    }
+    .btn-primary:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(255,255,255,1);}
+
+    .bubble-row{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:20px;
+      margin-top:20px;
     }
 
-    .nav-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
+    .bubble{
+      width:170px;height:170px;border-radius:50%;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(22px);
+      box-shadow:0 0 35px rgba(255,255,255,0.4);
+      display:flex;align-items:center;justify-content:center;
+      text-decoration:none;color:#fff;font-size:1rem;
+      text-align:center;padding:10px;transition:0.3s;
     }
-
-    .nav-links a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1.15rem;
-      padding: 10px 14px;
-      border-radius: 12px;
-      transition: 0.25s;
-      display: block;
-    }
-
-    .nav-links a:hover {
-      background: rgba(255,255,255,0.15);
-      transform: translateX(-6px);
-    }
-
-    /* HERO PANEL (UNCHANGED) */
-    .hero {
-      margin-top: 140px;
-      text-align: center;
-      padding: 60px;
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px);
-      border-radius: 24px;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
-    }
-
-    /* BUTTONS (UNCHANGED) */
-    .btn-primary {
-      background: #ffffff;
-      color: #000000;
-      padding: 16px 32px;
-      border-radius: 16px;
-      font-size: 1.3rem;
-      border: none;
-      cursor: pointer;
-      transition: 0.3s;
-      text-decoration: none;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-    }
-
-    .btn-primary:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
-    }
-
-    /* NAV BUBBLES (UNCHANGED) */
-    .bubble-row {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin-top: 70px;
-      padding-right: 260px; /* space for right nav */
-    }
-
-    .bubble {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 0 35px rgba(255, 255, 255, 0.4);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.3rem;
-      text-align: center;
-      color: #ffffff;
-      cursor: pointer;
-      animation: float 6s ease-in-out infinite;
-      transition: 0.3s;
-      text-decoration: none;
-    }
-
-    .bubble:hover {
-      transform: scale(1.18);
-      box-shadow: 0 0 50px rgba(255, 255, 255, 0.9);
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-18px); }
-      100% { transform: translateY(0); }
-    }
+    .bubble:hover{transform:scale(1.08);box-shadow:0 0 50px rgba(255,255,255,0.9);}
   </style>
 </head>
-
 <body>
 
-<!-- WHITE STARFIELDS -->
-<div class="stars1"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
 
-<!-- RIGHT-SIDE NAVIGATION (ADDED) -->
-<nav class="side-nav">
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+
+<nav id="sidebar" class="sidebar">
   <div class="nav-header">
     <div class="logo-orb">🛼</div>
     <div class="nav-title">Roll ’n Connect</div>
   </div>
-
   <ul class="nav-links">
-    <li><a href="index.html">🏠 Home</a></li>
     <li><a href="dashboard.html">📊 Dashboard</a></li>
     <li><a href="chatrooms.html">💬 Chatrooms</a></li>
-    <li><a href="marketplace.html">🛒 Marketplace</a></li>
     <li><a href="find-spots.html">📍 Find Spots</a></li>
     <li><a href="events.html">📅 Events</a></li>
+    <li><a href="calendar.html">🗓️ Calendar</a></li>
     <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
     <li><a href="settings.html">⚙️ Settings</a></li>
   </ul>
 </nav>
 
-<!-- HERO (UNCHANGED) -->
-<div class="hero">
-  <h1 style="font-size:4rem;">Roll ’n Connect</h1>
-  <p style="font-size:1.4rem; opacity:0.9;">
-    Your cosmic skating universe — chatrooms, spots, events, marketplace, and more.
-  </p>
+<div class="page-wrapper">
+  <div class="hero">
+    <h1>Roll ’n Connect</h1>
+    <p>
+      Your cosmic skating universe — profiles, clips, chatrooms, lessons, spots, events, and more.  
+      Built for every discipline, everywhere you roll.
+    </p>
 
-  <div style="margin-top:30px;">
-    <a href="signup.html" class="btn-primary">Sign Up</a>
-    <a href="login.html" class="btn-primary">Login</a>
+    <div class="hero-buttons">
+      <a href="signup.html" class="btn-primary">Sign Up</a>
+      <a href="login.html" class="btn-primary">Login</a>
+    </div>
+
+    <div class="bubble-row">
+      <a href="chatrooms.html" class="bubble">💬 Chatrooms</a>
+      <a href="find-spots.html" class="bubble">📍 Find Spots</a>
+      <a href="events.html" class="bubble">📅 Events</a>
+      <a href="profile.html" class="bubble">👤 Your Profile</a>
+    </div>
   </div>
 </div>
 
-<!-- MAIN NAVIGATION (UNCHANGED) -->
-<div class="bubble-row">
-  <a href="chatrooms.html" class="bubble">Chatrooms</a>
-  <a href="marketplace.html" class="bubble">Marketplace</a>
-  <a href="find-spots.html" class="bubble">Find Spots</a>
-  <a href="events.html" class="bubble">Events</a>
-  <a href="profile.html" class="bubble">Your Profile</a>
-</div>
+<script>
+  const h=document.getElementById("hamburger"), s=document.getElementById("sidebar");
+  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+</script>
 
 </body>
 </html>
