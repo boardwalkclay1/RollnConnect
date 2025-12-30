@@ -3,12 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <title>Login • Roll ’n Connect</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- GLOBAL STYLES -->
+  <link rel="stylesheet" href="styles/style.css">
 
   <style>
+    body {
+      background: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    /* STARFIELDS */
+    .stars1, .stars2, .stars3 {
+      position: fixed;
+      inset: 0;
+      background: url('styles/stars-white.png') repeat;
+      z-index: -3;
+    }
+    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
+    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
+    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
+
+    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
+    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
+    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
+
+    /* RIGHT-SIDE NAVIGATION */
+    .side-nav {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      right: 0;
+      top: 0;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(255,255,255,0.15);
+      padding: 30px 20px;
+      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .nav-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-orb {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.15rem;
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: 0.25s;
+      display: block;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateX(-6px);
+    }
+
+    /* MAIN CONTENT AREA */
+    .page-content {
+      flex: 1;
+      padding: 60px;
+      padding-right: 320px; /* space for right nav */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* LOGIN CARD */
     .auth-container {
+      width: 100%;
       max-width: 480px;
-      margin: 140px auto;
       padding: 40px;
       text-align: center;
       border-radius: 24px;
@@ -50,38 +146,63 @@
 
 <body>
 
-<div class="stars1"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
-<div class="nebula-haze"></div>
+  <!-- STARFIELDS -->
+  <div class="stars1"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
 
-<div class="auth-container glass">
-  <h1 style="font-size:2.6rem; color:#e0e4ff; text-shadow:0 0 20px #8a6cff;">
-    Welcome Back
-  </h1>
+  <!-- RIGHT-SIDE NAVIGATION -->
+  <nav class="side-nav">
+    <div class="nav-header">
+      <div class="logo-orb">🛼</div>
+      <div class="nav-title">Roll ’n Connect</div>
+    </div>
 
-  <p style="opacity:0.9; margin-bottom:20px;">
-    Log in to your cosmic skating universe.
-  </p>
+    <ul class="nav-links">
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="profile.html">👤 Profile</a></li>
+      <li><a href="dashboard.html">📊 Dashboard</a></li>
+      <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+      <li><a href="events.html">📅 Events</a></li>
+      <li><a href="spots-map.html">📍 Spots Map</a></li>
+      <li><a href="clips-feed.html">🎥 Clips Feed</a></li>
+      <li><a href="marketplace.html">🛒 Marketplace</a></li>
+      <li><a href="settings.html">⚙️ Settings</a></li>
+    </ul>
+  </nav>
 
-  <input type="email" class="auth-input" placeholder="Email">
-  <input type="password" class="auth-input" placeholder="Password">
+  <!-- MAIN CONTENT -->
+  <main class="page-content">
 
-  <div class="remember-box">
-    <input type="checkbox" id="remember">
-    <label for="remember">Remember this device</label>
-  </div>
+    <div class="auth-container glass">
+      <h1 style="font-size:2.6rem; color:#e0e4ff; text-shadow:0 0 20px #8a6cff;">
+        Welcome Back
+      </h1>
 
-  <button class="btn-primary"
-          style="margin-top:25px; width:100%; font-size:1.3rem;"
-          onclick="window.location.href='profile.html'">
-    Login
-  </button>
+      <p style="opacity:0.9; margin-bottom:20px;">
+        Log in to your cosmic skating universe.
+      </p>
 
-  <div class="auth-footer">
-    New here? <a href="signup.html" style="color:#9bb3ff;">Create an account</a>
-  </div>
-</div>
+      <input type="email" class="auth-input" placeholder="Email">
+      <input type="password" class="auth-input" placeholder="Password">
+
+      <div class="remember-box">
+        <input type="checkbox" id="remember">
+        <label for="remember">Remember this device</label>
+      </div>
+
+      <button class="btn-primary"
+              style="margin-top:25px; width:100%; font-size:1.3rem;"
+              onclick="window.location.href='profile.html'">
+        Login
+      </button>
+
+      <div class="auth-footer">
+        New here? <a href="signup.html" style="color:#9bb3ff;">Create an account</a>
+      </div>
+    </div>
+
+  </main>
 
 </body>
 </html>
