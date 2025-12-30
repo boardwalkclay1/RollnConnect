@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Roll ’n Connect</title>
-  <link rel="stylesheet" href="styles/style.css">
 
   <style>
     body {
@@ -12,7 +11,10 @@
       margin:0;
       padding:0;
       font-family:'Inter',sans-serif;
-      overflow:hidden;
+      overflow-x:hidden;   /* allow vertical scrolling */
+      overflow-y:auto;
+      position:relative;
+      min-height:100vh;
     }
 
     /* STARFIELDS */
@@ -20,6 +22,7 @@
       position:fixed; inset:0;
       background:url('styles/stars-white.png') repeat;
       z-index:-3;
+      pointer-events:none;
     }
     .stars1{opacity:.55;animation:drift1 140s linear infinite;}
     .stars2{opacity:.35;animation:drift2 200s linear infinite;}
@@ -72,30 +75,13 @@
     .hamburger.active span:nth-child(2){opacity:0;}
     .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
 
-    .nav-header{text-align:center;margin-bottom:30px;}
-    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
-    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
-    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;}
-    .nav-links a{
-      color:#fff;text-decoration:none;font-size:1.05rem;
-      padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);
-      box-shadow:0 0 12px rgba(255,255,255,0.15);transition:0.25s;
-    }
-    .nav-links a:hover{
-      background:rgba(255,255,255,0.2);
-      transform:translateX(8px);
-      box-shadow:0 0 20px rgba(255,255,255,0.4);
-    }
-
-    /* CENTER TITLE */
+    /* TITLE */
     .title-wrapper {
-      position:absolute;
-      top:20%;
-      left:50%;
-      transform:translate(-50%, -50%);
       text-align:center;
+      padding-top:180px;
+      padding-bottom:200px;
       z-index:5;
-      pointer-events:none;
+      position:relative;
     }
 
     .main-title {
@@ -114,7 +100,7 @@
       text-shadow:0 0 30px rgba(255,255,255,0.8);
     }
 
-    /* FLOATING BOUNCING BUTTONS */
+    /* FLOATING BUTTONS */
     .bubble {
       position:absolute;
       width:200px;
@@ -139,14 +125,14 @@
       box-shadow:0 0 60px rgba(255,255,255,1);
     }
 
-    /* FULL-WIDTH PANELS */
+    /* PANELS */
     .panel {
       width:100%;
       padding:80px 40px;
       background:rgba(255,255,255,0.06);
       backdrop-filter:blur(20px);
       box-shadow:0 0 60px rgba(255,255,255,0.25);
-      margin-top:600px;
+      margin-top:200px;
       border-top:1px solid rgba(255,255,255,0.2);
       border-bottom:1px solid rgba(255,255,255,0.2);
       position:relative;
@@ -195,7 +181,6 @@
       font-weight:600;
     }
 
-    /* SIGNATURE */
     .signature {
       text-align:center;
       margin-top:80px;
@@ -233,13 +218,13 @@
   </ul>
 </nav>
 
-<!-- CENTER TITLE -->
+<!-- TITLE -->
 <div class="title-wrapper">
   <div class="main-title">ROLL ’N CONNECT</div>
   <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
 </div>
 
-<!-- FLOATING BOUNCING BUTTONS -->
+<!-- FLOATING BUTTONS -->
 <a href="chatrooms.html" class="bubble" id="b1">Chatrooms</a>
 <a href="find-spots.html" class="bubble" id="b2">Find Spots</a>
 <a href="events.html" class="bubble" id="b3">Events</a>
@@ -314,7 +299,7 @@
   const h=document.getElementById("hamburger"), s=document.getElementById("sidebar");
   h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
 
-  /* BOUNCING BUTTONS */
+  /* FLOATING BUTTONS */
   const bubbles = [
     { el: document.getElementById("b1"), x:100, y:100, vx:2.2, vy:1.7 },
     { el: document.getElementById("b2"), x:500, y:200, vx:-2.5, vy:2.1 },
@@ -326,7 +311,7 @@
 
   function animate() {
     const w = window.innerWidth;
-    const h = window.innerHeight * 3; /* allow bouncing over full page */
+    const h = document.body.scrollHeight; /* FULL PAGE HEIGHT */
 
     for (let b of bubbles) {
       b.x += b.vx;
