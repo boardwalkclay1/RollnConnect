@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Longboard – Roll ’n Connect</title>
+  <link rel="stylesheet" href="styles/style.css">
+
+  <style>
+    body { background:#000; color:#fff; margin:0; padding:0; font-family:'Inter',sans-serif; overflow-x:hidden; }
+    .page-wrapper { padding-top:120px; text-align:center; }
+    .hero {
+      margin:0 auto 40px auto; padding:40px; max-width:900px;
+      background:rgba(255,255,255,0.08); backdrop-filter:blur(20px);
+      border-radius:24px; box-shadow:0 0 50px rgba(255,255,255,0.2);
+    }
+    .sub-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:30px; padding:0 40px 60px 40px;
+    }
+    .sub-card {
+      background:rgba(255,255,255,0.12); backdrop-filter:blur(20px);
+      padding:24px; border-radius:20px; box-shadow:0 0 35px rgba(255,255,255,0.25);
+      transition:0.3s;
+    }
+    .sub-card:hover { transform:scale(1.05); box-shadow:0 0 50px rgba(255,255,255,0.5); }
+    .enter-btn {
+      display:inline-block; margin-top:14px; padding:10px 18px;
+      background:#fff; color:#000; border-radius:12px; text-decoration:none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
+
+<!-- BURGER -->
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar" class="sidebar">
+  <div class="nav-header"><div class="logo-orb">🛹</div><div class="nav-title">Longboard</div></div>
+  <ul class="nav-links">
+    <li><a href="chatrooms.html">⬅ Back to Chatrooms</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+
+  <div class="hero">
+    <h1 style="font-size:3rem;">Longboard</h1>
+    <p style="font-size:1.1rem;opacity:0.9;">
+      Choose your longboard style.  
+      Each subcategory leads to its own chatroom with effects, emojis, and notifications.
+    </p>
+  </div>
+
+  <section class="sub-grid">
+
+    <div class="sub-card">
+      <h2>Dancing</h2>
+      <p>Footwork, flow, boardwalk style.</p>
+      <a href="longboard-dancing.html" class="enter-btn">Enter Dancing</a>
+    </div>
+
+    <div class="sub-card">
+      <h2>Cruising</h2>
+      <p>Chill rides, smooth pushes, city flow.</p>
+      <a href="longboard-cruising.html" class="enter-btn">Enter Cruising</a>
+    </div>
+
+    <div class="sub-card">
+      <h2>Downhill</h2>
+      <p>Speed, freeride, slides, hills.</p>
+      <a href="longboard-downhill.html" class="enter-btn">Enter Downhill</a>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+</script>
+
+</body>
+</html>
