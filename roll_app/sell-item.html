@@ -2,124 +2,249 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Sell an Item – Roll ’n Connect</title>
+  <title>Sell an Item • Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
+
+  <!-- GLOBAL STYLES -->
+  <link rel="stylesheet" href="styles/style.css">
+
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    /* STARFIELDS */
+    .stars1, .stars2, .stars3 {
+      position: fixed;
+      inset: 0;
+      background: url('styles/stars-white.png') repeat;
+      z-index: -3;
+    }
+    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
+    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
+    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
+
+    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
+    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
+    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
+
+    /* RIGHT-SIDE NAVIGATION */
+    .side-nav {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      right: 0;
+      top: 0;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(255,255,255,0.15);
+      padding: 30px 20px;
+      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .nav-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-orb {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.15rem;
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: 0.25s;
+      display: block;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateX(-6px);
+    }
+
+    /* MAIN CONTENT AREA */
+    .page-content {
+      flex: 1;
+      padding: 60px;
+      padding-right: 320px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    /* FORM CARD */
+    .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 35px rgba(160,120,255,0.3);
+      animation: fadeIn 1.2s ease;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 1rem;
+      backdrop-filter: blur(10px);
+      margin-bottom: 18px;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: #ffffff;
+      color: #000000;
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 1.2rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(255,255,255,0.8);
+    }
+  </style>
 </head>
+
 <body>
-<div class="app-shell">
 
-  <header class="app-header">
-    <div class="app-header-left">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
-    </div>
-    <div class="app-header-right">
-      <a href="marketplace.html" class="icon-btn">←</a>
-    </div>
-  </header>
+<!-- STARFIELDS -->
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
 
-  <main class="page">
-    <h1>Sell an item</h1>
+<!-- RIGHT NAV -->
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="logo-orb">🛼</div>
+    <div class="nav-title">Roll ’n Connect</div>
+  </div>
 
-    <div class="card max-w-narrow">
-      <p class="card-text">
-        Create a listing tied to your profile. Later, we’ll wire this up so it appears in the main
-        marketplace grid and on your profile.
-      </p>
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="clips-feed.html">🎥 Clips Feed</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="settings.html">⚙️ Settings</a></li>
+  </ul>
+</nav>
 
-      <form class="stack-md">
-        <div>
-          <label for="item-title">Item title</label>
-          <input id="item-title" type="text" placeholder="Example: 40\" dancing longboard setup" required />
-        </div>
+<!-- MAIN CONTENT -->
+<main class="page-content">
 
-        <div>
-          <label for="item-category">Category</label>
-          <select id="item-category" required>
-            <option value="">Select a category</option>
-            <option>Longboard</option>
-            <option>Skateboard</option>
-            <option>Roller Skates</option>
-            <option>Inline Skates</option>
-            <option>Gear & Parts</option>
-          </select>
-        </div>
+  <h1 style="font-size:2.4rem; text-shadow:0 0 20px rgba(255,255,255,0.4);">
+    Sell an Item
+  </h1>
 
-        <div>
-          <label for="item-condition">Condition</label>
-          <select id="item-condition" required>
-            <option>New</option>
-            <option>Used – Excellent</option>
-            <option>Used – Good</option>
-            <option>Used – Fair</option>
-          </select>
-        </div>
+  <div class="card">
 
-        <div>
-          <label for="item-price">Price</label>
-          <input id="item-price" type="number" min="0" step="1" placeholder="180" required />
-        </div>
+    <p style="opacity:0.85; margin-bottom:20px;">
+      Create a listing tied to your profile.  
+      Soon this will publish to the main marketplace and your profile page.
+    </p>
 
-        <div>
-          <label for="item-location">Location</label>
-          <input id="item-location" type="text" placeholder="City, State / Country" />
-        </div>
+    <form>
 
-        <div>
-          <label for="item-photos">Photos</label>
-          <input id="item-photos" type="file" accept="image/*" multiple />
-        </div>
+      <label for="item-title">Item Title</label>
+      <input id="item-title" type="text" placeholder="Example: 40&quot; dancing longboard setup" required />
 
-        <div>
-          <label for="item-description">Description</label>
-          <textarea id="item-description" rows="4"
-            placeholder="Describe setup, components, wear, and anything a skater should know."></textarea>
-        </div>
+      <label for="item-category">Category</label>
+      <select id="item-category" required>
+        <option value="">Select a category</option>
+        <option>Longboard</option>
+        <option>Skateboard</option>
+        <option>Roller Skates</option>
+        <option>Inline Skates</option>
+        <option>Gear & Parts</option>
+      </select>
 
-        <button type="button" class="btn btn-primary" style="width:100%;" onclick="fakeSubmit()">
-          Post listing (front‑end only for now)
-        </button>
-      </form>
-    </div>
-  </main>
+      <label for="item-condition">Condition</label>
+      <select id="item-condition" required>
+        <option>New</option>
+        <option>Used – Excellent</option>
+        <option>Used – Good</option>
+        <option>Used – Fair</option>
+      </select>
 
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-    </div>
-  </footer>
+      <label for="item-price">Price</label>
+      <input id="item-price" type="number" min="0" step="1" placeholder="180" required />
 
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-    <a href="spots-map.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🧭</div>
-      <span>Explore</span>
-    </a>
-    <a href="clips-feed.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">▶</div>
-      <span>Clips</span>
-    </a>
-    <a href="marketplace.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-    <a href="dashboard.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
-    </a>
-  </nav>
-</div>
+      <label for="item-location">Location</label>
+      <input id="item-location" type="text" placeholder="City, State / Country" />
+
+      <label for="item-photos">Photos</label>
+      <input id="item-photos" type="file" accept="image/*" multiple />
+
+      <label for="item-description">Description</label>
+      <textarea id="item-description" rows="4"
+        placeholder="Describe setup, components, wear, and anything a skater should know."></textarea>
+
+      <button type="button" class="btn-primary" onclick="fakeSubmit()">
+        Post Listing (demo only)
+      </button>
+
+    </form>
+
+  </div>
+
+</main>
 
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-
   function fakeSubmit() {
-    alert("Listing submitted (demo only). Later, this will save to the real marketplace backend.");
+    alert("Listing submitted (demo only). Backend integration coming soon.");
   }
 </script>
+
 </body>
 </html>
