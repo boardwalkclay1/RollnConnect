@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Find Spots – Roll ’n Connect</title>
-
   <link rel="stylesheet" href="styles/style.css">
 
   <!-- MAPBOX -->
@@ -34,93 +33,150 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* HAMBURGER */
+    /* FLOATING SIDEBAR */
+    .sidebar {
+      position:fixed;
+      top:50%;
+      left:-260px;
+      transform:translateY(-50%);
+      width:260px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:30px 20px;
+      border-radius:0 20px 20px 0;
+      box-shadow:10px 0 40px rgba(255,255,255,0.25);
+      transition:0.35s ease;
+      z-index:9998;
+    }
+    .sidebar.open { left:0; }
+
+    /* BURGER */
     .hamburger {
-      position: fixed;
-      top: 25px;
-      left: 25px;
-      width: 36px;
-      height: 28px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
-      z-index: 9999;
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:9999;
     }
     .hamburger span {
-      height: 4px;
-      width: 100%;
-      background: #ffffff;
-      border-radius: 4px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.8);
-      transition: 0.3s;
+      height:4px;
+      width:100%;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
     }
-    .hamburger.active span:nth-child(1){transform:translateY(12px) rotate(45deg);}
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
     .hamburger.active span:nth-child(2){opacity:0;}
-    .hamburger.active span:nth-child(3){transform:translateY(-12px) rotate(-45deg);}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
 
-    /* SIDEBAR */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: -260px;
-      width: 260px;
-      height: 100vh;
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(255,255,255,0.15);
-      padding: 30px 20px;
-      box-shadow: 5px 0 25px rgba(255,255,255,0.15);
-      display: flex;
-      flex-direction: column;
-      z-index: 9998;
-      transition: 0.35s ease;
+    /* NAV LINKS */
+    .nav-header{text-align:center;margin-bottom:30px;}
+    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
+    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
+
+    .nav-links {
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
     }
-    .sidebar.open { left: 0; }
-
-    .nav-header{text-align:center;margin-bottom:40px;}
-    .logo-orb{font-size:3rem;margin-bottom:10px;}
-    .nav-title{font-size:1.4rem;font-weight:600;}
-
-    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;}
-    .nav-links a{
-      color:#fff;text-decoration:none;font-size:1.15rem;
-      padding:10px 14px;border-radius:12px;transition:0.25s;
+    .nav-links a {
+      color:#fff;
+      text-decoration:none;
+      font-size:1.15rem;
+      padding:10px 14px;
+      border-radius:12px;
+      transition:0.25s;
+      display:block;
+      background:rgba(255,255,255,0.05);
+      box-shadow:0 0 12px rgba(255,255,255,0.15);
     }
-    .nav-links a:hover{
-      background:rgba(255,255,255,0.15);
-      transform:translateX(6px);
+    .nav-links a:hover {
+      background:rgba(255,255,255,0.2);
+      transform:translateX(8px);
+      box-shadow:0 0 20px rgba(255,255,255,0.4);
     }
 
     /* MAP */
     #map {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: calc(100% - 0px);
-      height: 100vh;
-      z-index: 1;
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100vh;
+      z-index:1;
     }
 
-    /* SEARCH BAR */
-    .search-box {
-      position: fixed;
-      top: 25px;
-      right: 25px;
-      z-index: 9999;
-      background: rgba(0,0,0,0.6);
-      padding: 12px 18px;
-      border-radius: 12px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 20px rgba(255,255,255,0.3);
+    /* SEARCH PANEL */
+    .search-panel {
+      position:fixed;
+      top:25px;
+      right:25px;
+      background:rgba(0,0,0,0.55);
+      backdrop-filter:blur(20px);
+      padding:20px;
+      border-radius:20px;
+      box-shadow:0 0 30px rgba(255,255,255,0.3);
+      z-index:9999;
+      width:280px;
     }
-    .search-box input {
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-size: 1rem;
-      outline: none;
+
+    .search-panel input {
+      width:100%;
+      padding:10px 14px;
+      border-radius:12px;
+      border:none;
+      background:rgba(255,255,255,0.15);
+      color:#fff;
+      margin-bottom:12px;
     }
+
+    .category-buttons {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .cat-btn {
+      padding:8px 14px;
+      background:rgba(255,255,255,0.15);
+      border-radius:12px;
+      cursor:pointer;
+      font-size:0.9rem;
+      transition:0.25s;
+    }
+    .cat-btn:hover {
+      background:#fff;
+      color:#000;
+      transform:scale(1.1);
+    }
+
+    .loc-btn {
+      margin-top:12px;
+      width:100%;
+      padding:10px;
+      background:#fff;
+      color:#000;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:600;
+      transition:0.25s;
+    }
+    .loc-btn:hover {
+      transform:scale(1.05);
+      box-shadow:0 0 20px rgba(255,255,255,0.8);
+    }
+
   </style>
 </head>
 
@@ -130,20 +186,17 @@
 <div class="stars2"></div>
 <div class="stars3"></div>
 
-<!-- HAMBURGER -->
-<div id="hamburger" class="hamburger">
-  <span></span><span></span><span></span>
-</div>
+<!-- BURGER -->
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
 
 <!-- SIDEBAR -->
 <nav id="sidebar" class="sidebar">
   <div class="nav-header">
-    <div class="logo-orb">🛼</div>
-    <div class="nav-title">Roll ’n Connect</div>
+    <div class="logo-orb">📍</div>
+    <div class="nav-title">Find Spots</div>
   </div>
 
   <ul class="nav-links">
-    <li><a href="index.html">🏠 Home</a></li>
     <li><a href="dashboard.html">📊 Dashboard</a></li>
     <li><a href="chatrooms.html">💬 Chatrooms</a></li>
     <li><a href="events.html">📅 Events</a></li>
@@ -154,74 +207,93 @@
   </ul>
 </nav>
 
-<!-- SEARCH BAR -->
-<div class="search-box">
-  <input id="searchInput" placeholder="Search: skatepark, rink, trail, lot...">
+<!-- SEARCH PANEL -->
+<div class="search-panel">
+  <input id="searchInput" placeholder="Search: skatepark, rink, trail...">
+
+  <div class="category-buttons">
+    <div class="cat-btn" data-q="skatepark">Skateparks</div>
+    <div class="cat-btn" data-q="roller rink">Rinks</div>
+    <div class="cat-btn" data-q="trail">Trails</div>
+    <div class="cat-btn" data-q="parking lot">Parking Lots</div>
+    <div class="cat-btn" data-q="plaza">Plazas</div>
+  </div>
+
+  <button class="loc-btn" id="locateMe">Use My Location</button>
 </div>
 
 <!-- MAP -->
 <div id="map"></div>
 
 <script>
-  // SIDEBAR TOGGLE
-  const h = document.getElementById("hamburger");
-  const s = document.getElementById("sidebar");
-  h.onclick = () => { h.classList.toggle("active"); s.classList.toggle("open"); };
+  /* SIDEBAR */
+  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
 
-  // MAPBOX INIT
+  /* MAPBOX INIT */
   mapboxgl.accessToken = "YOUR_MAPBOX_KEY_HERE";
 
   const map = new mapboxgl.Map({
-    container: "map",
-    style: "mapbox://styles/mapbox/dark-v11",
-    center: [-84.3, 33.8], // Atlanta default
-    zoom: 11
+    container:"map",
+    style:"mapbox://styles/mapbox/dark-v11",
+    center:[-84.3,33.8],
+    zoom:11
   });
 
-  // USER LOCATION
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
-      const { latitude, longitude } = pos.coords;
+  /* USER AVATAR MARKER */
+  function placeUserMarker(lng,lat){
+    const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+    const avatar = profile.avatarUrl || "styles/default-avatar.png";
 
-      map.setCenter([longitude, latitude]);
+    const el = document.createElement("div");
+    el.style.width="45px";
+    el.style.height="45px";
+    el.style.borderRadius="50%";
+    el.style.backgroundImage=`url('${avatar}')`;
+    el.style.backgroundSize="cover";
+    el.style.boxShadow="0 0 15px rgba(255,255,255,0.9)";
 
-      // Load profile avatar
-      const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
-      const avatar = profile.avatarUrl || "styles/default-avatar.png";
-
-      // Custom marker with avatar
-      const el = document.createElement("div");
-      el.style.width = "40px";
-      el.style.height = "40px";
-      el.style.borderRadius = "50%";
-      el.style.backgroundImage = `url('${avatar}')`;
-      el.style.backgroundSize = "cover";
-      el.style.boxShadow = "0 0 10px rgba(255,255,255,0.8)";
-
-      new mapboxgl.Marker(el)
-        .setLngLat([longitude, latitude])
-        .addTo(map);
-    });
+    new mapboxgl.Marker(el).setLngLat([lng,lat]).addTo(map);
   }
 
-  // SEARCH FUNCTION
-  document.getElementById("searchInput").addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      const q = e.target.value;
-      fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${q}.json?proximity=ip&access_token=${mapboxgl.accessToken}`)
-        .then(r => r.json())
-        .then(data => {
-          if (!data.features.length) return;
+  /* USE MY LOCATION */
+  document.getElementById("locateMe").onclick = () => {
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const {latitude,longitude}=pos.coords;
+      map.flyTo({center:[longitude,latitude],zoom:14});
+      placeUserMarker(longitude,latitude);
+    });
+  };
 
-          const spot = data.features[0];
-          map.flyTo({ center: spot.center, zoom: 14 });
+  /* SEARCH FUNCTION */
+  function runSearch(q){
+    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${q}.json?proximity=ip&access_token=${mapboxgl.accessToken}`)
+      .then(r=>r.json())
+      .then(data=>{
+        if(!data.features.length) return;
+        const spot=data.features[0];
+        map.flyTo({center:spot.center,zoom:14});
+        new mapboxgl.Marker()
+          .setLngLat(spot.center)
+          .setPopup(new mapboxgl.Popup().setHTML(`<strong>${spot.text}</strong><br>${spot.place_name}`))
+          .addTo(map);
+      });
+  }
 
-          new mapboxgl.Marker()
-            .setLngLat(spot.center)
-            .setPopup(new mapboxgl.Popup().setHTML(`<strong>${spot.text}</strong><br>${spot.place_name}`))
-            .addTo(map);
-        });
-    }
+  document.getElementById("searchInput").addEventListener("keydown",e=>{
+    if(e.key==="Enter") runSearch(e.target.value);
+  });
+
+  document.querySelectorAll(".cat-btn").forEach(btn=>{
+    btn.onclick=()=>runSearch(btn.dataset.q);
+  });
+
+  /* CLICK TO DROP CUSTOM MARKER */
+  map.on("click",e=>{
+    new mapboxgl.Marker({color:"#fff"})
+      .setLngLat(e.lngLat)
+      .setPopup(new mapboxgl.Popup().setHTML(`<strong>Custom Spot</strong><br>${e.lngLat.lng.toFixed(5)}, ${e.lngLat.lat.toFixed(5)}`))
+      .addTo(map);
   });
 </script>
 
