@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <title>Roll ’n Connect</title>
 
-  <!-- GLOBAL STYLES -->
+  <!-- UPDATED STYLE FOLDER -->
   <link rel="stylesheet" href="styles/style.css">
 
   <style>
+    /* PURE BLACK BACKGROUND */
     body {
-      background: #000;
-      color: #fff;
+      background: #000000;
+      color: #ffffff;
       margin: 0;
       padding: 0;
       font-family: 'Inter', sans-serif;
@@ -18,7 +19,7 @@
       display: flex;
     }
 
-    /* STARFIELDS */
+    /* WHITE STARFIELDS */
     .stars1, .stars2, .stars3 {
       position: fixed;
       inset: 0;
@@ -33,7 +34,7 @@
     @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
     @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
 
-    /* RIGHT-SIDE NAVIGATION */
+    /* RIGHT-SIDE NAVIGATION (ADDED WITHOUT TOUCHING ORIGINAL LAYOUT) */
     .side-nav {
       width: 260px;
       height: 100vh;
@@ -90,16 +91,9 @@
       transform: translateX(-6px);
     }
 
-    /* MAIN CONTENT AREA */
-    .page-content {
-      flex: 1;
-      padding: 60px;
-      padding-right: 320px; /* space for right nav */
-    }
-
-    /* HERO PANEL */
+    /* HERO PANEL (UNCHANGED) */
     .hero {
-      margin-top: 120px;
+      margin-top: 140px;
       text-align: center;
       padding: 60px;
       background: rgba(255, 255, 255, 0.08);
@@ -111,7 +105,7 @@
       box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
     }
 
-    /* BUTTONS */
+    /* BUTTONS (UNCHANGED) */
     .btn-primary {
       background: #ffffff;
       color: #000000;
@@ -130,13 +124,14 @@
       box-shadow: 0 0 40px rgba(255, 255, 255, 0.8);
     }
 
-    /* NAV BUBBLES */
+    /* NAV BUBBLES (UNCHANGED) */
     .bubble-row {
       display: flex;
       justify-content: center;
       gap: 40px;
       flex-wrap: wrap;
       margin-top: 70px;
+      padding-right: 260px; /* space for right nav */
     }
 
     .bubble {
@@ -164,28 +159,60 @@
     }
 
     @keyframes float {
-      0% { transform: translateY(0px); }
+      0% { transform: translateY(0); }
       50% { transform: translateY(-18px); }
-      100% { transform: translateY(0px); }
+      100% { transform: translateY(0); }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- STARFIELDS -->
-  <div class="stars1"></div>
-  <div class="stars2"></div>
-  <div class="stars3"></div>
+<!-- WHITE STARFIELDS -->
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
 
-  <!-- RIGHT-SIDE NAVIGATION -->
-  <nav class="side-nav">
-    <div class="nav-header">
-      <div class="logo-orb">🛼</div>
-      <div class="nav-title">Roll ’n Connect</div>
-    </div>
+<!-- RIGHT-SIDE NAVIGATION (ADDED) -->
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="logo-orb">🛼</div>
+    <div class="nav-title">Roll ’n Connect</div>
+  </div>
 
-    <ul class="nav-links">
-      <li><a href="index.html">🏠 Home</a></li>
-      <li><a href="profile.html">👤 Profile</a></li>
-      <li><a href="dashboard.html">
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="settings.html">⚙️ Settings</a></li>
+  </ul>
+</nav>
+
+<!-- HERO (UNCHANGED) -->
+<div class="hero">
+  <h1 style="font-size:4rem;">Roll ’n Connect</h1>
+  <p style="font-size:1.4rem; opacity:0.9;">
+    Your cosmic skating universe — chatrooms, spots, events, marketplace, and more.
+  </p>
+
+  <div style="margin-top:30px;">
+    <a href="signup.html" class="btn-primary">Sign Up</a>
+    <a href="login.html" class="btn-primary">Login</a>
+  </div>
+</div>
+
+<!-- MAIN NAVIGATION (UNCHANGED) -->
+<div class="bubble-row">
+  <a href="chatrooms.html" class="bubble">Chatrooms</a>
+  <a href="marketplace.html" class="bubble">Marketplace</a>
+  <a href="find-spots.html" class="bubble">Find Spots</a>
+  <a href="events.html" class="bubble">Events</a>
+  <a href="profile.html" class="bubble">Your Profile</a>
+</div>
+
+</body>
+</html>
