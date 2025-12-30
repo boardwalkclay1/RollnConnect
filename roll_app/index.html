@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <title>Roll ’n Connect</title>
 
-  <!-- UPDATED STYLE FOLDER -->
+  <!-- GLOBAL STYLES -->
   <link rel="stylesheet" href="styles/style.css">
 
   <style>
-    /* PURE BLACK BACKGROUND */
     body {
-      background: #000000;
-      color: #ffffff;
+      background: #000;
+      color: #fff;
       margin: 0;
       padding: 0;
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
+      display: flex;
     }
 
-    /* WHITE STARFIELDS */
+    /* STARFIELDS */
     .stars1, .stars2, .stars3 {
       position: fixed;
       inset: 0;
@@ -33,9 +33,73 @@
     @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
     @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
 
+    /* RIGHT-SIDE NAVIGATION */
+    .side-nav {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      right: 0;
+      top: 0;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(255,255,255,0.15);
+      padding: 30px 20px;
+      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .nav-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-orb {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.15rem;
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: 0.25s;
+      display: block;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateX(-6px);
+    }
+
+    /* MAIN CONTENT AREA */
+    .page-content {
+      flex: 1;
+      padding: 60px;
+      padding-right: 320px; /* space for right nav */
+    }
+
     /* HERO PANEL */
     .hero {
-      margin-top: 140px;
+      margin-top: 120px;
       text-align: center;
       padding: 60px;
       background: rgba(255, 255, 255, 0.08);
@@ -100,44 +164,28 @@
     }
 
     @keyframes float {
-      0% { transform: translateY(0); }
+      0% { transform: translateY(0px); }
       50% { transform: translateY(-18px); }
-      100% { transform: translateY(0); }
+      100% { transform: translateY(0px); }
     }
   </style>
 </head>
 
 <body>
 
-<!-- WHITE STARFIELDS -->
-<div class="stars1"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
+  <!-- STARFIELDS -->
+  <div class="stars1"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
 
-<!-- HERO -->
-<div class="hero">
-  <h1 style="font-size:4rem;">Roll ’n Connect</h1>
-  <p style="font-size:1.4rem; opacity:0.9;">
-    Your cosmic skating universe — chatrooms, spots, events, marketplace, and more.
-  </p>
+  <!-- RIGHT-SIDE NAVIGATION -->
+  <nav class="side-nav">
+    <div class="nav-header">
+      <div class="logo-orb">🛼</div>
+      <div class="nav-title">Roll ’n Connect</div>
+    </div>
 
-  <div style="margin-top:30px;">
-    <a href="signup.html" class="btn-primary">Sign Up</a>
-    <a href="login.html" class="btn-primary">Login</a>
-  </div>
-</div>
-
-<!-- MAIN NAVIGATION -->
-<div class="bubble-row">
-
-  <!-- FIXED CHATROOM LINK -->
-  <a href="chatrooms.html" class="bubble">Chatrooms</a>
-
-  <a href="marketplace.html" class="bubble">Marketplace</a>
-  <a href="find-spots.html" class="bubble">Find Spots</a>
-  <a href="events.html" class="bubble">Events</a>
-  <a href="profile.html" class="bubble">Your Profile</a>
-</div>
-
-</body>
-</html>
+    <ul class="nav-links">
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="profile.html">👤 Profile</a></li>
+      <li><a href="dashboard.html">
