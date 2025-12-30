@@ -11,13 +11,12 @@
       margin:0;
       padding:0;
       font-family:'Inter',sans-serif;
-      overflow-x:hidden;   /* allow vertical scrolling */
+      overflow-x:hidden;
       overflow-y:auto;
       position:relative;
       min-height:100vh;
     }
 
-    /* STARFIELDS */
     .stars1,.stars2,.stars3 {
       position:fixed; inset:0;
       background:url('styles/stars-white.png') repeat;
@@ -32,25 +31,57 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* SIDEBAR */
     .sidebar {
       position:fixed;
       top:50%;
       left:-260px;
       transform:translateY(-50%);
       width:260px;
-      background:rgba(255,255,255,0.08);
+      background:rgba(10,10,20,0.9);
       backdrop-filter:blur(25px);
       border-right:1px solid rgba(255,255,255,0.25);
-      padding:30px 20px;
+      padding:26px 20px;
       border-radius:0 20px 20px 0;
-      box-shadow:10px 0 40px rgba(255,255,255,0.25);
+      box-shadow:10px 0 40px rgba(0,0,0,0.7);
       transition:0.35s ease;
-      z-index:9998;
+      z-index:9000;
     }
     .sidebar.open { left:0; }
 
-    /* BURGER */
+    .nav-header{text-align:center;margin-bottom:24px;}
+    .logo-orb{
+      font-size:2.4rem;
+      margin-bottom:6px;
+      text-shadow:0 0 20px rgba(255,255,255,0.9);
+    }
+    .nav-title{
+      font-size:1.2rem;
+      font-weight:600;
+      text-shadow:0 0 10px rgba(255,255,255,0.7);
+    }
+
+    .nav-links{
+      list-style:none;
+      padding:0;margin:0;
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .nav-links a{
+      display:block;
+      color:#fff;
+      text-decoration:none;
+      font-size:0.95rem;
+      padding:8px 12px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.05);
+      box-shadow:0 0 10px rgba(255,255,255,0.15);
+      transition:0.25s;
+    }
+    .nav-links a:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(5px);
+      box-shadow:0 0 18px rgba(255,255,255,0.4);
+    }
+
     .hamburger {
       position:fixed;
       top:25px;
@@ -61,21 +92,20 @@
       flex-direction:column;
       justify-content:space-between;
       cursor:pointer;
-      z-index:9999;
+      z-index:9500;
     }
     .hamburger span {
-      height:4px;
+      height:3px;
       width:100%;
       background:#fff;
       border-radius:4px;
-      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      box-shadow:0 0 8px rgba(255,255,255,0.9);
       transition:0.3s;
     }
-    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(1){transform:translateY(12px) rotate(45deg);}
     .hamburger.active span:nth-child(2){opacity:0;}
-    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+    .hamburger.active span:nth-child(3){transform:translateY(-12px) rotate(-45deg);}
 
-    /* TITLE */
     .title-wrapper {
       text-align:center;
       padding-top:180px;
@@ -100,7 +130,6 @@
       text-shadow:0 0 30px rgba(255,255,255,0.8);
     }
 
-    /* FLOATING BUTTONS */
     .bubble {
       position:absolute;
       width:200px;
@@ -118,14 +147,14 @@
       text-align:center;
       padding:10px;
       transition:0.3s;
-      z-index:4;
+      z-index:99999;
+      pointer-events:auto;
     }
     .bubble:hover {
       transform:scale(1.12);
       box-shadow:0 0 60px rgba(255,255,255,1);
     }
 
-    /* PANELS */
     .panel {
       width:100%;
       padding:80px 40px;
@@ -137,7 +166,9 @@
       border-bottom:1px solid rgba(255,255,255,0.2);
       position:relative;
       z-index:2;
+      pointer-events:none;
     }
+    .panel * { pointer-events:auto; }
 
     .panel-title {
       font-size:3rem;
@@ -168,10 +199,15 @@
       background:rgba(255,255,255,0.2);
       border-radius:16px;
       margin-bottom:14px;
+      overflow:hidden;
+    }
+    .item-img img{
+      width:100%;height:100%;object-fit:cover;
     }
 
     .item-title { font-size:1.3rem;font-weight:600;margin-bottom:6px; }
-    .item-price { opacity:0.85;margin-bottom:10px; }
+    .item-disc { font-size:0.9rem;opacity:0.8;margin-bottom:4px; }
+    .item-price { opacity:0.9;margin-bottom:10px; }
     .item-btn {
       padding:10px 16px;
       background:#fff;
@@ -196,10 +232,8 @@
 <div class="stars2"></div>
 <div class="stars3"></div>
 
-<!-- BURGER -->
 <div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
 
-<!-- SIDEBAR -->
 <nav id="sidebar" class="sidebar">
   <div class="nav-header">
     <div class="logo-orb">🛼</div>
@@ -218,13 +252,11 @@
   </ul>
 </nav>
 
-<!-- TITLE -->
 <div class="title-wrapper">
   <div class="main-title">ROLL ’N CONNECT</div>
   <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
 </div>
 
-<!-- FLOATING BUTTONS -->
 <a href="chatrooms.html" class="bubble" id="b1">Chatrooms</a>
 <a href="find-spots.html" class="bubble" id="b2">Find Spots</a>
 <a href="events.html" class="bubble" id="b3">Events</a>
@@ -232,74 +264,22 @@
 <a href="marketplace.html" class="bubble" id="b5">Marketplace</a>
 <a href="giveaways.html" class="bubble" id="b6">Giveaways</a>
 
-<!-- MARKETPLACE PANEL -->
-<div class="panel">
-  <div class="panel-title">Marketplace Sneak Peek</div>
-
-  <div class="items-grid">
-    <div class="item-card">
-      <div class="item-img"></div>
-      <div class="item-title">Galaxy Rhythm Wheels (Quads)</div>
-      <div class="item-price">$89.99</div>
-      <a class="item-btn">View Item</a>
-    </div>
-
-    <div class="item-card">
-      <div class="item-img"></div>
-      <div class="item-title">Urban Flow Frames (Blades)</div>
-      <div class="item-price">$129.99</div>
-      <a class="item-btn">View Item</a>
-    </div>
-
-    <div class="item-card">
-      <div class="item-img"></div>
-      <div class="item-title">Nebula Dancer Deck (Longboard)</div>
-      <div class="item-price">$199.99</div>
-      <a class="item-btn">View Item</a>
-    </div>
-
-    <div class="item-card">
-      <div class="item-img"></div>
-      <div class="item-title">Cosmic Street Pop Deck (Skateboard)</div>
-      <div class="item-price">$79.99</div>
-      <a class="item-btn">View Item</a>
-    </div>
-  </div>
+<div class="panel" id="marketplacePanel">
+  <div class="panel-title">Marketplace</div>
+  <div class="items-grid" id="marketplaceItems"></div>
 </div>
 
-<!-- GIVEAWAY PANEL -->
 <div class="panel">
   <div class="panel-title">Giveaways</div>
-
-  <div class="items-grid">
-    <div class="item-card">
-      <div class="item-title">Enter Giveaway</div>
-      <div class="item-price">Win gear, lessons, and more</div>
-      <a class="item-btn">Enter Now</a>
-    </div>
-
-    <div class="item-card">
-      <div class="item-title">Past Winners</div>
-      <div class="item-price">See who won last month</div>
-      <a class="item-btn">View Winners</a>
-    </div>
-
-    <div class="item-card">
-      <div class="item-title">Rules</div>
-      <div class="item-price">How giveaways work</div>
-      <a class="item-btn">Read Rules</a>
-    </div>
-  </div>
+  <div class="items-grid" id="giveawayItems"></div>
 </div>
 
 <div class="signature">by Boardwalk Clay</div>
 
 <script>
-  /* SIDEBAR */
-  const h=document.getElementById("hamburger"), s=document.getElementById("sidebar");
-  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+  const hb=document.getElementById("hamburger"), sb=document.getElementById("sidebar");
+  hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
 
-  /* FLOATING BUTTONS */
   const bubbles = [
     { el: document.getElementById("b1"), x:100, y:100, vx:2.2, vy:1.7 },
     { el: document.getElementById("b2"), x:500, y:200, vx:-2.5, vy:2.1 },
@@ -311,7 +291,7 @@
 
   function animate() {
     const w = window.innerWidth;
-    const h = document.body.scrollHeight; /* FULL PAGE HEIGHT */
+    const h = document.body.scrollHeight;
 
     for (let b of bubbles) {
       b.x += b.vx;
@@ -339,8 +319,56 @@
 
     requestAnimationFrame(animate);
   }
-
   animate();
+
+  function getMarketplaceItems(){
+    try{
+      return JSON.parse(localStorage.getItem("rc_marketplace_items") || "[]");
+    }catch(e){return [];}
+  }
+
+  function renderIndexMarketplace(){
+    const items = getMarketplaceItems();
+    const marketWrap = document.getElementById("marketplaceItems");
+    const giveawayWrap = document.getElementById("giveawayItems");
+    marketWrap.innerHTML="";
+    giveawayWrap.innerHTML="";
+
+    items.slice(-4).reverse().forEach(item=>{
+      const card=document.createElement("div");
+      card.className="item-card";
+      card.innerHTML = `
+        <div class="item-img">${item.imageDataUrl ? `<img src="${item.imageDataUrl}">` : ""}</div>
+        <div class="item-title">${item.title}</div>
+        <div class="item-disc">${item.discipline || "Unlabeled"}</div>
+        <div class="item-price">$${item.price}</div>
+        <a class="item-btn" href="marketplace-item.html?id=${encodeURIComponent(item.id)}">View Item</a>
+      `;
+      marketWrap.appendChild(card);
+    });
+
+    items.filter(i=>i.donateToGiveaway).forEach(item=>{
+      const card=document.createElement("div");
+      card.className="item-card";
+      card.innerHTML = `
+        <div class="item-img">${item.imageDataUrl ? `<img src="${item.imageDataUrl}">` : ""}</div>
+        <div class="item-title">${item.title}</div>
+        <div class="item-disc">${item.discipline || "Unlabeled"}</div>
+        <div class="item-price">Donated • $${item.price}</div>
+        <a class="item-btn" href="marketplace-item.html?id=${encodeURIComponent(item.id)}">View Giveaway Item</a>
+      `;
+      giveawayWrap.appendChild(card);
+    });
+
+    if(!marketWrap.children.length){
+      marketWrap.innerHTML = "<div style='text-align:center;opacity:0.8;'>No items yet. Visit the marketplace to add some.</div>";
+    }
+    if(!giveawayWrap.children.length){
+      giveawayWrap.innerHTML = "<div style='text-align:center;opacity:0.8;'>No donated giveaway items yet.</div>";
+    }
+  }
+
+  renderIndexMarketplace();
 </script>
 
 </body>
