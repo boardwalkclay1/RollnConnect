@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Roll ’n Connect – Chat</title>
+  <title>Dancing Room · Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Cosmic black & white glow theme -->
@@ -60,7 +60,8 @@
       background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(15,15,15,0.95));
       border-bottom: var(--border-subtle);
       box-shadow: 0 0 18px rgba(0,0,0,0.6);
-      z-index: 10;
+      z-index: 20;
+      position: relative;
     }
 
     .hamburger {
@@ -114,6 +115,7 @@
       display: flex;
       flex-direction: column;
       gap: 2px;
+      text-align: center;
     }
 
     .topbar-title-main {
@@ -155,6 +157,79 @@
       box-shadow: var(--shadow-glow);
     }
 
+    /* Left slide-out menu */
+    .side-menu-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      display: none;
+      z-index: 30;
+    }
+
+    .side-menu-backdrop.visible {
+      display: block;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100vh;
+      background: var(--bg-panel-alt);
+      border-right: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 0 40px rgba(0,0,0,0.9);
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: var(--transition-med);
+      z-index: 40;
+    }
+
+    .side-menu.visible {
+      left: 0;
+    }
+
+    .side-menu-title {
+      font-size: 14px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .side-menu-sub {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+
+    .side-menu-link {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--accent-soft);
+      font-size: 13px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .side-menu-link:hover {
+      color: var(--accent);
+      border-color: rgba(255,255,255,0.45);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .side-menu-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      opacity: 0.7;
+      margin-top: 6px;
+      margin-bottom: 4px;
+    }
+
     /* Layout */
     .main {
       flex: 1;
@@ -168,7 +243,6 @@
       .main {
         grid-template-columns: minmax(0, 1fr);
       }
-
       .sidebar-left,
       .sidebar-right {
         display: none;
@@ -212,9 +286,9 @@
     }
 
     .badge-live {
-      border-color: rgba(255, 80, 80, 0.8);
-      color: rgba(255, 80, 80, 0.9);
-      box-shadow: 0 0 14px rgba(255, 80, 80, 0.55);
+      border-color: rgba(255,80,80,0.8);
+      color: rgba(255,80,80,0.9);
+      box-shadow: 0 0 14px rgba(255,80,80,0.55);
     }
 
     /* Left sidebar – rooms & groups */
@@ -381,7 +455,6 @@
       letter-spacing: 0.12em;
     }
 
-    /* Message types */
     .msg-type-label {
       font-size: 9px;
       text-transform: uppercase;
@@ -442,7 +515,7 @@
       color: var(--accent);
     }
 
-    /* Voice message bubble */
+    /* Voice bubble */
     .voice-bubble {
       display: flex;
       align-items: center;
@@ -503,7 +576,7 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* Chat input bar */
+    /* Input bar */
     .chat-input-bar {
       padding: 8px 10px;
       border-top: var(--border-subtle);
@@ -603,7 +676,98 @@
       font-size: 13px;
     }
 
-    /* Right sidebar – members & hover profile */
+    /* Attach bar */
+    .attach-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 4px;
+      padding: 0 12px 8px;
+    }
+
+    .attach-btn {
+      border-radius: 999px;
+      border: 1px dashed rgba(255,255,255,0.4);
+      padding: 4px 9px;
+      cursor: pointer;
+      background: rgba(0,0,0,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      transition: var(--transition-fast);
+    }
+
+    .attach-btn:hover {
+      box-shadow: var(--shadow-glow);
+      border-style: solid;
+      color: var(--accent);
+    }
+
+    /* Live voice banner */
+    .live-voice-banner {
+      padding: 6px 10px;
+      font-size: 11px;
+      border-bottom: var(--border-subtle);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.10), rgba(0,0,0,0.96));
+    }
+
+    .live-voice-banner.active {
+      display: flex;
+    }
+
+    .live-voice-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--danger);
+      box-shadow: 0 0 12px rgba(255,77,77,0.95);
+      animation: live-pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes live-pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.65; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .live-voice-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .live-voice-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 3px 8px;
+      font-size: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      background: rgba(0,0,0,0.9);
+      transition: var(--transition-fast);
+    }
+
+    .live-voice-btn.leave {
+      border-color: rgba(255,77,77,0.9);
+      color: rgba(255,143,143,0.96);
+    }
+
+    .live-voice-btn:hover {
+      box-shadow: var(--shadow-glow);
+      color: var(--accent);
+    }
+
+    /* Right sidebar – members */
     .sidebar-right-body {
       flex: 1;
       overflow-y: auto;
@@ -691,7 +855,7 @@
     /* Hover profile card */
     .profile-hover-card {
       position: fixed;
-      z-index: 99;
+      z-index: 50;
       pointer-events: none;
       opacity: 0;
       transform: translateY(6px);
@@ -779,7 +943,7 @@
     .emoji-dropdown {
       position: absolute;
       bottom: 50px;
-      right: 120px;
+      right: 140px;
       width: 220px;
       padding: 8px;
       border-radius: 16px;
@@ -790,7 +954,7 @@
       flex-wrap: wrap;
       gap: 5px;
       font-size: 20px;
-      z-index: 20;
+      z-index: 25;
     }
 
     .emoji-dropdown.visible {
@@ -812,97 +976,7 @@
       background: rgba(255,255,255,0.12);
     }
 
-    /* Events & Spots footer quick-add */
-    .attach-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      opacity: 0.75;
-      margin-top: 4px;
-    }
-
-    .attach-btn {
-      border-radius: 999px;
-      border: 1px dashed rgba(255,255,255,0.4);
-      padding: 4px 9px;
-      cursor: pointer;
-      background: rgba(0,0,0,0.85);
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      transition: var(--transition-fast);
-    }
-
-    .attach-btn:hover {
-      box-shadow: var(--shadow-glow);
-      border-style: solid;
-      color: var(--accent);
-    }
-
-    /* Live voice banner for private group */
-    .live-voice-banner {
-      padding: 6px 10px;
-      font-size: 11px;
-      border-bottom: var(--border-subtle);
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      background: radial-gradient(circle at top, rgba(255,255,255,0.10), rgba(0,0,0,0.96));
-    }
-
-    .live-voice-banner.active {
-      display: flex;
-    }
-
-    .live-voice-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .live-pulse {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--danger);
-      box-shadow: 0 0 12px rgba(255,77,77,0.95);
-      animation: live-pulse 1s ease-in-out infinite;
-    }
-
-    @keyframes live-pulse {
-      0% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.35); opacity: 0.65; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .live-voice-actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    .live-voice-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.4);
-      padding: 3px 8px;
-      font-size: 10px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      background: rgba(0,0,0,0.9);
-      transition: var(--transition-fast);
-    }
-
-    .live-voice-btn.leave {
-      border-color: rgba(255,77,77,0.9);
-      color: rgba(255,143,143,0.96);
-    }
-
-    .live-voice-btn:hover {
-      box-shadow: var(--shadow-glow);
-      color: var(--accent);
-    }
-
-    /* Simple modal for selecting event/spot placeholder */
+    /* Modal for Events/Spots */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -910,7 +984,7 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 98;
+      z-index: 45;
     }
 
     .modal-backdrop.visible {
@@ -997,6 +1071,26 @@
   </style>
 </head>
 <body>
+  <!-- Side menu backdrop + menu -->
+  <div class="side-menu-backdrop" id="sideMenuBackdrop"></div>
+  <nav class="side-menu" id="sideMenu">
+    <div class="side-menu-title">Roll ’n Connect</div>
+    <div class="side-menu-sub">Cosmic navigation · Dancing Room</div>
+
+    <div class="side-menu-section-title">Main</div>
+    <div class="side-menu-link" data-link="dashboard.html">Dashboard</div>
+    <div class="side-menu-link" data-link="marketplace.html">Marketplace</div>
+    <div class="side-menu-link" data-link="events.html">Events</div>
+    <div class="side-menu-link" data-link="spots.html">Spots</div>
+
+    <div class="side-menu-section-title">You</div>
+    <div class="side-menu-link" data-link="profile.html">Profile</div>
+    <div class="side-menu-link" data-link="settings.html">Settings</div>
+
+    <div class="side-menu-section-title">Session</div>
+    <div class="side-menu-link" data-link="logout.html">Logout</div>
+  </nav>
+
   <div class="app-shell">
     <!-- TOPBAR -->
     <header class="topbar">
@@ -1004,8 +1098,8 @@
         <span></span>
       </div>
       <div class="topbar-title">
-        <div class="topbar-title-main">Roll ’n Connect Chat</div>
-        <div class="topbar-sub">Black & white glow · hover to explore</div>
+        <div class="topbar-title-main">Dancing Room</div>
+        <div class="topbar-sub">Flow · Style · Rhythm</div>
       </div>
       <div class="topbar-actions">
         <button class="pill-btn" id="goToEventsBtn">Events</button>
@@ -1023,13 +1117,13 @@
         </div>
         <div class="sidebar-left-body">
           <div class="room-list" id="roomList">
-            <!-- Example public room -->
-            <div class="room-item active" data-room-id="public-lobby">
+            <!-- Dancing Room (this room) -->
+            <div class="room-item active" data-room-id="dancing-room">
               <div class="room-main">
-                <span class="room-pill">Public</span>
-                <span>Global Roll Chat</span>
+                <span class="room-pill">Dancing</span>
+                <span>Dancing Room</span>
               </div>
-              <div class="room-meta">432 online</div>
+              <div class="room-meta">234 online</div>
             </div>
             <!-- Example private group -->
             <div class="room-item" data-room-id="private-crew">
@@ -1050,8 +1144,8 @@
       <!-- CENTER: Chat panel -->
       <section class="panel">
         <div class="panel-header">
-          <div class="panel-title" id="currentRoomName">Global Roll Chat · Public</div>
-          <div class="badge" id="roomModeBadge">Text & voice</div>
+          <div class="panel-title" id="currentRoomName">Dancing Room · Public</div>
+          <div class="badge" id="roomModeBadge">Text & voice messages</div>
         </div>
 
         <!-- Live voice banner only for private groups -->
@@ -1078,7 +1172,7 @@
                   <span class="msg-status">Seen</span>
                 </div>
                 <div class="msg-content">
-                  First session in the new cosmic chatroom. Keep it simple, keep it real.
+                  First steps in the Dancing Room. Flow clean, keep the messages simple.
                 </div>
               </div>
             </div>
@@ -1117,8 +1211,8 @@
                     Tonight · 11:30 PM · 3.2 miles away
                   </div>
                   <div class="msg-card-actions">
-                    <button class="msg-card-btn">View event</button>
-                    <button class="msg-card-btn">Get directions</button>
+                    <button class="msg-card-btn" data-event-id="event-1" data-action="view-event">View event</button>
+                    <button class="msg-card-btn" data-event-id="event-1" data-action="directions-event">Get directions</button>
                   </div>
                 </div>
               </div>
@@ -1137,11 +1231,11 @@
                 <div class="msg-spot-card">
                   <div class="msg-spot-title">Rooftop Glide Deck</div>
                   <div class="msg-spot-meta">
-                    1.1 miles · smooth concrete · city view · tap for directions
+                    1.1 miles · smooth concrete · city view
                   </div>
                   <div class="msg-card-actions">
-                    <button class="msg-card-btn">View spot</button>
-                    <button class="msg-card-btn">Get directions</button>
+                    <button class="msg-card-btn" data-spot-id="spot-1" data-action="view-spot">View spot</button>
+                    <button class="msg-card-btn" data-spot-id="spot-1" data-action="directions-spot">Get directions</button>
                   </div>
                 </div>
               </div>
@@ -1278,9 +1372,7 @@
   </div>
 
   <script>
-    // ---------------------------------------------
-    // MOCK DATA (replace with live data from Events/Spots/Profiles later)
-    // ---------------------------------------------
+    // Mock data (replace with real Events/Spots/Profiles later)
     const mockUsers = {
       "user-1": {
         id: "user-1",
@@ -1335,9 +1427,32 @@
       }
     ];
 
-    // ---------------------------------------------
-    // PROFILE HOVER CARD
-    // ---------------------------------------------
+    // Side menu logic
+    const sideMenu = document.getElementById("sideMenu");
+    const sideMenuBackdrop = document.getElementById("sideMenuBackdrop");
+    const hamburger = document.getElementById("hamburger");
+
+    function openSideMenu() {
+      sideMenu.classList.add("visible");
+      sideMenuBackdrop.classList.add("visible");
+    }
+
+    function closeSideMenu() {
+      sideMenu.classList.remove("visible");
+      sideMenuBackdrop.classList.remove("visible");
+    }
+
+    hamburger.addEventListener("click", openSideMenu);
+    sideMenuBackdrop.addEventListener("click", closeSideMenu);
+
+    document.querySelectorAll(".side-menu-link").forEach(link => {
+      link.addEventListener("click", () => {
+        const href = link.getAttribute("data-link");
+        if (href) window.location.href = href;
+      });
+    });
+
+    // Profile hover card
     const hoverCard = document.getElementById("profileHoverCard");
     const hoverName = document.getElementById("hoverName");
     const hoverHandle = document.getElementById("hoverHandle");
@@ -1351,12 +1466,10 @@
     function showHoverCard(userId, x, y) {
       const user = mockUsers[userId];
       if (!user) return;
-
       hoverCurrentUserId = userId;
       hoverName.textContent = user.username;
       hoverHandle.textContent = user.handle;
       hoverSummary.textContent = user.summary;
-
       hoverCard.style.left = x + 14 + "px";
       hoverCard.style.top = y + 10 + "px";
       hoverCard.classList.add("visible");
@@ -1367,7 +1480,7 @@
       hoverCurrentUserId = null;
     }
 
-    document.querySelectorAll(".hover-profile").forEach((el) => {
+    function bindHoverProfile(el) {
       el.addEventListener("mouseenter", (e) => {
         const userId = e.currentTarget.getAttribute("data-user-id");
         const rect = e.currentTarget.getBoundingClientRect();
@@ -1377,7 +1490,9 @@
       el.addEventListener("mouseleave", () => {
         hoverHideTimeout = setTimeout(hideHoverCard, 120);
       });
-    });
+    }
+
+    document.querySelectorAll(".hover-profile").forEach(bindHoverProfile);
 
     hoverCard.addEventListener("mouseenter", () => {
       if (hoverHideTimeout) clearTimeout(hoverHideTimeout);
@@ -1388,9 +1503,9 @@
 
     hoverViewProfileBtn.addEventListener("click", () => {
       if (!hoverCurrentUserId) return;
-      // TODO: route to profile page with this user
-      console.log("View profile:", hoverCurrentUserId);
-      // Example: window.location.href = `profile.html?user=${hoverCurrentUserId}`;
+      const user = mockUsers[hoverCurrentUserId];
+      const usernameParam = encodeURIComponent(hoverCurrentUserId);
+      window.location.href = `profile.html?user=${usernameParam}`;
     });
 
     hoverRequestPrivateBtn.addEventListener("click", () => {
@@ -1398,15 +1513,12 @@
       requestPrivateChat(hoverCurrentUserId);
     });
 
-    // ---------------------------------------------
-    // PRIVATE CHAT REQUESTS
-    // ---------------------------------------------
+    // Private chat requests
     function requestPrivateChat(userId) {
       const user = mockUsers[userId];
       if (!user) return;
-      // TODO: send private chat request via backend
-      console.log("Request private chat with", user.username);
-      alert(`Private chat request sent to ${user.username}`);
+      const usernameParam = encodeURIComponent(userId);
+      window.location.href = `private-chat.html?user=${usernameParam}`;
     }
 
     document.querySelectorAll(".member-action-btn[data-action='request-private']").forEach((btn) => {
@@ -1416,9 +1528,7 @@
       });
     });
 
-    // ---------------------------------------------
-    // ROOM SWITCHING & PRIVATE GROUP LIVE VOICE (UI ONLY)
-    // ---------------------------------------------
+    // Room switching & live voice
     const roomList = document.getElementById("roomList");
     const currentRoomName = document.getElementById("currentRoomName");
     const roomModeBadge = document.getElementById("roomModeBadge");
@@ -1426,7 +1536,7 @@
     const joinVoiceBtn = document.getElementById("joinVoiceBtn");
     const leaveVoiceBtn = document.getElementById("leaveVoiceBtn");
 
-    let currentRoomId = "public-lobby";
+    let currentRoomId = "dancing-room";
     let liveVoiceActive = false;
     let joinedVoice = false;
 
@@ -1437,15 +1547,15 @@
       item.classList.add("active");
       currentRoomId = item.getAttribute("data-room-id");
 
-      if (currentRoomId === "public-lobby") {
-        currentRoomName.textContent = "Global Roll Chat · Public";
+      if (currentRoomId === "dancing-room") {
+        currentRoomName.textContent = "Dancing Room · Public";
         roomModeBadge.textContent = "Text & voice messages";
         liveVoiceBanner.classList.remove("active");
         liveVoiceActive = false;
         joinedVoice = false;
       } else {
         currentRoomName.textContent = "Private Group · " + item.querySelector(".room-main span:nth-child(2)").textContent;
-        roomModeBadge.textContent = "Private group · Live voice";
+        roomModeBadge.textContent = "Private group · Live voice & text";
         liveVoiceBanner.classList.add("active");
         liveVoiceActive = true;
       }
@@ -1455,27 +1565,22 @@
       if (!liveVoiceActive) return;
       // TODO: connect to WebRTC voice room
       joinedVoice = true;
-      console.log("Joined live voice in room:", currentRoomId);
-      alert("You joined live voice for this private group.");
+      alert("You joined live voice for this private group (hook WebRTC here).");
     });
 
     leaveVoiceBtn.addEventListener("click", () => {
       if (!joinedVoice) return;
       // TODO: disconnect from voice
       joinedVoice = false;
-      console.log("Left live voice in room:", currentRoomId);
       alert("You left the live voice session.");
     });
 
     document.getElementById("createGroupBtn").addEventListener("click", () => {
       // TODO: open UI to name group + select members
-      console.log("Create private group clicked");
       alert("Private group creation UI goes here.");
     });
 
-    // ---------------------------------------------
-    // TEXT MESSAGES, EMOJIS, GIFTS
-    // ---------------------------------------------
+    // Text messages, emojis, gifts
     const chatInput = document.getElementById("chatInput");
     const sendMessageBtn = document.getElementById("sendMessageBtn");
     const chatMessages = document.getElementById("chatMessages");
@@ -1526,25 +1631,14 @@
 
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      // Re-bind hover behaviour for dynamically added elements
-      row.querySelectorAll(".hover-profile").forEach((el) => {
-        el.addEventListener("mouseenter", (e) => {
-          const userId = e.currentTarget.getAttribute("data-user-id");
-          const rect = e.currentTarget.getBoundingClientRect();
-          if (hoverHideTimeout) clearTimeout(hoverHideTimeout);
-          showHoverCard(userId, rect.left, rect.bottom);
-        });
-        el.addEventListener("mouseleave", () => {
-          hoverHideTimeout = setTimeout(hideHoverCard, 120);
-        });
-      });
+      row.querySelectorAll(".hover-profile").forEach(bindHoverProfile);
     }
 
     sendMessageBtn.addEventListener("click", () => {
       const text = chatInput.value.trim();
       if (!text) return;
       appendTextMessage(text, true);
-      // TODO: send to backend via WebSocket/Worker
+      // TODO: send to backend
       chatInput.value = "";
     });
 
@@ -1572,22 +1666,21 @@
       }
     });
 
-    // Gifts (kisses, hugs, roses)
+    // Gifts
     document.querySelectorAll(".gift-chip").forEach((chip) => {
       chip.addEventListener("click", () => {
         const giftType = chip.dataset.gift;
         let label = "";
-        if (giftType === "kiss") label = "sent you a kiss";
-        if (giftType === "hug") label = "sent you a hug";
-        if (giftType === "rose") label = "sent you a rose";
-        appendTextMessage(`💌 You ${label}.`, true);
+        let emoji = "";
+        if (giftType === "kiss") { label = "sent you a kiss"; emoji = "😘"; }
+        if (giftType === "hug") { label = "sent you a hug"; emoji = "🤗"; }
+        if (giftType === "rose") { label = "sent you a rose"; emoji = "🌹"; }
+        appendTextMessage(`${emoji} You ${label}.`, true);
         // TODO: send structured gift message to backend
       });
     });
 
-    // ---------------------------------------------
-    // VOICE MESSAGE – UI HOOK ONLY
-    // ---------------------------------------------
+    // Voice message UI hooks
     const voiceRecordBtn = document.getElementById("voiceRecordBtn");
     let recording = false;
 
@@ -1603,30 +1696,25 @@
     });
 
     function startVoiceRecording() {
-      // TODO: integrate MediaRecorder, capture audio, upload to backend/R2
-      console.log("Voice recording started");
-      alert("Voice recording UI hook – connect to MediaRecorder + backend.");
+      // TODO: integrate MediaRecorder
+      alert("Voice recording started (connect MediaRecorder + backend).");
     }
 
     function stopVoiceRecording() {
-      // TODO: finalize audio, send to backend, append voice message bubble
-      console.log("Voice recording stopped");
-      alert("Voice recording stopped – attach audio bubble after upload.");
+      // TODO: upload audio + append voice bubble
+      alert("Voice recording stopped (upload + render voice bubble).");
     }
 
-    // Voice bubble playback demo
     document.querySelectorAll(".voice-bubble").forEach((bubble) => {
       const btn = bubble.querySelector(".voice-play-btn");
       const wave = bubble.querySelector(".voice-wave");
       btn.addEventListener("click", () => {
-        // TODO: connect to actual audio playback
+        // TODO: play actual audio
         wave.classList.toggle("playing");
       });
     });
 
-    // ---------------------------------------------
-    // ATTACH EVENTS & SPOTS
-    // ---------------------------------------------
+    // Attach Events & Spots
     const attachEventBtn = document.getElementById("attachEventBtn");
     const attachSpotBtn = document.getElementById("attachSpotBtn");
     const modalBackdrop = document.getElementById("modalBackdrop");
@@ -1634,7 +1722,7 @@
     const modalList = document.getElementById("modalList");
     const modalCloseBtn = document.getElementById("modalCloseBtn");
 
-    let modalMode = null; // "event" or "spot"
+    let modalMode = null;
 
     function openModal(mode) {
       modalMode = mode;
@@ -1648,7 +1736,11 @@
         div.dataset.itemId = item.id;
         div.innerHTML = `
           <div class="modal-item-title">${item.title}</div>
-          <div class="modal-item-meta">${mode === "event" ? item.time + " · " + item.distance : item.distance + " · " + item.info}</div>
+          <div class="modal-item-meta">${
+            mode === "event"
+              ? item.time + " · " + item.distance
+              : item.distance + " · " + item.info
+          }</div>
         `;
         div.addEventListener("click", () => {
           modalBackdrop.classList.remove("visible");
@@ -1720,13 +1812,20 @@
       dirBtn.textContent = "Get directions";
 
       viewBtn.addEventListener("click", () => {
-        // TODO: deep link into Events/Spots page with ID
-        console.log("View", mode, item.id);
+        if (mode === "event") {
+          window.location.href = `event.html?id=${encodeURIComponent(item.id)}`;
+        } else {
+          window.location.href = `spot.html?id=${encodeURIComponent(item.id)}`;
+        }
       });
 
       dirBtn.addEventListener("click", () => {
-        // TODO: open directions (Google Maps or internal map)
-        console.log("Get directions for", mode, item.id);
+        // Placeholder: take them to spots/events page, or map
+        if (mode === "event") {
+          window.location.href = `events.html?highlight=${encodeURIComponent(item.id)}`;
+        } else {
+          window.location.href = `spots.html?highlight=${encodeURIComponent(item.id)}`;
+        }
       });
 
       actions.appendChild(viewBtn);
@@ -1745,20 +1844,7 @@
       chatMessages.appendChild(row);
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
-      // Rebind hover
-      row.querySelectorAll(".hover-profile").forEach((el) => {
-        el.addEventListener("mouseenter", (e) => {
-          const userId = e.currentTarget.getAttribute("data-user-id");
-          const rect = e.currentTarget.getBoundingClientRect();
-          if (hoverHideTimeout) clearTimeout(hoverHideTimeout);
-          showHoverCard(userId, rect.left, rect.bottom);
-        });
-        el.addEventListener("mouseleave", () => {
-          hoverHideTimeout = setTimeout(hideHoverCard, 120);
-        });
-      });
-
-      // TODO: send structured event/spot message to backend
+      row.querySelectorAll(".hover-profile").forEach(bindHoverProfile);
     }
 
     attachEventBtn.addEventListener("click", () => openModal("event"));
@@ -1768,26 +1854,15 @@
       if (e.target === modalBackdrop) modalBackdrop.classList.remove("visible");
     });
 
-    // ---------------------------------------------
-    // TOP NAV SHORTCUTS – hook to pages
-    // ---------------------------------------------
+    // Top nav shortcuts
     document.getElementById("goToEventsBtn").addEventListener("click", () => {
-      // TODO: route to events page
-      console.log("Go to events");
+      window.location.href = "events.html";
     });
     document.getElementById("goToSpotsBtn").addEventListener("click", () => {
-      // TODO: route to spots page
-      console.log("Go to spots");
+      window.location.href = "spots.html";
     });
     document.getElementById("goToProfileBtn").addEventListener("click", () => {
-      // TODO: route to profile page
-      console.log("Go to profile");
-    });
-
-    // Hamburger – hook into your global menu
-    document.getElementById("hamburger").addEventListener("click", () => {
-      // TODO: open your cosmic hamburger menu
-      console.log("Hamburger clicked – open navigation drawer.");
+      window.location.href = "profile.html";
     });
   </script>
 </body>
