@@ -1,84 +1,84 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Cruising Chat — Roll ’n Connect</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <style>
-    /* Theme: black & white glowing with chrome accents */
-    :root{
-      --bg:#050507; --panel:#0b0d11; --muted:#9aa3b2; --white:#fff;
-      --glass:rgba(255,255,255,0.03); --accent:#ffffff;
-      --bubble-bg:rgba(255,255,255,0.04); --bubble-me:#ffffff;
-      --max-width:1200px;
-      --notif-bg:rgba(255,255,255,0.03);
-    }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#07070a);color:var(--white);font-family:Inter,system-ui,Segoe UI,Arial;-webkit-font-smoothing:antialiased}
-    .wrap{max-width:var(--max-width);margin:18px auto;padding:18px;display:grid;grid-template-columns:320px 1fr 300px;gap:18px;align-items:start}
-    /* Left sidebar */
-    .sidebar{background:var(--panel);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 40px rgba(0,0,0,0.6)}
-    .brand{font-weight:900;font-size:1.1rem}
-    .small{color:var(--muted);font-size:0.9rem;margin-top:6px}
-    .nav{margin-top:14px;display:flex;flex-direction:column;gap:8px}
-    .nav a{color:var(--white);text-decoration:none;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.02)}
-    /* Center chat */
-    .chat-panel{background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;height:78vh}
-    .chat-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.02)}
-    .room-title{font-weight:900}
-    .messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.01))}
-    /* Message bubble layout */
-    .msg-row{display:flex;gap:10px;align-items:flex-end}
-    .msg-row.me{flex-direction:row-reverse}
-    .avatar{width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,0.04);flex:0 0 44px}
-    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
-    .bubble{max-width:72%;padding:10px 12px;border-radius:14px;background:var(--bubble-bg);position:relative;color:var(--white);box-shadow:0 8px 30px rgba(0,0,0,0.6);word-break:break-word}
-    .bubble.me{background:linear-gradient(180deg,#fff,#eee);color:#000}
-    .meta{font-size:0.78rem;color:var(--muted);margin-bottom:6px;display:flex;gap:8px;align-items:center}
-    .time{font-size:0.72rem;color:var(--muted);margin-top:6px}
-    .username{font-weight:800;cursor:pointer}
-    /* Emoji rendering */
-    .emoji-inline{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;margin:0 4px;vertical-align:middle}
-    .emoji-circle{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;margin-right:8px}
-    /* Composer */
-    .composer{display:flex;gap:10px;padding:12px;border-top:1px solid rgba(255,255,255,0.02);align-items:center}
-    .input{flex:1;padding:12px;border-radius:12px;border:none;background:rgba(255,255,255,0.03);color:var(--white);min-height:44px;resize:none}
-    .send-btn{background:linear-gradient(90deg,#fff,#ddd);color:#000;padding:10px 14px;border-radius:12px;border:none;font-weight:800;cursor:pointer}
-    .small-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--white);padding:8px;border-radius:10px;cursor:pointer}
-    /* Emoji picker panel */
-    .emoji-panel{display:none;flex-direction:column;gap:8px;padding:10px;background:rgba(0,0,0,0.45);border-radius:12px;border:1px solid rgba(255,255,255,0.03);max-height:320px;overflow:auto;position:absolute;right:20px;bottom:80px;z-index:40}
-    .emoji-tabs{display:flex;gap:8px;margin-bottom:8px}
-    .emoji-tab{padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
-    .emoji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:6px}
-    .emoji-tile{display:flex;align-items:center;justify-content:center;padding:6px;border-radius:8px;cursor:pointer}
-    /* Fonts & style controls */
-    .controls{display:flex;gap:8px;align-items:center}
-    select, input[type="color"]{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--white);padding:8px;border-radius:8px}
-    /* Members list (right) */
-    .members{background:var(--panel);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);height:78vh;display:flex;flex-direction:column}
-    .members h4{margin:0 0 8px 0}
-    .member-list{overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px}
-    .member-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:default}
-    .member-item:hover{background:rgba(255,255,255,0.02)}
-    .member-name{font-weight:700;cursor:pointer}
-    .member-actions{margin-left:auto;display:flex;gap:6px}
-    .profile-pop{position:absolute;background:var(--panel);padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 10px 30px rgba(0,0,0,0.6);z-index:50;min-width:220px}
-    /* Notification center */
-    .notif-center{background:var(--panel);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);height:78vh;display:flex;flex-direction:column}
-    .notif-header{display:flex;align-items:center;justify-content:space-between}
-    .notif-list{margin-top:12px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px}
-    .notif-item{padding:10px;border-radius:10px;background:var(--notif-bg);display:flex;gap:8px;align-items:flex-start}
-    .notif-actions{margin-left:auto;display:flex;gap:6px}
-    /* message effects */
-    .bubble.slam{animation:slamAnim .45s cubic-bezier(.2,.8,.2,1)}
-    @keyframes slamAnim{0%{transform:scale(.85);opacity:.6}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
-    .bubble.reveal{opacity:0;transform:translateY(10px);animation:revealAnim .45s ease forwards}
-    @keyframes revealAnim{to{opacity:1;transform:translateY(0)}}
-    .bubble.quiet{opacity:.55;filter:grayscale(.3);transform:scale(.98)}
-    /* fonts preview */
-    .font-sample{display:inline-block;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-left:6px}
-    /* responsive */
-    @media (max-width:1100px){ .wrap{grid-template-columns:1fr; padding:12px} .members,.notif-center,.sidebar{display:none} }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cruising Chat — Roll ’n Connect</title>
+<style>
+  :root{
+    --bg:#050507; --panel:#0b0d11; --muted:#9aa3b2; --white:#fff;
+    --glass:rgba(255,255,255,0.03); --accent:#fff;
+    --bubble-bg:rgba(255,255,255,0.04); --bubble-me:#ffffff;
+    --max-width:1300px; --card-radius:14px;
+    --accent-color:#00d1ff;
+  }
+  html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#07070a);color:var(--white);font-family:Inter,system-ui,Segoe UI,Arial;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--max-width);margin:18px auto;padding:18px;display:grid;grid-template-columns:280px 1fr 320px;gap:18px;align-items:start}
+  /* Left */
+  .sidebar{background:var(--panel);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+  .brand{font-weight:900;font-size:1.1rem}
+  .small{color:var(--muted);font-size:0.9rem;margin-top:6px}
+  .nav{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+  .nav a{color:var(--white);text-decoration:none;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.02)}
+  /* Center chat */
+  .chat-panel{background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;height:78vh;position:relative}
+  .chat-header{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.02)}
+  .room-title{font-weight:900}
+  .messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.01))}
+  /* Message bubble layout */
+  .msg-row{display:flex;gap:10px;align-items:flex-end}
+  .msg-row.me{flex-direction:row-reverse}
+  .avatar{width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,0.04);flex:0 0 44px}
+  .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .bubble{max-width:72%;padding:10px 12px;border-radius:14px;background:var(--bubble-bg);position:relative;color:var(--white);box-shadow:0 8px 30px rgba(0,0,0,0.6);word-break:break-word}
+  .bubble.me{background:linear-gradient(180deg,#fff,#eee);color:#000}
+  .meta{font-size:0.78rem;color:var(--muted);margin-bottom:6px;display:flex;gap:8px;align-items:center}
+  .time{font-size:0.72rem;color:var(--muted);margin-top:6px}
+  .username{font-weight:800;cursor:pointer}
+  /* Emoji rendering */
+  .emoji-inline{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;margin:0 4px;vertical-align:middle}
+  .emoji-circle{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;margin-right:8px}
+  /* Composer */
+  .composer{display:flex;gap:10px;padding:12px;border-top:1px solid rgba(255,255,255,0.02);align-items:center}
+  .input{flex:1;padding:12px;border-radius:12px;border:none;background:rgba(255,255,255,0.03);color:var(--white);min-height:48px;resize:none}
+  .send-btn{background:linear-gradient(90deg,#fff,#ddd);color:#000;padding:10px 14px;border-radius:12px;border:none;font-weight:800;cursor:pointer}
+  .small-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--white);padding:8px;border-radius:10px;cursor:pointer}
+  /* Emoji picker panel */
+  .emoji-panel{display:none;flex-direction:column;gap:8px;padding:10px;background:rgba(0,0,0,0.45);border-radius:12px;border:1px solid rgba(255,255,255,0.03);max-height:320px;overflow:auto;position:absolute;right:20px;bottom:80px;z-index:40}
+  .emoji-tabs{display:flex;gap:8px;margin-bottom:8px}
+  .emoji-tab{padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
+  .emoji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(36px,1fr));gap:6px}
+  .emoji-tile{display:flex;align-items:center;justify-content:center;padding:6px;border-radius:8px;cursor:pointer;font-size:18px}
+  .emoji-color{width:18px;height:18px;border-radius:50%;display:inline-block;margin-left:6px;border:1px solid rgba(0,0,0,0.2)}
+  /* Fonts & style controls */
+  .controls{display:flex;gap:8px;align-items:center}
+  select, input[type="color"]{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--white);padding:8px;border-radius:8px}
+  /* Members list (right) */
+  .members{background:var(--panel);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);height:78vh;display:flex;flex-direction:column}
+  .members h4{margin:0 0 8px 0}
+  .member-list{overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px}
+  .member-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:default}
+  .member-item:hover{background:rgba(255,255,255,0.02)}
+  .member-name{font-weight:700;cursor:pointer}
+  .member-actions{margin-left:auto;display:flex;gap:6px}
+  .profile-pop{position:fixed;background:var(--panel);padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 10px 30px rgba(0,0,0,0.6);z-index:50;min-width:220px}
+  /* Notification center */
+  .notif-center{background:var(--panel);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);height:78vh;display:flex;flex-direction:column}
+  .notif-header{display:flex;align-items:center;justify-content:space-between}
+  .notif-list{margin-top:12px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:8px}
+  .notif-item{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;gap:8px;align-items:flex-start}
+  .notif-actions{margin-left:auto;display:flex;gap:6px}
+  /* message effects */
+  .bubble.slam{animation:slamAnim .45s cubic-bezier(.2,.8,.2,1)}
+  @keyframes slamAnim{0%{transform:scale(.85);opacity:.6}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+  .bubble.reveal{opacity:0;transform:translateY(10px);animation:revealAnim .45s ease forwards}
+  @keyframes revealAnim{to{opacity:1;transform:translateY(0)}}
+  .bubble.quiet{opacity:.55;filter:grayscale(.3);transform:scale(.98)}
+  /* fonts preview */
+  .font-sample{display:inline-block;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-left:6px}
+  /* responsive */
+  @media (max-width:1100px){ .wrap{grid-template-columns:1fr; padding:12px} .members,.notif-center,.sidebar{display:none} .emoji-panel{right:10px;left:10px} }
+</style>
 </head>
 <body>
   <div class="wrap" role="application" aria-label="Cruising chatroom">
@@ -93,7 +93,7 @@
         <a href="chatrooms.html">All Chatrooms</a>
       </nav>
       <div style="margin-top:14px">
-        <div class="small">Tip: Hover members to preview profile. Click name to request a private chat.</div>
+        <div class="small">Tip: Hover members to preview profile. Click name to request a private chat or "I wanna skate".</div>
       </div>
     </aside>
 
@@ -118,7 +118,7 @@
             <label class="muted" style="font-size:0.85rem">Emoji Pack</label>
             <select id="emojiPackSelect" aria-label="Choose emoji pack">
               <option value="all">All</option>
-              <option value="skater">Skater Packs</option>
+              <option value="skater">Skater</option>
               <option value="hearts">Hearts</option>
               <option value="books">Books</option>
               <option value="elements">Elements</option>
@@ -179,23 +179,22 @@
     </aside>
   </div>
 
-  <script>
-/* Cruising chatroom enhanced:
-   - Rich emoji packs and font selection applied to message rendering
-   - Message effects (slam, reveal, quiet) animate on render
-   - Members list on right sorted alphabetically; hover shows profile summary
-   - Request private chat and "I wanna skate" send notifications to recipient and notification center
-   - Notifications stored in localStorage and shown in-page
-   - Profiles auto-connected via localStorage.rc_profile and rc_profiles_<id> for others
-   - Messages stored in rc_chat_cruising; TTL 24 hours
+<script>
+/* Advanced Cruising Chat — fully functional local prototype
+   Storage keys:
+     - rc_profile : current user profile {id,displayName,avatarUrl,handle}
+     - rc_profiles_<id> : optional other user profiles
+     - rc_members_cruising : array of members
+     - rc_chat_cruising : array of messages
+     - rc_dm_<otherId> : array of DM messages (local)
+     - rc_notifs_cruising : array of notifications
+   TTL: 24 hours
 */
 
-/* CONFIG */
 const ROOM_KEY = 'rc_chat_cruising';
 const PROFILE_KEY = 'rc_profile';
-const PROFILES_PREFIX = 'rc_profile_'; // other users can be stored here
-const NOTIF_KEY = 'rc_notifs_cruising';
 const MEMBERS_KEY = 'rc_members_cruising';
+const NOTIF_KEY = 'rc_notifs_cruising';
 const TTL = 24 * 60 * 60 * 1000;
 const CLEANUP_INTERVAL = 30 * 60 * 1000;
 
@@ -215,53 +214,57 @@ const notifCountEl = document.getElementById('notifCount');
 const fontSelect = document.getElementById('fontSelect');
 const emojiPackSelect = document.getElementById('emojiPackSelect');
 
-/* EMOJI PACKS (expanded) */
+/* Emoji packs (expanded) */
 const EMOJI_PACKS = {
-  skater: ['🛹','🛼','🛴','🛹💨','🛹🔥','🛹🤘','🛼✨','🛼🎵','🛹🏁','🛼❤️'],
-  hearts: ['❤️','💛','💚','💙','💜','🖤','🤍','💖','💘','💝','💕','💞','💓'],
-  books: ['📚','📖','📘','📗','📕','📓','📒','📔','📙','📚✨'],
-  elements: ['🔥','💧','🌪️','🌊','🌱','⚡','❄️','🌞','🌙','🌟'],
+  skater: ['🛹','🛼','🛴','🛹💨','🛹🔥','🛹🤘','🛼✨','🛼🎵','🛹🏁','🛼❤️','🛼🛼','🛹🛼'],
+  hearts: ['❤️','💛','💚','💙','💜','🖤','🤍','💖','💘','💝','💕','💞','💓','💗'],
+  books: ['📚','📖','📘','📗','📕','📓','📒','📔','📙','📚✨','📚📖'],
+  elements: ['🔥','💧','🌪️','🌊','🌱','⚡','❄️','🌞','🌙','🌟','🌈','🌫️'],
+  faces: ['😀','😅','😂','🤣','😊','😍','😎','🤙','🤘','🤟','🤩','😴'],
+  gestures: ['👍','👊','✌️','👏','🙏','🤝','🤜','🤛'],
   all: []
 };
 EMOJI_PACKS.all = [...new Set(Object.values(EMOJI_PACKS).flat())];
 
 /* Utilities */
-function uid(){ return 'm_' + Math.random().toString(36).slice(2,9); }
+function uid(){ return 'id_' + Math.random().toString(36).slice(2,9); }
 function now(){ return Date.now(); }
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-/* PROFILE MANAGEMENT */
+/* Profile management */
 let profile = ensureProfile();
 function ensureProfile(){
   try{
     const raw = localStorage.getItem(PROFILE_KEY);
-    if(raw){ const p = JSON.parse(raw); if(p && p.id) return p; }
+    if(raw){ const p = JSON.parse(raw); if(p && p.id) { addMember(p); return p; } }
   }catch(e){}
   // create ephemeral profile
   const id = 'u_' + Math.random().toString(36).slice(2,8);
-  const p = { id, displayName: 'Rider ' + id.slice(-4), avatarUrl: generateAvatarDataUrl(id), handle: 'rider' + id.slice(-4) };
+  const p = { id, displayName: 'Rider ' + id.slice(-4), avatarUrl: generateAvatarDataUrl(id, true), handle: 'rider' + id.slice(-4) };
   localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
-  // add to members list
   addMember(p);
   return p;
 }
-function generateAvatarDataUrl(id){
+function generateAvatarDataUrl(id, useLetter){
   const bg = '#111';
   const fg = '#fff';
-  const txt = encodeURIComponent((profile && profile.displayName ? profile.displayName[0] : id[0]).toUpperCase());
+  const txt = encodeURIComponent(useLetter ? (profile && profile.displayName ? profile.displayName[0] : id[0]) : id[0]);
   const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='100%' height='100%' fill='${bg}'/><text x='50%' y='55%' font-size='90' fill='${fg}' text-anchor='middle' font-family='Arial' font-weight='700'>${txt}</text></svg>`;
   return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
 }
 
-/* MEMBERS MANAGEMENT */
-function loadMembers(){
-  try{ const raw = localStorage.getItem(MEMBERS_KEY); return raw ? JSON.parse(raw) : []; } catch(e){ return []; }
-}
+/* Members */
+function loadMembers(){ try{ const raw = localStorage.getItem(MEMBERS_KEY); return raw ? JSON.parse(raw) : []; }catch(e){return [];} }
 function saveMembers(list){ localStorage.setItem(MEMBERS_KEY, JSON.stringify(list)); }
 function addMember(p){
   const list = loadMembers();
   if(!list.find(m=>m.id===p.id)){
     list.push({ id:p.id, displayName:p.displayName, avatarUrl:p.avatarUrl, handle:p.handle });
+    saveMembers(list);
+  } else {
+    // update if changed
+    const idx = list.findIndex(m=>m.id===p.id);
+    list[idx] = { id:p.id, displayName:p.displayName, avatarUrl:p.avatarUrl, handle:p.handle };
     saveMembers(list);
   }
 }
@@ -270,7 +273,7 @@ function removeMember(id){
   saveMembers(list);
 }
 
-/* NOTIFICATIONS */
+/* Notifications */
 function loadNotifs(){ try{ const raw = localStorage.getItem(NOTIF_KEY); return raw ? JSON.parse(raw) : []; }catch(e){return [];} }
 function saveNotifs(arr){ localStorage.setItem(NOTIF_KEY, JSON.stringify(arr)); updateNotifCount(); }
 function pushNotif(n){
@@ -284,19 +287,17 @@ function updateNotifCount(){
   notifCountEl.textContent = arr.length ? arr.length : '';
 }
 
-/* MESSAGES */
-function loadMessages(){
-  try{ const raw = localStorage.getItem(ROOM_KEY); return raw ? JSON.parse(raw) : []; }catch(e){return [];}
-}
+/* Messages */
+function loadMessages(){ try{ const raw = localStorage.getItem(ROOM_KEY); return raw ? JSON.parse(raw) : []; }catch(e){return [];} }
 function saveMessages(arr){ localStorage.setItem(ROOM_KEY, JSON.stringify(arr)); }
 
-/* CLEANUP TTL */
+/* TTL cleanup */
 function cleanup(){
   const cutoff = now() - TTL;
   // room messages
   const msgs = loadMessages().filter(m => m.ts >= cutoff);
   saveMessages(msgs);
-  // DMs and notifs
+  // DMs
   for(const k in localStorage){
     if(k.startsWith('rc_dm_')){
       try{
@@ -306,11 +307,12 @@ function cleanup(){
       }catch(e){}
     }
   }
+  // notifs
   const nots = loadNotifs().filter(n => n.ts >= cutoff);
   saveNotifs(nots);
 }
 
-/* RENDERING */
+/* Rendering messages */
 function renderMessages(){
   messagesEl.innerHTML = '';
   const msgs = loadMessages().sort((a,b)=>a.ts - b.ts);
@@ -330,8 +332,8 @@ function renderMessages(){
     const meta = document.createElement('div'); meta.className = 'meta';
     const uname = document.createElement('span'); uname.className = 'username'; uname.textContent = m.senderName;
     uname.dataset.userid = m.senderId;
-    uname.addEventListener('click', onRequestDM);
-    uname.addEventListener('mouseenter', onHoverProfile);
+    uname.addEventListener('click', ()=> requestDM(m.senderId));
+    uname.addEventListener('mouseenter', (e)=> showProfilePop(e, m.senderId));
     uname.addEventListener('mouseleave', hideProfilePop);
     meta.appendChild(uname);
     const timeSpan = document.createElement('span'); timeSpan.className = 'muted'; timeSpan.textContent = formatTime(m.ts);
@@ -339,18 +341,17 @@ function renderMessages(){
     // body
     const body = document.createElement('div'); body.className = 'body';
     body.innerHTML = renderMessageBody(m);
-    // location
+    bubble.appendChild(meta);
+    bubble.appendChild(body);
     if(m.meta && m.meta.location){
       const loc = document.createElement('div'); loc.className = 'muted'; loc.style.marginTop = '8px';
       const a = document.createElement('a'); a.href = `/find-spots.html?lat=${m.meta.location.lat}&lng=${m.meta.location.lng}`; a.textContent = 'Open in Find Spots'; a.style.color = 'inherit'; a.style.fontWeight = '700';
       loc.appendChild(a);
       bubble.appendChild(loc);
     }
-    // assemble
-    bubble.appendChild(meta);
-    bubble.appendChild(body);
     const time = document.createElement('div'); time.className = 'time muted'; time.textContent = new Date(m.ts).toLocaleString();
     bubble.appendChild(time);
+    // assemble
     if(isMe){
       row.appendChild(bubble);
       row.appendChild(av);
@@ -363,19 +364,17 @@ function renderMessages(){
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 
-/* render message body with emoji tiles and font */
+/* Render message body with emoji tiles */
 function renderMessageBody(m){
   let html = escapeHtml(m.text || '');
-  // emojis metadata
   if(Array.isArray(m.emojis) && m.emojis.length){
     const tiles = m.emojis.map(e => `<span class="emoji-circle" style="background:${e.color||'transparent'}">${escapeHtml(e.char)}</span>`).join('');
     html += '<div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">' + tiles + '</div>';
   }
-  // apply selected emoji pack font size or style if needed (kept simple)
   return `<div style="font-family:${fontSelect.value};">${html}</div>`;
 }
 
-/* MEMBERS RENDER */
+/* Render members */
 function renderMembers(){
   memberListEl.innerHTML = '';
   const members = loadMembers().slice().sort((a,b)=>a.displayName.localeCompare(b.displayName));
@@ -390,16 +389,18 @@ function renderMembers(){
     item.appendChild(av); item.appendChild(txt); item.appendChild(actions);
     // hover profile summary
     const nameEl = txt.querySelector('.member-name');
-    nameEl.addEventListener('mouseenter', (e)=> showProfilePop(e, m));
+    nameEl.addEventListener('mouseenter', (e)=> showProfilePop(e, m.id));
     nameEl.addEventListener('mouseleave', hideProfilePop);
     memberListEl.appendChild(item);
   }
 }
 
-/* PROFILE POPUP */
-let profilePop;
-function showProfilePop(e, member){
+/* Profile popup */
+let profilePop = null;
+function showProfilePop(e, memberOrId){
   hideProfilePop();
+  const member = (typeof memberOrId === 'string') ? getMemberById(memberOrId) : memberOrId;
+  if(!member) return;
   profilePop = document.createElement('div'); profilePop.className = 'profile-pop';
   profilePop.innerHTML = `<div style="display:flex;gap:10px;align-items:center">
     <div style="width:56px;height:56px;border-radius:50%;overflow:hidden"><img src="${member.avatarUrl||generateAvatarDataUrl(member.id)}" style="width:100%;height:100%;object-fit:cover"></div>
@@ -415,14 +416,17 @@ function showProfilePop(e, member){
   </div>`;
   document.body.appendChild(profilePop);
   const rect = e.target.getBoundingClientRect();
-  profilePop.style.left = (rect.right + 12) + 'px';
-  profilePop.style.top = (rect.top - 6) + 'px';
+  profilePop.style.left = Math.min(window.innerWidth - 240, rect.right + 12) + 'px';
+  profilePop.style.top = Math.max(8, rect.top - 6) + 'px';
   document.getElementById('popDM').addEventListener('click', ()=> { requestDM(member.id); hideProfilePop(); });
   document.getElementById('popSkate').addEventListener('click', ()=> { requestSkate(member.id); hideProfilePop(); });
 }
 function hideProfilePop(){ if(profilePop && profilePop.parentNode) profilePop.parentNode.removeChild(profilePop); profilePop = null; }
 
-/* NOTIFICATIONS RENDER */
+/* Notifications rendering */
+function loadNotifs(){ try{ const raw = localStorage.getItem(NOTIF_KEY); return raw ? JSON.parse(raw) : []; }catch(e){return [];} }
+function saveNotifs(arr){ localStorage.setItem(NOTIF_KEY, JSON.stringify(arr)); updateNotifCount(); }
+function pushNotifObj(n){ const arr = loadNotifs(); arr.unshift(n); saveNotifs(arr); renderNotifs(); }
 function renderNotifs(){
   notifListEl.innerHTML = '';
   const nots = loadNotifs();
@@ -441,12 +445,13 @@ function renderNotifs(){
   }
   updateNotifCount();
 }
-
-/* NOTIF ACTIONS */
 function handleNotifAccept(n){
-  // For "I wanna skate" we can create an event or mark accepted; here we push a confirmation message
-  pushNotif({ id: uid(), ts: now(), title: 'Skate request accepted', body: `You accepted ${n.fromName}'s request.`, fromId: profile.id, fromName: profile.displayName, fromAvatar: profile.avatarUrl });
-  // remove original
+  // Accepting a skate request or DM request: create a confirmation message in chat
+  if(n.type === 'skate_request'){
+    sendMessage(`${profile.displayName} accepted ${n.fromName}'s skate request.`, 'normal', null, []);
+  } else if(n.type === 'dm_request'){
+    sendMessage(`${profile.displayName} accepted ${n.fromName}'s DM request.`, 'normal', null, []);
+  }
   dismissNotif(n.id);
 }
 function dismissNotif(id){
@@ -455,7 +460,7 @@ function dismissNotif(id){
   renderNotifs();
 }
 
-/* SEND MESSAGE */
+/* Send message */
 function sendMessage(text, effect='normal', meta=null, emojis=[]){
   const msg = {
     id: uid(),
@@ -474,7 +479,7 @@ function sendMessage(text, effect='normal', meta=null, emojis=[]){
   renderMessages();
 }
 
-/* SHARE LOCATION */
+/* Share location */
 function shareLocation(){
   if(!navigator.geolocation){ alert('Geolocation not supported'); return; }
   shareLocBtn.disabled = true; shareLocBtn.textContent = '…';
@@ -487,43 +492,81 @@ function shareLocation(){
   }, {enableHighAccuracy:false,timeout:10000});
 }
 
-/* DM REQUEST */
+/* DM request (local prototype) */
 function requestDM(otherId){
   const other = getMemberById(otherId);
   if(!other){ alert('User not found'); return; }
-  // push a notification to recipient (local prototype: stored in localStorage for recipient)
   const notif = { id: uid(), ts: now(), title: 'DM request', body: `${profile.displayName} wants to DM you.`, fromId: profile.id, fromName: profile.displayName, fromAvatar: profile.avatarUrl, type:'dm_request' };
-  // store under recipient's notif key if we had multi-user; here we store locally and show as incoming
-  pushNotif(notif);
-  alert('DM request sent (local prototype).');
+  pushNotifObj(notif);
+  alert('DM request sent (local prototype). It appears in your Notification Center.');
 }
 
-/* I WANNA SKATE REQUEST */
+/* I wanna skate */
 function requestSkate(otherId){
   const other = getMemberById(otherId);
   if(!other){ alert('User not found'); return; }
   const notif = { id: uid(), ts: now(), title: 'I wanna skate', body: `${profile.displayName} wants to skate with you.`, fromId: profile.id, fromName: profile.displayName, fromAvatar: profile.avatarUrl, type:'skate_request' };
-  pushNotif(notif);
-  alert('Skate request sent (local prototype).');
+  pushNotifObj(notif);
+  alert('Skate request sent (local prototype). It appears in your Notification Center.');
 }
 
-/* HELPERS */
+/* Helpers */
 function getMemberById(id){ return loadMembers().find(m=>m.id===id); }
 function formatTime(ts){ const d = new Date(ts); return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
 
-/* EVENT HANDLERS */
+/* Emoji picker */
+function populateEmojiGrid(tab){
+  emojiGrid.innerHTML = '';
+  const list = (tab === 'all') ? EMOJI_PACKS.all : (EMOJI_PACKS[tab] || []);
+  for(const ch of list){
+    const tile = document.createElement('div'); tile.className = 'emoji-tile'; tile.textContent = ch;
+    tile.addEventListener('click', ()=> { inputEl.value += ch; inputEl.focus(); });
+    emojiGrid.appendChild(tile);
+  }
+}
+
+/* Seed demo members and messages if empty */
+function seedDemo(){
+  if(loadMembers().length === 0){
+    const demo = [
+      { id:'u_alex', displayName:'Alex', avatarUrl:generateAvatarDataUrl('u_alex'), handle:'alex' },
+      { id:'u_bree', displayName:'Bree', avatarUrl:generateAvatarDataUrl('u_bree'), handle:'bree' },
+      { id:'u_chris', displayName:'Chris', avatarUrl:generateAvatarDataUrl('u_chris'), handle:'chris' },
+      profile
+    ];
+    saveMembers(demo);
+  }
+  if(loadMessages().length === 0){
+    const demoMsgs = [
+      { id:uid(), senderId:'u_alex', senderName:'Alex', avatarUrl:generateAvatarDataUrl('u_alex'), text:'Morning cruise route: boardwalk to pier', ts:now()-3600*1000, effect:'normal', emojis:[], meta:null },
+      { id:uid(), senderId:'u_bree', senderName:'Bree', avatarUrl:generateAvatarDataUrl('u_bree'), text:'I love that route ❤️', ts:now()-3500*1000, effect:'reveal', emojis:[{char:'❤️',color:'#ff6b6b'}], meta:null },
+      { id:uid(), senderId:profile.id, senderName:profile.displayName, avatarUrl:profile.avatarUrl, text:'Anyone down for a sunset lap?', ts:now()-1800*1000, effect:'slam', emojis:[], meta:null }
+    ];
+    saveMessages(demoMsgs);
+  }
+  if(loadNotifs().length === 0){
+    saveNotifs([{ id:uid(), ts:now()-2000*1000, title:'Welcome', body:'You joined Cruising chat. Hover members to preview profiles.', fromId:'system', fromName:'System', fromAvatar:'' }]);
+  }
+}
+
+/* Render everything */
+function renderAll(){
+  renderMessages();
+  renderMembers();
+  renderNotifs();
+  updateNotifCount();
+}
+
+/* Event bindings */
 sendBtn.addEventListener('click', ()=> {
   const text = inputEl.value.trim();
   if(!text) return;
-  // parse emojis from input (simple: any emoji char appended)
-  const emojis = []; // advanced emoji metadata could be added via picker
-  sendMessage(text, effectEl.value, null, emojis);
+  sendMessage(text, effectEl.value, null, []);
   inputEl.value = '';
 });
 inputEl.addEventListener('keydown', e=> {
   if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendBtn.click(); }
 });
-
 openEmojiBtn.addEventListener('click', ()=> {
   emojiPanel.style.display = emojiPanel.style.display === 'flex' ? 'none' : 'flex';
   emojiPanel.setAttribute('aria-hidden', emojiPanel.style.display === 'none');
@@ -539,74 +582,16 @@ emojiPanel.addEventListener('click', e=>{
   }
 });
 emojiPackSelect.addEventListener('change', ()=> populateEmojiGrid(emojiPackSelect.value));
-
-document.getElementById('openNotifs').addEventListener('click', ()=> {
-  // toggle notif panel visibility by scrolling to it (panel always visible on wide screens)
-  const notifs = document.querySelector('.notif-center');
-  if(notifs) notifs.scrollIntoView({behavior:'smooth'});
-});
-
+shareLocBtn.addEventListener('click', shareLocation);
 document.getElementById('clearNotifs').addEventListener('click', ()=> { saveNotifs([]); renderNotifs(); });
-
-document.getElementById('joinBtn').addEventListener('click', ()=> {
-  addMember(profile);
-  renderMembers();
-});
-document.getElementById('leaveBtn').addEventListener('click', ()=> {
-  removeMember(profile.id);
-  renderMembers();
-});
-
-/* POPULATE EMOJI GRID */
-function populateEmojiGrid(tab){
-  emojiGrid.innerHTML = '';
-  const list = (tab === 'all') ? EMOJI_PACKS.all : (EMOJI_PACKS[tab] || []);
-  for(const ch of list){
-    const tile = document.createElement('div'); tile.className = 'emoji-tile'; tile.textContent = ch;
-    tile.addEventListener('click', ()=> { inputEl.value += ch; inputEl.focus(); });
-    emojiGrid.appendChild(tile);
-  }
-}
-
-/* INIT: seed some members and messages for demo */
-function seedDemo(){
-  // seed members if empty
-  if(loadMembers().length === 0){
-    const demo = [
-      { id:'u_alex', displayName:'Alex', avatarUrl:generateAvatarDataUrl('u_alex'), handle:'alex' },
-      { id:'u_bree', displayName:'Bree', avatarUrl:generateAvatarDataUrl('u_bree'), handle:'bree' },
-      { id:'u_chris', displayName:'Chris', avatarUrl:generateAvatarDataUrl('u_chris'), handle:'chris' },
-      profile
-    ];
-    saveMembers(demo);
-  }
-  // seed messages if empty
-  if(loadMessages().length === 0){
-    const demoMsgs = [
-      { id:uid(), senderId:'u_alex', senderName:'Alex', avatarUrl:generateAvatarDataUrl('u_alex'), text:'Morning cruise route: boardwalk to pier', ts:now()-3600*1000, effect:'normal', emojis:[], meta:null },
-      { id:uid(), senderId:'u_bree', senderName:'Bree', avatarUrl:generateAvatarDataUrl('u_bree'), text:'I love that route ❤️', ts:now()-3500*1000, effect:'reveal', emojis:[{char:'❤️',color:'#ff6b6b'}], meta:null },
-      { id:uid(), senderId:profile.id, senderName:profile.displayName, avatarUrl:profile.avatarUrl, text:'Anyone down for a sunset lap?', ts:now()-1800*1000, effect:'slam', emojis:[], meta:null }
-    ];
-    saveMessages(demoMsgs);
-  }
-  // seed notifs
-  if(loadNotifs().length === 0){
-    saveNotifs([{ id:uid(), ts:now()-2000*1000, title:'Welcome', body:'You joined Cruising chat. Hover members to preview profiles.', fromId:'system', fromName:'System', fromAvatar:'' }]);
-  }
-}
-
-/* RENDER ALL */
-function renderAll(){
-  renderMessages();
-  renderMembers();
-  renderNotifs();
-  updateNotifCount();
-}
+document.getElementById('joinBtn').addEventListener('click', ()=> { addMember(profile); renderMembers(); });
+document.getElementById('leaveBtn').addEventListener('click', ()=> { removeMember(profile.id); renderMembers(); });
 
 /* Periodic cleanup */
 setInterval(()=>{ cleanup(); renderAll(); }, CLEANUP_INTERVAL);
 
-/* initial */
+/* Initial setup */
+EMOJI_PACKS.all = [...new Set(Object.values(EMOJI_PACKS).flat())];
 seedDemo();
 populateEmojiGrid('all');
 renderAll();
@@ -614,10 +599,12 @@ renderAll();
 /* Expose for debugging */
 window.__rc = { profile, sendMessage, loadMessages, loadMembers, loadNotifs };
 
-/* Small helper: clicking username requests DM */
-function onRequestDM(e){ const id = e.currentTarget.dataset.userid; requestDM(id); }
-function onHoverProfile(e){ const id = e.currentTarget.dataset.userid; const member = getMemberById(id); if(member) showProfilePop(e, member); }
-function showProfilePop(e, member){
+/* small helper to show profile pop on username click in messages */
+function showProfilePop(e, id){
+  const member = getMemberById(id);
+  if(member) showProfilePopAtElement(e.target, member);
+}
+function showProfilePopAtElement(target, member){
   hideProfilePop();
   profilePop = document.createElement('div'); profilePop.className = 'profile-pop';
   profilePop.innerHTML = `<div style="display:flex;gap:10px;align-items:center">
@@ -626,14 +613,19 @@ function showProfilePop(e, member){
       <div style="font-weight:800">${escapeHtml(member.displayName)}</div>
       <div class="muted">@${escapeHtml(member.handle||member.id)}</div>
       <div style="margin-top:8px;color:var(--muted);font-size:0.9rem">Click to request DM or "I wanna skate"</div>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button class="small-btn" id="popDM">Request DM</button>
+        <button class="small-btn" id="popSkate">I wanna skate</button>
+      </div>
     </div>
   </div>`;
   document.body.appendChild(profilePop);
-  const rect = e.currentTarget.getBoundingClientRect();
-  profilePop.style.left = (rect.right + 12) + 'px';
-  profilePop.style.top = (rect.top - 6) + 'px';
+  const rect = target.getBoundingClientRect();
+  profilePop.style.left = Math.min(window.innerWidth - 260, rect.right + 12) + 'px';
+  profilePop.style.top = Math.max(8, rect.top - 6) + 'px';
+  document.getElementById('popDM').addEventListener('click', ()=> { requestDM(member.id); hideProfilePop(); });
+  document.getElementById('popSkate').addEventListener('click', ()=> { requestSkate(member.id); hideProfilePop(); });
 }
-let profilePop = null;
 function hideProfilePop(){ if(profilePop && profilePop.parentNode) profilePop.parentNode.removeChild(profilePop); profilePop = null; }
 
 </script>
