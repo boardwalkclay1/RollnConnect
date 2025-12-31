@@ -25,6 +25,7 @@
       font-size: 34px;
       margin-bottom: 8px;
       font-weight: 700;
+      text-shadow: 0 0 12px #4a4aff;
     }
 
     .subtitle {
@@ -47,6 +48,13 @@
       background: #14141c;
       color: white;
       font-size: 16px;
+      box-shadow: 0 0 0px #4a4aff;
+      transition: 0.25s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      box-shadow: 0 0 12px #4a4aff;
     }
 
     textarea {
@@ -62,11 +70,13 @@
       color: white;
       font-size: 18px;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.25s;
+      box-shadow: 0 0 0px #4a4aff;
     }
 
     button:hover {
       background: #6a6aff;
+      box-shadow: 0 0 16px #4a4aff;
     }
   </style>
 </head>
