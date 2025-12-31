@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Cruising Chat — Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{--bg:#05060a;--panel:#0b0d12;--accent:#7cff6b;--muted:#9aa3b2;--white:#fff}
+    body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#020204 0%,#07101a 100%);color:var(--white);height:100vh;display:flex;align-items:stretch}
+    .sidebar{width:260px;background:rgba(255,255,255,0.03);backdrop-filter:blur(8px);padding:20px;box-shadow:inset -6px 0 30px rgba(0,0,0,0.6)}
+    .main{flex:1;display:flex;flex-direction:column}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,0.03)}
+    .room-title{font-size:1.2rem;font-weight:700}
+    .messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+    .composer{display:flex;gap:10px;padding:14px;border-top:1px solid rgba(255,255,255,0.03);align-items:center}
+    .input{flex:1;padding:10px 12px;border-radius:10px;border:none;background:rgba(255,255,255,0.04);color:var(--white)}
+    .btn{background:var(--accent);color:#000;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+    .small-btn{background:rgba(255,255,255,0.06);color:var(--white);padding:8px;border-radius:8px;border:none;cursor:pointer}
+    .msg{max-width:72%;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(0,0,0,0.6);transition:transform .35s,opacity .35s}
+    .meta{font-size:0.8rem;color:var(--muted);margin-bottom:6px}
+    .msg.slam{animation:slamAnim .45s cubic-bezier(.2,.8,.2,1)}
+    @keyframes slamAnim{0%{transform:scale(.85);opacity:.6}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
+    .msg.reveal{opacity:0;transform:translateY(10px);animation:revealAnim .45s ease forwards}
+    @keyframes revealAnim{to{opacity:1;transform:translateY(0)}}
+    .msg.quiet{opacity:.6;filter:grayscale(.2);transform:scale(.98)}
+    .msg.normal{}
+    .msg .loc{margin-top:8px;padding:8px;border-radius:8px;background:rgba(0,0,0,0.25);display:flex;justify-content:space-between;align-items:center}
+    .emoji-picker{display:flex;gap:8px;flex-wrap:wrap;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px}
+    .emoji{cursor:pointer;padding:6px;border-radius:6px}
+    .top-controls{display:flex;gap:8px;align-items:center}
+    .sender{padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:none;color:var(--white)}
+    a.open-map{color:var(--accent);text-decoration:none;font-weight:700}
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+    <h3>Roll ’n Connect</h3>
+    <p style="color:var(--muted)">Rooms</p>
+    <ul style="padding:0;margin:10px 0 0 0;list-style:none">
+      <li>📍 Find Spots</li>
+      <li>💬 Chatrooms</li>
+      <li>🛒 Marketplace</li>
+    </ul>
+  </nav>
+
+  <main class="main" role="main">
+    <header>
+      <div>
+        <div class="room-title">Cruising</div>
+        <div style="font-size:0.85rem;color:var(--muted)">Casual rides, routes, and meetups</div>
+      </div>
+      <div class="top-controls">
+        <input id="sender" class="sender" placeholder="Your name" />
+        <button id="clearBtn" class="small-btn">Clear All</button>
+      </div>
+    </header>
+
+    <section id="messages" class="messages" aria-live="polite"></section>
+
+    <div class="composer">
+      <div style="display:flex;flex-direction:column;gap:8px;width:100%">
+        <div id="emojiPicker" class="emoji-picker" aria-hidden="false">
+          <span class="emoji">🚲</span><span class="emoji">🛼</span><span class="emoji">🌅</span><span class="emoji">❤️</span><span class="emoji">✨</span>
+        </div>
+        <input id="text" class="input" placeholder="Share routes, meetups, or drop a spot" />
+      </div>
+
+      <select id="effect" class="small-btn" title="Message effect">
+        <option value="normal">Normal</option>
+        <option value="slam">Slam</option>
+        <option value="reveal">Reveal</option>
+        <option value="quiet">Quiet</option>
+      </select>
+
+      <button id="locBtn" class="small-btn" title="Drop my location">📍</button>
+      <button id="sendBtn" class="btn">Send</button>
+    </div>
+  </main>
+
+<script>
+/* ROOM CONFIG */
+const ROOM_ID = 'cruising';
+const STORAGE_KEY = 'rc_chat_' + ROOM_ID;
+const CLEANUP_INTERVAL_MS = 30 * 60 * 1000;
+const TTL_MS = 24 * 60 * 60 * 1000;
+
+/* DOM */
+const messagesEl = document.getElementById('messages');
+const textEl = document.getElementById('text');
+const sendBtn = document.getElementById('sendBtn');
+const senderEl = document.getElementById('sender');
+const effectEl = document.getElementById('effect');
+const locBtn = document.getElementById('locBtn');
+const emojiPicker = document.getElementById('emojiPicker');
+const clearBtn = document.getElementById('clearBtn');
+
+function now(){return Date.now();}
+function uid(){return 'm_' + Math.random().toString(36).slice(2,9);}
+function loadMessages(){ try{ const raw = localStorage.getItem(STORAGE_KEY); if(!raw) return []; const arr = JSON.parse(raw); return Array.isArray(arr) ? arr : []; }catch(e){return [];} }
+function saveMessages(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function cleanupOldMessages(){ const msgs = loadMessages(); const cutoff = now() - TTL_MS; const filtered = msgs.filter(m => m.ts >= cutoff); if(filtered.length !== msgs.length) saveMessages(filtered); return filtered; }
+function render(){ messagesEl.innerHTML = ''; const msgs = cleanupOldMessages(); msgs.sort((a,b)=>a.ts - b.ts); for(const m of msgs){ const el = document.createElement('div'); el.className = 'msg ' + (m.effect || 'normal'); const time = new Date(m.ts).toLocaleString(); el.innerHTML = `<div class="meta"><strong>${escapeHtml(m.sender||'Anon')}</strong> · <span style="color:var(--muted)">${time}</span></div><div class="body">${escapeHtml(m.text)}</div>`; if(m.meta && m.meta.location){ const {lat,lng} = m.meta.location; const mapLink = `/find-spots.html?lat=${lat}&lng=${lng}`; const locHtml = `<div class="loc"><div style="font-size:0.9rem">${lat.toFixed(5)}, ${lng.toFixed(5)}</div><a class="open-map" href="${mapLink}">Open in Find Spots</a></div>`; el.innerHTML += locHtml; } messagesEl.appendChild(el); messagesEl.scrollTop = messagesEl.scrollHeight; } }
+function sendMessage(text, effect='normal', meta=null){ const sender = senderEl.value.trim() || 'Anon'; const msg = { id: uid(), sender, text, ts: now(), effect, meta }; const arr = loadMessages(); arr.push(msg); saveMessages(arr); render(); }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+sendBtn.addEventListener('click', ()=> { const t = textEl.value.trim(); if(!t) return; sendMessage(t, effectEl.value, null); textEl.value = ''; });
+textEl.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendBtn.click(); }});
+clearBtn.addEventListener('click', ()=>{ if(confirm('Clear all messages in this room?')){ localStorage.removeItem(STORAGE_KEY); render(); }});
+emojiPicker.addEventListener('click', e=>{ if(e.target.classList.contains('emoji')){ textEl.value += e.target.textContent; textEl.focus(); }});
+locBtn.addEventListener('click', ()=>{ if(!navigator.geolocation){ alert('Geolocation not supported'); return; } locBtn.disabled = true; locBtn.textContent = '…'; navigator.geolocation.getCurrentPosition(pos=>{ const {latitude:lat, longitude:lng} = pos.coords; sendMessage('Shared a location', effectEl.value, { location:{lat,lng} }); locBtn.disabled = false; locBtn.textContent = '📍'; }, err=>{ alert('Location denied or unavailable'); locBtn.disabled = false; locBtn.textContent = '📍'; }, {enableHighAccuracy:false,timeout:10000}); });
+setInterval(()=>{ cleanupOldMessages(); render(); }, CLEANUP_INTERVAL_MS);
+render();
+</script>
+</body>
+</html>
