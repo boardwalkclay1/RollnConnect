@@ -1,221 +1,140 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Longboard – Roll ’n Connect</title>
-  <link rel="stylesheet" href="styles/style.css">
-
+  <meta charset="utf-8" />
+  <title>Longboard — Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    body {
-      background:#000;
-      color:#fff;
-      margin:0;
-      padding:0;
-      font-family:'Inter',sans-serif;
-      overflow-x:hidden;
+    :root{
+      --bg-1:#02040a; --bg-2:#07101a; --panel:rgba(255,255,255,0.04);
+      --accent:#00d1ff; --accent-2:#ff6bd1; --muted:#9aa3b2; --glass:rgba(255,255,255,0.06);
+      --card-radius:14px; --gap:18px; --max-width:1100px;
     }
-
-    /* STARFIELDS */
-    .stars1,.stars2,.stars3 {
-      position:fixed; inset:0;
-      background:url('styles/stars-white.png') repeat;
-      z-index:-3;
-    }
-    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
-    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
-    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
-
-    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
-    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
-    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
-
-    /* FLOATING FUTURISTIC SIDEBAR */
-    .sidebar {
-      position:fixed;
-      top:50%;
-      left:-260px;
-      transform:translateY(-50%);
-      width:260px;
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(25px);
-      border-right:1px solid rgba(255,255,255,0.25);
-      padding:30px 20px;
-      border-radius:0 20px 20px 0;
-      box-shadow:10px 0 40px rgba(255,255,255,0.25);
-      transition:0.35s ease;
-      z-index:9998;
-    }
-    .sidebar.open { left:0; }
-
-    /* BURGER */
-    .hamburger {
-      position:fixed;
-      top:25px;
-      left:25px;
-      width:40px;
-      height:30px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      cursor:pointer;
-      z-index:9999;
-    }
-    .hamburger span {
-      height:4px;
-      width:100%;
-      background:#fff;
-      border-radius:4px;
-      box-shadow:0 0 12px rgba(255,255,255,0.9);
-      transition:0.3s;
-    }
-    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
-    .hamburger.active span:nth-child(2){opacity:0;}
-    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
-
-    /* NAV LINKS */
-    .nav-header{text-align:center;margin-bottom:30px;}
-    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
-    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
-
-    .nav-links {
-      list-style:none;
-      padding:0;
-      margin:0;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-    .nav-links a {
-      color:#fff;
-      text-decoration:none;
-      font-size:1.15rem;
-      padding:10px 14px;
-      border-radius:12px;
-      transition:0.25s;
-      display:block;
-      background:rgba(255,255,255,0.05);
-      box-shadow:0 0 12px rgba(255,255,255,0.15);
-    }
-    .nav-links a:hover {
-      background:rgba(255,255,255,0.2);
-      transform:translateX(8px);
-      box-shadow:0 0 20px rgba(255,255,255,0.4);
-    }
-
-    /* PAGE WRAPPER */
-    .page-wrapper {
-      padding-top:120px;
-      padding-bottom:80px;
-      text-align:center;
-    }
-
-    /* HERO */
-    .hero {
-      margin:0 auto 40px auto;
-      padding:40px;
-      max-width:900px;
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(25px);
-      border-radius:24px;
-      box-shadow:0 0 60px rgba(255,255,255,0.3);
-    }
-
-    /* SUBCATEGORY GRID */
-    .sub-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:40px;
-      padding:0 40px;
-    }
-
-    .sub-card {
-      background:rgba(255,255,255,0.12);
-      backdrop-filter:blur(25px);
-      padding:24px;
-      border-radius:20px;
-      box-shadow:0 0 40px rgba(255,255,255,0.3);
-      transition:0.3s;
-      text-align:left;
-    }
-    .sub-card:hover {
-      transform:scale(1.06);
-      box-shadow:0 0 60px rgba(255,255,255,0.5);
-    }
-
-    .enter-btn {
-      display:inline-block;
-      margin-top:14px;
-      padding:10px 18px;
-      background:#fff;
-      color:#000;
-      border-radius:12px;
-      text-decoration:none;
-      font-weight:600;
-    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:#fff;font-family:Inter,system-ui,Segoe UI,Arial}
+    .wrap{max-width:var(--max-width);margin:36px auto;padding:28px;display:grid;grid-template-columns:260px 1fr;gap:28px}
+    /* Sidebar */
+    .sidebar{background:var(--panel);backdrop-filter:blur(10px);padding:20px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+    .brand{font-weight:800;font-size:1.25rem;letter-spacing:0.6px}
+    .byline{font-size:0.85rem;color:var(--muted);margin-top:6px}
+    .nav{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+    .nav a{display:block;padding:10px 12px;border-radius:10px;text-decoration:none;color:#fff;background:transparent;border:1px solid rgba(255,255,255,0.03)}
+    .nav a:hover{transform:translateX(6px);background:var(--glass)}
+    /* Main */
+    .main{padding:18px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;backdrop-filter:blur(6px)}
+    .hero{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .hero-left{max-width:68%}
+    .title{font-size:2rem;font-weight:900;letter-spacing:0.8px}
+    .subtitle{color:var(--muted);margin-top:8px}
+    .hero-cta{display:flex;gap:12px}
+    .btn{padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:700}
+    .btn-primary{background:var(--accent);color:#000}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff}
+    /* Realms grid */
+    .realms{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--gap);margin-top:22px}
+    .realm{background:rgba(255,255,255,0.02);padding:16px;border-radius:var(--card-radius);box-shadow:0 10px 30px rgba(0,0,0,0.6);display:flex;flex-direction:column;justify-content:space-between}
+    .realm h3{margin:0;font-size:1.1rem}
+    .realm p{color:var(--muted);margin:10px 0 0 0;font-size:0.95rem}
+    .realm-actions{display:flex;gap:10px;margin-top:14px;align-items:center}
+    .enter-btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#000;padding:10px 12px;border-radius:10px;text-decoration:none;font-weight:800}
+    .open-spots{background:transparent;border:1px solid rgba(255,255,255,0.04);color:#fff;padding:8px 10px;border-radius:10px;text-decoration:none}
+    /* Footer note */
+    .note{margin-top:18px;color:var(--muted);font-size:0.9rem}
+    /* Small helpers */
+    .row{display:flex;gap:12px;align-items:center}
+    .pill{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.03);font-weight:700}
+    /* Responsive */
+    @media (max-width:900px){ .wrap{grid-template-columns:1fr; padding:18px} .hero-left{max-width:100%} .sidebar{order:2} }
   </style>
 </head>
-
 <body>
+  <div class="wrap" role="application">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand">ROLL ’N CONNECT</div>
+      <div class="byline">By Boardwalk Clay</div>
 
-<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
+      <nav class="nav" aria-label="Primary">
+        <a href="index.html">🏠 Home</a>
+        <a href="dashboard.html">📊 Dashboard</a>
+        <a href="marketplace.html">🛒 Marketplace</a>
+        <a href="giveaway.html">🎁 Giveaway</a>
+        <a href="chatrooms.html">💬 Chatrooms</a>
+        <a href="find-spots.html">📍 Find Spots</a>
+        <a href="events.html">📅 Events</a>
+        <a href="profile.html">👤 Your Profile</a>
+        <a href="settings.html">⚙️ Settings</a>
+      </nav>
+    </aside>
 
-<!-- BURGER -->
-<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+    <main class="main" aria-labelledby="longboard-heading">
+      <div class="hero">
+        <div class="hero-left">
+          <div id="longboard-heading" class="title">Longboard</div>
+          <div class="subtitle">Longboarding is the discipline. Choose a realm below to join focused chatrooms with message effects, emoji blasts, and per‑room notifications.</div>
+          <div class="note">This page is the Longboard hub — it leads to Dancing, Cruising, and Downhill chatrooms and to curated Find Spots for each style.</div>
+        </div>
 
-<!-- FLOATING SIDEBAR -->
-<nav id="sidebar" class="sidebar">
-  <div class="nav-header">
-    <div class="logo-orb">🛹</div>
-    <div class="nav-title">Longboard</div>
+        <div class="hero-cta" role="region" aria-label="Quick actions">
+          <a class="btn btn-primary" href="marketplace.html">Marketplace</a>
+          <a class="btn btn-ghost" href="giveaway.html">Giveaway Center</a>
+        </div>
+      </div>
+
+      <section class="realms" aria-label="Longboard Realms">
+        <article class="realm" id="realm-dancing" data-room="dancing">
+          <div>
+            <h3>Dancing</h3>
+            <p>Flow, footwork, combos, and boardwalk‑style movement. Perfect for freestyle and choreography meetups.</p>
+            <div style="margin-top:10px;color:var(--muted);font-size:0.85rem">Default packs: Elements, Hearts</div>
+          </div>
+          <div class="realm-actions">
+            <a class="enter-btn" href="room-dancing.html" aria-label="Enter Dancing Chat">Enter Dancing Chat</a>
+            <a class="open-spots" href="find-spots.html?tag=dancing" aria-label="Find Spots for Dancing">Open Spots</a>
+          </div>
+        </article>
+
+        <article class="realm" id="realm-cruising" data-room="cruising">
+          <div>
+            <h3>Cruising</h3>
+            <p>Chill rides, smooth pushes, city laps, and mellow flow. Great for route sharing and casual meetups.</p>
+            <div style="margin-top:10px;color:var(--muted);font-size:0.85rem">Default packs: Hearts, Elements</div>
+          </div>
+          <div class="realm-actions">
+            <a class="enter-btn" href="room-cruising.html" aria-label="Enter Cruising Chat">Enter Cruising Chat</a>
+            <a class="open-spots" href="find-spots.html?tag=cruising" aria-label="Find Spots for Cruising">Open Spots</a>
+          </div>
+        </article>
+
+        <article class="realm" id="realm-downhill" data-room="downhill">
+          <div>
+            <h3>Downhill</h3>
+            <p>Speed, freeride, slides, and hill bombing. Safety tips, race meetups, and route scouting live here.</p>
+            <div style="margin-top:10px;color:var(--muted);font-size:0.85rem">Default packs: Downhill, Longboard</div>
+          </div>
+          <div class="realm-actions">
+            <a class="enter-btn" href="room-downhill.html" aria-label="Enter Downhill Chat">Enter Downhill Chat</a>
+            <a class="open-spots" href="find-spots.html?tag=downhill" aria-label="Find Spots for Downhill">Open Spots</a>
+          </div>
+        </article>
+      </section>
+
+      <div class="note" style="margin-top:22px">
+        Each realm supports message effects (slam, reveal, quiet), emoji customization, polls, event posting, and location drops that open Find Spots with directions.
+      </div>
+    </main>
   </div>
 
-  <ul class="nav-links">
-    <li><a href="chatrooms.html">⬅ Back to Chatrooms</a></li>
-    <li><a href="dashboard.html">📊 Dashboard</a></li>
-    <li><a href="profile.html">👤 Your Profile</a></li>
-    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
-  </ul>
-</nav>
-
-<div class="page-wrapper">
-
-  <div class="hero">
-    <h1 style="font-size:3rem;">Longboard Chat Realms</h1>
-    <p style="font-size:1.05rem;opacity:0.9;line-height:1.7;">
-      Longboarding splits into three major styles.  
-      Each one leads to a chatroom with message effects, emoji blasts,  
-      reveal messages, slam messages, quiet messages, and per‑room notifications.
-    </p>
-  </div>
-
-  <section class="sub-grid">
-
-    <div class="sub-card">
-      <h2>Dancing</h2>
-      <p>Flow, footwork, combos, and boardwalk‑style movement.</p>
-      <a href="chatroom.html?room=longboard-dancing" class="enter-btn">Enter Dancing Chat</a>
-    </div>
-
-    <div class="sub-card">
-      <h2>Cruising</h2>
-      <p>Chill rides, smooth pushes, city laps, and mellow flow.</p>
-      <a href="chatroom.html?room=longboard-cruising" class="enter-btn">Enter Cruising Chat</a>
-    </div>
-
-    <div class="sub-card">
-      <h2>Downhill</h2>
-      <p>Speed, freeride, slides, and hill bombing.</p>
-      <a href="chatroom.html?room=longboard-downhill" class="enter-btn">Enter Downhill Chat</a>
-    </div>
-
-  </section>
-
-</div>
-
-<script>
-  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
-  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
-</script>
-
+  <script>
+    // Dev-time link check (non-blocking): logs missing pages to console for quick debugging.
+    (function validateLinks(){
+      const links = document.querySelectorAll('.enter-btn, .open-spots');
+      links.forEach(a=>{
+        const href = a.getAttribute('href');
+        // HEAD check to warn in console if file missing during development
+        fetch(href, { method: 'HEAD' }).then(res=>{
+          if(!res.ok) console.warn('Linked page may be missing:', href);
+        }).catch(()=> console.warn('Could not reach linked page (dev check):', href));
+      });
+    })();
+  </script>
 </body>
 </html>
