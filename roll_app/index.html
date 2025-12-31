@@ -17,6 +17,7 @@
       min-height:100vh;
     }
 
+    /* STARFIELDS */
     .stars1,.stars2,.stars3 {
       position:fixed; inset:0;
       background:url('styles/stars-white.png') repeat;
@@ -31,22 +32,16 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
+    /* SIDEBAR */
     .sidebar {
-      position:fixed;
-      top:50%;
-      left:-260px;
-      transform:translateY(-50%);
-      width:260px;
-      background:rgba(10,10,20,0.9);
+      position:fixed;top:0;left:0;height:100vh;width:260px;
+      background:rgba(10,10,20,0.92);
       backdrop-filter:blur(25px);
       border-right:1px solid rgba(255,255,255,0.25);
       padding:26px 20px;
-      border-radius:0 20px 20px 0;
       box-shadow:10px 0 40px rgba(0,0,0,0.7);
-      transition:0.35s ease;
       z-index:9000;
     }
-    .sidebar.open { left:0; }
 
     .nav-header{text-align:center;margin-bottom:24px;}
     .logo-orb{
@@ -61,8 +56,7 @@
     }
 
     .nav-links{
-      list-style:none;
-      padding:0;margin:0;
+      list-style:none;padding:0;margin:0;
       display:flex;flex-direction:column;gap:12px;
     }
     .nav-links a{
@@ -70,7 +64,7 @@
       color:#fff;
       text-decoration:none;
       font-size:0.95rem;
-      padding:8px 12px;
+      padding:10px 14px;
       border-radius:10px;
       background:rgba(255,255,255,0.05);
       box-shadow:0 0 10px rgba(255,255,255,0.15);
@@ -82,40 +76,31 @@
       box-shadow:0 0 18px rgba(255,255,255,0.4);
     }
 
-    .hamburger {
-      position:fixed;
-      top:25px;
-      left:25px;
-      width:40px;
-      height:30px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      cursor:pointer;
-      z-index:9500;
+    .notif-dot{
+      display:inline-block;
+      width:10px;height:10px;
+      background:#ff3b3b;border-radius:50%;
+      margin-left:6px;
+      box-shadow:0 0 10px #ff3b3b;
     }
-    .hamburger span {
-      height:3px;
-      width:100%;
-      background:#fff;
-      border-radius:4px;
-      box-shadow:0 0 8px rgba(255,255,255,0.9);
-      transition:0.3s;
-    }
-    .hamburger.active span:nth-child(1){transform:translateY(12px) rotate(45deg);}
-    .hamburger.active span:nth-child(2){opacity:0;}
-    .hamburger.active span:nth-child(3){transform:translateY(-12px) rotate(-45deg);}
 
+    /* MAIN LAYOUT */
+    .main-wrapper{
+      margin-left:260px;
+      padding:40px 20px 80px;
+    }
+
+    /* TITLE */
     .title-wrapper {
       text-align:center;
-      padding-top:180px;
+      padding-top:140px;
       padding-bottom:200px;
       z-index:5;
       position:relative;
     }
 
     .main-title {
-      font-size:9rem;
+      font-size:8rem;
       font-weight:900;
       letter-spacing:4px;
       text-shadow:0 0 80px rgba(255,255,255,1);
@@ -123,15 +108,16 @@
     }
 
     .subtitle {
-      font-size:2rem;
+      font-size:1.8rem;
       opacity:0.9;
       max-width:900px;
       margin:0 auto;
       text-shadow:0 0 30px rgba(255,255,255,0.8);
     }
 
+    /* FLOATING PONG BUTTONS */
     .bubble {
-      position:absolute;
+      position:fixed; /* stay clickable on scroll */
       width:200px;
       height:200px;
       border-radius:50%;
@@ -155,13 +141,14 @@
       box-shadow:0 0 60px rgba(255,255,255,1);
     }
 
+    /* PANELS */
     .panel {
       width:100%;
-      padding:80px 40px;
+      padding:60px 20px;
       background:rgba(255,255,255,0.06);
       backdrop-filter:blur(20px);
       box-shadow:0 0 60px rgba(255,255,255,0.25);
-      margin-top:200px;
+      margin-bottom:60px;
       border-top:1px solid rgba(255,255,255,0.2);
       border-bottom:1px solid rgba(255,255,255,0.2);
       position:relative;
@@ -171,58 +158,59 @@
     .panel * { pointer-events:auto; }
 
     .panel-title {
-      font-size:3rem;
+      font-size:2.4rem;
       text-align:center;
-      margin-bottom:40px;
+      margin-bottom:30px;
       text-shadow:0 0 30px rgba(255,255,255,0.8);
     }
 
     .items-grid {
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:30px;
-      max-width:1400px;
+      gap:24px;
+      max-width:1200px;
       margin:0 auto;
     }
 
     .item-card {
       background:rgba(255,255,255,0.12);
-      padding:20px;
-      border-radius:20px;
+      padding:18px;
+      border-radius:18px;
       box-shadow:0 0 40px rgba(255,255,255,0.3);
       text-align:center;
     }
 
     .item-img {
       width:100%;
-      height:180px;
-      background:rgba(255,255,255,0.2);
+      height:160px;
       border-radius:16px;
-      margin-bottom:14px;
+      background:rgba(255,255,255,0.2);
+      margin-bottom:10px;
       overflow:hidden;
     }
     .item-img img{
       width:100%;height:100%;object-fit:cover;
     }
 
-    .item-title { font-size:1.3rem;font-weight:600;margin-bottom:6px; }
+    .item-title { font-size:1.2rem;font-weight:600;margin-bottom:4px; }
     .item-disc { font-size:0.9rem;opacity:0.8;margin-bottom:4px; }
-    .item-price { opacity:0.9;margin-bottom:10px; }
+    .item-price { opacity:0.9;margin-bottom:8px; }
     .item-btn {
-      padding:10px 16px;
+      padding:8px 14px;
       background:#fff;
       color:#000;
-      border-radius:12px;
+      border-radius:10px;
       text-decoration:none;
       font-weight:600;
+      font-size:0.9rem;
     }
 
     .signature {
       text-align:center;
-      margin-top:80px;
-      font-size:1.4rem;
+      margin-top:40px;
+      font-size:1.2rem;
       opacity:0.8;
-      padding-bottom:40px;
+      padding-bottom:20px;
     }
   </style>
 </head>
@@ -232,72 +220,138 @@
 <div class="stars2"></div>
 <div class="stars3"></div>
 
-<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
-
-<nav id="sidebar" class="sidebar">
+<!-- SIDEBAR -->
+<nav class="sidebar">
   <div class="nav-header">
     <div class="logo-orb">🛼</div>
     <div class="nav-title">Roll ’n Connect</div>
   </div>
   <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
     <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="sell-item.html">➕ Sell Item</a></li>
+    <li><a href="notifications.html">🔔 Notifications <span id="notifDot"></span></a></li>
     <li><a href="chatrooms.html">💬 Chatrooms</a></li>
     <li><a href="find-spots.html">📍 Find Spots</a></li>
     <li><a href="events.html">📅 Events</a></li>
     <li><a href="calendar.html">🗓️ Calendar</a></li>
     <li><a href="profile.html">👤 Your Profile</a></li>
     <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
-    <li><a href="marketplace.html">🛒 Marketplace</a></li>
-    <li><a href="giveaways.html">🎁 Giveaways</a></li>
   </ul>
 </nav>
 
-<div class="title-wrapper">
-  <div class="main-title">ROLL ’N CONNECT</div>
-  <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
+<div class="main-wrapper">
+  <!-- HERO -->
+  <div class="title-wrapper">
+    <div class="main-title">ROLL ’N CONNECT</div>
+    <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
+  </div>
+
+  <!-- MARKETPLACE PREVIEW -->
+  <div class="panel">
+    <div class="panel-title">Marketplace</div>
+    <div class="items-grid" id="marketplaceItems"></div>
+  </div>
+
+  <!-- GIVEAWAY PREVIEW -->
+  <div class="panel">
+    <div class="panel-title">Giveaway Items</div>
+    <div class="items-grid" id="giveawayItems"></div>
+  </div>
+
+  <div class="signature">by Boardwalk Clay</div>
 </div>
 
-<a href="chatrooms.html" class="bubble" id="b1">Chatrooms</a>
-<a href="find-spots.html" class="bubble" id="b2">Find Spots</a>
-<a href="events.html" class="bubble" id="b3">Events</a>
-<a href="profile.html" class="bubble" id="b4">Your Profile</a>
+<!-- FLOATING PONG BUTTONS -->
+<a href="chatrooms.html"   class="bubble" id="b1">Chatrooms</a>
+<a href="find-spots.html"  class="bubble" id="b2">Find Spots</a>
+<a href="events.html"      class="bubble" id="b3">Events</a>
+<a href="profile.html"     class="bubble" id="b4">Your Profile</a>
 <a href="marketplace.html" class="bubble" id="b5">Marketplace</a>
-<a href="giveaways.html" class="bubble" id="b6">Giveaways</a>
-
-<div class="panel" id="marketplacePanel">
-  <div class="panel-title">Marketplace</div>
-  <div class="items-grid" id="marketplaceItems"></div>
-</div>
-
-<div class="panel">
-  <div class="panel-title">Giveaways</div>
-  <div class="items-grid" id="giveawayItems"></div>
-</div>
-
-<div class="signature">by Boardwalk Clay</div>
+<a href="notifications.html" class="bubble" id="b6">Notifications</a>
 
 <script>
-  const hb=document.getElementById("hamburger"), sb=document.getElementById("sidebar");
-  hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
+  /* DATA HELPERS */
+  function getItems(){
+    try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}
+    catch(e){return [];}
+  }
+  function getNotifications(){
+    try{return JSON.parse(localStorage.getItem("rc_notifications")||"[]");}
+    catch(e){return [];}
+  }
 
+  /* NOTIF DOT */
+  function renderNotifDot(){
+    const dotEl=document.getElementById("notifDot");
+    const notifs=getNotifications();
+    const hasPending=notifs.some(n=>n.status==="pending");
+    dotEl.innerHTML = hasPending ? "<span class='notif-dot'></span>" : "";
+  }
+  renderNotifDot();
+
+  /* MARKETPLACE + GIVEAWAY PREVIEW */
+  function renderIndexMarketplace(){
+    const items = getItems();
+    const marketWrap = document.getElementById("marketplaceItems");
+    const giveawayWrap = document.getElementById("giveawayItems");
+
+    marketWrap.innerHTML="";
+    giveawayWrap.innerHTML="";
+
+    // last 4 items for marketplace preview
+    items.slice(-4).reverse().forEach(item=>{
+      marketWrap.appendChild(makeCard(item,false));
+    });
+
+    // all donated items for giveaway preview
+    items.filter(i=>i.donateToGiveaway).forEach(item=>{
+      giveawayWrap.appendChild(makeCard(item,true));
+    });
+
+    if(!marketWrap.children.length){
+      marketWrap.innerHTML="<div style='text-align:center;opacity:0.8;'>No items yet. Visit the marketplace to add some.</div>";
+    }
+    if(!giveawayWrap.children.length){
+      giveawayWrap.innerHTML="<div style='text-align:center;opacity:0.8;'>No donated giveaway items yet.</div>";
+    }
+  }
+
+  function makeCard(item,isGiveaway){
+    const div=document.createElement("div");
+    div.className="item-card";
+    div.innerHTML=`
+      <div class="item-img">${item.imageDataUrl?`<img src="${item.imageDataUrl}">`:""}</div>
+      <div class="item-title">${item.title}</div>
+      <div class="item-disc">${item.discipline || "Unlabeled"}</div>
+      <div class="item-price">${isGiveaway ? "Donated • $" + item.price : "$"+item.price}</div>
+      <a class="item-btn" href="marketplace-item.html?id=${encodeURIComponent(item.id)}">View Item</a>
+    `;
+    return div;
+  }
+
+  renderIndexMarketplace();
+
+  /* PONG BUBBLES */
   const bubbles = [
-    { el: document.getElementById("b1"), x:100, y:100, vx:2.2, vy:1.7 },
-    { el: document.getElementById("b2"), x:500, y:200, vx:-2.5, vy:2.1 },
-    { el: document.getElementById("b3"), x:900, y:150, vx:2.8, vy:-1.9 },
-    { el: document.getElementById("b4"), x:300, y:450, vx:-2.3, vy:-1.6 },
-    { el: document.getElementById("b5"), x:700, y:600, vx:2.4, vy:2.2 },
-    { el: document.getElementById("b6"), x:200, y:800, vx:-2.1, vy:2.4 },
+    { el: document.getElementById("b1"), x:320, y:120, vx:1.8, vy:1.2 },
+    { el: document.getElementById("b2"), x:720, y:220, vx:-2.1, vy:1.9 },
+    { el: document.getElementById("b3"), x:520, y:420, vx:2.2, vy:-1.7 },
+    { el: document.getElementById("b4"), x:260, y:520, vx:-1.9, vy:-1.4 },
+    { el: document.getElementById("b5"), x:860, y:120, vx:2.0, vy:2.1 },
+    { el: document.getElementById("b6"), x:640, y:360, vx:-2.3, vy:1.6 },
   ];
 
   function animate() {
     const w = window.innerWidth;
-    const h = document.body.scrollHeight;
+    const h = window.innerHeight;
 
     for (let b of bubbles) {
       b.x += b.vx;
       b.y += b.vy;
 
-      if (b.x <= 0 || b.x + 200 >= w) b.vx *= -1;
+      if (b.x <= 260 || b.x + 200 >= w) b.vx *= -1; // avoid sidebar
       if (b.y <= 0 || b.y + 200 >= h) b.vy *= -1;
 
       for (let other of bubbles) {
@@ -320,55 +374,6 @@
     requestAnimationFrame(animate);
   }
   animate();
-
-  function getMarketplaceItems(){
-    try{
-      return JSON.parse(localStorage.getItem("rc_marketplace_items") || "[]");
-    }catch(e){return [];}
-  }
-
-  function renderIndexMarketplace(){
-    const items = getMarketplaceItems();
-    const marketWrap = document.getElementById("marketplaceItems");
-    const giveawayWrap = document.getElementById("giveawayItems");
-    marketWrap.innerHTML="";
-    giveawayWrap.innerHTML="";
-
-    items.slice(-4).reverse().forEach(item=>{
-      const card=document.createElement("div");
-      card.className="item-card";
-      card.innerHTML = `
-        <div class="item-img">${item.imageDataUrl ? `<img src="${item.imageDataUrl}">` : ""}</div>
-        <div class="item-title">${item.title}</div>
-        <div class="item-disc">${item.discipline || "Unlabeled"}</div>
-        <div class="item-price">$${item.price}</div>
-        <a class="item-btn" href="marketplace-item.html?id=${encodeURIComponent(item.id)}">View Item</a>
-      `;
-      marketWrap.appendChild(card);
-    });
-
-    items.filter(i=>i.donateToGiveaway).forEach(item=>{
-      const card=document.createElement("div");
-      card.className="item-card";
-      card.innerHTML = `
-        <div class="item-img">${item.imageDataUrl ? `<img src="${item.imageDataUrl}">` : ""}</div>
-        <div class="item-title">${item.title}</div>
-        <div class="item-disc">${item.discipline || "Unlabeled"}</div>
-        <div class="item-price">Donated • $${item.price}</div>
-        <a class="item-btn" href="marketplace-item.html?id=${encodeURIComponent(item.id)}">View Giveaway Item</a>
-      `;
-      giveawayWrap.appendChild(card);
-    });
-
-    if(!marketWrap.children.length){
-      marketWrap.innerHTML = "<div style='text-align:center;opacity:0.8;'>No items yet. Visit the marketplace to add some.</div>";
-    }
-    if(!giveawayWrap.children.length){
-      giveawayWrap.innerHTML = "<div style='text-align:center;opacity:0.8;'>No donated giveaway items yet.</div>";
-    }
-  }
-
-  renderIndexMarketplace();
 </script>
 
 </body>
