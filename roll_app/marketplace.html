@@ -107,12 +107,14 @@
 
     .page-title{
       font-size:3rem;
-      margin-bottom:10px;
+      margin-bottom:8px;
       text-shadow:0 0 30px rgba(255,255,255,0.8);
     }
 
     .page-sub{
-      opacity:0.85;margin-bottom:30px;
+      opacity:0.85;
+      margin-bottom:30px;
+      font-size:1rem;
     }
 
     /* FILTER BAR */
@@ -124,12 +126,13 @@
     .search-box input{
       padding:10px 14px;border-radius:12px;border:none;
       background:rgba(255,255,255,0.15);color:#fff;
-      width:260px;
+      width:260px;font-size:0.95rem;
     }
 
     .sort-box select{
       padding:10px 14px;border-radius:12px;border:none;
       background:rgba(255,255,255,0.15);color:#fff;
+      font-size:0.95rem;
     }
 
     /* DISCIPLINE TABS */
@@ -140,6 +143,7 @@
       padding:10px 16px;border-radius:12px;
       background:rgba(255,255,255,0.12);
       cursor:pointer;transition:0.25s;
+      font-size:0.95rem;
     }
     .tab.active{
       background:#fff;color:#000;font-weight:700;
@@ -169,15 +173,20 @@
 
     .item-title{font-size:1.2rem;font-weight:600;margin-bottom:4px;}
     .item-disc{font-size:0.9rem;opacity:0.8;margin-bottom:4px;}
-    .item-price{opacity:0.9;margin-bottom:8px;}
+    .item-price{opacity:0.9;margin-bottom:8px;font-size:0.95rem;}
     .item-btn{
       padding:8px 14px;background:#fff;color:#000;
       border-radius:10px;text-decoration:none;font-weight:600;font-size:0.9rem;
+      display:inline-block;
     }
 
     .section-header{
       font-size:2rem;margin-top:60px;margin-bottom:20px;
       text-shadow:0 0 20px rgba(255,255,255,0.8);
+    }
+
+    @media(max-width:600px){
+      .page-title{font-size:2.1rem;}
     }
   </style>
 </head>
@@ -306,7 +315,7 @@
     const profile=getProfile();
     const items=getItems();
 
-    const search=searchInput.value.toLowerCase();
+    const search=(searchInput.value||"").toLowerCase();
 
     let filtered=items.filter(i=>{
       const matchesDisc = activeDisc==="All" || i.discipline===activeDisc;
@@ -332,6 +341,16 @@
     items.filter(i=>i.sellerId===profile.id).forEach(item=>{
       yourGrid.appendChild(makeCard(item));
     });
+
+    if(!itemsGrid.children.length){
+      itemsGrid.innerHTML="<div style='opacity:0.8;'>No items found. Try changing filters or add something.</div>";
+    }
+    if(!giveawayGrid.children.length){
+      giveawayGrid.innerHTML="<div style='opacity:0.8;'>No giveaway items yet.</div>";
+    }
+    if(!yourGrid.children.length){
+      yourGrid.innerHTML="<div style='opacity:0.8;'>You haven’t listed anything yet.</div>";
+    }
   }
 
   function makeCard(item){
@@ -340,9 +359,9 @@
     div.innerHTML=`
       <div class="item-img">${item.imageDataUrl?`<img src="${item.imageDataUrl}">`:""}</div>
       <div class="item-title">${item.title}</div>
-      <div class="item-disc">${item.discipline}</div>
+      <div class="item-disc">${item.discipline || "Unlabeled"}</div>
       <div class="item-price">$${item.price}</div>
-      <a class="item-btn" href="marketplace-item.html?id=${item.id}">View Item</a>
+      <a class="item-btn" href="marketplace-item.html?id=${encodeURIComponent(item.id)}">View Item</a>
     `;
     return div;
   }
