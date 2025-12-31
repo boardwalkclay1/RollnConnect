@@ -5,9 +5,8 @@
   <title>Find Spots – Roll ’n Connect</title>
   <link rel="stylesheet" href="styles/style.css">
 
-  <!-- MAPBOX -->
-  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
-  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <!-- GOOGLE MAPS -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_KEY&libraries=places,marker"></script>
 
   <style>
     body {
@@ -176,7 +175,6 @@
       transform:scale(1.05);
       box-shadow:0 0 20px rgba(255,255,255,0.8);
     }
-
   </style>
 </head>
 
@@ -226,75 +224,115 @@
 <div id="map"></div>
 
 <script>
-  /* SIDEBAR */
-  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
-  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+/* SIDEBAR */
+const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
 
-  /* MAPBOX INIT */
-  mapboxgl.accessToken = "YOUR_MAPBOX_KEY_HERE";
+/* GOOGLE MAP INIT */
+let map;
+let markers = [];
 
-  const map = new mapboxgl.Map({
-    container:"map",
-    style:"mapbox://styles/mapbox/dark-v11",
-    center:[-84.3,33.8],
-    zoom:11
-  });
+const cosmicStyle = [
+  { elementType:"geometry", stylers:[{color:"#0a0a0a"}] },
+  { elementType:"labels.text.fill", stylers:[{color:"#ffffff"}] },
+  { elementType:"labels.text.stroke", stylers:[{color:"#000000"}] },
+  { featureType:"poi", stylers:[{visibility:"off"}] },
+  { featureType:"road", stylers:[{color:"#222"}] },
+  { featureType:"water", stylers:[{color:"#111"}] }
+];
 
-  /* USER AVATAR MARKER */
-  function placeUserMarker(lng,lat){
-    const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
-    const avatar = profile.avatarUrl || "styles/default-avatar.png";
-
-    const el = document.createElement("div");
-    el.style.width="45px";
-    el.style.height="45px";
-    el.style.borderRadius="50%";
-    el.style.backgroundImage=`url('${avatar}')`;
-    el.style.backgroundSize="cover";
-    el.style.boxShadow="0 0 15px rgba(255,255,255,0.9)";
-
-    new mapboxgl.Marker(el).setLngLat([lng,lat]).addTo(map);
-  }
-
-  /* USE MY LOCATION */
-  document.getElementById("locateMe").onclick = () => {
-    navigator.geolocation.getCurrentPosition(pos=>{
-      const {latitude,longitude}=pos.coords;
-      map.flyTo({center:[longitude,latitude],zoom:14});
-      placeUserMarker(longitude,latitude);
-    });
-  };
-
-  /* SEARCH FUNCTION */
-  function runSearch(q){
-    fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${q}.json?proximity=ip&access_token=${mapboxgl.accessToken}`)
-      .then(r=>r.json())
-      .then(data=>{
-        if(!data.features.length) return;
-        const spot=data.features[0];
-        map.flyTo({center:spot.center,zoom:14});
-        new mapboxgl.Marker()
-          .setLngLat(spot.center)
-          .setPopup(new mapboxgl.Popup().setHTML(`<strong>${spot.text}</strong><br>${spot.place_name}`))
-          .addTo(map);
-      });
-  }
-
-  document.getElementById("searchInput").addEventListener("keydown",e=>{
-    if(e.key==="Enter") runSearch(e.target.value);
-  });
-
-  document.querySelectorAll(".cat-btn").forEach(btn=>{
-    btn.onclick=()=>runSearch(btn.dataset.q);
+function initMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    center:{lat:33.8,lng:-84.3},
+    zoom:11,
+    styles:cosmicStyle,
+    disableDefaultUI:true,
   });
 
   /* CLICK TO DROP CUSTOM MARKER */
-  map.on("click",e=>{
-    new mapboxgl.Marker({color:"#fff"})
-      .setLngLat(e.lngLat)
-      .setPopup(new mapboxgl.Popup().setHTML(`<strong>Custom Spot</strong><br>${e.lngLat.lng.toFixed(5)}, ${e.lngLat.lat.toFixed(5)}`))
-      .addTo(map);
+  map.addListener("click", (e) => {
+    const marker = new google.maps.marker.AdvancedMarkerElement({
+      map,
+      position:e.latLng,
+      title:"Custom Spot",
+    });
+
+    const infowindow = new google.maps.InfoWindow({
+      content:`<strong>Custom Spot</strong><br>${e.latLng.lng().toFixed(5)}, ${e.latLng.lat().toFixed(5)}`
+    });
+
+    marker.addListener("click", () => infowindow.open({anchor:marker, map}));
   });
+}
+
+window.onload = initMap;
+
+/* USER AVATAR MARKER */
+function placeUserMarker(lng,lat){
+  const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+  const avatar = profile.avatarUrl || "styles/default-avatar.png";
+
+  const el = document.createElement("img");
+  el.src = avatar;
+  el.style.width="50px";
+  el.style.height="50px";
+  el.style.borderRadius="50%";
+  el.style.boxShadow="0 0 15px rgba(255,255,255,0.9)";
+
+  new google.maps.marker.AdvancedMarkerElement({
+    map,
+    position:{lat, lng},
+    content:el
+  });
+}
+
+/* USE MY LOCATION */
+document.getElementById("locateMe").onclick = () => {
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude,longitude}=pos.coords;
+    map.panTo({lat:latitude,lng:longitude});
+    map.setZoom(14);
+    placeUserMarker(longitude,latitude);
+  });
+};
+
+/* SEARCH FUNCTION */
+function runSearch(q){
+  const service = new google.maps.places.PlacesService(map);
+
+  const request = {
+    query:q,
+    fields:["name","geometry","formatted_address"]
+  };
+
+  service.findPlaceFromQuery(request,(results,status)=>{
+    if(status !== google.maps.places.PlacesServiceStatus.OK || !results.length) return;
+
+    const spot = results[0];
+    map.panTo(spot.geometry.location);
+    map.setZoom(14);
+
+    const marker = new google.maps.marker.AdvancedMarkerElement({
+      map,
+      position:spot.geometry.location,
+      title:spot.name
+    });
+
+    const infowindow = new google.maps.InfoWindow({
+      content:`<strong>${spot.name}</strong><br>${spot.formatted_address}`
+    });
+
+    marker.addListener("click", () => infowindow.open({anchor:marker, map}));
+  });
+}
+
+document.getElementById("searchInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter") runSearch(e.target.value);
+});
+
+document.querySelectorAll(".cat-btn").forEach(btn=>{
+  btn.onclick=()=>runSearch(btn.dataset.q);
+});
 </script>
 
 </body>
