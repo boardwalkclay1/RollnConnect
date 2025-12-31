@@ -274,6 +274,29 @@
       text-transform: uppercase;
       letter-spacing: 0.16em;
       color: rgba(255,255,255,0.65);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .rooms-toggle-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 3px 8px;
+      font-size: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      background: rgba(0,0,0,0.9);
+      opacity: 0.7;
+      transition: var(--transition-fast);
+    }
+
+    .rooms-toggle-btn.active {
+      opacity: 1;
+      color: var(--accent);
+      border-color: rgba(255,255,255,0.7);
+      box-shadow: var(--shadow-glow);
     }
 
     .badge {
@@ -1081,7 +1104,7 @@
     <div class="side-menu-link" data-link="dashboard.html">Dashboard</div>
     <div class="side-menu-link" data-link="marketplace.html">Marketplace</div>
     <div class="side-menu-link" data-link="events.html">Events</div>
-    <div class="side-menu-link" data-link="spots.html">Spots</div>
+    <div class="side-menu-link" data-link="find-spots.html">Find spots</div>
 
     <div class="side-menu-section-title">You</div>
     <div class="side-menu-link" data-link="profile.html">Profile</div>
@@ -1103,7 +1126,7 @@
       </div>
       <div class="topbar-actions">
         <button class="pill-btn" id="goToEventsBtn">Events</button>
-        <button class="pill-btn" id="goToSpotsBtn">Spots</button>
+        <button class="pill-btn" id="goToSpotsBtn">Find spots</button>
         <button class="pill-btn" id="goToProfileBtn">My Profile</button>
       </div>
     </header>
@@ -1112,13 +1135,16 @@
       <!-- LEFT SIDEBAR: Rooms & groups -->
       <aside class="panel sidebar-left">
         <div class="panel-header">
-          <div class="panel-title">Rooms & Groups</div>
-          <span class="badge">Public & private</span>
+          <div class="panel-title">
+            <button class="rooms-toggle-btn active" data-mode="public">Public</button>
+            <button class="rooms-toggle-btn" data-mode="private">Private</button>
+          </div>
+          <span class="badge">Rooms & groups</span>
         </div>
         <div class="sidebar-left-body">
           <div class="room-list" id="roomList">
-            <!-- Dancing Room (this room) -->
-            <div class="room-item active" data-room-id="dancing-room">
+            <!-- Dancing Room (public) -->
+            <div class="room-item active" data-room-id="dancing-room" data-room-type="public">
               <div class="room-main">
                 <span class="room-pill">Dancing</span>
                 <span>Dancing Room</span>
@@ -1126,7 +1152,7 @@
               <div class="room-meta">234 online</div>
             </div>
             <!-- Example private group -->
-            <div class="room-item" data-room-id="private-crew">
+            <div class="room-item" data-room-id="private-crew" data-room-type="private">
               <div class="room-main">
                 <span class="room-pill">Crew</span>
                 <span>ATL Night Riders</span>
@@ -1503,7 +1529,6 @@
 
     hoverViewProfileBtn.addEventListener("click", () => {
       if (!hoverCurrentUserId) return;
-      const user = mockUsers[hoverCurrentUserId];
       const usernameParam = encodeURIComponent(hoverCurrentUserId);
       window.location.href = `profile.html?user=${usernameParam}`;
     });
@@ -1528,17 +1553,37 @@
       });
     });
 
-    // Room switching & live voice
+    // Room switching, public/private filter & live voice
     const roomList = document.getElementById("roomList");
     const currentRoomName = document.getElementById("currentRoomName");
     const roomModeBadge = document.getElementById("roomModeBadge");
     const liveVoiceBanner = document.getElementById("liveVoiceBanner");
     const joinVoiceBtn = document.getElementById("joinVoiceBtn");
     const leaveVoiceBtn = document.getElementById("leaveVoiceBtn");
+    const roomToggleBtns = document.querySelectorAll(".rooms-toggle-btn");
 
     let currentRoomId = "dancing-room";
     let liveVoiceActive = false;
     let joinedVoice = false;
+    let currentRoomFilter = "public";
+
+    function applyRoomFilter() {
+      document.querySelectorAll(".room-item").forEach(room => {
+        const type = room.getAttribute("data-room-type");
+        room.style.display = (type === currentRoomFilter) ? "flex" : "none";
+      });
+    }
+
+    roomToggleBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        roomToggleBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentRoomFilter = btn.getAttribute("data-mode");
+        applyRoomFilter();
+      });
+    });
+
+    applyRoomFilter();
 
     roomList.addEventListener("click", (e) => {
       const item = e.target.closest(".room-item");
@@ -1546,9 +1591,10 @@
       document.querySelectorAll(".room-item").forEach(r => r.classList.remove("active"));
       item.classList.add("active");
       currentRoomId = item.getAttribute("data-room-id");
+      const roomType = item.getAttribute("data-room-type");
 
-      if (currentRoomId === "dancing-room") {
-        currentRoomName.textContent = "Dancing Room · Public";
+      if (roomType === "public") {
+        currentRoomName.textContent = item.querySelector(".room-main span:nth-child(2)").textContent + " · Public";
         roomModeBadge.textContent = "Text & voice messages";
         liveVoiceBanner.classList.remove("active");
         liveVoiceActive = false;
@@ -1575,9 +1621,30 @@
       alert("You left the live voice session.");
     });
 
+    // Real group creation – adds a private group into the list
     document.getElementById("createGroupBtn").addEventListener("click", () => {
-      // TODO: open UI to name group + select members
-      alert("Private group creation UI goes here.");
+      const name = prompt("Name your private group:");
+      if (!name) return;
+      const groupId = "group-" + Date.now();
+
+      const row = document.createElement("div");
+      row.className = "room-item";
+      row.setAttribute("data-room-id", groupId);
+      row.setAttribute("data-room-type", "private");
+      row.innerHTML = `
+        <div class="room-main">
+          <span class="room-pill">Crew</span>
+          <span>${name}</span>
+        </div>
+        <div class="room-meta">1 member</div>
+      `;
+      roomList.appendChild(row);
+
+      if (currentRoomFilter === "private") {
+        row.style.display = "flex";
+      } else {
+        row.style.display = "none";
+      }
     });
 
     // Text messages, emojis, gifts
@@ -1820,11 +1887,10 @@
       });
 
       dirBtn.addEventListener("click", () => {
-        // Placeholder: take them to spots/events page, or map
         if (mode === "event") {
           window.location.href = `events.html?highlight=${encodeURIComponent(item.id)}`;
         } else {
-          window.location.href = `spots.html?highlight=${encodeURIComponent(item.id)}`;
+          window.location.href = `find-spots.html?highlight=${encodeURIComponent(item.id)}`;
         }
       });
 
@@ -1859,7 +1925,7 @@
       window.location.href = "events.html";
     });
     document.getElementById("goToSpotsBtn").addEventListener("click", () => {
-      window.location.href = "spots.html";
+      window.location.href = "find-spots.html";
     });
     document.getElementById("goToProfileBtn").addEventListener("click", () => {
       window.location.href = "profile.html";
