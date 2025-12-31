@@ -1,116 +1,1794 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Dancing Chat — Roll ’n Connect</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <title>Roll ’n Connect – Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Cosmic black & white glow theme -->
   <style>
-    /* same styles as longboard page */
-    :root{--bg:#05060a;--panel:#0b0d12;--accent:#ff6bd1;--muted:#9aa3b2;--white:#fff}
-    body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#020204 0%,#07101a 100%);color:var(--white);height:100vh;display:flex;align-items:stretch}
-    .sidebar{width:260px;background:rgba(255,255,255,0.03);backdrop-filter:blur(8px);padding:20px;box-shadow:inset -6px 0 30px rgba(0,0,0,0.6)}
-    .main{flex:1;display:flex;flex-direction:column}
-    header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid rgba(255,255,255,0.03)}
-    .room-title{font-size:1.2rem;font-weight:700}
-    .messages{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
-    .composer{display:flex;gap:10px;padding:14px;border-top:1px solid rgba(255,255,255,0.03);align-items:center}
-    .input{flex:1;padding:10px 12px;border-radius:10px;border:none;background:rgba(255,255,255,0.04);color:var(--white)}
-    .btn{background:var(--accent);color:#000;padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
-    .small-btn{background:rgba(255,255,255,0.06);color:var(--white);padding:8px;border-radius:8px;border:none;cursor:pointer}
-    .msg{max-width:72%;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(0,0,0,0.6);transition:transform .35s,opacity .35s}
-    .meta{font-size:0.8rem;color:var(--muted);margin-bottom:6px}
-    .msg.slam{animation:slamAnim .45s cubic-bezier(.2,.8,.2,1)}
-    @keyframes slamAnim{0%{transform:scale(.85);opacity:.6}60%{transform:scale(1.08);opacity:1}100%{transform:scale(1)}}
-    .msg.reveal{opacity:0;transform:translateY(10px);animation:revealAnim .45s ease forwards}
-    @keyframes revealAnim{to{opacity:1;transform:translateY(0)}}
-    .msg.quiet{opacity:.6;filter:grayscale(.2);transform:scale(.98)}
-    .msg.normal{}
-    .msg .loc{margin-top:8px;padding:8px;border-radius:8px;background:rgba(0,0,0,0.25);display:flex;justify-content:space-between;align-items:center}
-    .emoji-picker{display:flex;gap:8px;flex-wrap:wrap;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px}
-    .emoji{cursor:pointer;padding:6px;border-radius:6px}
-    .top-controls{display:flex;gap:8px;align-items:center}
-    .sender{padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);border:none;color:var(--white)}
-    a.open-map{color:var(--accent);text-decoration:none;font-weight:700}
+    :root {
+      --bg-main: #050505;
+      --bg-panel: rgba(15, 15, 15, 0.92);
+      --bg-panel-alt: rgba(20, 20, 20, 0.96);
+      --accent: #ffffff;
+      --accent-soft: rgba(255, 255, 255, 0.65);
+      --accent-muted: rgba(255, 255, 255, 0.25);
+      --danger: #ff4d4d;
+      --success: #4dff88;
+      --shadow-glow: 0 0 16px rgba(255, 255, 255, 0.25);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-pill: 999px;
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.25s ease-out;
+      --border-subtle: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #151515 0, #000 45%, #000 100%);
+      color: var(--accent-soft);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    a {
+      color: var(--accent-soft);
+      text-decoration: none;
+    }
+
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* Top nav */
+    .topbar {
+      height: 56px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to right, rgba(0,0,0,0.9), rgba(15,15,15,0.95));
+      border-bottom: var(--border-subtle);
+      box-shadow: 0 0 18px rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+
+    .hamburger {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(0,0,0,0.9));
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+
+    .hamburger span {
+      display: block;
+      width: 16px;
+      height: 1.5px;
+      background: var(--accent-soft);
+      border-radius: 999px;
+      position: relative;
+    }
+
+    .hamburger span::before,
+    .hamburger span::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 1.5px;
+      background: var(--accent-soft);
+      border-radius: 999px;
+      left: 0;
+    }
+
+    .hamburger span::before {
+      top: -5px;
+    }
+
+    .hamburger span::after {
+      top: 5px;
+    }
+
+    .hamburger:hover {
+      box-shadow: var(--shadow-glow);
+      border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .topbar-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .topbar-title-main {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--accent);
+      letter-spacing: 0.03em;
+    }
+
+    .topbar-sub {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill-btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 6px 12px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(0,0,0,0.9));
+      color: var(--accent-soft);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .pill-btn:hover {
+      color: var(--accent);
+      border-color: rgba(255, 255, 255, 0.45);
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Layout */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1.7fr) 260px;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    @media (max-width: 960px) {
+      .main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .sidebar-left,
+      .sidebar-right {
+        display: none;
+      }
+    }
+
+    .panel {
+      background: var(--bg-panel);
+      border-radius: 22px;
+      border: var(--border-subtle);
+      box-shadow: 0 0 35px rgba(0,0,0,0.78);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: var(--border-subtle);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.05), rgba(0,0,0,0.96));
+    }
+
+    .panel-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .badge {
+      border-radius: var(--radius-pill);
+      padding: 3px 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .badge-live {
+      border-color: rgba(255, 80, 80, 0.8);
+      color: rgba(255, 80, 80, 0.9);
+      box-shadow: 0 0 14px rgba(255, 80, 80, 0.55);
+    }
+
+    /* Left sidebar – rooms & groups */
+    .sidebar-left-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 8px 12px;
+    }
+
+    .room-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .room-item {
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      background: linear-gradient(120deg, rgba(255,255,255,0.03), rgba(0,0,0,0.95));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      font-size: 12px;
+    }
+
+    .room-item:hover {
+      border-color: rgba(255,255,255,0.4);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .room-item.active {
+      border-color: rgba(255,255,255,0.7);
+      box-shadow: var(--shadow-glow);
+      color: var(--accent);
+    }
+
+    .room-main {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .room-pill {
+      border-radius: var(--radius-pill);
+      padding: 3px 8px;
+      font-size: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .room-meta {
+      font-size: 10px;
+      opacity: 0.6;
+    }
+
+    .create-group-btn {
+      margin-top: 10px;
+      width: 100%;
+      text-align: center;
+      border-radius: 14px;
+      padding: 8px;
+      border: 1px dashed rgba(255,255,255,0.4);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      cursor: pointer;
+      background: linear-gradient(120deg, rgba(255,255,255,0.03), rgba(0,0,0,0.9));
+      transition: var(--transition-fast);
+    }
+
+    .create-group-btn:hover {
+      box-shadow: var(--shadow-glow);
+      border-style: solid;
+      color: var(--accent);
+    }
+
+    /* Center chat panel */
+    .chat-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 12px 14px 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .msg-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      max-width: 80%;
+      position: relative;
+    }
+
+    .msg-row.self {
+      margin-left: auto;
+      flex-direction: row-reverse;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.25), rgba(0,0,0,0.9));
+      border: 1px solid rgba(255,255,255,0.35);
+      box-shadow: 0 0 12px rgba(255,255,255,0.4);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .msg-bubble {
+      padding: 8px 10px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(0,0,0,0.95));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 0 14px rgba(0,0,0,0.9);
+      font-size: 13px;
+      line-height: 1.35;
+      color: var(--accent-soft);
+      position: relative;
+    }
+
+    .msg-row.self .msg-bubble {
+      background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(0,0,0,0.9));
+      color: var(--accent);
+    }
+
+    .msg-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      margin-bottom: 3px;
+      opacity: 0.7;
+    }
+
+    .msg-username {
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .msg-username:hover {
+      text-decoration: underline;
+    }
+
+    .msg-time {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .msg-status {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    /* Message types */
+    .msg-type-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      opacity: 0.65;
+      margin-bottom: 4px;
+    }
+
+    .msg-content {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .msg-event-card,
+    .msg-spot-card {
+      margin-top: 4px;
+      border-radius: 14px;
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.10), rgba(0,0,0,0.95));
+      font-size: 12px;
+    }
+
+    .msg-event-title,
+    .msg-spot-title {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 2px;
+    }
+
+    .msg-event-meta,
+    .msg-spot-meta {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+
+    .msg-card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .msg-card-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      background: rgba(0,0,0,0.8);
+      padding: 4px 8px;
+      font-size: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      transition: var(--transition-fast);
+    }
+
+    .msg-card-btn:hover {
+      box-shadow: var(--shadow-glow);
+      color: var(--accent);
+    }
+
+    /* Voice message bubble */
+    .voice-bubble {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .voice-play-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .voice-play-btn:hover {
+      box-shadow: var(--shadow-glow);
+      border-color: rgba(255,255,255,0.9);
+    }
+
+    .voice-wave {
+      flex: 1;
+      height: 16px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .voice-wave::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(255,255,255,0.5), transparent);
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+
+    .voice-wave.playing::after {
+      animation: wave-scan 1.3s linear infinite;
+      opacity: 1;
+    }
+
+    @keyframes wave-scan {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .voice-duration {
+      font-size: 10px;
+      opacity: 0.8;
+      min-width: 32px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Chat input bar */
+    .chat-input-bar {
+      padding: 8px 10px;
+      border-top: var(--border-subtle);
+      background: radial-gradient(circle at bottom, rgba(255,255,255,0.05), rgba(0,0,0,0.95));
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-input-shell {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.75);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 4px 10px;
+    }
+
+    .chat-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--accent);
+      font-size: 13px;
+    }
+
+    .chat-input::placeholder {
+      color: rgba(255,255,255,0.35);
+    }
+
+    .input-pill-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.26);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(0,0,0,0.9));
+      transition: var(--transition-fast);
+    }
+
+    .input-pill-btn:hover {
+      box-shadow: var(--shadow-glow);
+      border-color: rgba(255,255,255,0.7);
+    }
+
+    .send-btn {
+      border-radius: 999px;
+      padding: 6px 14px;
+      border: 1px solid rgba(255,255,255,0.5);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      cursor: pointer;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.15), rgba(0,0,0,0.95));
+      color: var(--accent);
+      transition: var(--transition-fast);
+    }
+
+    .send-btn:hover {
+      box-shadow: var(--shadow-glow);
+    }
+
+    .gift-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 4px;
+    }
+
+    .gift-chip {
+      border-radius: 999px;
+      padding: 3px 9px;
+      border: 1px solid rgba(255,255,255,0.28);
+      font-size: 11px;
+      cursor: pointer;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: var(--transition-fast);
+    }
+
+    .gift-chip:hover {
+      box-shadow: var(--shadow-glow);
+      border-color: rgba(255,255,255,0.75);
+      color: var(--accent);
+    }
+
+    .gift-chip span {
+      font-size: 13px;
+    }
+
+    /* Right sidebar – members & hover profile */
+    .sidebar-right-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 8px 12px;
+    }
+
+    .member-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .member-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 8px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      background: linear-gradient(120deg, rgba(255,255,255,0.03), rgba(0,0,0,0.95));
+      font-size: 12px;
+      position: relative;
+    }
+
+    .member-row:hover {
+      border-color: rgba(255,255,255,0.4);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .member-main {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .member-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.2), rgba(0,0,0,0.9));
+      border: 1px solid rgba(255,255,255,0.35);
+      box-shadow: 0 0 10px rgba(255,255,255,0.35);
+      cursor: pointer;
+    }
+
+    .member-name {
+      cursor: pointer;
+    }
+
+    .member-name:hover {
+      text-decoration: underline;
+    }
+
+    .member-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px rgba(77,255,136,0.9);
+    }
+
+    .member-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .member-action-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 3px 7px;
+      font-size: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      background: rgba(0,0,0,0.85);
+      transition: var(--transition-fast);
+    }
+
+    .member-action-btn:hover {
+      box-shadow: var(--shadow-glow);
+      color: var(--accent);
+    }
+
+    /* Hover profile card */
+    .profile-hover-card {
+      position: fixed;
+      z-index: 99;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: var(--transition-med);
+      background: var(--bg-panel-alt);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 0 28px rgba(0,0,0,0.92);
+      padding: 10px 12px;
+      width: 240px;
+      font-size: 12px;
+    }
+
+    .profile-hover-card.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .profile-hover-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .profile-hover-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.25), rgba(0,0,0,0.9));
+      border: 1px solid rgba(255,255,255,0.45);
+      box-shadow: 0 0 16px rgba(255,255,255,0.6);
+    }
+
+    .profile-hover-name {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .profile-hover-handle {
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    .profile-hover-summary {
+      font-size: 11px;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .profile-hover-stats {
+      display: flex;
+      gap: 10px;
+      font-size: 11px;
+      opacity: 0.8;
+      margin-bottom: 6px;
+    }
+
+    .profile-hover-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .profile-hover-btn {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 4px 8px;
+      font-size: 11px;
+      cursor: pointer;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      background: rgba(0,0,0,0.9);
+      transition: var(--transition-fast);
+    }
+
+    .profile-hover-btn:hover {
+      box-shadow: var(--shadow-glow);
+      color: var(--accent);
+    }
+
+    /* Emoji dropdown */
+    .emoji-dropdown {
+      position: absolute;
+      bottom: 50px;
+      right: 120px;
+      width: 220px;
+      padding: 8px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: var(--bg-panel-alt);
+      box-shadow: 0 0 30px rgba(0,0,0,0.9);
+      display: none;
+      flex-wrap: wrap;
+      gap: 5px;
+      font-size: 20px;
+      z-index: 20;
+    }
+
+    .emoji-dropdown.visible {
+      display: flex;
+    }
+
+    .emoji-item {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: var(--transition-fast);
+    }
+
+    .emoji-item:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* Events & Spots footer quick-add */
+    .attach-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 4px;
+    }
+
+    .attach-btn {
+      border-radius: 999px;
+      border: 1px dashed rgba(255,255,255,0.4);
+      padding: 4px 9px;
+      cursor: pointer;
+      background: rgba(0,0,0,0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      transition: var(--transition-fast);
+    }
+
+    .attach-btn:hover {
+      box-shadow: var(--shadow-glow);
+      border-style: solid;
+      color: var(--accent);
+    }
+
+    /* Live voice banner for private group */
+    .live-voice-banner {
+      padding: 6px 10px;
+      font-size: 11px;
+      border-bottom: var(--border-subtle);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.10), rgba(0,0,0,0.96));
+    }
+
+    .live-voice-banner.active {
+      display: flex;
+    }
+
+    .live-voice-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--danger);
+      box-shadow: 0 0 12px rgba(255,77,77,0.95);
+      animation: live-pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes live-pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.65; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .live-voice-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .live-voice-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.4);
+      padding: 3px 8px;
+      font-size: 10px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      background: rgba(0,0,0,0.9);
+      transition: var(--transition-fast);
+    }
+
+    .live-voice-btn.leave {
+      border-color: rgba(255,77,77,0.9);
+      color: rgba(255,143,143,0.96);
+    }
+
+    .live-voice-btn:hover {
+      box-shadow: var(--shadow-glow);
+      color: var(--accent);
+    }
+
+    /* Simple modal for selecting event/spot placeholder */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 98;
+    }
+
+    .modal-backdrop.visible {
+      display: flex;
+    }
+
+    .modal {
+      width: min(420px, 92vw);
+      background: var(--bg-panel-alt);
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 0 40px rgba(0,0,0,0.92);
+      padding: 14px 14px 12px;
+      font-size: 13px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .modal-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+    }
+
+    .modal-close {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.35);
+      padding: 2px 8px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      background: rgba(0,0,0,0.9);
+      transition: var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      box-shadow: var(--shadow-glow);
+    }
+
+    .modal-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .modal-item {
+      padding: 8px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: linear-gradient(120deg, rgba(255,255,255,0.05), rgba(0,0,0,0.96));
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .modal-item:hover {
+      box-shadow: var(--shadow-glow);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    .modal-item-title {
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .modal-item-meta {
+      font-size: 11px;
+      opacity: 0.8;
+    }
   </style>
 </head>
 <body>
-  <nav class="sidebar">
-    <h3>Roll ’n Connect</h3>
-    <p style="color:var(--muted)">Rooms</p>
-    <ul style="padding:0;margin:10px 0 0 0;list-style:none">
-      <li>📍 Find Spots</li>
-      <li>💬 Chatrooms</li>
-      <li>🛒 Marketplace</li>
-    </ul>
-  </nav>
-
-  <main class="main" role="main">
-    <header>
-      <div>
-        <div class="room-title">Dancing</div>
-        <div style="font-size:0.85rem;color:var(--muted)">Freestyle, flow, and music</div>
+  <div class="app-shell">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="hamburger" id="hamburger">
+        <span></span>
       </div>
-      <div class="top-controls">
-        <input id="sender" class="sender" placeholder="Your name" />
-        <button id="clearBtn" class="small-btn">Clear All</button>
+      <div class="topbar-title">
+        <div class="topbar-title-main">Roll ’n Connect Chat</div>
+        <div class="topbar-sub">Black & white glow · hover to explore</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="pill-btn" id="goToEventsBtn">Events</button>
+        <button class="pill-btn" id="goToSpotsBtn">Spots</button>
+        <button class="pill-btn" id="goToProfileBtn">My Profile</button>
       </div>
     </header>
 
-    <section id="messages" class="messages" aria-live="polite"></section>
-
-    <div class="composer">
-      <div style="display:flex;flex-direction:column;gap:8px;width:100%">
-        <div id="emojiPicker" class="emoji-picker" aria-hidden="false">
-          <span class="emoji">🕺</span><span class="emoji">💃</span><span class="emoji">🎶</span><span class="emoji">✨</span><span class="emoji">❤️</span>
+    <main class="main">
+      <!-- LEFT SIDEBAR: Rooms & groups -->
+      <aside class="panel sidebar-left">
+        <div class="panel-header">
+          <div class="panel-title">Rooms & Groups</div>
+          <span class="badge">Public & private</span>
         </div>
-        <input id="text" class="input" placeholder="Share moves, music, or drop a meetup spot" />
+        <div class="sidebar-left-body">
+          <div class="room-list" id="roomList">
+            <!-- Example public room -->
+            <div class="room-item active" data-room-id="public-lobby">
+              <div class="room-main">
+                <span class="room-pill">Public</span>
+                <span>Global Roll Chat</span>
+              </div>
+              <div class="room-meta">432 online</div>
+            </div>
+            <!-- Example private group -->
+            <div class="room-item" data-room-id="private-crew">
+              <div class="room-main">
+                <span class="room-pill">Crew</span>
+                <span>ATL Night Riders</span>
+              </div>
+              <div class="room-meta">8 members</div>
+            </div>
+          </div>
+
+          <button class="create-group-btn" id="createGroupBtn">
+            + Start private group
+          </button>
+        </div>
+      </aside>
+
+      <!-- CENTER: Chat panel -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title" id="currentRoomName">Global Roll Chat · Public</div>
+          <div class="badge" id="roomModeBadge">Text & voice</div>
+        </div>
+
+        <!-- Live voice banner only for private groups -->
+        <div class="live-voice-banner" id="liveVoiceBanner">
+          <div class="live-voice-left">
+            <div class="live-pulse"></div>
+            <div>Live voice is on · tap join to hop in</div>
+          </div>
+          <div class="live-voice-actions">
+            <button class="live-voice-btn" id="joinVoiceBtn">Join</button>
+            <button class="live-voice-btn leave" id="leaveVoiceBtn">Leave</button>
+          </div>
+        </div>
+
+        <div class="chat-body">
+          <div class="chat-messages" id="chatMessages">
+            <!-- Example text message -->
+            <div class="msg-row">
+              <div class="avatar hover-profile" data-user-id="user-1"></div>
+              <div class="msg-bubble">
+                <div class="msg-meta">
+                  <span class="msg-username hover-profile" data-user-id="user-1">@boardwalk</span>
+                  <span class="msg-time">9:45 PM</span>
+                  <span class="msg-status">Seen</span>
+                </div>
+                <div class="msg-content">
+                  First session in the new cosmic chatroom. Keep it simple, keep it real.
+                </div>
+              </div>
+            </div>
+
+            <!-- Example voice message -->
+            <div class="msg-row self">
+              <div class="avatar hover-profile" data-user-id="user-self"></div>
+              <div class="msg-bubble">
+                <div class="msg-meta">
+                  <span class="msg-username hover-profile" data-user-id="user-self">You</span>
+                  <span class="msg-time">9:46 PM</span>
+                  <span class="msg-status">Delivered</span>
+                </div>
+                <div class="msg-type-label">Voice message</div>
+                <div class="voice-bubble" data-voice-id="voice-1">
+                  <div class="voice-play-btn">▶</div>
+                  <div class="voice-wave"></div>
+                  <div class="voice-duration">0:18</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Example event card in chat -->
+            <div class="msg-row">
+              <div class="avatar hover-profile" data-user-id="user-2"></div>
+              <div class="msg-bubble">
+                <div class="msg-meta">
+                  <span class="msg-username hover-profile" data-user-id="user-2">@nightglide</span>
+                  <span class="msg-time">9:48 PM</span>
+                  <span class="msg-status">Seen</span>
+                </div>
+                <div class="msg-type-label">Shared event</div>
+                <div class="msg-event-card">
+                  <div class="msg-event-title">Midnight City Roll · Downtown ATL</div>
+                  <div class="msg-event-meta">
+                    Tonight · 11:30 PM · 3.2 miles away
+                  </div>
+                  <div class="msg-card-actions">
+                    <button class="msg-card-btn">View event</button>
+                    <button class="msg-card-btn">Get directions</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Example spot card in chat -->
+            <div class="msg-row self">
+              <div class="avatar hover-profile" data-user-id="user-self"></div>
+              <div class="msg-bubble">
+                <div class="msg-meta">
+                  <span class="msg-username hover-profile" data-user-id="user-self">You</span>
+                  <span class="msg-time">9:49 PM</span>
+                  <span class="msg-status">Seen</span>
+                </div>
+                <div class="msg-type-label">Shared spot</div>
+                <div class="msg-spot-card">
+                  <div class="msg-spot-title">Rooftop Glide Deck</div>
+                  <div class="msg-spot-meta">
+                    1.1 miles · smooth concrete · city view · tap for directions
+                  </div>
+                  <div class="msg-card-actions">
+                    <button class="msg-card-btn">View spot</button>
+                    <button class="msg-card-btn">Get directions</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input -->
+          <div class="chat-input-bar">
+            <div class="chat-input-shell">
+              <button class="input-pill-btn" id="emojiToggleBtn">😊</button>
+              <input
+                type="text"
+                id="chatInput"
+                class="chat-input"
+                placeholder="Send a message..."
+              />
+              <button class="input-pill-btn" id="voiceRecordBtn">🎙</button>
+            </div>
+
+            <button class="send-btn" id="sendMessageBtn">Send</button>
+
+            <div class="gift-bar">
+              <div class="gift-chip" data-gift="kiss">
+                <span>😘</span><span>Kiss</span>
+              </div>
+              <div class="gift-chip" data-gift="hug">
+                <span>🤗</span><span>Hug</span>
+              </div>
+              <div class="gift-chip" data-gift="rose">
+                <span>🌹</span><span>Rose</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Events & Spots attach quick actions -->
+          <div class="attach-bar">
+            <span>Attach:</span>
+            <button class="attach-btn" id="attachEventBtn">Event</button>
+            <button class="attach-btn" id="attachSpotBtn">Spot</button>
+          </div>
+        </div>
+
+        <!-- Emoji dropdown -->
+        <div class="emoji-dropdown" id="emojiDropdown">
+          <div class="emoji-item">😀</div>
+          <div class="emoji-item">😎</div>
+          <div class="emoji-item">🤝</div>
+          <div class="emoji-item">🔥</div>
+          <div class="emoji-item">✨</div>
+          <div class="emoji-item">💫</div>
+          <div class="emoji-item">❤️</div>
+          <div class="emoji-item">🙌</div>
+          <div class="emoji-item">🥳</div>
+          <div class="emoji-item">🛼</div>
+          <div class="emoji-item">🏙</div>
+          <div class="emoji-item">🎧</div>
+        </div>
+      </section>
+
+      <!-- RIGHT SIDEBAR: Members -->
+      <aside class="panel sidebar-right">
+        <div class="panel-header">
+          <div class="panel-title">In this room</div>
+          <span class="badge">Hover for profile</span>
+        </div>
+        <div class="sidebar-right-body">
+          <div class="member-list" id="memberList">
+            <div class="member-row">
+              <div class="member-main">
+                <div class="member-avatar hover-profile" data-user-id="user-1"></div>
+                <span class="member-name hover-profile" data-user-id="user-1">@boardwalk</span>
+              </div>
+              <div class="member-actions">
+                <div class="member-status-dot"></div>
+                <button class="member-action-btn" data-action="request-private" data-user-id="user-1">
+                  Private chat
+                </button>
+              </div>
+            </div>
+
+            <div class="member-row">
+              <div class="member-main">
+                <div class="member-avatar hover-profile" data-user-id="user-2"></div>
+                <span class="member-name hover-profile" data-user-id="user-2">@nightglide</span>
+              </div>
+              <div class="member-actions">
+                <div class="member-status-dot"></div>
+                <button class="member-action-btn" data-action="request-private" data-user-id="user-2">
+                  Private chat
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Hover profile card -->
+  <div class="profile-hover-card" id="profileHoverCard">
+    <div class="profile-hover-header">
+      <div class="profile-hover-avatar" id="hoverAvatar"></div>
+      <div>
+        <div class="profile-hover-name" id="hoverName">@username</div>
+        <div class="profile-hover-handle" id="hoverHandle">distance · discipline</div>
       </div>
-
-      <select id="effect" class="small-btn" title="Message effect">
-        <option value="normal">Normal</option>
-        <option value="slam">Slam</option>
-        <option value="reveal">Reveal</option>
-        <option value="quiet">Quiet</option>
-      </select>
-
-      <button id="locBtn" class="small-btn" title="Drop my location">📍</button>
-      <button id="sendBtn" class="btn">Send</button>
     </div>
-  </main>
+    <div class="profile-hover-summary" id="hoverSummary">
+      Quick summary of this rider goes here – style, vibe, disciplines, and current city.
+    </div>
+    <div class="profile-hover-stats">
+      <div><strong>128</strong> sessions</div>
+      <div><strong>42</strong> spots shared</div>
+      <div><strong>8</strong> events hosted</div>
+    </div>
+    <div class="profile-hover-actions">
+      <button class="profile-hover-btn" id="hoverViewProfileBtn">View profile</button>
+      <button class="profile-hover-btn" id="hoverRequestPrivateBtn">Request chat</button>
+    </div>
+  </div>
 
-<script>
-/* ROOM CONFIG */
-const ROOM_ID = 'dancing';
-const STORAGE_KEY = 'rc_chat_' + ROOM_ID;
-const CLEANUP_INTERVAL_MS = 30 * 60 * 1000;
-const TTL_MS = 24 * 60 * 60 * 1000;
+  <!-- Modal – select event / spot -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Attach item</div>
+        <button class="modal-close" id="modalCloseBtn">Close</button>
+      </div>
+      <div class="modal-list" id="modalList">
+        <!-- Items will be injected here -->
+      </div>
+    </div>
+  </div>
 
-/* DOM */
-const messagesEl = document.getElementById('messages');
-const textEl = document.getElementById('text');
-const sendBtn = document.getElementById('sendBtn');
-const senderEl = document.getElementById('sender');
-const effectEl = document.getElementById('effect');
-const locBtn = document.getElementById('locBtn');
-const emojiPicker = document.getElementById('emojiPicker');
-const clearBtn = document.getElementById('clearBtn');
+  <script>
+    // ---------------------------------------------
+    // MOCK DATA (replace with live data from Events/Spots/Profiles later)
+    // ---------------------------------------------
+    const mockUsers = {
+      "user-1": {
+        id: "user-1",
+        username: "@boardwalk",
+        handle: "Visionary · ATL · Longboard",
+        summary: "Builder of cosmic platforms, protector of creators, and longboard dancer orbiting Atlanta nights.",
+        stats: { sessions: 215, spots: 63, events: 17 }
+      },
+      "user-2": {
+        id: "user-2",
+        username: "@nightglide",
+        handle: "Night rides · City flow",
+        summary: "Lives for midnight sessions and rooftop lines. Always scouting new smooth concrete.",
+        stats: { sessions: 142, spots: 24, events: 6 }
+      },
+      "user-self": {
+        id: "user-self",
+        username: "You",
+        handle: "Current session",
+        summary: "This is you in the system. Your public summary appears to others.",
+        stats: { sessions: 89, spots: 12, events: 4 }
+      }
+    };
 
-function now(){return Date.now();}
-function uid(){return 'm_' + Math.random().toString(36).slice(2,9);}
-function loadMessages(){ try{ const raw = localStorage.getItem(STORAGE_KEY); if(!raw) return []; const arr = JSON.parse(raw); return Array.isArray(arr) ? arr : []; }catch(e){return [];} }
-function saveMessages(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
-function cleanupOldMessages(){ const msgs = loadMessages(); const cutoff = now() - TTL_MS; const filtered = msgs.filter(m => m.ts >= cutoff); if(filtered.length !== msgs.length) saveMessages(filtered); return filtered; }
-function render(){ messagesEl.innerHTML = ''; const msgs = cleanupOldMessages(); msgs.sort((a,b)=>a.ts - b.ts); for(const m of msgs){ const el = document.createElement('div'); el.className = 'msg ' + (m.effect || 'normal'); const time = new Date(m.ts).toLocaleString(); el.innerHTML = `<div class="meta"><strong>${escapeHtml(m.sender||'Anon')}</strong> · <span style="color:var(--muted)">${time}</span></div><div class="body">${escapeHtml(m.text)}</div>`; if(m.meta && m.meta.location){ const {lat,lng} = m.meta.location; const mapLink = `/find-spots.html?lat=${lat}&lng=${lng}`; const locHtml = `<div class="loc"><div style="font-size:0.9rem">${lat.toFixed(5)}, ${lng.toFixed(5)}</div><a class="open-map" href="${mapLink}">Open in Find Spots</a></div>`; el.innerHTML += locHtml; } messagesEl.appendChild(el); messagesEl.scrollTop = messagesEl.scrollHeight; } }
-function sendMessage(text, effect='normal', meta=null){ const sender = senderEl.value.trim() || 'Anon'; const msg = { id: uid(), sender, text, ts: now(), effect, meta }; const arr = loadMessages(); arr.push(msg); saveMessages(arr); render(); }
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+    const mockEvents = [
+      {
+        id: "event-1",
+        title: "Midnight City Roll · Downtown ATL",
+        time: "Tonight · 11:30 PM",
+        distance: "3.2 miles away"
+      },
+      {
+        id: "event-2",
+        title: "Sunrise Cruise · Beltline Eastside",
+        time: "Tomorrow · 6:00 AM",
+        distance: "5.1 miles away"
+      }
+    ];
 
-sendBtn.addEventListener('click', ()=> { const t = textEl.value.trim(); if(!t) return; sendMessage(t, effectEl.value, null); textEl.value = ''; });
-textEl.addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendBtn.click(); }});
-clearBtn.addEventListener('click', ()=>{ if(confirm('Clear all messages in this room?')){ localStorage.removeItem(STORAGE_KEY); render(); }});
-emojiPicker.addEventListener('click', e=>{ if(e.target.classList.contains('emoji')){ textEl.value += e.target.textContent; textEl.focus(); }});
-locBtn.addEventListener('click', ()=>{ if(!navigator.geolocation){ alert('Geolocation not supported'); return; } locBtn.disabled = true; locBtn.textContent = '…'; navigator.geolocation.getCurrentPosition(pos=>{ const {latitude:lat, longitude:lng} = pos.coords; sendMessage('Shared a location', effectEl.value, { location:{lat,lng} }); locBtn.disabled = false; locBtn.textContent = '📍'; }, err=>{ alert('Location denied or unavailable'); locBtn.disabled = false; locBtn.textContent = '📍'; }, {enableHighAccuracy:false,timeout:10000}); });
-setInterval(()=>{ cleanupOldMessages(); render(); }, CLEANUP_INTERVAL_MS);
-render();
-</script>
+    const mockSpots = [
+      {
+        id: "spot-1",
+        title: "Rooftop Glide Deck",
+        distance: "1.1 miles · smooth concrete",
+        info: "City view · mellow traffic · perfect for dancing."
+      },
+      {
+        id: "spot-2",
+        title: "Riverfront Path",
+        distance: "4.4 miles · scenic",
+        info: "Long run, light curves, water on your side."
+      }
+    ];
+
+    // ---------------------------------------------
+    // PROFILE HOVER CARD
+    // ---------------------------------------------
+    const hoverCard = document.getElementById("profileHoverCard");
+    const hoverName = document.getElementById("hoverName");
+    const hoverHandle = document.getElementById("hoverHandle");
+    const hoverSummary = document.getElementById("hoverSummary");
+    const hoverViewProfileBtn = document.getElementById("hoverViewProfileBtn");
+    const hoverRequestPrivateBtn = document.getElementById("hoverRequestPrivateBtn");
+
+    let hoverCurrentUserId = null;
+    let hoverHideTimeout = null;
+
+    function showHoverCard(userId, x, y) {
+      const user = mockUsers[userId];
+      if (!user) return;
+
+      hoverCurrentUserId = userId;
+      hoverName.textContent = user.username;
+      hoverHandle.textContent = user.handle;
+      hoverSummary.textContent = user.summary;
+
+      hoverCard.style.left = x + 14 + "px";
+      hoverCard.style.top = y + 10 + "px";
+      hoverCard.classList.add("visible");
+    }
+
+    function hideHoverCard() {
+      hoverCard.classList.remove("visible");
+      hoverCurrentUserId = null;
+    }
+
+    document.querySelectorAll(".hover-profile").forEach((el) => {
+      el.addEventListener("mouseenter", (e) => {
+        const userId = e.currentTarget.getAttribute("data-user-id");
+        const rect = e.currentTarget.getBoundingClientRect();
+        if (hoverHideTimeout) clearTimeout(hoverHideTimeout);
+        showHoverCard(userId, rect.left, rect.bottom);
+      });
+      el.addEventListener("mouseleave", () => {
+        hoverHideTimeout = setTimeout(hideHoverCard, 120);
+      });
+    });
+
+    hoverCard.addEventListener("mouseenter", () => {
+      if (hoverHideTimeout) clearTimeout(hoverHideTimeout);
+    });
+    hoverCard.addEventListener("mouseleave", () => {
+      hoverHideTimeout = setTimeout(hideHoverCard, 120);
+    });
+
+    hoverViewProfileBtn.addEventListener("click", () => {
+      if (!hoverCurrentUserId) return;
+      // TODO: route to profile page with this user
+      console.log("View profile:", hoverCurrentUserId);
+      // Example: window.location.href = `profile.html?user=${hoverCurrentUserId}`;
+    });
+
+    hoverRequestPrivateBtn.addEventListener("click", () => {
+      if (!hoverCurrentUserId) return;
+      requestPrivateChat(hoverCurrentUserId);
+    });
+
+    // ---------------------------------------------
+    // PRIVATE CHAT REQUESTS
+    // ---------------------------------------------
+    function requestPrivateChat(userId) {
+      const user = mockUsers[userId];
+      if (!user) return;
+      // TODO: send private chat request via backend
+      console.log("Request private chat with", user.username);
+      alert(`Private chat request sent to ${user.username}`);
+    }
+
+    document.querySelectorAll(".member-action-btn[data-action='request-private']").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const userId = e.currentTarget.getAttribute("data-user-id");
+        requestPrivateChat(userId);
+      });
+    });
+
+    // ---------------------------------------------
+    // ROOM SWITCHING & PRIVATE GROUP LIVE VOICE (UI ONLY)
+    // ---------------------------------------------
+    const roomList = document.getElementById("roomList");
+    const currentRoomName = document.getElementById("currentRoomName");
+    const roomModeBadge = document.getElementById("roomModeBadge");
+    const liveVoiceBanner = document.getElementById("liveVoiceBanner");
+    const joinVoiceBtn = document.getElementById("joinVoiceBtn");
+    const leaveVoiceBtn = document.getElementById("leaveVoiceBtn");
+
+    let currentRoomId = "public-lobby";
+    let liveVoiceActive = false;
+    let joinedVoice = false;
+
+    roomList.addEventListener("click", (e) => {
+      const item = e.target.closest(".room-item");
+      if (!item) return;
+      document.querySelectorAll(".room-item").forEach(r => r.classList.remove("active"));
+      item.classList.add("active");
+      currentRoomId = item.getAttribute("data-room-id");
+
+      if (currentRoomId === "public-lobby") {
+        currentRoomName.textContent = "Global Roll Chat · Public";
+        roomModeBadge.textContent = "Text & voice messages";
+        liveVoiceBanner.classList.remove("active");
+        liveVoiceActive = false;
+        joinedVoice = false;
+      } else {
+        currentRoomName.textContent = "Private Group · " + item.querySelector(".room-main span:nth-child(2)").textContent;
+        roomModeBadge.textContent = "Private group · Live voice";
+        liveVoiceBanner.classList.add("active");
+        liveVoiceActive = true;
+      }
+    });
+
+    joinVoiceBtn.addEventListener("click", () => {
+      if (!liveVoiceActive) return;
+      // TODO: connect to WebRTC voice room
+      joinedVoice = true;
+      console.log("Joined live voice in room:", currentRoomId);
+      alert("You joined live voice for this private group.");
+    });
+
+    leaveVoiceBtn.addEventListener("click", () => {
+      if (!joinedVoice) return;
+      // TODO: disconnect from voice
+      joinedVoice = false;
+      console.log("Left live voice in room:", currentRoomId);
+      alert("You left the live voice session.");
+    });
+
+    document.getElementById("createGroupBtn").addEventListener("click", () => {
+      // TODO: open UI to name group + select members
+      console.log("Create private group clicked");
+      alert("Private group creation UI goes here.");
+    });
+
+    // ---------------------------------------------
+    // TEXT MESSAGES, EMOJIS, GIFTS
+    // ---------------------------------------------
+    const chatInput = document.getElementById("chatInput");
+    const sendMessageBtn = document.getElementById("sendMessageBtn");
+    const chatMessages = document.getElementById("chatMessages");
+    const emojiToggleBtn = document.getElementById("emojiToggleBtn");
+    const emojiDropdown = document.getElementById("emojiDropdown");
+
+    function appendTextMessage(content, isSelf = true) {
+      const row = document.createElement("div");
+      row.className = "msg-row" + (isSelf ? " self" : "");
+
+      const avatar = document.createElement("div");
+      avatar.className = "avatar hover-profile";
+      avatar.dataset.userId = isSelf ? "user-self" : "user-1";
+
+      const bubble = document.createElement("div");
+      bubble.className = "msg-bubble";
+
+      const meta = document.createElement("div");
+      meta.className = "msg-meta";
+
+      const username = document.createElement("span");
+      username.className = "msg-username hover-profile";
+      username.dataset.userId = isSelf ? "user-self" : "user-1";
+      username.textContent = isSelf ? "You" : "@boardwalk";
+
+      const time = document.createElement("span");
+      time.className = "msg-time";
+      time.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+      const status = document.createElement("span");
+      status.className = "msg-status";
+      status.textContent = isSelf ? "Sent" : "Seen";
+
+      meta.appendChild(username);
+      meta.appendChild(time);
+      meta.appendChild(status);
+
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "msg-content";
+      contentDiv.textContent = content;
+
+      bubble.appendChild(meta);
+      bubble.appendChild(contentDiv);
+
+      row.appendChild(avatar);
+      row.appendChild(bubble);
+      chatMessages.appendChild(row);
+
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Re-bind hover behaviour for dynamically added elements
+      row.querySelectorAll(".hover-profile").forEach((el) => {
+        el.addEventListener("mouseenter", (e) => {
+          const userId = e.currentTarget.getAttribute("data-user-id");
+          const rect = e.currentTarget.getBoundingClientRect();
+          if (hoverHideTimeout) clearTimeout(hoverHideTimeout);
+          showHoverCard(userId, rect.left, rect.bottom);
+        });
+        el.addEventListener("mouseleave", () => {
+          hoverHideTimeout = setTimeout(hideHoverCard, 120);
+        });
+      });
+    }
+
+    sendMessageBtn.addEventListener("click", () => {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      appendTextMessage(text, true);
+      // TODO: send to backend via WebSocket/Worker
+      chatInput.value = "";
+    });
+
+    chatInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendMessageBtn.click();
+      }
+    });
+
+    emojiToggleBtn.addEventListener("click", () => {
+      emojiDropdown.classList.toggle("visible");
+    });
+
+    emojiDropdown.querySelectorAll(".emoji-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        chatInput.value += item.textContent;
+        chatInput.focus();
+      });
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!emojiDropdown.contains(e.target) && e.target !== emojiToggleBtn) {
+        emojiDropdown.classList.remove("visible");
+      }
+    });
+
+    // Gifts (kisses, hugs, roses)
+    document.querySelectorAll(".gift-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const giftType = chip.dataset.gift;
+        let label = "";
+        if (giftType === "kiss") label = "sent you a kiss";
+        if (giftType === "hug") label = "sent you a hug";
+        if (giftType === "rose") label = "sent you a rose";
+        appendTextMessage(`💌 You ${label}.`, true);
+        // TODO: send structured gift message to backend
+      });
+    });
+
+    // ---------------------------------------------
+    // VOICE MESSAGE – UI HOOK ONLY
+    // ---------------------------------------------
+    const voiceRecordBtn = document.getElementById("voiceRecordBtn");
+    let recording = false;
+
+    voiceRecordBtn.addEventListener("click", () => {
+      recording = !recording;
+      if (recording) {
+        voiceRecordBtn.textContent = "⏺";
+        startVoiceRecording();
+      } else {
+        voiceRecordBtn.textContent = "🎙";
+        stopVoiceRecording();
+      }
+    });
+
+    function startVoiceRecording() {
+      // TODO: integrate MediaRecorder, capture audio, upload to backend/R2
+      console.log("Voice recording started");
+      alert("Voice recording UI hook – connect to MediaRecorder + backend.");
+    }
+
+    function stopVoiceRecording() {
+      // TODO: finalize audio, send to backend, append voice message bubble
+      console.log("Voice recording stopped");
+      alert("Voice recording stopped – attach audio bubble after upload.");
+    }
+
+    // Voice bubble playback demo
+    document.querySelectorAll(".voice-bubble").forEach((bubble) => {
+      const btn = bubble.querySelector(".voice-play-btn");
+      const wave = bubble.querySelector(".voice-wave");
+      btn.addEventListener("click", () => {
+        // TODO: connect to actual audio playback
+        wave.classList.toggle("playing");
+      });
+    });
+
+    // ---------------------------------------------
+    // ATTACH EVENTS & SPOTS
+    // ---------------------------------------------
+    const attachEventBtn = document.getElementById("attachEventBtn");
+    const attachSpotBtn = document.getElementById("attachSpotBtn");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalList = document.getElementById("modalList");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+
+    let modalMode = null; // "event" or "spot"
+
+    function openModal(mode) {
+      modalMode = mode;
+      modalTitle.textContent = mode === "event" ? "Attach event to chat" : "Attach spot to chat";
+      modalList.innerHTML = "";
+
+      const items = mode === "event" ? mockEvents : mockSpots;
+      items.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "modal-item";
+        div.dataset.itemId = item.id;
+        div.innerHTML = `
+          <div class="modal-item-title">${item.title}</div>
+          <div class="modal-item-meta">${mode === "event" ? item.time + " · " + item.distance : item.distance + " · " + item.info}</div>
+        `;
+        div.addEventListener("click", () => {
+          modalBackdrop.classList.remove("visible");
+          attachItemToChat(mode, item);
+        });
+        modalList.appendChild(div);
+      });
+
+      modalBackdrop.classList.add("visible");
+    }
+
+    function attachItemToChat(mode, item) {
+      const row = document.createElement("div");
+      row.className = "msg-row self";
+
+      const avatar = document.createElement("div");
+      avatar.className = "avatar hover-profile";
+      avatar.dataset.userId = "user-self";
+
+      const bubble = document.createElement("div");
+      bubble.className = "msg-bubble";
+
+      const meta = document.createElement("div");
+      meta.className = "msg-meta";
+
+      const username = document.createElement("span");
+      username.className = "msg-username hover-profile";
+      username.dataset.userId = "user-self";
+      username.textContent = "You";
+
+      const time = document.createElement("span");
+      time.className = "msg-time";
+      time.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+      const status = document.createElement("span");
+      status.className = "msg-status";
+      status.textContent = "Sent";
+
+      meta.appendChild(username);
+      meta.appendChild(time);
+      meta.appendChild(status);
+
+      const typeLabel = document.createElement("div");
+      typeLabel.className = "msg-type-label";
+      typeLabel.textContent = mode === "event" ? "Shared event" : "Shared spot";
+
+      const card = document.createElement("div");
+      card.className = mode === "event" ? "msg-event-card" : "msg-spot-card";
+
+      const titleEl = document.createElement("div");
+      titleEl.className = mode === "event" ? "msg-event-title" : "msg-spot-title";
+      titleEl.textContent = item.title;
+
+      const metaEl = document.createElement("div");
+      metaEl.className = mode === "event" ? "msg-event-meta" : "msg-spot-meta";
+      metaEl.textContent = mode === "event"
+        ? `${item.time} · ${item.distance}`
+        : `${item.distance} · ${item.info}`;
+
+      const actions = document.createElement("div");
+      actions.className = "msg-card-actions";
+
+      const viewBtn = document.createElement("button");
+      viewBtn.className = "msg-card-btn";
+      viewBtn.textContent = mode === "event" ? "View event" : "View spot";
+
+      const dirBtn = document.createElement("button");
+      dirBtn.className = "msg-card-btn";
+      dirBtn.textContent = "Get directions";
+
+      viewBtn.addEventListener("click", () => {
+        // TODO: deep link into Events/Spots page with ID
+        console.log("View", mode, item.id);
+      });
+
+      dirBtn.addEventListener("click", () => {
+        // TODO: open directions (Google Maps or internal map)
+        console.log("Get directions for", mode, item.id);
+      });
+
+      actions.appendChild(viewBtn);
+      actions.appendChild(dirBtn);
+
+      card.appendChild(titleEl);
+      card.appendChild(metaEl);
+      card.appendChild(actions);
+
+      bubble.appendChild(meta);
+      bubble.appendChild(typeLabel);
+      bubble.appendChild(card);
+
+      row.appendChild(avatar);
+      row.appendChild(bubble);
+      chatMessages.appendChild(row);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Rebind hover
+      row.querySelectorAll(".hover-profile").forEach((el) => {
+        el.addEventListener("mouseenter", (e) => {
+          const userId = e.currentTarget.getAttribute("data-user-id");
+          const rect = e.currentTarget.getBoundingClientRect();
+          if (hoverHideTimeout) clearTimeout(hoverHideTimeout);
+          showHoverCard(userId, rect.left, rect.bottom);
+        });
+        el.addEventListener("mouseleave", () => {
+          hoverHideTimeout = setTimeout(hideHoverCard, 120);
+        });
+      });
+
+      // TODO: send structured event/spot message to backend
+    }
+
+    attachEventBtn.addEventListener("click", () => openModal("event"));
+    attachSpotBtn.addEventListener("click", () => openModal("spot"));
+    modalCloseBtn.addEventListener("click", () => modalBackdrop.classList.remove("visible"));
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) modalBackdrop.classList.remove("visible");
+    });
+
+    // ---------------------------------------------
+    // TOP NAV SHORTCUTS – hook to pages
+    // ---------------------------------------------
+    document.getElementById("goToEventsBtn").addEventListener("click", () => {
+      // TODO: route to events page
+      console.log("Go to events");
+    });
+    document.getElementById("goToSpotsBtn").addEventListener("click", () => {
+      // TODO: route to spots page
+      console.log("Go to spots");
+    });
+    document.getElementById("goToProfileBtn").addEventListener("click", () => {
+      // TODO: route to profile page
+      console.log("Go to profile");
+    });
+
+    // Hamburger – hook into your global menu
+    document.getElementById("hamburger").addEventListener("click", () => {
+      // TODO: open your cosmic hamburger menu
+      console.log("Hamburger clicked – open navigation drawer.");
+    });
+  </script>
 </body>
 </html>
