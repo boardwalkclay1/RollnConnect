@@ -32,28 +32,51 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* SIDEBAR */
+    /* BURGER MENU */
+    .hamburger {
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:99999;
+    }
+    .hamburger span {
+      height:4px;
+      width:100%;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+    /* SLIDE-OUT SIDEBAR */
     .sidebar {
-      position:fixed;top:0;left:0;height:100vh;width:260px;
+      position:fixed;
+      top:0;
+      left:-260px;
+      height:100vh;
+      width:260px;
       background:rgba(10,10,20,0.92);
       backdrop-filter:blur(25px);
       border-right:1px solid rgba(255,255,255,0.25);
       padding:26px 20px;
       box-shadow:10px 0 40px rgba(0,0,0,0.7);
-      z-index:9000;
+      transition:0.35s ease;
+      z-index:99998;
     }
+    .sidebar.open { left:0; }
 
     .nav-header{text-align:center;margin-bottom:24px;}
-    .logo-orb{
-      font-size:2.4rem;
-      margin-bottom:6px;
-      text-shadow:0 0 20px rgba(255,255,255,0.9);
-    }
-    .nav-title{
-      font-size:1.2rem;
-      font-weight:600;
-      text-shadow:0 0 10px rgba(255,255,255,0.7);
-    }
+    .logo-orb{font-size:2.4rem;margin-bottom:6px;text-shadow:0 0 20px rgba(255,255,255,0.9);}
+    .nav-title{font-size:1.2rem;font-weight:600;text-shadow:0 0 10px rgba(255,255,255,0.7);}
 
     .nav-links{
       list-style:none;padding:0;margin:0;
@@ -84,9 +107,8 @@
       box-shadow:0 0 10px #ff3b3b;
     }
 
-    /* MAIN LAYOUT */
+    /* MAIN CONTENT */
     .main-wrapper{
-      margin-left:260px;
       padding:40px 20px 80px;
     }
 
@@ -117,7 +139,7 @@
 
     /* FLOATING PONG BUTTONS */
     .bubble {
-      position:fixed; /* stay clickable on scroll */
+      position:fixed;
       width:200px;
       height:200px;
       border-radius:50%;
@@ -133,7 +155,7 @@
       text-align:center;
       padding:10px;
       transition:0.3s;
-      z-index:99999;
+      z-index:99997;
       pointer-events:auto;
     }
     .bubble:hover {
@@ -220,8 +242,11 @@
 <div class="stars2"></div>
 <div class="stars3"></div>
 
-<!-- SIDEBAR -->
-<nav class="sidebar">
+<!-- BURGER -->
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+
+<!-- SLIDE-OUT SIDEBAR -->
+<nav id="sidebar" class="sidebar">
   <div class="nav-header">
     <div class="logo-orb">🛼</div>
     <div class="nav-title">Roll ’n Connect</div>
@@ -272,6 +297,11 @@
 <a href="notifications.html" class="bubble" id="b6">Notifications</a>
 
 <script>
+  /* BURGER MENU */
+  const hb=document.getElementById("hamburger");
+  const sb=document.getElementById("sidebar");
+  hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
+
   /* DATA HELPERS */
   function getItems(){
     try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}
@@ -351,7 +381,7 @@
       b.x += b.vx;
       b.y += b.vy;
 
-      if (b.x <= 260 || b.x + 200 >= w) b.vx *= -1; // avoid sidebar
+      if (b.x <= 0 || b.x + 200 >= w) b.vx *= -1;
       if (b.y <= 0 || b.y + 200 >= h) b.vy *= -1;
 
       for (let other of bubbles) {
