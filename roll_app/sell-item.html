@@ -10,6 +10,7 @@
       font-family:'Inter',sans-serif;overflow-x:hidden;overflow-y:auto;
     }
 
+    /* STARFIELD */
     .stars1,.stars2,.stars3{
       position:fixed;inset:0;
       background:url('styles/stars-white.png') repeat;
@@ -22,204 +23,48 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    .sidebar{
-      position:fixed;top:0;left:0;height:100vh;width:260px;
+    /* BURGER MENU */
+    .hamburger {
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:99999;
+    }
+    .hamburger span {
+      height:4px;
+      width:100%;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+    /* SLIDE-OUT SIDEBAR */
+    .sidebar {
+      position:fixed;
+      top:0;
+      left:-260px;
+      height:100vh;
+      width:260px;
       background:rgba(10,10,20,0.92);
       backdrop-filter:blur(25px);
       border-right:1px solid rgba(255,255,255,0.25);
       padding:26px 20px;
       box-shadow:10px 0 40px rgba(0,0,0,0.7);
-      z-index:9000;
+      transition:0.35s ease;
+      z-index:99998;
     }
+    .sidebar.open { left:0; }
 
     .nav-header{text-align:center;margin-bottom:24px;}
     .logo-orb{font-size:2.4rem;margin-bottom:6px;text-shadow:0 0 20px rgba(255,255,255,0.9);}
-    .nav-title{font-size:1.2rem;font-weight:600;text-shadow:0 0 10px rgba(255,255,255,0.7);}
-    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;}
-    .nav-links a{
-      display:block;color:#fff;text-decoration:none;font-size:0.95rem;
-      padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);
-      box-shadow:0 0 10px rgba(255,255,255,0.15);transition:0.25s;
-    }
-    .nav-links a:hover{
-      background:rgba(255,255,255,0.2);
-      transform:translateX(5px);
-      box-shadow:0 0 18px rgba(255,255,255,0.4);
-    }
-
-    .main{
-      margin-left:260px;
-      padding:40px;
-      min-height:100vh;
-    }
-
-    .page-title{
-      font-size:2.6rem;
-      margin-bottom:8px;
-      text-shadow:0 0 30px rgba(255,255,255,0.8);
-    }
-
-    .page-sub{opacity:0.85;margin-bottom:30px;}
-
-    .form-card{
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(25px);
-      padding:26px;border-radius:20px;
-      box-shadow:0 0 50px rgba(255,255,255,0.3);
-      max-width:700px;
-    }
-
-    label{font-size:0.85rem;opacity:0.85;display:block;margin-bottom:4px;}
-    input,textarea,select{
-      width:100%;padding:10px 12px;margin-bottom:16px;
-      border:none;border-radius:12px;
-      background:rgba(255,255,255,0.16);color:#fff;font-size:0.95rem;
-    }
-    textarea{resize:vertical;}
-
-    .row-flex{display:flex;gap:12px;}
-    .row-flex > div{flex:1;}
-
-    .toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
-    .toggle-row input[type="checkbox"]{width:auto;height:auto;}
-
-    .btn-primary{
-      padding:10px 18px;background:#fff;color:#000;
-      border-radius:12px;border:none;font-weight:600;cursor:pointer;
-    }
-
-    .status-msg{margin-top:10px;font-size:0.9rem;opacity:0.9;}
-  </style>
-</head>
-<body>
-
-<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
-
-<nav class="sidebar">
-  <div class="nav-header">
-    <div class="logo-orb">➕</div>
-    <div class="nav-title">Sell Item</div>
-  </div>
-  <ul class="nav-links">
-    <li><a href="marketplace.html">⬅ Marketplace</a></li>
-    <li><a href="notifications.html">Notifications</a></li>
-    <li><a href="index.html">🏠 Home</a></li>
-  </ul>
-</nav>
-
-<div class="main">
-  <div class="page-title">Sell an Item</div>
-  <div class="page-sub">List your gear, label your discipline, and optionally donate it to the Giveaway pool.</div>
-
-  <div class="form-card">
-    <label>Title</label>
-    <input id="itemTitle" placeholder="Nebula Dancer Deck">
-
-    <div class="row-flex">
-      <div>
-        <label>Price (USD)</label>
-        <input id="itemPrice" placeholder="199.99">
-      </div>
-      <div>
-        <label>Discipline</label>
-        <select id="itemDiscipline">
-          <option value="">Select</option>
-          <option value="Quads">Quads</option>
-          <option value="Blades">Blades</option>
-          <option value="Longboard">Longboard</option>
-          <option value="Skateboard">Skateboard</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-    </div>
-
-    <label>Description</label>
-    <textarea id="itemDescription" rows="3" placeholder="Condition, story, sizing, etc."></textarea>
-
-    <label>Image</label>
-    <input id="itemImage" type="file" accept="image/*">
-
-    <div class="toggle-row">
-      <input type="checkbox" id="itemDonate">
-      <label for="itemDonate">Donate this item to the Giveaway pool</label>
-    </div>
-
-    <button class="btn-primary" id="addItemBtn">List Item</button>
-    <div class="status-msg" id="statusMsg"></div>
-  </div>
-</div>
-
-<script>
-  function getProfile(){
-    try{return JSON.parse(localStorage.getItem("rc_profile")||"{}");}
-    catch(e){return {};}
-  }
-  function getItems(){
-    try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}
-    catch(e){return [];}
-  }
-  function saveItems(items){
-    localStorage.setItem("rc_marketplace_items",JSON.stringify(items));
-  }
-
-  const titleEl=document.getElementById("itemTitle");
-  const priceEl=document.getElementById("itemPrice");
-  const discEl=document.getElementById("itemDiscipline");
-  const descEl=document.getElementById("itemDescription");
-  const imgEl=document.getElementById("itemImage");
-  const donateEl=document.getElementById("itemDonate");
-  const addBtn=document.getElementById("addItemBtn");
-  const statusMsg=document.getElementById("statusMsg");
-
-  addBtn.onclick=()=>{
-    const profile=getProfile();
-    if(!profile.id || !profile.name){
-      statusMsg.textContent="Set up your profile first (name + id) before listing items.";
-      return;
-    }
-
-    const title=titleEl.value.trim();
-    const price=priceEl.value.trim();
-    const discipline=discEl.value;
-    const description=descEl.value.trim();
-    const donate=donateEl.checked;
-
-    if(!title || !price || !discipline){
-      statusMsg.textContent="Title, price, and discipline are required.";
-      return;
-    }
-
-    const items=getItems();
-    const id=Date.now().toString()+"-"+Math.random().toString(36).slice(2);
-    const file=imgEl.files[0];
-
-    function finish(imageDataUrl){
-      items.push({
-        id,
-        title,
-        price,
-        discipline,
-        description,
-        imageDataUrl,
-        donateToGiveaway:donate,
-        sellerName:profile.name || "Unknown",
-        sellerId:profile.id || "",
-        timestamp:Date.now()
-      });
-      saveItems(items);
-      statusMsg.textContent="Item listed. Redirecting...";
-      setTimeout(()=>{window.location.href="marketplace.html";},800);
-    }
-
-    if(file){
-      const reader=new FileReader();
-      reader.onload=e=>finish(e.target.result);
-      reader.readAsDataURL(file);
-    }else{
-      finish("");
-    }
-  };
-</script>
-
-</body>
-</html>
+    .nav-title{font-size:1.2rem;font-weight:600;text-shadow:0 0 10px rgba(255,255,255,0.7);
