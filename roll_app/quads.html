@@ -15,7 +15,7 @@
       overflow-x:hidden;
     }
 
-    /* STARFIELDS */
+    /* STARFIELDS — WHITE ONLY */
     .stars1,.stars2,.stars3 {
       position:fixed; inset:0;
       background:url('styles/stars-white.png') repeat;
@@ -29,32 +29,32 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* NEBULA OVERLAY */
+    /* SIGNATURE WHITE GLOW OVERLAY */
     body::before {
       content:"";
       position:fixed;
       inset:0;
       background:
-        radial-gradient(circle at 40% 20%, rgba(80,80,255,0.25), transparent 60%),
-        radial-gradient(circle at 70% 80%, rgba(255,80,200,0.18), transparent 60%);
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.12), transparent 70%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08), transparent 70%);
       z-index:-2;
       pointer-events:none;
     }
 
-    /* FLOATING FUTURISTIC SIDEBAR */
+    /* FLOATING SIDEBAR — PURE BLACK + WHITE GLOW */
     .sidebar {
       position:fixed;
       top:50%;
       left:-260px;
       transform:translateY(-50%);
       width:260px;
-      background:rgba(255,255,255,0.08);
+      background:rgba(0,0,0,0.85);
       backdrop-filter:blur(25px);
       border-right:1px solid rgba(255,255,255,0.35);
       padding:30px 20px;
       border-radius:0 20px 20px 0;
       box-shadow:
-        10px 0 40px rgba(255,255,255,0.25),
+        0 0 40px rgba(255,255,255,0.25),
         inset -10px 0 40px rgba(255,255,255,0.08);
       transition:0.35s ease;
       z-index:9998;
@@ -138,12 +138,11 @@
       margin:0 auto 40px auto;
       padding:40px;
       max-width:900px;
-      background:rgba(255,255,255,0.08);
+      background:rgba(0,0,0,0.75);
       backdrop-filter:blur(25px);
       border-radius:24px;
       box-shadow:
         0 0 40px rgba(255,255,255,0.25),
-        0 0 120px rgba(120,120,255,0.25),
         inset 0 0 40px rgba(255,255,255,0.08);
     }
 
@@ -156,13 +155,13 @@
     }
 
     .sub-card {
-      background:rgba(255,255,255,0.12);
+      background:rgba(0,0,0,0.75);
       backdrop-filter:blur(25px);
       padding:24px;
       border-radius:20px;
       box-shadow:
-        0 0 40px rgba(255,255,255,0.3),
-        0 0 120px rgba(120,120,255,0.25);
+        0 0 40px rgba(255,255,255,0.25),
+        inset 0 0 30px rgba(255,255,255,0.08);
       transition:0.3s;
       text-align:left;
     }
@@ -170,7 +169,7 @@
       transform:scale(1.08) translateY(-6px);
       box-shadow:
         0 0 60px rgba(255,255,255,0.5),
-        0 0 120px rgba(120,120,255,0.35);
+        inset 0 0 40px rgba(255,255,255,0.12);
     }
 
     .enter-btn {
@@ -189,7 +188,7 @@
       transform:scale(1.12);
       box-shadow:
         0 0 30px rgba(255,255,255,0.8),
-        0 0 60px rgba(120,120,255,0.6);
+        0 0 60px rgba(255,255,255,0.6);
     }
   </style>
 </head>
@@ -221,9 +220,9 @@
   <div class="hero">
     <h1 style="font-size:3rem;">Quads Chat Realms</h1>
     <p style="font-size:1.05rem;opacity:0.9;line-height:1.7;">
-      The quad universe is split into three major cultures.  
-      Each one leads to its own chatroom with message effects, emoji blasts,  
-      reveal messages, slam messages, quiet messages, and per‑room notifications.
+      Explore the three pillars of quad skating culture.  
+      Each realm leads to its own cosmic chatroom with message effects,  
+      emoji blasts, reveal messages, slam messages, and per‑room notifications.
     </p>
   </div>
 
