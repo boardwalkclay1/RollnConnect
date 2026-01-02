@@ -35,8 +35,8 @@
       background: radial-gradient(circle at top, #151515 0, #000 45%, #000 100%);
       color: var(--accent-soft);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
+      overflow-y: auto;
     }
 
     a {
@@ -47,13 +47,13 @@
     .app-shell {
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      min-height: 100vh;
     }
 
     /* Top nav */
     .topbar {
       height: 56px;
-      padding: 0 16px;
+      padding: 0 10px 0 4px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -61,7 +61,14 @@
       border-bottom: var(--border-subtle);
       box-shadow: 0 0 18px rgba(0,0,0,0.6);
       z-index: 20;
-      position: relative;
+      position: sticky;
+      top: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .hamburger {
@@ -98,17 +105,31 @@
       left: 0;
     }
 
-    .hamburger span::before {
-      top: -5px;
-    }
-
-    .hamburger span::after {
-      top: 5px;
-    }
+    .hamburger span::before { top: -5px; }
+    .hamburger span::after { top: 5px; }
 
     .hamburger:hover {
       box-shadow: var(--shadow-glow);
       border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .back-btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 6px 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(0,0,0,0.9));
+      color: var(--accent-soft);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .back-btn:hover {
+      color: var(--accent);
+      border-color: rgba(255,255,255,0.45);
+      box-shadow: var(--shadow-glow);
     }
 
     .topbar-title {
@@ -187,9 +208,7 @@
       z-index: 40;
     }
 
-    .side-menu.visible {
-      left: 0;
-    }
+    .side-menu.visible { left: 0; }
 
     .side-menu-title {
       font-size: 14px;
@@ -202,6 +221,15 @@
       font-size: 11px;
       opacity: 0.7;
       margin-bottom: 10px;
+    }
+
+    .side-menu-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      opacity: 0.7;
+      margin-top: 6px;
+      margin-bottom: 4px;
     }
 
     .side-menu-link {
@@ -221,15 +249,6 @@
       box-shadow: var(--shadow-glow);
     }
 
-    .side-menu-section-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      opacity: 0.7;
-      margin-top: 6px;
-      margin-bottom: 4px;
-    }
-
     /* Layout */
     .main {
       flex: 1;
@@ -237,6 +256,7 @@
       grid-template-columns: 260px minmax(0, 1.7fr) 260px;
       gap: 10px;
       padding: 10px;
+      min-height: 0;
     }
 
     @media (max-width: 960px) {
@@ -258,6 +278,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      min-height: 0;
     }
 
     .panel-header {
@@ -398,6 +419,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      min-height: 0;
     }
 
     .chat-messages {
@@ -407,6 +429,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      min-height: 0;
     }
 
     .msg-row {
@@ -464,9 +487,7 @@
       cursor: pointer;
     }
 
-    .msg-username:hover {
-      text-decoration: underline;
-    }
+    .msg-username:hover { text-decoration: underline; }
 
     .msg-time {
       font-variant-numeric: tabular-nums;
@@ -605,12 +626,38 @@
       border-top: var(--border-subtle);
       background: radial-gradient(circle at bottom, rgba(255,255,255,0.05), rgba(0,0,0,0.95));
       display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .recipient-row {
+      display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      font-size: 11px;
+      opacity: 0.8;
+      padding: 0 4px;
+    }
+
+    .recipient-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.5);
+      padding: 3px 8px;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .recipient-pill button {
+      border: none;
+      background: transparent;
+      color: var(--accent-soft);
+      cursor: pointer;
+      font-size: 12px;
     }
 
     .chat-input-shell {
-      flex: 1;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -652,6 +699,13 @@
       border-color: rgba(255,255,255,0.7);
     }
 
+    .send-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
     .send-btn {
       border-radius: 999px;
       padding: 6px 14px;
@@ -673,7 +727,6 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-left: 4px;
     }
 
     .gift-chip {
@@ -695,9 +748,7 @@
       color: var(--accent);
     }
 
-    .gift-chip span {
-      font-size: 13px;
-    }
+    .gift-chip span { font-size: 13px; }
 
     /* Attach bar */
     .attach-bar {
@@ -707,7 +758,7 @@
       font-size: 11px;
       opacity: 0.75;
       margin-top: 4px;
-      padding: 0 12px 8px;
+      padding: 0 4px 4px;
     }
 
     .attach-btn {
@@ -738,9 +789,7 @@
       background: radial-gradient(circle at top, rgba(255,255,255,0.10), rgba(0,0,0,0.96));
     }
 
-    .live-voice-banner.active {
-      display: flex;
-    }
+    .live-voice-banner.active { display: flex; }
 
     .live-voice-left {
       display: flex;
@@ -813,6 +862,7 @@
       background: linear-gradient(120deg, rgba(255,255,255,0.03), rgba(0,0,0,0.95));
       font-size: 12px;
       position: relative;
+      cursor: pointer;
     }
 
     .member-row:hover {
@@ -840,9 +890,7 @@
       cursor: pointer;
     }
 
-    .member-name:hover {
-      text-decoration: underline;
-    }
+    .member-name:hover { text-decoration: underline; }
 
     .member-status-dot {
       width: 7px;
@@ -965,7 +1013,7 @@
     /* Emoji dropdown */
     .emoji-dropdown {
       position: absolute;
-      bottom: 50px;
+      bottom: 90px;
       right: 140px;
       width: 220px;
       padding: 8px;
@@ -980,9 +1028,7 @@
       z-index: 25;
     }
 
-    .emoji-dropdown.visible {
-      display: flex;
-    }
+    .emoji-dropdown.visible { display: flex; }
 
     .emoji-item {
       width: 28px;
@@ -1105,6 +1151,7 @@
     <div class="side-menu-link" data-link="marketplace.html">Marketplace</div>
     <div class="side-menu-link" data-link="events.html">Events</div>
     <div class="side-menu-link" data-link="find-spots.html">Find spots</div>
+    <div class="side-menu-link" data-link="chatrooms.html">Chatrooms</div>
 
     <div class="side-menu-section-title">You</div>
     <div class="side-menu-link" data-link="profile.html">Profile</div>
@@ -1117,8 +1164,11 @@
   <div class="app-shell">
     <!-- TOPBAR -->
     <header class="topbar">
-      <div class="hamburger" id="hamburger">
-        <span></span>
+      <div class="topbar-left">
+        <div class="hamburger" id="hamburger">
+          <span></span>
+        </div>
+        <button class="back-btn" id="backBtn">Back</button>
       </div>
       <div class="topbar-title">
         <div class="topbar-title-main">Dancing Room</div>
@@ -1198,7 +1248,7 @@
                   <span class="msg-status">Seen</span>
                 </div>
                 <div class="msg-content">
-                  First steps in the Dancing Room. Flow clean, keep the messages simple.
+                  First steps in the Dancing Room. Flow clean, keep it playful.
                 </div>
               </div>
             </div>
@@ -1220,56 +1270,17 @@
                 </div>
               </div>
             </div>
-
-            <!-- Example event card in chat -->
-            <div class="msg-row">
-              <div class="avatar hover-profile" data-user-id="user-2"></div>
-              <div class="msg-bubble">
-                <div class="msg-meta">
-                  <span class="msg-username hover-profile" data-user-id="user-2">@nightglide</span>
-                  <span class="msg-time">9:48 PM</span>
-                  <span class="msg-status">Seen</span>
-                </div>
-                <div class="msg-type-label">Shared event</div>
-                <div class="msg-event-card">
-                  <div class="msg-event-title">Midnight City Roll · Downtown ATL</div>
-                  <div class="msg-event-meta">
-                    Tonight · 11:30 PM · 3.2 miles away
-                  </div>
-                  <div class="msg-card-actions">
-                    <button class="msg-card-btn" data-event-id="event-1" data-action="view-event">View event</button>
-                    <button class="msg-card-btn" data-event-id="event-1" data-action="directions-event">Get directions</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Example spot card in chat -->
-            <div class="msg-row self">
-              <div class="avatar hover-profile" data-user-id="user-self"></div>
-              <div class="msg-bubble">
-                <div class="msg-meta">
-                  <span class="msg-username hover-profile" data-user-id="user-self">You</span>
-                  <span class="msg-time">9:49 PM</span>
-                  <span class="msg-status">Seen</span>
-                </div>
-                <div class="msg-type-label">Shared spot</div>
-                <div class="msg-spot-card">
-                  <div class="msg-spot-title">Rooftop Glide Deck</div>
-                  <div class="msg-spot-meta">
-                    1.1 miles · smooth concrete · city view
-                  </div>
-                  <div class="msg-card-actions">
-                    <button class="msg-card-btn" data-spot-id="spot-1" data-action="view-spot">View spot</button>
-                    <button class="msg-card-btn" data-spot-id="spot-1" data-action="directions-spot">Get directions</button>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <!-- Input -->
+          <!-- Input + recipient -->
           <div class="chat-input-bar">
+            <div class="recipient-row">
+              <span>Send to:</span>
+              <span id="recipientLabel" class="recipient-pill">
+                <span id="recipientName">Everyone in room</span>
+                <button id="clearRecipientBtn" title="Clear recipient">×</button>
+              </span>
+            </div>
             <div class="chat-input-shell">
               <button class="input-pill-btn" id="emojiToggleBtn">😊</button>
               <input
@@ -1281,26 +1292,27 @@
               <button class="input-pill-btn" id="voiceRecordBtn">🎙</button>
             </div>
 
-            <button class="send-btn" id="sendMessageBtn">Send</button>
-
-            <div class="gift-bar">
-              <div class="gift-chip" data-gift="kiss">
-                <span>😘</span><span>Kiss</span>
-              </div>
-              <div class="gift-chip" data-gift="hug">
-                <span>🤗</span><span>Hug</span>
-              </div>
-              <div class="gift-chip" data-gift="rose">
-                <span>🌹</span><span>Rose</span>
+            <div class="send-row">
+              <button class="send-btn" id="sendMessageBtn">Send</button>
+              <div class="gift-bar">
+                <div class="gift-chip" data-gift="kiss">
+                  <span>😘</span><span>Kiss</span>
+                </div>
+                <div class="gift-chip" data-gift="hug">
+                  <span>🤗</span><span>Hug</span>
+                </div>
+                <div class="gift-chip" data-gift="rose">
+                  <span>🌹</span><span>Rose</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Events & Spots attach quick actions -->
-          <div class="attach-bar">
-            <span>Attach:</span>
-            <button class="attach-btn" id="attachEventBtn">Event</button>
-            <button class="attach-btn" id="attachSpotBtn">Spot</button>
+            <!-- Events & Spots attach quick actions -->
+            <div class="attach-bar">
+              <span>Attach:</span>
+              <button class="attach-btn" id="attachEventBtn">Event</button>
+              <button class="attach-btn" id="attachSpotBtn">Spot</button>
+            </div>
           </div>
         </div>
 
@@ -1329,7 +1341,7 @@
         </div>
         <div class="sidebar-right-body">
           <div class="member-list" id="memberList">
-            <div class="member-row">
+            <div class="member-row" data-user-id="user-1">
               <div class="member-main">
                 <div class="member-avatar hover-profile" data-user-id="user-1"></div>
                 <span class="member-name hover-profile" data-user-id="user-1">@boardwalk</span>
@@ -1342,7 +1354,7 @@
               </div>
             </div>
 
-            <div class="member-row">
+            <div class="member-row" data-user-id="user-2">
               <div class="member-main">
                 <div class="member-avatar hover-profile" data-user-id="user-2"></div>
                 <span class="member-name hover-profile" data-user-id="user-2">@nightglide</span>
@@ -1426,13 +1438,13 @@
     const mockEvents = [
       {
         id: "event-1",
-        title: "Midnight City Roll · Downtown ATL",
-        time: "Tonight · 11:30 PM",
-        distance: "3.2 miles away"
+        title: "Floor Session · Downtown Plaza",
+        time: "Tonight · 9:00 PM",
+        distance: "3.0 miles away"
       },
       {
         id: "event-2",
-        title: "Sunrise Cruise · Beltline Eastside",
+        title: "Sunrise Flow · Beltline Corner",
         time: "Tomorrow · 6:00 AM",
         distance: "5.1 miles away"
       }
@@ -1441,17 +1453,26 @@
     const mockSpots = [
       {
         id: "spot-1",
-        title: "Rooftop Glide Deck",
-        distance: "1.1 miles · smooth concrete",
-        info: "City view · mellow traffic · perfect for dancing."
+        title: "Smooth Tile Stage",
+        distance: "1.4 miles · marble",
+        info: "Big flat stage, mellow security, perfect for patterns."
       },
       {
         id: "spot-2",
-        title: "Riverfront Path",
-        distance: "4.4 miles · scenic",
-        info: "Long run, light curves, water on your side."
+        title: "Rooftop Dance Deck",
+        distance: "2.8 miles · smooth concrete",
+        info: "City view, lights, music friendly."
       }
     ];
+
+    // Back button
+    document.getElementById("backBtn").addEventListener("click", () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "chatrooms.html";
+      }
+    });
 
     // Side menu logic
     const sideMenu = document.getElementById("sideMenu");
@@ -1550,6 +1571,33 @@
       btn.addEventListener("click", (e) => {
         const userId = e.currentTarget.getAttribute("data-user-id");
         requestPrivateChat(userId);
+      });
+    });
+
+    // Recipient selection (for messages, emojis, gifts)
+    let activeRecipientId = null;
+    const recipientNameEl = document.getElementById("recipientName");
+    const clearRecipientBtn = document.getElementById("clearRecipientBtn");
+
+    function setRecipient(userId) {
+      activeRecipientId = userId;
+      const user = mockUsers[userId];
+      if (user) {
+        recipientNameEl.textContent = user.username;
+      }
+    }
+
+    function clearRecipient() {
+      activeRecipientId = null;
+      recipientNameEl.textContent = "Everyone in room";
+    }
+
+    clearRecipientBtn.addEventListener("click", clearRecipient);
+
+    document.querySelectorAll(".member-row").forEach(row => {
+      row.addEventListener("click", () => {
+        const userId = row.getAttribute("data-user-id");
+        setRecipient(userId);
       });
     });
 
@@ -1654,13 +1702,13 @@
     const emojiToggleBtn = document.getElementById("emojiToggleBtn");
     const emojiDropdown = document.getElementById("emojiDropdown");
 
-    function appendTextMessage(content, isSelf = true) {
+    function appendTextMessage(content, isSelf = true, recipientId = null) {
       const row = document.createElement("div");
       row.className = "msg-row" + (isSelf ? " self" : "");
 
       const avatar = document.createElement("div");
       avatar.className = "avatar hover-profile";
-      avatar.dataset.userId = isSelf ? "user-self" : "user-1";
+      avatar.dataset.userId = isSelf ? "user-self" : (recipientId || "user-1");
 
       const bubble = document.createElement("div");
       bubble.className = "msg-bubble";
@@ -1670,8 +1718,8 @@
 
       const username = document.createElement("span");
       username.className = "msg-username hover-profile";
-      username.dataset.userId = isSelf ? "user-self" : "user-1";
-      username.textContent = isSelf ? "You" : "@boardwalk";
+      username.dataset.userId = isSelf ? "user-self" : (recipientId || "user-1");
+      username.textContent = isSelf ? "You" : (mockUsers[recipientId]?.username || "@boardwalk");
 
       const time = document.createElement("span");
       time.className = "msg-time";
@@ -1689,6 +1737,13 @@
       contentDiv.className = "msg-content";
       contentDiv.textContent = content;
 
+      if (recipientId) {
+        const targetLabel = document.createElement("div");
+        targetLabel.className = "msg-type-label";
+        targetLabel.textContent = "To " + mockUsers[recipientId].username;
+        bubble.appendChild(targetLabel);
+      }
+
       bubble.appendChild(meta);
       bubble.appendChild(contentDiv);
 
@@ -1704,8 +1759,8 @@
     sendMessageBtn.addEventListener("click", () => {
       const text = chatInput.value.trim();
       if (!text) return;
-      appendTextMessage(text, true);
-      // TODO: send to backend
+      appendTextMessage(text, true, activeRecipientId || null);
+      // TODO: send to backend with recipientId
       chatInput.value = "";
     });
 
@@ -1722,8 +1777,12 @@
 
     emojiDropdown.querySelectorAll(".emoji-item").forEach((item) => {
       item.addEventListener("click", () => {
-        chatInput.value += item.textContent;
-        chatInput.focus();
+        if (!activeRecipientId) {
+          alert("Select a user from the right sidebar to send this emoji to.");
+          return;
+        }
+        appendTextMessage(item.textContent, true, activeRecipientId);
+        // TODO: send emoji message with recipientId
       });
     });
 
@@ -1733,17 +1792,21 @@
       }
     });
 
-    // Gifts
+    // Gifts – require a selected recipient
     document.querySelectorAll(".gift-chip").forEach((chip) => {
       chip.addEventListener("click", () => {
+        if (!activeRecipientId) {
+          alert("Select a user from the right sidebar to send a gift to.");
+          return;
+        }
         const giftType = chip.dataset.gift;
         let label = "";
         let emoji = "";
         if (giftType === "kiss") { label = "sent you a kiss"; emoji = "😘"; }
         if (giftType === "hug") { label = "sent you a hug"; emoji = "🤗"; }
         if (giftType === "rose") { label = "sent you a rose"; emoji = "🌹"; }
-        appendTextMessage(`${emoji} You ${label}.`, true);
-        // TODO: send structured gift message to backend
+        appendTextMessage(`${emoji} You ${label}.`, true, activeRecipientId);
+        // TODO: send structured gift message to backend with recipientId
       });
     });
 
