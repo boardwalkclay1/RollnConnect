@@ -29,6 +29,18 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
+    /* NEBULA OVERLAY */
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at 40% 20%, rgba(80,80,255,0.25), transparent 60%),
+        radial-gradient(circle at 70% 80%, rgba(255,80,200,0.18), transparent 60%);
+      z-index:-2;
+      pointer-events:none;
+    }
+
     /* FLOATING FUTURISTIC SIDEBAR */
     .sidebar {
       position:fixed;
@@ -36,13 +48,14 @@
       left:-260px;
       transform:translateY(-50%);
       width:260px;
-      height:auto;
       background:rgba(255,255,255,0.08);
       backdrop-filter:blur(25px);
-      border-right:1px solid rgba(255,255,255,0.25);
+      border-right:1px solid rgba(255,255,255,0.35);
       padding:30px 20px;
       border-radius:0 20px 20px 0;
-      box-shadow:10px 0 40px rgba(255,255,255,0.25);
+      box-shadow:
+        10px 0 40px rgba(255,255,255,0.25),
+        inset -10px 0 40px rgba(255,255,255,0.08);
       transition:0.35s ease;
       z-index:9998;
     }
@@ -96,6 +109,7 @@
       display:block;
       background:rgba(255,255,255,0.05);
       box-shadow:0 0 12px rgba(255,255,255,0.15);
+      text-shadow:0 0 8px rgba(255,255,255,0.4);
     }
     .nav-links a:hover {
       background:rgba(255,255,255,0.2);
@@ -108,6 +122,15 @@
       padding-top:120px;
       padding-bottom:80px;
       text-align:center;
+      position:relative;
+    }
+
+    .page-wrapper::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at center, rgba(255,255,255,0.06), transparent 70%);
+      z-index:-1;
     }
 
     /* HERO */
@@ -118,7 +141,10 @@
       background:rgba(255,255,255,0.08);
       backdrop-filter:blur(25px);
       border-radius:24px;
-      box-shadow:0 0 60px rgba(255,255,255,0.3);
+      box-shadow:
+        0 0 40px rgba(255,255,255,0.25),
+        0 0 120px rgba(120,120,255,0.25),
+        inset 0 0 40px rgba(255,255,255,0.08);
     }
 
     /* SUBCATEGORY GRID */
@@ -134,13 +160,17 @@
       backdrop-filter:blur(25px);
       padding:24px;
       border-radius:20px;
-      box-shadow:0 0 40px rgba(255,255,255,0.3);
+      box-shadow:
+        0 0 40px rgba(255,255,255,0.3),
+        0 0 120px rgba(120,120,255,0.25);
       transition:0.3s;
       text-align:left;
     }
     .sub-card:hover {
-      transform:scale(1.06);
-      box-shadow:0 0 60px rgba(255,255,255,0.5);
+      transform:scale(1.08) translateY(-6px);
+      box-shadow:
+        0 0 60px rgba(255,255,255,0.5),
+        0 0 120px rgba(120,120,255,0.35);
     }
 
     .enter-btn {
@@ -152,6 +182,14 @@
       border-radius:12px;
       text-decoration:none;
       font-weight:600;
+      box-shadow:0 0 20px rgba(255,255,255,0.4);
+      transition:0.3s;
+    }
+    .enter-btn:hover {
+      transform:scale(1.12);
+      box-shadow:
+        0 0 30px rgba(255,255,255,0.8),
+        0 0 60px rgba(120,120,255,0.6);
     }
   </style>
 </head>
@@ -194,19 +232,19 @@
     <div class="sub-card">
       <h2>Rink Culture</h2>
       <p>Indoor rhythm, line dances, routines, and classic rink energy.</p>
-      <a href="chatroom.html?room=quads-rink" class="enter-btn">Enter Rink Chat</a>
+      <a href="room-rink.html" class="enter-btn">Enter Rink Chat</a>
     </div>
 
     <div class="sub-card">
       <h2>Street Culture</h2>
       <p>Urban quadding, plazas, outdoor rinks, parking lots, and freestyle flow.</p>
-      <a href="chatroom.html?room=quads-street" class="enter-btn">Enter Street Chat</a>
+      <a href="room-qstreet.html" class="enter-btn">Enter Street Chat</a>
     </div>
 
     <div class="sub-card">
       <h2>Park</h2>
       <p>Bowls, transitions, coping tricks, and quad park progression.</p>
-      <a href="chatroom.html?room=quads-park" class="enter-btn">Enter Park Chat</a>
+      <a href="room-qpark.html" class="enter-btn">Enter Park Chat</a>
     </div>
 
   </section>
@@ -214,7 +252,8 @@
 </div>
 
 <script>
-  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+  const h=document.getElementById("hamburger"),
+        s=document.getElementById("sidebar");
   h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
 </script>
 
