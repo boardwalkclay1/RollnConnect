@@ -53,7 +53,7 @@
     /* Top nav */
     .topbar {
       height: 56px;
-      padding: 0 16px;
+      padding: 0 10px 0 4px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -63,6 +63,12 @@
       z-index: 20;
       position: sticky;
       top: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .hamburger {
@@ -105,6 +111,25 @@
     .hamburger:hover {
       box-shadow: var(--shadow-glow);
       border-color: rgba(255, 255, 255, 0.35);
+    }
+
+    .back-btn {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 6px 10px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(0,0,0,0.9));
+      color: var(--accent-soft);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .back-btn:hover {
+      color: var(--accent);
+      border-color: rgba(255,255,255,0.45);
+      box-shadow: var(--shadow-glow);
     }
 
     .topbar-title {
@@ -988,7 +1013,7 @@
     /* Emoji dropdown */
     .emoji-dropdown {
       position: absolute;
-      bottom: 70px;
+      bottom: 90px;
       right: 140px;
       width: 220px;
       padding: 8px;
@@ -1126,6 +1151,7 @@
     <div class="side-menu-link" data-link="marketplace.html">Marketplace</div>
     <div class="side-menu-link" data-link="events.html">Events</div>
     <div class="side-menu-link" data-link="find-spots.html">Find spots</div>
+    <div class="side-menu-link" data-link="chatrooms.html">Chatrooms</div>
 
     <div class="side-menu-section-title">You</div>
     <div class="side-menu-link" data-link="profile.html">Profile</div>
@@ -1138,8 +1164,11 @@
   <div class="app-shell">
     <!-- TOPBAR -->
     <header class="topbar">
-      <div class="hamburger" id="hamburger">
-        <span></span>
+      <div class="topbar-left">
+        <div class="hamburger" id="hamburger">
+          <span></span>
+        </div>
+        <button class="back-btn" id="backBtn">Back</button>
       </div>
       <div class="topbar-title">
         <div class="topbar-title-main">Cruising Room</div>
@@ -1436,6 +1465,15 @@
       }
     ];
 
+    // Back button
+    document.getElementById("backBtn").addEventListener("click", () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "chatrooms.html";
+      }
+    });
+
     // Side menu logic
     const sideMenu = document.getElementById("sideMenu");
     const sideMenuBackdrop = document.getElementById("sideMenuBackdrop");
@@ -1545,7 +1583,7 @@
       activeRecipientId = userId;
       const user = mockUsers[userId];
       if (user) {
-        recipientNameEl.textContent = `@${user.username.replace(/^@/, "")}`;
+        recipientNameEl.textContent = user.username;
       }
     }
 
@@ -1699,7 +1737,6 @@
       contentDiv.className = "msg-content";
       contentDiv.textContent = content;
 
-      // If this is targeted to a specific user, add a small label
       if (recipientId) {
         const targetLabel = document.createElement("div");
         targetLabel.className = "msg-type-label";
