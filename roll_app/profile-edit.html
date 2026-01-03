@@ -1,117 +1,305 @@
-<script>
-  const hb = document.getElementById("hamburger"),
-        sb = document.getElementById("sidebar");
-  hb.onclick = () => { hb.classList.toggle("active"); sb.classList.toggle("open"); };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root{
+      --bg:#02040a;--card:#0c1020;--text:#fff;--border:rgba(255,255,255,0.18);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      min-height:100vh;
+      background:radial-gradient(circle at top,#141b3a,#02040a 55%,#000);
+      font-family:system-ui,sans-serif;
+      color:var(--text);
+      padding:16px;
+    }
+    .page{max-width:960px;margin:0 auto;}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+    h2{margin-bottom:10px;}
+    .field{margin-bottom:10px;}
+    .field label{
+      display:block;
+      margin-bottom:4px;
+      opacity:0.8;
+      font-size:0.85rem;
+    }
+    .field input,.field textarea{
+      width:100%;
+      padding:8px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.05);
+      color:var(--text);
+      font-size:0.9rem;
+    }
+    textarea{resize:vertical;}
+    .btn{
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.1);
+      color:var(--text);
+      cursor:pointer;
+      font-size:0.85rem;
+      margin-right:8px;
+      margin-top:6px;
+    }
+    .btn-primary{background:rgba(125,249,255,0.18);}
+    .item{
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px;
+      margin-top:8px;
+      font-size:0.85rem;
+    }
+    .item button{
+      margin-top:6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
 
-  /* ===== STORAGE KEYS ===== */
-  const LS_PROFILE = "rc_user_profile";
-  const LS_LESSONS = "rc_user_lessons";
+    <!-- PROFILE CARD -->
+    <div class="card">
+      <h2>Profile</h2>
 
-  /* ===== LOAD PROFILE ===== */
-  let profile = JSON.parse(localStorage.getItem(LS_PROFILE) || "{}");
-  profile.posts = profile.posts || [];
+      <div class="field">
+        <label for="nameInput">Name</label>
+        <input id="nameInput" type="text" />
+      </div>
+      <div class="field">
+        <label for="usernameInput">Username / handle</label>
+        <input id="usernameInput" type="text" />
+      </div>
+      <div class="field">
+        <label for="bioInput">Bio</label>
+        <textarea id="bioInput" rows="3"></textarea>
+      </div>
+      <div class="field">
+        <label for="avatarUrlInput">Avatar URL</label>
+        <input id="avatarUrlInput" type="url" />
+      </div>
+      <div class="field">
+        <label for="profileClipUrlInput">Profile Clip URL</label>
+        <input id="profileClipUrlInput" type="url" />
+      </div>
+      <div class="field">
+        <label for="postsCountInput">Posts count</label>
+        <input id="postsCountInput" type="number" min="0" />
+      </div>
+      <div class="field">
+        <label for="clipsCountInput">Clips count</label>
+        <input id="clipsCountInput" type="number" min="0" />
+      </div>
+      <div class="field">
+        <label for="eventsCountInput">Events count</label>
+        <input id="eventsCountInput" type="number" min="0" />
+      </div>
 
-  /* ===== LOAD LESSONS ===== */
-  function getLessons() {
-    return JSON.parse(localStorage.getItem(LS_LESSONS) || "[]");
-  }
-  function saveLessons(list) {
-    localStorage.setItem(LS_LESSONS, JSON.stringify(list));
-  }
+      <button class="btn btn-primary" id="saveProfileBtn" type="button">Save profile</button>
+      <button class="btn" type="button" onclick="window.location.href=profile.html">Back to profile</button>
+    </div>
 
-  /* ===== FILL INPUTS ===== */
-  const nameEl = document.getElementById("name");
-  const bioEl = document.getElementById("bio");
-  const linkEl = document.getElementById("link");
-  const instaEl = document.getElementById("instagram");
-  const postsList = document.getElementById("postsList");
-  const lessonsList = document.getElementById("lessonsList");
+    <!-- LESSONS -->
+    <div class="card">
+      <h2>Lessons</h2>
 
-  nameEl.value = profile.name || "";
-  bioEl.value = profile.bio || "";
-  linkEl.value = profile.link || "";
-  instaEl.value = profile.instagram || "";
+      <div class="field">
+        <label for="lessonTitleInput">Title</label>
+        <input id="lessonTitleInput" type="text" />
+      </div>
+      <div class="field">
+        <label for="lessonPriceInput">Price</label>
+        <input id="lessonPriceInput" type="number" min="0" />
+      </div>
+      <div class="field">
+        <label for="lessonDurationInput">Duration (min)</label>
+        <input id="lessonDurationInput" type="number" min="0" />
+      </div>
+      <div class="field">
+        <label for="lessonDescInput">Description</label>
+        <textarea id="lessonDescInput" rows="2"></textarea>
+      </div>
 
-  /* ===== RENDER POSTS ===== */
-  function renderPosts() {
-    postsList.innerHTML = "";
-    profile.posts.forEach((p, idx) => {
-      const div = document.createElement("div");
-      div.className = "post-item";
-      div.innerHTML = `
-        <div><strong>${p.type.toUpperCase()}</strong> – ${p.caption || ""}</div>
-        <div style="font-size:0.8rem;opacity:0.9;">Likes: ${p.likes || 0} • Views: ${p.views || 0}</div>
-        <button class="delete-btn" data-idx="${idx}">Delete</button>
-      `;
-      postsList.appendChild(div);
-    });
+      <button class="btn btn-primary" id="addLessonBtn" type="button">Add lesson</button>
 
-    postsList.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.onclick = () => {
-        profile.posts.splice(btn.dataset.idx, 1);
-        renderPosts();
+      <div id="lessonsList"></div>
+    </div>
+
+    <!-- CLIPS -->
+    <div class="card">
+      <h2>Clips</h2>
+
+      <div class="field">
+        <label for="clipUrlInput">Clip URL</label>
+        <input id="clipUrlInput" type="url" />
+      </div>
+
+      <button class="btn btn-primary" id="addClipBtn" type="button">Add clip</button>
+
+      <div id="clipsList"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const LS_PROFILE = "rc_user_profile";
+    const LS_LESSONS = "rc_user_lessons";
+    const LS_CLIPS   = "rc_user_clips";
+
+    function safeParse(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        return JSON.parse(raw);
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function loadProfileForm() {
+      const p = safeParse(LS_PROFILE, {});
+      document.getElementById("nameInput").value         = p.name || "";
+      document.getElementById("usernameInput").value     = p.username || "";
+      document.getElementById("bioInput").value          = p.bio || "";
+      document.getElementById("avatarUrlInput").value    = p.avatarUrl || "";
+      document.getElementById("profileClipUrlInput").value = p.profileClipUrl || "";
+      document.getElementById("postsCountInput").value   = p.postsCount || 0;
+      document.getElementById("clipsCountInput").value   = p.clipsCount || 0;
+      document.getElementById("eventsCountInput").value  = p.eventsCount || 0;
+    }
+
+    function saveProfileForm() {
+      const p = {
+        name:        document.getElementById("nameInput").value.trim(),
+        username:    document.getElementById("usernameInput").value.trim(),
+        bio:         document.getElementById("bioInput").value.trim(),
+        avatarUrl:   document.getElementById("avatarUrlInput").value.trim(),
+        profileClipUrl: document.getElementById("profileClipUrlInput").value.trim(),
+        postsCount:  Number(document.getElementById("postsCountInput").value) || 0,
+        clipsCount:  Number(document.getElementById("clipsCountInput").value) || 0,
+        eventsCount: Number(document.getElementById("eventsCountInput").value) || 0
       };
-    });
-  }
+      localStorage.setItem(LS_PROFILE, JSON.stringify(p));
+      alert("Profile saved.");
+    }
 
-  /* ===== RENDER LESSONS ===== */
-  function renderLessons() {
-    const lessons = getLessons();
-    lessonsList.innerHTML = "";
+    function renderLessons() {
+      const lessons = safeParse(LS_LESSONS, []);
+      const container = document.getElementById("lessonsList");
+      container.innerHTML = "";
 
-    lessons.forEach((ls, idx) => {
-      const div = document.createElement("div");
-      div.className = "lesson-item";
-      div.innerHTML = `
-        <div><strong>${ls.title}</strong> – $${ls.price}, ${ls.duration} min</div>
-        <div style="font-size:0.9rem;opacity:0.9;">${ls.description}</div>
-        <button class="delete-btn" data-idx="${idx}">Delete</button>
-      `;
-      lessonsList.appendChild(div);
-    });
+      if (!lessons.length) {
+        container.innerHTML = "<p style=\\"font-size:0.85rem;opacity:0.7;\\">No lessons yet.</p>";
+        return;
+      }
 
-    lessonsList.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.onclick = () => {
-        const lessons = getLessons();
-        lessons.splice(btn.dataset.idx, 1);
-        saveLessons(lessons);
-        renderLessons();
-      };
-    });
-  }
+      lessons.forEach(function(ls, index) {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML =
+          "<strong>" + (ls.title || "Lesson " + (index + 1)) + "</strong><br>" +
+          (ls.price ? "$" + ls.price : "Free") + " • " + (ls.duration || 0) + " min<br>" +
+          "<span style=\\"opacity:0.8;\\">" + (ls.description || "") + "</span><br>";
 
-  renderPosts();
-  renderLessons();
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.textContent = "Remove";
+        btn.onclick = function () {
+          const list = safeParse(LS_LESSONS, []);
+          list.splice(index, 1);
+          localStorage.setItem(LS_LESSONS, JSON.stringify(list));
+          renderLessons();
+        };
 
-  /* ===== ADD LESSON ===== */
-  document.getElementById("addLessonBtn").onclick = () => {
-    const title = document.getElementById("lessonTitle").value.trim();
-    const price = document.getElementById("lessonPrice").value.trim();
-    const duration = document.getElementById("lessonDuration").value.trim();
-    const description = document.getElementById("lessonDescription").value.trim();
+        div.appendChild(btn);
+        container.appendChild(div);
+      });
+    }
 
-    if (!title) return;
+    function addLesson() {
+      const title = document.getElementById("lessonTitleInput").value.trim();
+      const price = document.getElementById("lessonPriceInput").value.trim();
+      const duration = document.getElementById("lessonDurationInput").value.trim();
+      const description = document.getElementById("lessonDescInput").value.trim();
 
-    const lessons = getLessons();
-    lessons.push({ title, price, duration, description });
-    saveLessons(lessons);
+      if (!title) {
+        alert("Lesson needs a title.");
+        return;
+      }
 
-    document.getElementById("lessonTitle").value = "";
-    document.getElementById("lessonPrice").value = "";
-    document.getElementById("lessonDuration").value = "";
-    document.getElementById("lessonDescription").value = "";
+      const lessons = safeParse(LS_LESSONS, []);
+      lessons.push({ title: title, price: price, duration: duration, description: description });
+      localStorage.setItem(LS_LESSONS, JSON.stringify(lessons));
 
+      document.getElementById("lessonTitleInput").value = "";
+      document.getElementById("lessonPriceInput").value = "";
+      document.getElementById("lessonDurationInput").value = "";
+      document.getElementById("lessonDescInput").value = "";
+
+      renderLessons();
+    }
+
+    function renderClips() {
+      const clips = safeParse(LS_CLIPS, []);
+      const container = document.getElementById("clipsList");
+      container.innerHTML = "";
+
+      if (!clips.length) {
+        container.innerHTML = "<p style=\\"font-size:0.85rem;opacity:0.7;\\">No clips saved.</p>";
+        return;
+      }
+
+      clips.forEach(function(url, index) {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = "<span style=\\"font-size:0.85rem;\\">" + url + "</span><br>";
+
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.textContent = "Remove";
+        btn.onclick = function () {
+          const list = safeParse(LS_CLIPS, []);
+          list.splice(index, 1);
+          localStorage.setItem(LS_CLIPS, JSON.stringify(list));
+          renderClips();
+        };
+
+        div.appendChild(btn);
+        container.appendChild(div);
+      });
+    }
+
+    function addClip() {
+      const url = document.getElementById("clipUrlInput").value.trim();
+      if (!url) {
+        alert("Clip URL required.");
+        return;
+      }
+      const clips = safeParse(LS_CLIPS, []);
+      clips.push(url);
+      localStorage.setItem(LS_CLIPS, JSON.stringify(clips));
+      document.getElementById("clipUrlInput").value = "";
+      renderClips();
+    }
+
+    document.getElementById("saveProfileBtn").onclick = saveProfileForm;
+    document.getElementById("addLessonBtn").onclick = addLesson;
+    document.getElementById("addClipBtn").onclick = addClip;
+
+    loadProfileForm();
     renderLessons();
-  };
-
-  /* ===== SAVE PROFILE ===== */
-  document.getElementById("saveProfileBtn").onclick = () => {
-    profile.name = nameEl.value.trim() || "Your Name";
-    profile.bio = bioEl.value.trim();
-    profile.link = linkEl.value.trim();
-    profile.instagram = instaEl.value.trim();
-
-    localStorage.setItem(LS_PROFILE, JSON.stringify(profile));
-    window.location.href = "profile.html";
-  };
-</script>
+    renderClips();
+  </script>
+</body>
+</html>
