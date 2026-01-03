@@ -960,7 +960,44 @@
               <!-- Posts rendered here -->
             </div>
           </section>
+<!-- LESSONS PANEL -->
+<section class="panel" id="lessonsPanel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Lessons</div>
+      <div class="panel-subtitle">Book time with this creator</div>
+    </div>
+  </div>
+  <div id="lessonsPublicList"></div>
+</section>
 
+<!-- BOOKING SHEET (simple inline modal) -->
+<div id="lessonBookingSheet" style="display:none;position:fixed;left:0;right:0;bottom:0;background:rgba(2,4,10,0.98);border-top:1px solid rgba(255,255,255,0.3);box-shadow:0 -8px 40px rgba(0,0,0,0.8);padding:14px 16px;z-index:50;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <div style="font-size:0.9rem;text-transform:uppercase;letter-spacing:0.08em;">Book Lesson</div>
+    <button type="button" id="closeBookingSheetBtn" style="border:none;background:transparent;color:white;font-size:1.3rem;cursor:pointer;">×</button>
+  </div>
+  <div id="bookingLessonTitle" style="font-weight:600;margin-bottom:4px;"></div>
+  <div id="bookingLessonPrice" style="font-size:0.8rem;opacity:0.8;margin-bottom:8px;"></div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+    <div style="display:flex;gap:8px;">
+      <div style="flex:1;">
+        <div style="opacity:0.7;margin-bottom:2px;">Date</div>
+        <input type="date" id="bookingDateInput" style="width:100%;">
+      </div>
+      <div style="flex:1;">
+        <div style="opacity:0.7;margin-bottom:2px;">Time</div>
+        <input type="time" id="bookingTimeInput" style="width:100%;">
+      </div>
+    </div>
+    <div>
+      <div style="opacity:0.7;margin-bottom:2px;">Note (optional)</div>
+      <textarea id="bookingNoteInput" rows="2" style="width:100%;"></textarea>
+    </div>
+    <button class="pill-btn" type="button" id="confirmBookingBtn">Confirm Booking</button>
+  </div>
+</div>
           <!-- CALENDAR PANEL (CENTERED) -->
           <section class="panel calendar-panel" id="calendarPanel">
             <div class="calendar-inner">
