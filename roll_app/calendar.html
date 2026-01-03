@@ -1,49 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Calendar</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<title>My Calendar – Roll ’n Connect</title>
+
+<style>
+/* GLOBAL */
+body {
+  background:#000;
+  color:#fff;
+  margin:0;
+  padding:0;
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* STARFIELDS */
+.stars1,.stars2,.stars3 {
+  position:fixed; inset:0;
+  background:url('styles/stars-white.png') repeat;
+  z-index:-3;
+  pointer-events:none;
+}
+.stars1{opacity:.55;animation:drift1 140s linear infinite;}
+.stars2{opacity:.35;animation:drift2 200s linear infinite;}
+.stars3{opacity:.2; animation:drift3 260s linear infinite;}
+
+@keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+@keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+@keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+/* BURGER */
+.hamburger {
+  position:fixed;
+  top:25px;
+  left:25px;
+  width:40px;
+  height:30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  cursor:pointer;
+  z-index:99999;
+}
+.hamburger span {
+  height:4px;
+  width:100%;
+  background:#fff;
+  border-radius:4px;
+  box-shadow:0 0 12px rgba(255,255,255,0.9);
+  transition:0.3s;
+}
+.hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+.hamburger.active span:nth-child(2){opacity:0;}
+.hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+/* SIDEBAR */
+.sidebar {
+  position:fixed;
+  top:0;
+  left:-260px;
+  width:260px;
+  height:100vh;
+  background:rgba(10,10,20,0.92);
+  backdrop-filter:blur(25px);
+  border-right:1px solid rgba(255,255,255,0.25);
+  padding:26px 20px;
+  box-shadow:10px 0 40px rgba(0,0,0,0.7);
+  transition:0.35s ease;
+  z-index:99998;
+}
+.sidebar.open { left:0; }
+
+.sidebar-header {
+  text-align:center;
+  margin-bottom:24px;
+}
+.sidebar-header h2 {
+  font-size:1.4rem;
+  text-shadow:0 0 20px #fff;
+}
+
+.sidebar a {
+  display:block;
+  color:#fff;
+  text-decoration:none;
+  padding:10px 14px;
+  margin-bottom:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.05);
+  box-shadow:0 0 10px rgba(255,255,255,0.15);
+  transition:0.25s;
+}
+.sidebar a:hover {
+  background:rgba(255,255,255,0.2);
+  transform:translateX(5px);
+  box-shadow:0 0 18px rgba(255,255,255,0.4);
+}
+
+/* MAIN WRAPPER */
+.cosmic-wrapper {
+  padding:140px 20px 80px;
+  max-width:900px;
+  margin:0 auto;
+}
+
+/* GLASS PANEL */
+.glass {
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(20px);
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 0 40px rgba(255,255,255,0.25);
+  margin-bottom:40px;
+}
+
+.section-title {
+  font-size:3rem;
+  text-align:center;
+  text-shadow:0 0 40px #fff;
+}
+
+/* CALENDAR LIST */
+.calendar-list {
+  list-style:none;
+  padding:0;
+  margin:0;
+}
+
+.calendar-item {
+  padding:18px;
+  margin-bottom:16px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.12);
+  box-shadow:0 0 30px rgba(255,255,255,0.25);
+}
+
+.calendar-item a {
+  color:#fff;
+  text-decoration:underline;
+}
+</style>
 </head>
+
 <body>
 
+<!-- STARFIELDS -->
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
 
+<!-- BURGER -->
 <div id="hamburger" class="hamburger">
   <span></span><span></span><span></span>
 </div>
 
+<!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
   <div class="sidebar-header"><h2>Menu</h2></div>
   <a href="dashboard.html">Dashboard</a>
   <a href="profile.html">My Profile</a>
   <a href="profile-edit.html">Edit Profile</a>
   <a href="chatrooms.html">Chatrooms</a>
-  <a href="calendar.html">Calendar</a>
-  <a href="settings.html">Settings</a>
+  <a href="events.html">Events</a>
+  <a href="find-spots.html">Find Spots</a>
 </div>
 
+<!-- MAIN CONTENT -->
 <div class="cosmic-wrapper">
 
-  <div class="glass" style="margin-bottom:40px;">
-    <h1 class="section-title">Calendar</h1>
+  <div class="glass">
+    <h1 class="section-title">My Calendar</h1>
   </div>
 
-  <div class="glass" style="padding:30px;">
+  <div class="glass">
     <ul id="calendarFullList" class="calendar-list"></ul>
-    <p id="calendarEmpty" style="display:none; opacity:0.7;">No events yet.</p>
+    <p id="calendarEmpty" style="display:none; opacity:0.7;">Nothing saved yet.</p>
   </div>
 
 </div>
 
-<script src="profile.js"></script>
 <script>
-  RC.initCalendar();
-  const h = document.getElementById("hamburger");
-  const s = document.getElementById("sidebar");
-  h.onclick = () => { h.classList.toggle("active"); s.classList.toggle("open"); };
+/* AUTH CHECK — ONLY ALLOW LOGGED-IN USERS */
+const user = JSON.parse(localStorage.getItem("rc_user"));
+if (!user) {
+  window.location.href = "index.html";
+}
+
+/* BURGER */
+const h = document.getElementById("hamburger");
+const s = document.getElementById("sidebar");
+h.onclick = () => {
+  h.classList.toggle("active");
+  s.classList.toggle("open");
+};
+
+/* LOAD CALENDAR ITEMS */
+function loadCalendarItems() {
+  const events = JSON.parse(localStorage.getItem("rc_events") || "[]");
+  const spots = JSON.parse(localStorage.getItem("rc_spots") || "[]");
+
+  const savedEvents = JSON.parse(localStorage.getItem("rc_user_saved_events") || "[]");
+  const savedSpots = JSON.parse(localStorage.getItem("rc_user_saved_spots") || "[]");
+
+  const list = document.getElementById("calendarFullList");
+  const empty = document.getElementById("calendarEmpty");
+
+  list.innerHTML = "";
+
+  const combined = [];
+
+  // Saved events
+  events.forEach(ev => {
+    if (savedEvents.includes(ev.id)) {
+      combined.push({
+        type: "event",
+        title: ev.title,
+        date: ev.date,
+        location: ev.location,
+        link: `event-details.html?id=${ev.id}`
+      });
+    }
+  });
+
+  // Saved spots
+  spots.forEach(sp => {
+    if (savedSpots.includes(sp.id)) {
+      combined.push({
+        type: "spot",
+        title: sp.name,
+        distance: sp.distance,
+        link: `spot-details.html?id=${sp.id}`
+      });
+    }
+  });
+
+  if (combined.length === 0) {
+    empty.style.display = "block";
+    return;
+  }
+
+  empty.style.display = "none";
+
+  combined.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "calendar-item";
+
+    li.innerHTML = `
+      <strong>${item.title}</strong><br>
+      ${item.date ? `📅 ${item.date}<br>` : ""}
+      ${item.location ? `📍 ${item.location}<br>` : ""}
+      ${item.distance ? `🛼 ${item.distance} miles away<br>` : ""}
+      <a href="${item.link}">View Details</a>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+loadCalendarItems();
 </script>
 
 </body>
