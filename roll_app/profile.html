@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Profile – Roll ’n Connect</title>
+<title>My Profile – Roll ’n Connect</title>
 
 <style>
 /* GLOBAL */
@@ -357,7 +357,6 @@ body {
 <!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
   <div class="sidebar-header"><h2>Menu</h2></div>
-  <a href="index.html">Home</a>
   <a href="dashboard.html">Dashboard</a>
   <a href="profile.html">My Profile</a>
   <a href="profile-edit.html">Edit Profile</a>
@@ -540,4 +539,274 @@ clipInput.onchange = (e) => {
   reader.readAsDataURL(file);
 };
 
-/* POSTS DATA MODEL */
+/* POSTS DATA MODEL
+   rc_user_posts: array of {id, userId, type: 'photo'|'clip', mediaData, caption, createdAt, likes: [userId] }
+   rc_user_likes: array of postIds that this user has liked (max 3 at a time)
+   rc_clips_global: array of clip posts for global clips page
+*/
+
+function getUserPosts() {
+  return JSON.parse(localStorage.getItem("rc_user_posts") || "[]").filter(p => p.userId === USER_ID);
+}
+function setUserPosts(posts) {
+  const all = JSON.parse(localStorage.getItem("rc_user_posts") || "[]").filter(p => p.userId !== USER_ID).concat(posts);
+  localStorage.setItem("rc_user_posts", JSON.stringify(all));
+}
+function getUserLikes() {
+  return JSON.parse(localStorage.getItem("rc_user_likes") || "[]");
+}
+function setUserLikes(likes) {
+  localStorage.setItem("rc_user_likes", JSON.stringify(likes));
+}
+
+/* CREATE POST */
+const newPhotoInput = document.getElementById("newPhotoInput");
+const newClipInput = document.getElementById("newClipInput");
+const newPostCaption = document.getElementById("newPostCaption");
+const createPostBtn = document.getElementById("createPostBtn");
+
+createPostBtn.onclick = () => {
+  const photoFile = newPhotoInput.files[0];
+  const clipFile = newClipInput.files[0];
+  const caption = newPostCaption.value.trim();
+
+  if (!photoFile && !clipFile) {
+    alert("Add a photo or a clip first.");
+    return;
+  }
+
+  if (photoFile && clipFile) {
+    alert("Choose either a photo OR a clip for a single post.");
+    return;
+  }
+
+  if (photoFile) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      createPost("photo", reader.result, caption);
+      newPhotoInput.value = "";
+      newPostCaption.value = "";
+    };
+    reader.readAsDataURL(photoFile);
+  } else if (clipFile) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      createPost("clip", reader.result, caption);
+      newClipInput.value = "";
+      newPostCaption.value = "";
+    };
+    reader.readAsDataURL(clipFile);
+  }
+};
+
+function createPost(type, mediaData, caption) {
+  const posts = getUserPosts();
+  const id = "post_" + Date.now();
+  const post = {
+    id,
+    userId: USER_ID,
+    type,
+    mediaData,
+    caption,
+    createdAt: new Date().toISOString(),
+    likes: []
+  };
+  posts.push(post);
+  setUserPosts(posts);
+
+  if (type === "clip") {
+    const clips = JSON.parse(localStorage.getItem("rc_clips_global") || "[]");
+    clips.push(post);
+    localStorage.setItem("rc_clips_global", JSON.stringify(clips));
+  }
+
+  renderPosts(currentFilter);
+  updateStats();
+}
+
+/* RENDER POSTS */
+const postsGrid = document.getElementById("postsGrid");
+let currentFilter = "all";
+
+function renderPosts(filter = "all") {
+  currentFilter = filter;
+  const posts = getUserPosts().sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+  postsGrid.innerHTML = "";
+
+  posts
+    .filter(p => filter === "all" || p.type === filter)
+    .forEach(p => {
+      const card = document.createElement("div");
+      card.className = "post-card";
+
+      const mediaHtml = p.type === "photo"
+        ? `<img src="${p.mediaData}">`
+        : `<video src="${p.mediaData}" muted loop></video>`;
+
+      const dateStr = new Date(p.createdAt).toLocaleString();
+
+      const likesCount = p.likes.length;
+      const userLikes = getUserLikes();
+      const likedByUser = userLikes.includes(p.id);
+
+      card.innerHTML = `
+        <div class="post-media">${mediaHtml}</div>
+        <div class="post-body">
+          <div class="post-caption">${p.caption || ""}</div>
+          <div class="post-meta">
+            ${p.type === "photo" ? "Photo" : "Clip"} · ${dateStr}<br>
+            ❤️ <span class="like-count">${likesCount}</span> likes
+          </div>
+          <div class="post-actions">
+            <button class="like-btn ${likedByUser ? "liked" : "not-liked"}" data-id="${p.id}">
+              ${likedByUser ? "Unlike" : "Like"}
+            </button>
+          </div>
+        </div>
+      `;
+      postsGrid.appendChild(card);
+    });
+
+  attachLikeHandlers();
+}
+
+function attachLikeHandlers() {
+  const buttons = postsGrid.querySelectorAll(".like-btn");
+  buttons.forEach(btn => {
+    btn.onclick = () => {
+      const postId = btn.getAttribute("data-id");
+      toggleLike(postId);
+    };
+  });
+}
+
+/* LIKE LOGIC: max 3 likes per user across all content */
+function toggleLike(postId) {
+  let likes = getUserLikes();
+  const posts = getUserPosts();
+
+  const postIndex = posts.findIndex(p => p.id === postId);
+  if (postIndex === -1) return;
+
+  const post = posts[postIndex];
+  const alreadyLiked = likes.includes(postId);
+
+  if (alreadyLiked) {
+    likes = likes.filter(id => id !== postId);
+    post.likes = post.likes.filter(u => u !== USER_ID);
+  } else {
+    if (likes.length >= 3) {
+      alert("You can only like up to 3 posts at a time. Remove a like first.");
+      return;
+    }
+    likes.push(postId);
+    if (!post.likes.includes(USER_ID)) post.likes.push(USER_ID);
+  }
+
+  setUserLikes(likes);
+  posts[postIndex] = post;
+  setUserPosts(posts);
+
+  renderPosts(currentFilter);
+  updateStats();
+}
+
+/* FILTER BUTTONS */
+document.querySelectorAll(".post-filter-btn").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".post-filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const filter = btn.getAttribute("data-filter");
+    renderPosts(filter);
+  };
+});
+
+/* STATS */
+const statPosts = document.getElementById("statPosts");
+const statPhotos = document.getElementById("statPhotos");
+const statClips = document.getElementById("statClips");
+const statLikes = document.getElementById("statLikes");
+
+function updateStats() {
+  const posts = getUserPosts();
+  const photos = posts.filter(p => p.type === "photo").length;
+  const clips = posts.filter(p => p.type === "clip").length;
+  const totalLikes = posts.reduce((sum,p)=> sum + p.likes.length, 0);
+
+  statPosts.textContent = posts.length;
+  statPhotos.textContent = photos;
+  statClips.textContent = clips;
+  statLikes.textContent = totalLikes;
+}
+
+/* CALENDAR (saved events + spots) */
+function loadProfileCalendar() {
+  const events = JSON.parse(localStorage.getItem("rc_events") || "[]");
+  const spots = JSON.parse(localStorage.getItem("rc_spots") || "[]");
+
+  const savedEvents = JSON.parse(localStorage.getItem("rc_user_saved_events") || "[]");
+  const savedSpots = JSON.parse(localStorage.getItem("rc_user_saved_spots") || "[]");
+
+  const list = document.getElementById("calendarList");
+  const empty = document.getElementById("calendarEmpty");
+
+  list.innerHTML = "";
+
+  const combined = [];
+
+  events.forEach(ev => {
+    if (savedEvents.includes(ev.id)) {
+      combined.push({
+        type: "event",
+        id: ev.id,
+        title: ev.title,
+        date: ev.date,
+        location: ev.location,
+        link: `event-details.html?id=${ev.id}`
+      });
+    }
+  });
+
+  spots.forEach(sp => {
+    if (savedSpots.includes(sp.id)) {
+      combined.push({
+        type: "spot",
+        id: sp.id,
+        title: sp.name,
+        distance: sp.distance,
+        link: `spot-details.html?id=${sp.id}`
+      });
+    }
+  });
+
+  if (combined.length === 0) {
+    empty.style.display = "block";
+    return;
+  }
+
+  empty.style.display = "none";
+
+  combined.forEach(item => {
+    const li = document.createElement("li");
+    li.className = "calendar-item";
+
+    li.innerHTML = `
+      <strong>${item.title}</strong><br>
+      ${item.date ? `📅 ${item.date}<br>` : ""}
+      ${item.location ? `📍 ${item.location}<br>` : ""}
+      ${item.distance ? `🛼 ${item.distance} miles away<br>` : ""}
+      <a href="${item.link}">View Details</a>
+    `;
+
+    list.appendChild(li);
+  });
+}
+
+/* INITIAL RENDER */
+renderPosts("all");
+updateStats();
+loadProfileCalendar();
+</script>
+
+</body>
+</html>
