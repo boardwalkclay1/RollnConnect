@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Roll ’n Connect</title>
+<title>Roll ’n Connect — by Boardwalk Clay</title>
 
 <style>
 /* GLOBAL */
@@ -58,7 +58,7 @@ body {
 .hamburger.active span:nth-child(2){opacity:0;}
 .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
 
-/* SLIDE-OUT SIDEBAR */
+/* SIDEBAR */
 .sidebar {
   position:fixed;
   top:0;
@@ -115,7 +115,7 @@ body {
 }
 
 /* MAIN CONTENT */
-.main-wrapper { padding:40px 20px 80px; }
+.main-wrapper{padding:40px 20px 80px;}
 
 /* HERO */
 .title-wrapper {
@@ -139,6 +139,11 @@ body {
   margin:0 auto;
   text-shadow:0 0 30px rgba(255,255,255,0.8);
 }
+.signature {
+  margin-top:20px;
+  font-size:1.2rem;
+  opacity:0.8;
+}
 
 /* PANELS */
 .panel {
@@ -152,10 +157,7 @@ body {
   border-bottom:1px solid rgba(255,255,255,0.2);
   position:relative;
   z-index:2;
-  pointer-events:none;
 }
-.panel * { pointer-events:auto; }
-
 .panel-title {
   font-size:2.4rem;
   text-align:center;
@@ -187,11 +189,7 @@ body {
   margin-bottom:10px;
   overflow:hidden;
 }
-.item-img img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+.item-img img{width:100%;height:100%;object-fit:cover;}
 
 .item-title { font-size:1.2rem;font-weight:600;margin-bottom:4px; }
 .item-disc { font-size:0.9rem;opacity:0.8;margin-bottom:4px; }
@@ -207,15 +205,7 @@ body {
   font-size:0.9rem;
 }
 
-.signature {
-  text-align:center;
-  margin-top:40px;
-  font-size:1.2rem;
-  opacity:0.8;
-  padding-bottom:20px;
-}
-
-/* FLOATING PONG BUTTONS */
+/* FLOATING BUBBLES */
 .bubble {
   position:fixed;
   width:200px;
@@ -234,7 +224,6 @@ body {
   padding:10px;
   transition:0.3s;
   z-index:99997;
-  pointer-events:auto;
 }
 .bubble:hover {
   transform:scale(1.12);
@@ -278,6 +267,7 @@ body {
   <div class="title-wrapper">
     <div class="main-title">ROLL ’N CONNECT</div>
     <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
+    <div class="signature">by Boardwalk Clay</div>
   </div>
 
   <!-- MARKETPLACE PREVIEW -->
@@ -292,7 +282,6 @@ body {
     <div class="items-grid" id="giveawayItems"></div>
   </div>
 
-  <div class="signature">by Boardwalk Clay</div>
 </div>
 
 <!-- FLOATING BUTTONS -->
@@ -337,21 +326,19 @@ function renderIndexMarketplace(){
   marketWrap.innerHTML="";
   giveawayWrap.innerHTML="";
 
-  // last 4 items for marketplace preview
   items.slice(-4).reverse().forEach(item=>{
     marketWrap.appendChild(makeCard(item,false));
   });
 
-  // all donated items for giveaway preview
   items.filter(i=>i.donateToGiveaway).forEach(item=>{
     giveawayWrap.appendChild(makeCard(item,true));
   });
 
   if(!marketWrap.children.length){
-    marketWrap.innerHTML="<div style='text-align:center;opacity:0.8;'>No items yet. Visit the marketplace to add some.</div>";
+    marketWrap.innerHTML="<div style='text-align:center;opacity:0.8;'>No items yet.</div>";
   }
   if(!giveawayWrap.children.length){
-    giveawayWrap.innerHTML="<div style='text-align:center;opacity:0.8;'>No donated giveaway items yet.</div>";
+    giveawayWrap.innerHTML="<div style='text-align:center;opacity:0.8;'>No donated items yet.</div>";
   }
 }
 
@@ -359,9 +346,7 @@ function makeCard(item,isGiveaway){
   const div=document.createElement("div");
   div.className="item-card";
   div.innerHTML=`
-    <div class="item-img">
-      ${item.imageDataUrl ? `<img src="${item.imageDataUrl}">` : ""}
-    </div>
+    <div class="item-img">${item.imageDataUrl?`<img src="${item.imageDataUrl}">`:""}</div>
     <div class="item-title">${item.title}</div>
     <div class="item-disc">${item.discipline || "Unlabeled"}</div>
     <div class="item-price">${isGiveaway ? "Donated • $" + item.price : "$"+item.price}</div>
@@ -372,7 +357,7 @@ function makeCard(item,isGiveaway){
 
 renderIndexMarketplace();
 
-/* FLOATING BUBBLES */
+/* FLOATING BUBBLES — CSP SAFE */
 const bubbles = [
   { el: document.getElementById("b1"), x:320, y:120, vx:1.8, vy:1.2 },
   { el: document.getElementById("b2"), x:720, y:220, vx:-2.1, vy:1.9 },
@@ -382,7 +367,7 @@ const bubbles = [
   { el: document.getElementById("b6"), x:640, y:360, vx:-2.3, vy:1.6 },
 ];
 
-function animate() {
+function animateBubbles() {
   const w = window.innerWidth;
   const h = window.innerHeight;
 
@@ -410,9 +395,9 @@ function animate() {
     b.el.style.top = b.y + "px";
   }
 
-  requestAnimationFrame(animate);
+  requestAnimationFrame(animateBubbles);
 }
-animate();
+animateBubbles();
 </script>
 
 </body>
