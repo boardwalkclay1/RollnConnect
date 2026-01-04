@@ -30,37 +30,37 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* FLOATING PONG ORBS */
+    /* FLOATING COSMIC ORBS (PONG STYLE) */
     .floating-orb {
       position: fixed;
-      width: 90px;
-      height: 90px;
+      width: 110px;
+      height: 110px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
-      box-shadow: 0 0 35px rgba(255,255,255,0.25);
+      background: radial-gradient(circle, rgba(255,255,255,0.28), rgba(255,255,255,0.05));
+      box-shadow: 0 0 45px rgba(255,255,255,0.35);
       z-index:-2;
-      animation: pongMove 18s linear infinite alternate;
+      animation: pongMove 16s linear infinite alternate;
       pointer-events:none;
-      filter: blur(0.5px);
+      filter: blur(0.8px);
     }
     .floating-orb.small {
-      width: 55px;
-      height: 55px;
+      width: 60px;
+      height: 60px;
       animation-duration: 22s;
       opacity: 0.7;
     }
     .floating-orb.tiny {
       width: 35px;
       height: 35px;
-      animation-duration: 26s;
+      animation-duration: 28s;
       opacity: 0.5;
     }
 
     @keyframes pongMove {
       0%   { transform: translate(5vw, 10vh); }
-      25%  { transform: translate(70vw, 15vh); }
-      50%  { transform: translate(60vw, 70vh); }
-      75%  { transform: translate(15vw, 65vh); }
+      25%  { transform: translate(75vw, 12vh); }
+      50%  { transform: translate(60vw, 75vh); }
+      75%  { transform: translate(12vw, 65vh); }
       100% { transform: translate(5vw, 10vh); }
     }
 
@@ -139,6 +139,24 @@
       backdrop-filter:blur(20px);
       border-radius:24px;
       box-shadow:0 0 50px rgba(255,255,255,0.2);
+    }
+
+    /* VOICE MESSAGE TUTORIAL BOX */
+    .voice-tutorial {
+      margin:40px auto 60px auto;
+      padding:30px;
+      max-width:850px;
+      background:rgba(255,255,255,0.10);
+      border-radius:20px;
+      backdrop-filter:blur(18px);
+      box-shadow:0 0 40px rgba(255,255,255,0.25);
+      text-align:left;
+      line-height:1.7;
+    }
+    .voice-tutorial h2 {
+      margin-top:0;
+      font-size:1.8rem;
+      text-shadow:0 0 12px #fff;
     }
 
     /* GRID */
@@ -237,6 +255,27 @@
 
       <br>
       Choose your discipline to enter its universe.
+    </p>
+  </div>
+
+  <!-- NEW: VOICE MESSAGE TUTORIAL -->
+  <div class="voice-tutorial">
+    <h2>🎙 How to Send Voice Messages</h2>
+    <p>
+      Voice messages make conversations feel real — like you're skating together in the same spot.
+      Here's how it works inside every chatroom:
+    </p>
+
+    <ul style="line-height:1.9;">
+      <li><strong>1. Tap the microphone button</strong> at the bottom of the chat.</li>
+      <li><strong>2. Hold to record</strong> — release to send instantly.</li>
+      <li><strong>3. Slide left to cancel</strong> if you change your mind.</li>
+      <li><strong>4. Your voice message appears</strong> with your avatar + timestamp.</li>
+      <li><strong>5. Other users can tap to play</strong> with smooth audio.</li>
+    </ul>
+
+    <p style="opacity:0.85;">
+      Voice messages work in public rooms, private chats, and private groups with live voice.
     </p>
   </div>
 
