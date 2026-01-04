@@ -198,11 +198,11 @@
       let profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
 
       function render() {
-        const active = document.querySelector(".tab.active")?.textContent || "All";
+        const active = document.querySelector(".tab.active")?.textContent || "Newest";
 
         const filtered = items.filter(item => {
-          if (active === "All") return true;
           if (active === "Newest") return true;
+          if (active === "All") return true;
           return item.category === active.toLowerCase();
         });
 
@@ -210,18 +210,20 @@
           ? filtered.map(cardHTML).join("")
           : `<div class="empty-state">No items found.</div>`;
 
-        giveawayGrid.innerHTML = items.filter(i => i.price === 0).length
-          ? items.filter(i => i.price === 0).map(cardHTML).join("")
+        const giveaways = items.filter(i => i.price === 0);
+        giveawayGrid.innerHTML = giveaways.length
+          ? giveaways.map(cardHTML).join("")
           : `<div class="empty-state">No giveaway items yet.</div>`;
 
-        yourGrid.innerHTML = items.filter(i => i.seller === profile.username).length
-          ? items.filter(i => i.seller === profile.username).map(cardHTML).join("")
+        const yours = items.filter(i => i.seller === profile.username);
+        yourGrid.innerHTML = yours.length
+          ? yours.map(cardHTML).join("")
           : `<div class="empty-state">You haven’t listed anything yet.</div>`;
       }
 
       function cardHTML(item) {
         return `
-          <div class="item-card">
+          <div class="item-card" onclick="location.href='item-view.html?id=${item.id}'">
             <div class="item-title">${item.title}</div>
             <div class="item-price">${item.price === 0 ? "FREE" : "$" + item.price}</div>
             <div class="item-meta">${item.category.toUpperCase()} • ${item.condition}</div>
