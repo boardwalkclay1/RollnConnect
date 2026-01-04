@@ -281,7 +281,7 @@ function initMap(){
     zoom:11
   });
   places = new google.maps.places.PlacesService(map);
-  runSearch(); // initial load
+  runSearch();
 }
 window.onload = initMap;
 
@@ -398,33 +398,41 @@ function renderMarkers(){
         <div style="
           color:black;
           font-size:14px;
-          padding:14px;
-          border-radius:14px;
+          padding:16px;
+          border-radius:16px;
           background:white;
-          box-shadow:0 0 22px rgba(255,255,255,0.7);
+          box-shadow:0 0 28px rgba(255,255,255,0.8);
           font-family:system-ui;
           line-height:1.45;
         ">
-          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">
+          <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
             ${spot.name}
           </div>
 
-          <div style="opacity:0.75;margin-bottom:6px;">
+          <div style="opacity:0.75;margin-bottom:8px;">
             ${spot.formatted_address || ""}
           </div>
 
-          <div style="margin-bottom:6px;">
+          <div style="margin-bottom:8px;">
             ${spot.rating ? `⭐ ${spot.rating.toFixed(1)} Google` : "No Google rating"}
           </div>
 
-          <div id="popupCommunity_${spot.place_id}" style="margin-bottom:10px;opacity:0.85;">
+          <div id="popupCommunity_${spot.place_id}" style="margin-bottom:12px;opacity:0.85;">
             Loading community ratings…
           </div>
 
           <a href="https://www.google.com/maps/dir/?api=1&destination=${loc.lat()},${loc.lng()}"
              target="_blank"
-             style="color:#2563eb;font-weight:600;text-decoration:none;">
-            Get Directions →
+             style="
+               display:inline-block;
+               padding:6px 10px;
+               background:#2563eb;
+               color:white;
+               border-radius:6px;
+               font-weight:600;
+               text-decoration:none;
+             ">
+            Get Directions
           </a>
         </div>
       `
@@ -564,62 +572,4 @@ function placeUserMarker(loc){
   const avatar  = profile.avatarUrl || "styles/default-avatar.png";
 
   if(!userMarker){
-    userMarker = new google.maps.Marker({
-      map,
-      position: loc,
-      icon:{
-        url: avatar,
-        scaledSize: new google.maps.Size(40,40),
-        anchor: new google.maps.Point(20,20)
-      }
-    });
-  } else {
-    userMarker.setPosition(loc);
-  }
-}
-
-/* LIVE LOCATION */
-document.getElementById("liveBtn").onclick = () => {
-  if(liveWatch){
-    navigator.geolocation.clearWatch(liveWatch);
-    liveWatch = null;
-    return;
-  }
-
-  if(!navigator.geolocation) return;
-
-  liveWatch = navigator.geolocation.watchPosition(pos => {
-    const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-    placeUserMarker(loc);
-    checkNearby(loc);
-  });
-};
-
-/* NEARBY SKATERS */
-function checkNearby(loc){
-  const others = JSON.parse(localStorage.getItem("rc_live_skaters") || "[]");
-  let found = false;
-
-  others.forEach(o => {
-    const d = distance(loc.lat, loc.lng, o.lat, o.lng);
-    if(d <= 5) found = true;
-  });
-
-  document.getElementById("nearbyNotice").style.display = found ? "block" : "none";
-}
-
-function distance(lat1, lon1, lat2, lon2){
-  const R = 3958.8;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a =
-    Math.sin(dLat/2)**2 +
-    Math.cos(lat1*Math.PI/180) *
-    Math.cos(lat2*Math.PI/180) *
-    Math.sin(dLon/2)**2;
-  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
-}
-</script>
-
-</body>
-</html>
+    userMarker = new google.maps.Marker
