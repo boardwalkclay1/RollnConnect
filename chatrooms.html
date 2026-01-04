@@ -20,7 +20,7 @@
     .stars1,.stars2,.stars3 {
       position:fixed; inset:0;
       background:url('styles/stars-white.png') repeat;
-      z-index:-3;
+      z-index:-4;
     }
     .stars1{opacity:.55;animation:drift1 140s linear infinite;}
     .stars2{opacity:.35;animation:drift2 200s linear infinite;}
@@ -29,6 +29,40 @@
     @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+    /* FLOATING PONG ORBS */
+    .floating-orb {
+      position: fixed;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+      box-shadow: 0 0 35px rgba(255,255,255,0.25);
+      z-index:-2;
+      animation: pongMove 18s linear infinite alternate;
+      pointer-events:none;
+      filter: blur(0.5px);
+    }
+    .floating-orb.small {
+      width: 55px;
+      height: 55px;
+      animation-duration: 22s;
+      opacity: 0.7;
+    }
+    .floating-orb.tiny {
+      width: 35px;
+      height: 35px;
+      animation-duration: 26s;
+      opacity: 0.5;
+    }
+
+    @keyframes pongMove {
+      0%   { transform: translate(5vw, 10vh); }
+      25%  { transform: translate(70vw, 15vh); }
+      50%  { transform: translate(60vw, 70vh); }
+      75%  { transform: translate(15vw, 65vh); }
+      100% { transform: translate(5vw, 10vh); }
+    }
 
     /* BURGER */
     .hamburger {
@@ -148,61 +182,15 @@
 </head>
 
 <body>
-<!-- FLOATING SIGNATURE ELEMENTS -->
-<div class="float-orb orb1"></div>
-<div class="float-orb orb2"></div>
-<div class="float-orb orb3"></div>
 
-<style>
-  /* FLOATING SIGNATURE ORBS */
-  .float-orb {
-    position: fixed;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
-    box-shadow: 0 0 40px rgba(255,255,255,0.25);
-    filter: blur(1px);
-    z-index: -2;
-    animation: floaty 18s ease-in-out infinite;
-  }
-
-  .orb1 { top: 12%; left: 8%; animation-delay: 0s; }
-  .orb2 { top: 68%; left: 72%; animation-delay: 4s; }
-  .orb3 { top: 40%; left: 30%; animation-delay: 8s; }
-
-  @keyframes floaty {
-    0%   { transform: translateY(0px) translateX(0px) scale(1); }
-    50%  { transform: translateY(-40px) translateX(20px) scale(1.15); }
-    100% { transform: translateY(0px) translateX(0px) scale(1); }
-  }
-</style>
-
-<!-- UPDATED HERO TEXT -->
-<div class="hero">
-  <h1 style="font-size:3rem;">Chatrooms</h1>
-  <p style="font-size:1.2rem;opacity:0.9;line-height:1.7;">
-    Every discipline has its own world — and every world has sub‑realms.
-    Each realm leads to a fully upgraded chatroom experience with:
-    <br><br>
-
-    🎙 <strong>Voice messages</strong> (tap, record, send — clean and simple)<br>
-    😊 <strong>Emoji & gift sending</strong> (kisses, hugs, roses, reactions)<br>
-    🧊 <strong>Hover‑profiles</strong> with mini‑summaries & quick actions<br>
-    🔒 <strong>Private chat requests</strong> between users<br>
-    🎧 <strong>Private groups with live voice</strong> (like being on a call together)<br>
-    📅 <strong>Drop events into the chat</strong> directly from the Events page<br>
-    📍 <strong>Drop spots into the chat</strong> with distance + directions<br>
-    🌌 <strong>Cosmic black‑and‑white glow UI</strong> with floating elements<br>
-    🌀 <strong>Fun learning experience</strong> — every room teaches you how to use it<br>
-
-    <br>
-    Choose your discipline to enter its universe.
-  </p>
-</div>
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
+
+<!-- FLOATING ORBS -->
+<div class="floating-orb"></div>
+<div class="floating-orb small"></div>
+<div class="floating-orb tiny"></div>
 
 <!-- BURGER -->
 <div id="hamburger" class="hamburger">
@@ -232,35 +220,37 @@
 
   <div class="hero">
     <h1 style="font-size:3rem;">Chatrooms</h1>
-    <p style="font-size:1.2rem;opacity:0.9;">
-      Every discipline has its own world.  
-      Each world has sub‑categories.  
-      Each sub‑category leads to a souped‑up chatroom with:
+    <p style="font-size:1.2rem;opacity:0.9;line-height:1.7;">
+      Every discipline has its own world — and every world has sub‑realms.
+      Each realm leads to a fully upgraded chatroom experience with:
       <br><br>
-      🔥 **Emoji blasts**  
-      🌀 **Message effects** (slam, quiet, reveal, normal)  
-      🎨 **Font & style options**  
-      🔔 **Per‑room notification toggles**  
-      💬 **Live chat that uses your profile name + avatar**  
-      <br><br>
+
+      🎙 <strong>Voice messages</strong><br>
+      😊 <strong>Emoji & gift sending</strong><br>
+      🧊 <strong>Hover‑profiles</strong><br>
+      🔒 <strong>Private chat requests</strong><br>
+      🎧 <strong>Private groups with live voice</strong><br>
+      📅 <strong>Drop events into chat</strong><br>
+      📍 <strong>Drop spots with directions</strong><br>
+      🌌 <strong>Cosmic black‑and‑white glow UI</strong><br>
+      🌀 <strong>Fun learning experience</strong><br>
+
+      <br>
       Choose your discipline to enter its universe.
     </p>
   </div>
 
   <section class="chatrooms-grid">
 
-    <!-- LONGBOARD -->
     <div class="chatroom-card">
       <h2>Longboard</h2>
       <p>Dancing • Cruising • Downhill</p>
       <p style="opacity:0.8;font-size:0.9rem;">
-        Flow, footwork, speed, and smooth cruising.  
-        Enter to choose your longboard style.
+        Flow, footwork, speed, and smooth cruising.
       </p>
       <a href="longboard.html" class="enter-btn">Enter</a>
     </div>
 
-    <!-- BLADES -->
     <div class="chatroom-card">
       <h2>Blades</h2>
       <p>Urban Flow • Slalom</p>
@@ -270,7 +260,6 @@
       <a href="blades.html" class="enter-btn">Enter</a>
     </div>
 
-    <!-- QUADS -->
     <div class="chatroom-card">
       <h2>Quads</h2>
       <p>Dance Skating • Rink Culture • Outdoor Rink</p>
@@ -280,7 +269,6 @@
       <a href="quads.html" class="enter-btn">Enter</a>
     </div>
 
-    <!-- SKATEBOARD -->
     <div class="chatroom-card">
       <h2>Skateboard</h2>
       <p>Street • Park • Vert</p>
@@ -290,13 +278,11 @@
       <a href="skateboard.html" class="enter-btn">Enter</a>
     </div>
 
-    <!-- VIRTUAL SKATE PARK -->
     <div class="chatroom-card">
       <h2>Virtual Skate Park</h2>
       <p>All Disciplines • Shared Space</p>
       <p style="opacity:0.8;font-size:0.9rem;">
-        A digital skatepark where every discipline meets, chats,  
-        shares clips, and builds community together.
+        A digital skatepark where every discipline meets.
       </p>
       <a href="virtual.html" class="enter-btn">Enter</a>
     </div>
@@ -306,7 +292,8 @@
 </div>
 
 <script>
-  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+  const h=document.getElementById("hamburger"),
+        s=document.getElementById("sidebar");
   h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
 </script>
 
