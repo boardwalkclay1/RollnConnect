@@ -2,134 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SB Street – Chat Room</title>
+  <title>SB Street Room – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    :root {
-      --bg: #000000;
-      --panel: #0f0f0f;
-      --panel-soft: #101010;
-      --border: rgba(255, 255, 255, 0.18);
-      --text: #e6e6e6;
-      --muted: rgba(230, 230, 230, 0.7);
-      --glow-soft: 0 0 14px rgba(255, 255, 255, 0.45);
-      --glow-strong: 0 0 22px rgba(255, 255, 255, 0.8);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      background: #000;
+      color: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
       overflow: hidden;
     }
 
-    a {
-      color: #ffffff;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
-    a:hover {
-      text-decoration: underline;
-    }
-
-    /* HAMBURGER */
-    .hamburger {
-      position: fixed;
-      top: 14px;
-      left: 16px;
-      width: 38px;
-      height: 28px;
-      cursor: pointer;
-      z-index: 1001;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .hamburger div {
-      height: 5px;
-      background: #ffffff;
-      border-radius: 4px;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.85);
-      transition: 0.3s;
-    }
-
-    /* SIDE MENU */
-    .side-menu {
-      position: fixed;
-      top: 0;
-      left: -260px;
-      width: 260px;
+    .page-scroll {
       height: 100vh;
-      background: #050505;
-      padding: 48px 18px 18px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
-      transition: 0.35s ease;
-      z-index: 1000;
       overflow-y: auto;
+      padding-bottom: 40px;
     }
 
-    .side-menu.open {
+    /* HEADER */
+
+    .header {
+      position: sticky;
+      top: 0;
       left: 0;
-    }
-
-    .side-menu-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      opacity: 0.85;
-    }
-
-    .side-menu a {
-      display: block;
-      padding: 10px 12px;
-      margin-bottom: 10px;
-      background: #101010;
-      border-radius: 10px;
-      text-decoration: none;
-      color: var(--text);
-      font-size: 14px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
-      border: 1px solid var(--border);
-      transition: 0.2s;
-    }
-
-    .side-menu a:hover {
-      background: #181818;
-      box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
-    }
-
-    .side-menu a.current {
-      background: #ffffff;
-      color: #000000;
-      box-shadow: var(--glow-strong);
-      font-weight: 700;
-    }
-
-    /* APP SHELL */
-    .app-shell {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-
-    .app-header {
-      padding: 10px 16px 8px 60px;
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(8,8,18,0.96);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      z-index: 2000;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(0, 0, 0, 0.95);
-      border-bottom: 1px solid var(--border);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.35);
-      position: relative;
-      z-index: 10;
     }
 
     .header-left {
@@ -138,21 +46,57 @@
       gap: 10px;
     }
 
-    .back-btn {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: #050505;
-      color: var(--text);
-      font-size: 12px;
+    .hamburger-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+      backdrop-filter: blur(16px);
     }
 
-    .room-name {
-      font-size: 18px;
-      font-weight: 600;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    .hamburger-button span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: #fff;
+      position: relative;
+    }
+
+    .hamburger-button span::before,
+    .hamburger-button span::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 2px;
+      background: #fff;
+      left: 0;
+    }
+
+    .hamburger-button span::before { top: -6px; }
+    .hamburger-button span::after { top: 6px; }
+
+    .header-title-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .header-sub {
+      font-size: 0.8rem;
+      color: #a9bdf8;
+      margin-top: 2px;
     }
 
     .header-right {
@@ -161,797 +105,1086 @@
       gap: 8px;
     }
 
-    .toggle-pill {
-      display: inline-flex;
-      align-items: center;
+    .back-button {
       border-radius: 999px;
-      border: 1px solid var(--border);
-      background: #050505;
-      padding: 4px;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .toggle-pill button {
-      border-radius: 999px;
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      padding: 4px 8px;
-      cursor: pointer;
-      font-size: 11px;
-    }
-
-    .toggle-pill button.active {
-      background: #ffffff;
-      color: #000000;
-      box-shadow: var(--glow-soft);
-      font-weight: 700;
-    }
-
-    .start-group-btn {
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.7);
+      color: #fff;
       padding: 6px 12px;
-      font-size: 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: #101010;
-      color: var(--text);
+      font-size: 0.8rem;
       cursor: pointer;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
     }
 
-    .start-group-btn:hover {
-      background: #181818;
-      box-shadow: var(--glow-strong);
+    /* SIDE MENU */
+
+    .side-menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 2100;
     }
 
-    /* MAIN LAYOUT */
-    .main {
-      flex: 1;
-      display: flex;
-      height: calc(100vh - 60px);
-      padding: 8px 8px 8px 60px;
-      gap: 8px;
-      overflow: hidden;
+    .side-menu-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
     }
 
-    .column {
-      background: var(--panel);
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 18px rgba(255, 255, 255, 0.18);
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .chat-column {
-      flex: 2;
-      min-width: 0;
-    }
-
-    .side-column {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .column-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-      font-size: 13px;
-      opacity: 0.85;
-    }
-
-    .column-header-title {
-      font-weight: 600;
-    }
-
-    .scroll-area {
-      flex: 1;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .scroll-area::-webkit-scrollbar {
-      width: 6px;
-    }
-    .scroll-area::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.35);
-      border-radius: 999px;
-    }
-
-    /* CHAT MESSAGES */
-    .message {
-      padding: 6px 8px;
-      border-radius: 10px;
-      margin-bottom: 6px;
-      background: var(--panel-soft);
-      border: 1px solid var(--border);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
-      font-size: 13px;
-    }
-
-    .message-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2px;
-    }
-
-    .message-user {
-      font-weight: 600;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .message-meta {
-      font-size: 11px;
-      opacity: 0.65;
-    }
-
-    .message-body {
-      font-size: 13px;
-      opacity: 0.95;
-    }
-
-    .tag-pill {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 6px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      font-size: 10px;
-      margin-left: 6px;
-      opacity: 0.85;
-    }
-
-    /* PROFILE HOVER CARD */
-    .profile-card {
+    .side-menu {
       position: absolute;
-      top: 16px;
+      top: 0;
       left: 0;
-      background: #050505;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
-      padding: 8px 10px;
-      width: 220px;
-      font-size: 12px;
-      z-index: 20;
-      display: none;
-    }
-
-    .message-user:hover .profile-card {
-      display: block;
-    }
-
-    .profile-card-row {
-      margin-bottom: 4px;
-    }
-
-    .profile-card-actions a {
-      font-size: 12px;
-      display: inline-block;
-      margin-right: 6px;
-    }
-
-    /* INPUT AREA */
-    .input-bar {
-      margin-top: 8px;
-      border-radius: 12px;
-      padding: 8px;
-      background: #050505;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 16px rgba(255, 255, 255, 0.4);
+      width: 260px;
+      max-width: 80vw;
+      height: 100%;
+      background: radial-gradient(circle at top left, rgba(250,250,250,0.1), rgba(10,10,10,0.98));
+      box-shadow: 0 0 40px rgba(0,0,0,0.9);
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      padding: 20px 18px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
     }
 
-    .input-row {
-      display: flex;
-      gap: 6px;
+    .side-menu-overlay.active .side-menu {
+      transform: translateX(0);
     }
 
-    .input-row input[type="text"] {
-      flex: 1;
-      padding: 8px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #050505;
-      color: var(--text);
-      font-size: 13px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
-    }
-
-    .control-btn,
-    .primary-btn {
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #101010;
-      color: var(--text);
-      padding: 6px 10px;
-      font-size: 12px;
-      cursor: pointer;
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
-      white-space: nowrap;
-    }
-
-    .primary-btn {
-      background: #ffffff;
-      color: #000000;
+    .side-menu-title {
+      font-size: 1.2rem;
       font-weight: 700;
-      box-shadow: var(--glow-soft);
+      margin-bottom: 6px;
     }
 
-    .control-btn:hover,
-    .primary-btn:hover {
-      box-shadow: var(--glow-strong);
-      background: #181818;
-      color: #ffffff;
+    .side-menu-subtitle {
+      font-size: 0.78rem;
+      color: #b3c6ff;
+      margin-bottom: 12px;
     }
 
-    .primary-btn:hover {
-      background: #f0f0f0;
-      color: #000000;
+    .side-menu-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
     }
 
-    select {
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #050505;
-      color: var(--text);
-      font-size: 12px;
-      padding: 4px 6px;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+    .side-menu-link {
+      padding: 9px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #eef3ff;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.2s, transform 0.2s, border-color 0.2s;
     }
 
-    .mini-label {
-      font-size: 11px;
+    .side-menu-link:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.6);
+      transform: translateX(2px);
+    }
+
+    /* LAYOUT */
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 14px 40px;
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(260px, 1.1fr);
+      gap: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* LEFT COLUMN – CHAT */
+
+    .chat-container {
+      border-radius: 18px;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.06), rgba(0,0,0,0.95));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 0 22px rgba(255,255,255,0.09);
+      display: flex;
+      flex-direction: column;
+      min-height: 420px;
+      max-height: calc(100vh - 160px);
+    }
+
+    .chat-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .chat-title-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-title {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .chat-sub {
+      font-size: 0.78rem;
       opacity: 0.75;
     }
 
-    .inline-group {
+    .chat-toggle {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      overflow: hidden;
+      font-size: 0.8rem;
+    }
+
+    .chat-toggle button {
+      padding: 5px 10px;
+      border: none;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      min-width: 70px;
+    }
+
+    .chat-toggle button.active {
+      background: #fff;
+      color: #000;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 10px 6px;
+      scroll-behavior: smooth;
+    }
+
+    .message {
+      margin-bottom: 8px;
+      max-width: 80%;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-size: 0.86rem;
+      background: rgba(255,255,255,0.07);
+      box-shadow: 0 0 12px rgba(0,0,0,0.6);
+      position: relative;
+    }
+
+    .message.me {
+      margin-left: auto;
+      background: rgba(255,255,255,0.15);
+    }
+
+    .message-meta {
+      font-size: 0.7rem;
+      opacity: 0.6;
+      margin-bottom: 2px;
+    }
+
+    .message-text {
+      white-space: pre-wrap;
+    }
+
+    .message-tag {
+      font-size: 0.72rem;
+      opacity: 0.75;
+      margin-top: 3px;
+    }
+
+    .message-target {
+      color: #9fd0ff;
+    }
+
+    .message-system {
+      text-align: center;
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin: 6px 0;
+    }
+
+    .event-card, .spot-card {
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 6px 8px;
+      font-size: 0.8rem;
+      background: rgba(0,0,0,0.7);
+      margin-top: 4px;
+    }
+
+    .event-name, .spot-name {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .spot-distance {
+      font-size: 0.74rem;
+      opacity: 0.8;
+    }
+
+    .spot-link, .event-link {
+      font-size: 0.74rem;
+      color: #a9d4ff;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .chat-input-row {
+      border-top: 1px solid rgba(255,255,255,0.18);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(0,0,0,0.92);
+      border-radius: 0 0 18px 18px;
+    }
+
+    .chat-input-line {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+    }
+
+    .chat-text-input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      padding: 7px 10px;
+      font-size: 0.84rem;
+    }
+
+    .chat-text-input::placeholder {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .primary-btn, .ghost-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: #fff;
+      color: #000;
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .ghost-btn {
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+    }
+
+    .emoji-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
       flex-wrap: wrap;
+      font-size: 0.9rem;
     }
 
-    /* SIDE COLUMN CONTENT */
-    .section-block {
-      margin-bottom: 10px;
-      padding: 8px;
-      border-radius: 10px;
-      background: #050505;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
-      font-size: 12px;
+    .emoji-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
     }
 
-    .section-title {
-      font-weight: 600;
+    .emoji-btn span {
+      font-size: 0.95rem;
+    }
+
+    .recipient-select {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      max-width: 180px;
+    }
+
+    /* RIGHT COLUMN – USERS / GROUPS / ACTIONS */
+
+    .side-panel {
+      border-radius: 18px;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.06), rgba(5,5,5,0.98));
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 0 22px rgba(255,255,255,0.1);
+      padding: 10px 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 420px;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+
+    .panel-section {
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 8px 8px;
+      background: rgba(0,0,0,0.85);
+    }
+
+    .panel-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 4px;
-      font-size: 13px;
+    }
+
+    .panel-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .panel-sub {
+      font-size: 0.72rem;
+      opacity: 0.7;
     }
 
     .user-list {
       list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .user-list li {
+      margin-top: 6px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 4px 0;
+      flex-direction: column;
+      gap: 6px;
     }
 
-    .user-pill {
-      font-size: 12px;
+    .user-item {
+      position: relative;
+      padding: 5px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.03);
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: default;
+    }
+
+    .user-name {
       cursor: pointer;
     }
 
-    .user-pill:hover {
+    .user-tag {
+      font-size: 0.72rem;
+      opacity: 0.7;
+      margin-left: 4px;
+    }
+
+    .user-cta {
+      font-size: 0.74rem;
+      opacity: 0.85;
+      cursor: pointer;
       text-decoration: underline;
     }
 
-    .small-link {
-      font-size: 11px;
+    .profile-tooltip {
+      position: absolute;
+      left: 0;
+      top: 100%;
+      margin-top: 4px;
+      z-index: 50;
+      min-width: 220px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.96);
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 6px 8px;
+      font-size: 0.76rem;
+      box-shadow: 0 0 18px rgba(0,0,0,0.8);
+      display: none;
+    }
+
+    .profile-tooltip.visible {
+      display: block;
+    }
+
+    .profile-tooltip-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 3px;
+    }
+
+    .profile-tooltip-name {
+      font-weight: 600;
+    }
+
+    .profile-tooltip-btn {
+      font-size: 0.72rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.25);
+      padding: 2px 6px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .profile-tooltip-bio {
+      opacity: 0.8;
+    }
+
+    .groups-list {
+      list-style: none;
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.8rem;
+    }
+
+    .group-item {
+      padding: 5px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .group-label {
+      font-weight: 500;
+    }
+
+    .group-meta {
+      font-size: 0.72rem;
       opacity: 0.75;
     }
 
-    @media (max-width: 900px) {
-      .main {
-        flex-direction: column;
-        padding: 8px;
-      }
+    .start-group-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
+    }
 
-      .chat-column,
-      .side-column {
-        flex: none;
-        height: 50%;
-      }
+    .start-group-input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      padding: 5px 8px;
+      font-size: 0.8rem;
+    }
 
-      body {
-        overflow: hidden;
-      }
+    .small-link {
+      font-size: 0.76rem;
+      color: #a9d4ff;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .tag-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
+      padding: 2px 6px;
+      font-size: 0.72rem;
+      opacity: 0.8;
+    }
+
+    .subtle {
+      font-size: 0.72rem;
+      opacity: 0.75;
+      margin-top: 4px;
     }
   </style>
 </head>
 <body>
-
-  <!-- HAMBURGER -->
-  <div class="hamburger" onclick="toggleMenu()">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-
-  <!-- SIDE MENU -->
-  <div class="side-menu" id="sideMenu">
-    <div class="side-menu-title">SB Street Navigation</div>
-    <a href="index.html">Home</a>
-    <a href="chatrooms.html" class="current">Chatrooms</a>
-    <a href="find-spots.html">Find Spots</a>
-    <a href="events.html">Events</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="profile.html">Profile</a>
-    <a href="settings.html">Settings</a>
-  </div>
-
-  <div class="app-shell">
+  <div class="page-scroll">
     <!-- HEADER -->
-    <header class="app-header">
+    <header class="header">
       <div class="header-left">
-        <button class="back-btn" onclick="goBack()">← Back</button>
-        <div class="room-name">SB Street</div>
+        <button class="hamburger-button" id="menuBtn">
+          <span></span>
+        </button>
+        <div class="header-title-block">
+          <div class="header-title">SB Street Room</div>
+          <div class="header-sub">Public & private street sessions • voice + messages</div>
+        </div>
       </div>
       <div class="header-right">
-        <div class="toggle-pill" id="privacyToggle">
-          <button id="publicBtn" class="active" onclick="setRoomPrivacy('public')">Public</button>
-          <button id="privateBtn" onclick="setRoomPrivacy('private')">Private</button>
-        </div>
-        <button class="start-group-btn" onclick="startPrivateGroup()">Start Own Group</button>
+        <button class="back-button" id="backBtn">Back</button>
       </div>
     </header>
 
-    <!-- MAIN -->
-    <main class="main">
-      <!-- CHAT COLUMN -->
-      <section class="column chat-column">
-        <div class="column-header">
-          <div class="column-header-title">Room Chat</div>
-          <div class="column-header-meta mini-label" id="roomModeLabel">Mode: Public room</div>
+    <!-- SIDE MENU -->
+    <div class="side-menu-overlay" id="menuOverlay">
+      <nav class="side-menu">
+        <div>
+          <div class="side-menu-title">Navigation</div>
+          <div class="side-menu-subtitle">Cosmic flow</div>
+        </div>
+        <div class="side-menu-nav">
+          <a class="side-menu-link" href="index.html">Home</a>
+          <a class="side-menu-link" href="dashboard.html">Dashboard</a>
+          <a class="side-menu-link" href="chatrooms.html">Chatrooms</a>
+          <a class="side-menu-link" href="room-sbstreet.html">SB Street Room</a>
+          <a class="side-menu-link" href="calendar.html">Calendar</a>
+          <a class="side-menu-link" href="events.html">Events</a>
+          <a class="side-menu-link" href="find-spots.html">Find Spots</a>
+          <a class="side-menu-link" href="spots-map.html">Spots Map</a>
+          <a class="side-menu-link" href="marketplace.html">Marketplace</a>
+          <a class="side-menu-link" href="notifications.html">Notifications</a>
+          <a class="side-menu-link" href="profile.html">Profile</a>
+          <a class="side-menu-link" href="settings.html">Settings</a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- MAIN PAGE -->
+    <main class="page">
+      <!-- LEFT: CHAT AREA -->
+      <section class="chat-container">
+        <div class="chat-header-row">
+          <div class="chat-title-block">
+            <div class="chat-title" id="roomLabel">Public SB Street Room</div>
+            <div class="chat-sub">Voice messages + regular messages only</div>
+          </div>
+          <div class="chat-toggle" id="privacyToggle">
+            <button data-mode="public" class="active">Public</button>
+            <button data-mode="private">Private</button>
+          </div>
         </div>
 
-        <div class="scroll-area" id="chatMessages">
-          <!-- Messages will be injected here -->
-        </div>
+        <div class="chat-messages" id="chatMessages"></div>
 
-        <!-- INPUT BAR -->
-        <div class="input-bar">
-          <div class="input-row">
-            <input type="text" id="chatInput" placeholder="Type a message to the room..." />
-            <button class="control-btn" onclick="sendVoiceMessage()">🎙 Voice</button>
-            <button class="primary-btn" onclick="sendTextMessage()">Send</button>
+        <div class="chat-input-row">
+          <div class="chat-input-line">
+            <input id="chatInput" class="chat-text-input" type="text" placeholder="Type a message (text only, no files)..." />
+            <button id="sendBtn" class="primary-btn">Send</button>
+            <button id="voiceBtn" class="ghost-btn" title="Simulate sending a voice message">🎙 Voice</button>
           </div>
 
-          <div class="input-row">
-            <div class="inline-group">
-              <span class="mini-label">Emoji →</span>
-              <select id="emojiSelect">
-                <option value="">Choose emoji</option>
-                <option value="😀">😀 Smile</option>
-                <option value="😂">😂 Laugh</option>
-                <option value="❤️">❤️ Heart</option>
-                <option value="🔥">🔥 Fire</option>
-                <option value="🤝">🤝 Respect</option>
-              </select>
+          <div class="emoji-row">
+            <select id="recipientSelect" class="recipient-select">
+              <option value="">Send to room (everyone)</option>
+            </select>
 
-              <span class="mini-label">Gift →</span>
-              <select id="giftSelect">
-                <option value="">Choose gift</option>
-                <option value="💋">💋 Kiss</option>
-                <option value="🤗">🤗 Hug</option>
-                <option value="🌹">🌹 Rose</option>
-              </select>
+            <button class="emoji-btn" data-emoji="😊">
+              <span>😊</span><span>Smiley</span>
+            </button>
+            <button class="emoji-btn" data-emoji="😂">
+              <span>😂</span><span>Laugh</span>
+            </button>
+            <button class="emoji-btn" data-emoji="😍">
+              <span>😍</span><span>Love</span>
+            </button>
+            <button class="emoji-btn" data-emoji="😘 (kiss)">
+              <span>😘</span><span>Kiss</span>
+            </button>
+            <button class="emoji-btn" data-emoji="🤗 (hug)">
+              <span>🤗</span><span>Hug</span>
+            </button>
+            <button class="emoji-btn" data-emoji="🌹 (rose)">
+              <span>🌹</span><span>Rose</span>
+            </button>
+          </div>
 
-              <span class="mini-label">To:</span>
-              <select id="targetUserSelect">
-                <!-- Filled from active users list -->
-              </select>
-
-              <button class="control-btn" onclick="sendEmojiGift()">Send</button>
-            </div>
+          <div class="emoji-row">
+            <button id="addEventBtn" class="ghost-btn">Add Event from Events</button>
+            <button id="addSpotBtn" class="ghost-btn">Add Spot from Find Spots</button>
+            <span class="subtle">Events & spots will include details and directions.</span>
           </div>
         </div>
       </section>
 
-      <!-- SIDE COLUMN -->
-      <aside class="column side-column">
-        <div class="column-header">
-          <div class="column-header-title">People & Actions</div>
-        </div>
-
-        <div class="scroll-area">
-          <!-- ACTIVE USERS -->
-          <div class="section-block">
-            <div class="section-title">Active users</div>
-            <ul class="user-list" id="userList">
-              <!-- Users injected here -->
-            </ul>
-            <div class="small-link">Hover names in chat to see profile summary and visit profile.</div>
-          </div>
-
-          <!-- PRIVATE CHAT / GROUP -->
-          <div class="section-block">
-            <div class="section-title">Private connections</div>
-            <div class="mini-label">Request private chat:</div>
-            <div class="inline-group" style="margin-top:4px;">
-              <select id="privateChatUserSelect"></select>
-              <button class="control-btn" onclick="requestPrivateChat()">Request</button>
-            </div>
-
-            <div class="mini-label" style="margin-top:8px;">Current private group:</div>
-            <div id="groupStatus" class="small-link">No private group started on this device yet.</div>
-
-            <div class="mini-label" style="margin-top:8px;">Live voice group (concept):</div>
-            <div class="small-link">
-              When you start a group, this room supports live voice (like a group phone call) and text.
+      <!-- RIGHT: USERS / GROUPS / ACTIONS -->
+      <aside class="side-panel">
+        <section class="panel-section">
+          <div class="panel-title-row">
+            <div>
+              <div class="panel-title">People here</div>
+              <div class="panel-sub">Hover for profile • request private</div>
             </div>
           </div>
+          <ul class="user-list" id="userList"></ul>
+          <p class="subtle">Hover a name to see a summary and visit profile. Use “Private chat” to request a 1:1.</p>
+        </section>
 
-          <!-- EVENTS & SPOTS -->
-          <div class="section-block">
-            <div class="section-title">Share events & spots</div>
-
-            <div class="mini-label">From Events page:</div>
-            <select id="eventSelect">
-              <option value="">Choose event</option>
-              <option value="SB Meetup @ Piedmont Park|2.1 miles away|events.html">
-                SB Meetup @ Piedmont Park (2.1 mi)
-              </option>
-              <option value="Night Push Session Downtown|4.6 miles away|events.html">
-                Night Push Session Downtown (4.6 mi)
-              </option>
-            </select>
-            <button class="control-btn" style="margin-top:4px;" onclick="shareEventToChat()">Add event to chat</button>
-
-            <div class="mini-label" style="margin-top:8px;">From Spots page:</div>
-            <select id="spotSelect">
-              <option value="">Choose spot</option>
-              <option value="BeltLine Tunnel|1.3 miles away|find-spots.html">
-                BeltLine Tunnel (1.3 mi)
-              </option>
-              <option value="Campus Smooth Loop|0.8 miles away|find-spots.html">
-                Campus Smooth Loop (0.8 mi)
-              </option>
-            </select>
-            <button class="control-btn" style="margin-top:4px;" onclick="shareSpotToChat()">Add spot to chat</button>
-
-            <div class="small-link" style="margin-top:6px;">
-              Events open in <a href="events.html">Events</a> and spots open in
-              <a href="find-spots.html">Find Spots</a> for directions.
+        <section class="panel-section">
+          <div class="panel-title-row">
+            <div>
+              <div class="panel-title">Private groups</div>
+              <div class="panel-sub">Live voice together + writing</div>
             </div>
           </div>
-
-          <!-- DIRECT LINKS -->
-          <div class="section-block">
-            <div class="section-title">Quick navigation</div>
-            <div><a href="chatrooms.html">← Back to all chatrooms</a></div>
-            <div><a href="find-spots.html">→ Open Find Spots</a></div>
-            <div><a href="events.html">→ Open Events</a></div>
+          <ul class="groups-list" id="groupsList"></ul>
+          <div class="start-group-row">
+            <input id="groupNameInput" class="start-group-input" type="text" placeholder="Start your own group..." />
+            <button id="startGroupBtn" class="primary-btn">Start</button>
           </div>
-        </div>
+          <p class="subtle">
+            Private groups simulate shared live voice (phone-style) and include regular text chat.
+          </p>
+        </section>
+
+        <section class="panel-section">
+          <div class="panel-title-row">
+            <div class="panel-title">Quick actions</div>
+          </div>
+          <div class="tag-row">
+            <button class="ghost-btn" onclick="location.href='chatrooms.html'">All Chatrooms</button>
+            <button class="ghost-btn" onclick="location.href='find-spots.html'">Spots</button>
+            <button class="ghost-btn" onclick="location.href='events.html'">Events</button>
+          </div>
+          <p class="subtle">Use the toggle at the top of the chat to switch between public and private conversations.</p>
+        </section>
       </aside>
     </main>
   </div>
 
-  <script src="rc_app_config.js"></script>
   <script>
-    // --- BASIC STATE (mocked locally for now) ---
-    const CURRENT_USER = {
-      id: "you",
-      name: "You",
-      city: "Your City",
-      style: "SB Street regular",
-      board: "Longboard"
-    };
+    // BASIC STATE / CONFIG
+    const CURRENT_USER = 'you'; // replace with real auth later
+    let mode = 'public'; // 'public' | 'private'
+    let currentGroupId = null;
 
-    const ACTIVE_USERS = [
-      CURRENT_USER,
-      { id: "user1", name: "Rhea", city: "Midtown", style: "Freestyle", board: "Longboard" },
-      { id: "user2", name: "Kai", city: "Downtown", style: "Cruiser", board: "Skateboard" },
-      { id: "user3", name: "Nova", city: "Eastside", style: "Dance", board: "Longboard" }
+    const users = [
+      { username: 'you', display: 'You', bio: 'Street skating, late sessions.', hometown: 'Atlanta', level: 'Creator' },
+      { username: 'nova', display: 'Nova', bio: 'Back alleys and stair sets.', hometown: 'LA', level: 'Advanced' },
+      { username: 'orbit', display: 'Orbit', bio: 'Street lines and night runs.', hometown: 'NYC', level: 'Intermediate' },
     ];
 
-    function toggleMenu() {
-      document.getElementById("sideMenu").classList.toggle("open");
-    }
+    let groups = [
+      { id: 'g-street-crew', name: 'SB Street Crew', members: ['you','nova'], voiceLive: true },
+    ];
 
-    function goBack() {
-      window.history.back();
-    }
+    let messages = [];
 
-    // Privacy toggle
-    function setRoomPrivacy(mode) {
-      const publicBtn = document.getElementById("publicBtn");
-      const privateBtn = document.getElementById("privateBtn");
-      const label = document.getElementById("roomModeLabel");
-
-      if (mode === "public") {
-        publicBtn.classList.add("active");
-        privateBtn.classList.remove("active");
-        label.textContent = "Mode: Public room";
-      } else {
-        privateBtn.classList.add("active");
-        publicBtn.classList.remove("active");
-        label.textContent = "Mode: Private room";
+    // MENU
+    const menuBtn = document.getElementById('menuBtn');
+    const menuOverlay = document.getElementById('menuOverlay');
+    menuBtn.addEventListener('click', () => {
+      menuOverlay.classList.toggle('active');
+    });
+    menuOverlay.addEventListener('click', (e) => {
+      if (e.target === menuOverlay) {
+        menuOverlay.classList.remove('active');
       }
+    });
+
+    // BACK
+    document.getElementById('backBtn').addEventListener('click', () => {
+      history.back();
+    });
+
+    // PRIVACY TOGGLE
+    const privacyToggle = document.getElementById('privacyToggle');
+    const roomLabel = document.getElementById('roomLabel');
+
+    privacyToggle.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-mode]');
+      if (!btn) return;
+
+      const newMode = btn.getAttribute('data-mode');
+      if (newMode === mode) return;
+
+      mode = newMode;
+      [...privacyToggle.querySelectorAll('button')].forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      if (mode === 'public') {
+        roomLabel.textContent = 'Public SB Street Room';
+        currentGroupId = null;
+      } else {
+        roomLabel.textContent = 'Private rooms & groups';
+      }
+      renderMessages();
+    });
+
+    // USERS + HOVER PROFILE TOOLTIP
+    const userList = document.getElementById('userList');
+    const recipientSelect = document.getElementById('recipientSelect');
+
+    function renderUsers() {
+      userList.innerHTML = users.map(u => `
+        <li class="user-item" data-username="${u.username}">
+          <div>
+            <span class="user-name">@${u.username}</span>
+            <span class="user-tag">${u.level}</span>
+          </div>
+          <span class="user-cta" data-action="private-request">Private chat</span>
+          <div class="profile-tooltip">
+            <div class="profile-tooltip-row">
+              <span class="profile-tooltip-name">@${u.username}</span>
+              <button class="profile-tooltip-btn" data-action="visit-profile">Visit profile</button>
+            </div>
+            <div class="profile-tooltip-bio">${u.bio || ''}</div>
+            <div class="subtle">From: ${u.hometown || 'Unknown'}</div>
+          </div>
+        </li>
+      `).join('');
+
+      recipientSelect.innerHTML = `
+        <option value="">Send to room (everyone)</option>
+        ${users
+          .filter(u => u.username !== CURRENT_USER)
+          .map(u => `<option value="${u.username}">Send to @${u.username}</option>`)
+          .join('')}
+      `;
     }
 
-    function startPrivateGroup() {
-      const status = document.getElementById("groupStatus");
-      status.textContent = "Private group started (local). Live voice + text concept active for this group.";
-      alert("Private group created. Conceptually, everyone here can now join live voice + text.");
+    userList.addEventListener('mouseover', (e) => {
+      const item = e.target.closest('.user-item');
+      if (!item) return;
+      const tooltip = item.querySelector('.profile-tooltip');
+      tooltip.classList.add('visible');
+    });
+
+    userList.addEventListener('mouseout', (e) => {
+      const item = e.target.closest('.user-item');
+      if (!item) return;
+      const tooltip = item.querySelector('.profile-tooltip');
+      tooltip.classList.remove('visible');
+    });
+
+    userList.addEventListener('click', (e) => {
+      const item = e.target.closest('.user-item');
+      if (!item) return;
+      const username = item.getAttribute('data-username');
+      const action = e.target.getAttribute('data-action');
+
+      if (action === 'visit-profile') {
+        location.href = 'profile.html';
+        return;
+      }
+
+      if (action === 'private-request') {
+        addSystemMessage(`You requested a private chat with @${username}.`);
+        mode = 'private';
+        currentGroupId = `dm-${username}`;
+        updateToggleUI();
+        renderMessages();
+      }
+    });
+
+    function updateToggleUI() {
+      [...privacyToggle.querySelectorAll('button')].forEach(b => {
+        const m = b.getAttribute('data-mode');
+        b.classList.toggle('active', m === mode);
+      });
+      roomLabel.textContent = mode === 'public'
+        ? 'Public SB Street Room'
+        : (currentGroupId ? `Private: ${currentGroupId}` : 'Private rooms & groups');
     }
 
-    // Active user list and target user selects
-    function initUsers() {
-      const userList = document.getElementById("userList");
-      const targetSelect = document.getElementById("targetUserSelect");
-      const privateSelect = document.getElementById("privateChatUserSelect");
+    // GROUPS
+    const groupsList = document.getElementById('groupsList');
+    const groupNameInput = document.getElementById('groupNameInput');
+    const startGroupBtn = document.getElementById('startGroupBtn');
 
-      ACTIVE_USERS.forEach(user => {
-        // Side list
-        const li = document.createElement("li");
-        const span = document.createElement("span");
-        span.className = "user-pill";
-        span.textContent = user.name;
-        span.onclick = () => scrollToUserMessages(user.name);
-        li.appendChild(span);
+    function renderGroups() {
+      if (!groups.length) {
+        groupsList.innerHTML = `<li class="group-item"><span class="group-label">No private groups yet.</span></li>`;
+        return;
+      }
+      groupsList.innerHTML = groups.map(g => `
+        <li class="group-item" data-group="${g.id}">
+          <div>
+            <div class="group-label">${g.name}</div>
+            <div class="group-meta">${g.members.length} members • Voice: ${g.voiceLive ? 'On' : 'Off'}</div>
+          </div>
+          <span class="small-link">Join</span>
+        </li>
+      `).join('');
+    }
 
-        const link = document.createElement("a");
-        link.href = "profile.html";
-        link.className = "small-link";
-        link.textContent = "Profile";
-        li.appendChild(link);
+    groupsList.addEventListener('click', (e) => {
+      const item = e.target.closest('.group-item');
+      if (!item) return;
+      const id = item.getAttribute('data-group');
+      currentGroupId = id;
+      mode = 'private';
+      addSystemMessage(`You joined private group: ${id} (voice on, text enabled).`);
+      updateToggleUI();
+      renderMessages();
+    });
 
-        userList.appendChild(li);
+    startGroupBtn.addEventListener('click', () => {
+      const name = groupNameInput.value.trim();
+      if (!name) return;
+      const id = 'g-' + Date.now();
+      groups.push({ id, name, members: [CURRENT_USER], voiceLive: true });
+      groupNameInput.value = '';
+      renderGroups();
+      mode = 'private';
+      currentGroupId = id;
+      addSystemMessage(`You started a private group: ${name}. Live voice + writing ready.`);
+      updateToggleUI();
+      renderMessages();
+    });
 
-        // Target selects (skip self for target)
-        if (user.id !== CURRENT_USER.id) {
-          const opt1 = document.createElement("option");
-          opt1.value = user.id;
-          opt1.textContent = user.name;
-          targetSelect.appendChild(opt1);
+    // MESSAGES
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const voiceBtn = document.getElementById('voiceBtn');
 
-          const opt2 = document.createElement("option");
-          opt2.value = user.id;
-          opt2.textContent = user.name;
-          privateSelect.appendChild(opt2);
+    function addSystemMessage(text) {
+      messages.push({
+        type: 'system',
+        text,
+        ts: Date.now(),
+        mode,
+        groupId: currentGroupId || null
+      });
+      renderMessages();
+    }
+
+    function addTextMessage(text) {
+      if (!text.trim()) return;
+      const to = recipientSelect.value || null;
+      messages.push({
+        type: 'text',
+        from: CURRENT_USER,
+        to,
+        text: text.trim(),
+        ts: Date.now(),
+        mode,
+        groupId: currentGroupId || null
+      });
+      renderMessages();
+    }
+
+    function addVoiceMessage() {
+      const to = recipientSelect.value || null;
+      messages.push({
+        type: 'voice',
+        from: CURRENT_USER,
+        to,
+        text: '[Voice message]',
+        ts: Date.now(),
+        mode,
+        groupId: currentGroupId || null
+      });
+      renderMessages();
+    }
+
+    function addEmojiMessage(emojiLabel) {
+      const to = recipientSelect.value || null;
+      messages.push({
+        type: 'emoji',
+        from: CURRENT_USER,
+        to,
+        text: emojiLabel,
+        ts: Date.now(),
+        mode,
+        groupId: currentGroupId || null
+      });
+      renderMessages();
+    }
+
+    function addEventToChat(ev) {
+      messages.push({
+        type: 'event',
+        from: CURRENT_USER,
+        event: ev,
+        ts: Date.now(),
+        mode,
+        groupId: currentGroupId || null
+      });
+      renderMessages();
+    }
+
+    function addSpotToChat(spot) {
+      messages.push({
+        type: 'spot',
+        from: CURRENT_USER,
+        spot,
+        ts: Date.now(),
+        mode,
+        groupId: currentGroupId || null
+      });
+      renderMessages();
+    }
+
+    function visibleMessages() {
+      return messages.filter(m => {
+        if (m.mode !== mode) return false;
+        if (mode === 'private' && currentGroupId) {
+          return m.groupId === currentGroupId;
         }
+        if (mode === 'private' && !currentGroupId) {
+          return false;
+        }
+        if (mode === 'public') {
+          return !m.groupId;
+        }
+        return true;
       });
     }
 
-    // Chat message helpers
-    function createMessageElement(fromUser, body, meta, tag) {
-      const msg = document.createElement("div");
-      msg.className = "message";
-
-      const header = document.createElement("div");
-      header.className = "message-header";
-
-      const userSpan = document.createElement("span");
-      userSpan.className = "message-user";
-      userSpan.textContent = fromUser.name;
-
-      // Hover profile card
-      const profileCard = document.createElement("div");
-      profileCard.className = "profile-card";
-      profileCard.innerHTML = `
-        <div class="profile-card-row"><strong>${fromUser.name}</strong></div>
-        <div class="profile-card-row">City: ${fromUser.city || "Unknown"}</div>
-        <div class="profile-card-row">Style: ${fromUser.style || "SB Street"}</div>
-        <div class="profile-card-row">Board: ${fromUser.board || "Board"}</div>
-        <div class="profile-card-actions" style="margin-top:4px;">
-          <a href="profile.html">View profile</a>
-          <a href="javascript:void(0)" onclick="requestPrivateChatWith('${fromUser.id}')">Request private chat</a>
-        </div>
-      `;
-      userSpan.appendChild(profileCard);
-
-      const metaSpan = document.createElement("span");
-      metaSpan.className = "message-meta";
-      metaSpan.textContent = meta;
-
-      header.appendChild(userSpan);
-      header.appendChild(metaSpan);
-
-      if (tag) {
-        const tagSpan = document.createElement("span");
-        tagSpan.className = "tag-pill";
-        tagSpan.textContent = tag;
-        header.appendChild(tagSpan);
-      }
-
-      const bodyDiv = document.createElement("div");
-      bodyDiv.className = "message-body";
-      bodyDiv.innerHTML = body;
-
-      msg.appendChild(header);
-      msg.appendChild(bodyDiv);
-      return msg;
-    }
-
-    function appendMessage(msgElem) {
-      const container = document.getElementById("chatMessages");
-      container.appendChild(msgElem);
-      container.scrollTop = container.scrollHeight;
-    }
-
-    function sendTextMessage() {
-      const input = document.getElementById("chatInput");
-      const text = input.value.trim();
-      if (!text) return;
-
-      const msgElem = createMessageElement(
-        CURRENT_USER,
-        text,
-        "just now",
-        "message"
-      );
-      appendMessage(msgElem);
-      input.value = "";
-    }
-
-    function sendVoiceMessage() {
-      const msgElem = createMessageElement(
-        CURRENT_USER,
-        "🎙 <em>Voice message (concept)</em>",
-        "just now",
-        "voice"
-      );
-      appendMessage(msgElem);
-      alert("In a real build, this would start recording and send a voice clip.");
-    }
-
-    function sendEmojiGift() {
-      const emoji = document.getElementById("emojiSelect").value;
-      const gift = document.getElementById("giftSelect").value;
-      const targetId = document.getElementById("targetUserSelect").value;
-
-      if (!emoji && !gift) {
-        alert("Choose an emoji or gift first.");
-        return;
-      }
-      if (!targetId) {
-        alert("Choose who to send it to.");
+    function renderMessages() {
+      const list = visibleMessages();
+      if (!list.length) {
+        chatMessages.innerHTML = `<div class="message-system">No messages yet. Start talking.</div>`;
         return;
       }
 
-      const targetUser = ACTIVE_USERS.find(u => u.id === targetId);
-      if (!targetUser) return;
+      chatMessages.innerHTML = list.map(m => {
+        if (m.type === 'system') {
+          return `<div class="message-system">${m.text}</div>`;
+        }
 
-      const payload = [emoji, gift].filter(Boolean).join(" ");
-      const body = `${payload} <span class="mini-label">(to ${targetUser.name})</span>`;
+        const isMe = m.from === CURRENT_USER;
+        const sender = m.from ? '@' + m.from : 'system';
+        const target = m.to ? '@' + m.to : null;
+        const timeStr = new Date(m.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-      const msgElem = createMessageElement(
-        CURRENT_USER,
-        body,
-        "just now",
-        "emoji / gift"
-      );
-      appendMessage(msgElem);
+        if (m.type === 'event') {
+          const ev = m.event;
+          return `
+            <div class="message ${isMe ? 'me' : ''}">
+              <div class="message-meta">${sender} • ${timeStr}</div>
+              <div class="message-text">Shared an event:</div>
+              <div class="event-card">
+                <div class="event-name">${ev.name || 'Event'}</div>
+                <div>${ev.date || ''} ${ev.time ? '• ' + ev.time : ''}</div>
+                <div>${ev.location || ''}</div>
+                <div><span class="event-link" onclick="location.href='events.html'">View in Events</span></div>
+              </div>
+            </div>
+          `;
+        }
 
-      // Reset selects
-      document.getElementById("emojiSelect").value = "";
-      document.getElementById("giftSelect").value = "";
+        if (m.type === 'spot') {
+          const s = m.spot;
+          return `
+            <div class="message ${isMe ? 'me' : ''}">
+              <div class="message-meta">${sender} • ${timeStr}</div>
+              <div class="message-text">Shared a spot:</div>
+              <div class="spot-card">
+                <div class="spot-name">${s.name || 'Spot'}</div>
+                <div>${s.address || ''}</div>
+                <div class="spot-distance">${s.distance ? s.distance + ' away' : ''}</div>
+                <div>
+                  <span class="spot-link" onclick="location.href='find-spots.html'">Open in Find Spots</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        let tag = '';
+        if (m.type === 'voice') {
+          tag = `<div class="message-tag">🎙 Voice message</div>`;
+        } else if (m.type === 'emoji') {
+          tag = `<div class="message-tag">Gift: <span>${m.text}</span></div>`;
+        }
+
+        const targetText = target
+          ? `<span class="message-tag">to <span class="message-target">${target}</span></span>`
+          : '';
+
+        return `
+          <div class="message ${isMe ? 'me' : ''}">
+            <div class="message-meta">${sender} • ${timeStr}</div>
+            <div class="message-text">${m.text}</div>
+            ${tag}
+            ${targetText}
+          </div>
+        `;
+      }).join('');
+
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function shareEventToChat() {
-      const select = document.getElementById("eventSelect");
-      const value = select.value;
-      if (!value) {
-        alert("Choose an event first.");
-        return;
-      }
-      const [name, distance, link] = value.split("|");
-      const body = `
-        📅 <strong>${name}</strong><br/>
-        <span class="mini-label">${distance}</span><br/>
-        <a href="${link}">View event details</a>
-      `;
-      const msgElem = createMessageElement(
-        CURRENT_USER,
-        body,
-        "just now",
-        "event"
-      );
-      appendMessage(msgElem);
-      select.value = "";
-    }
-
-    function shareSpotToChat() {
-      const select = document.getElementById("spotSelect");
-      const value = select.value;
-      if (!value) {
-        alert("Choose a spot first.");
-        return;
-      }
-      const [name, distance, link] = value.split("|");
-      const body = `
-        📍 <strong>${name}</strong><br/>
-        <span class="mini-label">${distance}</span><br/>
-        <a href="${link}">Open in Find Spots for directions</a>
-      `;
-      const msgElem = createMessageElement(
-        CURRENT_USER,
-        body,
-        "just now",
-        "spot"
-      );
-      appendMessage(msgElem);
-      select.value = "";
-    }
-
-    function scrollToUserMessages(name) {
-      const container = document.getElementById("chatMessages");
-      const messages = Array.from(container.getElementsByClassName("message"));
-      const target = messages.find(m => m.querySelector(".message-user")?.firstChild?.nodeValue === name);
-      if (target) {
-        container.scrollTop = target.offsetTop - 20;
-      }
-    }
-
-    function requestPrivateChat() {
-      const select = document.getElementById("privateChatUserSelect");
-      const userId = select.value;
-      if (!userId) {
-        alert("Choose someone to request a private chat with.");
-        return;
-      }
-      const user = ACTIVE_USERS.find(u => u.id === userId);
-      if (!user) return;
-      alert(`Private chat request sent to ${user.name} (concept).`);
-    }
-
-    function requestPrivateChatWith(userId) {
-      const user = ACTIVE_USERS.find(u => u.id === userId);
-      if (!user) return;
-      alert(`Private chat request sent to ${user.name} (concept).`);
-    }
-
-    function seedWelcomeMessages() {
-      const intro = createMessageElement(
-        ACTIVE_USERS[1],
-        "Welcome to SB Street. Drop your clips, meetups, and push sessions here.",
-        "2 min ago",
-        "host"
-      );
-      const note = createMessageElement(
-        ACTIVE_USERS[2],
-        "Tap the spot or event links to get directions or details.",
-        "1 min ago",
-        "info"
-      );
-      appendMessage(intro);
-      appendMessage(note);
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      if (typeof applyAppConfigToDOM === "function") {
-        applyAppConfigToDOM(getAppConfig());
-      }
-      initUsers();
-      seedWelcomeMessages();
+    // SEND HANDLERS
+    sendBtn.addEventListener('click', () => {
+      addTextMessage(chatInput.value);
+      chatInput.value = '';
     });
+
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        addTextMessage(chatInput.value);
+        chatInput.value = '';
+      }
+    });
+
+    voiceBtn.addEventListener('click', () => {
+      addVoiceMessage();
+    });
+
+    // EMOJIS / GIFTS
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const emojiLabel = btn.getAttribute('data-emoji');
+        addEmojiMessage(emojiLabel);
+      });
+    });
+
+    // EVENTS / SPOTS INJECTION
+    const addEventBtn = document.getElementById('addEventBtn');
+    const addSpotBtn = document.getElementById('addSpotBtn');
+
+    addEventBtn.addEventListener('click', () => {
+      let events = [];
+      try {
+        events = JSON.parse(localStorage.getItem('rc_events') || '[]');
+      } catch (e) {
+        events = [];
+      }
+      const ev = events[0] || {
+        name: 'Session from Events page',
+        date: '',
+        time: '',
+        location: ''
+      };
+      addEventToChat(ev);
+    });
+
+    addSpotBtn.addEventListener('click', () => {
+      let spots = [];
+      try {
+        spots = JSON.parse(localStorage.getItem('rc_spots') || '[]');
+      } catch (e) {
+        spots = [];
+      }
+      const s = spots[0] || {
+        name: 'Spot from Find Spots',
+        address: '',
+        distance: ''
+      };
+      addSpotToChat(s);
+    });
+
+    // INIT
+    renderUsers();
+    renderGroups();
+    addSystemMessage('Welcome to SB Street Room. You can send voice messages, regular messages, emojis, and gifts.');
   </script>
 </body>
 </html>
