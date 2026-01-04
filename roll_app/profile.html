@@ -3,8 +3,147 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boardwalk Profile</title>
+  <title>Boardwalk Profile • Roll 'N Connect</title>
   <link rel="stylesheet" href="styles/style.css" />
+</head>
+
+<body>
+  <!-- Starfield background layers -->
+  <div class="stars1"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar glass">
+    <div class="sidebar-header">
+      <button id="burger-toggle" class="burger-button">☰</button>
+      <div class="sidebar-logo">
+        <span class="logo-title">ROLL 'N CONNECT</span>
+        <span class="logo-subtitle">Cosmic build • Boardwalk edition</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="home.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="profile.html" class="active">Profile</a>
+      <a href="profile-edit.html">Edit Profile</a>
+      <a href="chatroom.html">Chatrooms</a>
+      <a href="events.html">Events</a>
+      <a href="spots.html">Find Spots</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="notifications.html">Notifications</a>
+      <a href="calendar.html">Calendar</a>
+      <a href="clips-feed.html">Clips Feed</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="profile-layout">
+    <!-- TOP PANEL: PROFILE + POSTS + LESSONS -->
+    <section class="profile-main glass">
+      <div class="profile-header">
+        <img id="avatar" class="avatar" alt="Boardwalk avatar" />
+        <div class="profile-text">
+          <h1 id="username" class="section-title"></h1>
+          <p id="handle" class="handle"></p>
+          <p id="bio" class="bio"></p>
+
+          <button class="btn-primary" onclick="location.href='profile-edit.html'">
+            Edit profile
+          </button>
+        </div>
+        <div class="clip-preview-wrapper">
+          <span class="clip-label">Latest clip</span>
+          <img id="clip-preview" class="clip-preview" alt="Latest clip preview" />
+        </div>
+      </div>
+
+      <div class="profile-stats">
+        <div class="stat">
+          <span id="post-count" class="stat-number">0</span>
+          <span class="stat-label">Posts</span>
+        </div>
+        <div class="stat">
+          <span id="clip-count" class="stat-number">0</span>
+          <span class="stat-label">Clips</span>
+        </div>
+        <div class="stat">
+          <span id="event-count" class="stat-number">0</span>
+          <span class="stat-label">Events</span>
+        </div>
+      </div>
+
+      <div class="profile-columns">
+        <!-- POSTS -->
+        <section class="posts-column">
+          <h2 class="section-subtitle">Posts</h2>
+          <div class="post-actions">
+            <button class="btn-secondary">PHOTO POST</button>
+            <button class="btn-secondary">CLIP POST</button>
+          </div>
+          <div id="post-feed" class="post-feed"></div>
+        </section>
+
+        <!-- LESSONS -->
+        <section class="lessons-column">
+          <h2 class="section-subtitle">Lessons</h2>
+          <p class="lessons-copy">
+            Book 1:1 time with the creator for longboard dance, flow, creative building, and ecosystem design.
+          </p>
+          <button class="btn-primary">Book time with creator</button>
+        </section>
+      </div>
+    </section>
+
+    <!-- BOTTOM PANEL: CALENDAR -->
+    <section class="calendar-panel glass">
+      <div class="calendar-header">
+        <div>
+          <h2 class="section-title calendar-title">CALENDAR</h2>
+          <p class="calendar-subtitle">Events + Spots from your ecosystem</p>
+        </div>
+        <div class="calendar-meta">
+          <span id="calendar-activity" class="calendar-activity">0 New activity</span>
+          <a href="calendar.html" class="calendar-view-all">View all</a>
+        </div>
+      </div>
+
+      <!-- Placeholder grid – your dedicated calendar page can be full-featured -->
+      <div class="calendar-grid">
+        <div class="calendar-month">
+          <button class="calendar-nav">&lt;</button>
+          <span class="calendar-month-label">January 2026</span>
+          <button class="calendar-nav">&gt;</button>
+        </div>
+
+        <div class="calendar-weekdays">
+          <span>Sun</span>
+          <span>Mon</span>
+          <span>Tue</span>
+          <span>Wed</span>
+          <span>Thu</span>
+          <span>Fri</span>
+          <span>Sat</span>
+        </div>
+
+        <div class="calendar-days">
+          <!-- Simple 1–31 grid; your dedicated calendar logic can enhance this -->
+          <!-- Just enough visual structure to match the screenshot energy -->
+          <!-- Row 1 -->
+          <span class="day empty"></span>
+          <span class="day empty"></span>
+          <span class="day empty"></span>
+          <span class="day empty"></span>
+          <span class="day empty"></span>
+          <span class="day empty"></span>
+          <span class="day active">3</span>
+          <!-- Rest of days for feel -->
+          <!-- You can later replace with dynamic generation -->
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -50,10 +189,10 @@
         container.innerHTML = "";
         posts.forEach(post => {
           const div = document.createElement("div");
-          div.className = "post";
+          div.className = "post-card";
           div.innerHTML = `
-            <img src="${post.image}" alt="Post" />
-            <p>${post.caption}</p>
+            <img src="${post.image}" alt="Post" class="post-image" />
+            <p class="post-caption">${post.caption}</p>
           `;
           container.appendChild(div);
         });
@@ -99,7 +238,9 @@
           `${savedEvents.length + savedSpots.length} New activity`;
       }
 
-      document.getElementById("burger-toggle").addEventListener("click", () => {
+      // Burger toggle
+      const burger = document.getElementById("burger-toggle");
+      burger.addEventListener("click", () => {
         document.body.classList.toggle("menu-open");
       });
 
@@ -107,74 +248,10 @@
       renderPosts();
       updateStats();
       renderCalendar();
+
+      // Expose toggleLike if you later wire it to buttons
+      window.toggleLike = toggleLike;
     });
   </script>
-</head>
-
-<body>
-
-  <aside class="sidebar">
-    <button id="burger-toggle">☰</button>
-
-    <nav>
-      <a href="home.html">Home</a>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="profile.html" class="active">Profile</a>
-      <a href="profile-edit.html">Edit Profile</a>
-      <a href="chatroom.html">Chatrooms</a>
-      <a href="events.html">Events</a>
-      <a href="spots.html">Find Spots</a>
-      <a href="marketplace.html">Marketplace</a>
-      <a href="notifications.html">Notifications</a>
-      <a href="calendar.html">Calendar</a>
-      <a href="clips-feed.html">Clips Feed</a>
-    </nav>
-
-    <footer>Cosmic build • Boardwalk edition</footer>
-  </aside>
-
-  <main>
-
-    <section class="profile">
-      <img id="avatar" class="avatar" />
-      <h1 id="username"></h1>
-      <p id="handle"></p>
-      <p id="bio"></p>
-
-      <button onclick="location.href='profile-edit.html'">Edit Profile</button>
-
-      <img id="clip-preview" class="clip-preview" />
-
-      <div class="stats">
-        <span id="post-count">0</span> Posts
-        <span id="clip-count">0</span> Clips
-        <span id="event-count">0</span> Events
-      </div>
-    </section>
-
-    <section class="posts">
-      <h2>Posts</h2>
-      <button>PHOTO POST</button>
-      <button>CLIP POST</button>
-      <div id="post-feed"></div>
-    </section>
-
-    <section class="lessons">
-      <h2>Lessons</h2>
-      <button>Book time with creator</button>
-    </section>
-
-    <section class="calendar">
-      <h2>CALENDAR</h2>
-      <p>Events + Spots from your ecosystem</p>
-
-      <div class="calendar-grid">
-        <p id="calendar-activity">0 New activity</p>
-        <a href="calendar.html">View all</a>
-      </div>
-    </section>
-
-  </main>
-
 </body>
 </html>
