@@ -1,219 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Find Spots</title>
+  <meta charset="UTF-8">
+  <title>Find Spots – Roll ’n Connect</title>
+
+  <link rel="stylesheet" href="styles/style.css">
+
+  <!-- GOOGLE MAPS -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places,marker"></script>
 
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #222;
+      background:#000;
+      color:#fff;
+      margin:0;
+      padding:0;
+      font-family:'Inter',sans-serif;
+      overflow:hidden;
     }
 
-    header {
-      background: #111;
-      color: white;
-      padding: 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
+    .stars1,.stars2,.stars3 {
+      position:fixed; inset:0;
+      background:url('styles/stars-white.png') repeat;
+      z-index:-3;
+    }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
+
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+    .sidebar {
+      position:fixed;
+      top:50%;
+      left:-260px;
+      transform:translateY(-50%);
+      width:260px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:30px 20px;
+      border-radius:0 20px 20px 0;
+      box-shadow:10px 0 40px rgba(255,255,255,0.25);
+      transition:0.35s ease;
+      z-index:9998;
+    }
+    .sidebar.open { left:0; }
+
+    .hamburger {
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:9999;
+    }
+    .hamburger span {
+      height:4px;
+      width:100%;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+    .nav-header{text-align:center;margin-bottom:30px;}
+    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
+    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
+
+    .nav-links {
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .nav-links a {
+      color:#fff;
+      text-decoration:none;
+      font-size:1.15rem;
+      padding:10px 14px;
+      border-radius:12px;
+      transition:0.25s;
+      display:block;
+      background:rgba(255,255,255,0.05);
+      box-shadow:0 0 12px rgba(255,255,255,0.15);
+    }
+    .nav-links a:hover {
+      background:rgba(255,255,255,0.2);
+      transform:translateX(8px);
+      box-shadow:0 0 20px rgba(255,255,255,0.4);
     }
 
-    /* FILTERS */
-    .filters {
-      background: white;
-      padding: 15px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      border-bottom: 1px solid #ddd;
+    #map {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100vh;
+      z-index:1;
     }
 
-    .filters select,
-    .filters input {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
+    .search-panel {
+      position:fixed;
+      top:25px;
+      right:25px;
+      background:rgba(0,0,0,0.55);
+      backdrop-filter:blur(20px);
+      padding:20px;
+      border-radius:20px;
+      box-shadow:0 0 30px rgba(255,255,255,0.3);
+      z-index:9999;
+      width:280px;
     }
 
-    /* MENU BELOW FILTERS */
-    .menu {
-      background: #222;
-      color: white;
-      padding: 12px;
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      font-size: 16px;
+    .search-panel input {
+      width:100%;
+      padding:10px 14px;
+      border-radius:12px;
+      border:none;
+      background:rgba(255,255,255,0.15);
+      color:#fff;
+      margin-bottom:12px;
     }
 
-    .menu a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
+    .category-buttons {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
     }
 
-    /* SPOT LIST */
-    .spots-container {
-      padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
+    .cat-btn {
+      padding:8px 14px;
+      background:rgba(255,255,255,0.15);
+      border-radius:12px;
+      cursor:pointer;
+      font-size:0.9rem;
+      transition:0.25s;
+    }
+    .cat-btn:hover {
+      background:#fff;
+      color:#000;
+      transform:scale(1.1);
     }
 
-    .spot-card {
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    .loc-btn {
+      margin-top:12px;
+      width:100%;
+      padding:10px;
+      background:#fff;
+      color:#000;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:600;
+      transition:0.25s;
+      border:none;
+    }
+    .loc-btn:hover {
+      transform:scale(1.05);
+      box-shadow:0 0 20px rgba(255,255,255,0.8);
     }
 
-    .spot-card img {
-      width: 100%;
-      height: 160px;
-      object-fit: cover;
+    /* SPOT DETAILS PANEL */
+    .spot-details {
+      position:fixed;
+      bottom:0;
+      left:50%;
+      transform:translateX(-50%);
+      width:90%;
+      max-width:420px;
+      background:rgba(0,0,0,0.75);
+      backdrop-filter:blur(20px);
+      padding:20px;
+      border-radius:20px 20px 0 0;
+      box-shadow:0 0 30px rgba(255,255,255,0.3);
+      z-index:9999;
+      display:none;
     }
 
-    .spot-info {
-      padding: 15px;
+    .spot-details h2 {
+      margin:0 0 10px;
+      font-size:1.4rem;
     }
 
-    .spot-info h3 {
-      margin: 0 0 8px;
-      font-size: 18px;
-    }
-
-    .spot-info p {
-      margin: 0 0 10px;
-      color: #555;
-      font-size: 14px;
-    }
-
-    .reviews {
-      padding: 15px;
-      border-top: 1px solid #eee;
-      background: #fafafa;
-    }
-
-    .review {
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-
-    .review strong {
-      color: #333;
+    .spot-details button {
+      width:100%;
+      padding:12px;
+      background:#fff;
+      color:#000;
+      border:none;
+      border-radius:12px;
+      font-weight:600;
+      margin-top:15px;
+      cursor:pointer;
     }
   </style>
 </head>
 
 <body>
 
-  <header>Find Spots</header>
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
 
-  <!-- FILTERS AT TOP -->
-  <div class="filters">
-    <select id="typeFilter">
-      <option value="">Spot Type</option>
-      <option value="park">Park</option>
-      <option value="garage">Garage</option>
-      <option value="street">Street</option>
-    </select>
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
 
-    <select id="difficultyFilter">
-      <option value="">Difficulty</option>
-      <option value="easy">Easy</option>
-      <option value="medium">Medium</option>
-      <option value="hard">Hard</option>
-    </select>
-
-    <input type="text" id="searchInput" placeholder="Search spots..." />
+<nav id="sidebar" class="sidebar">
+  <div class="nav-header">
+    <div class="logo-orb">📍</div>
+    <div class="nav-title">Find Spots</div>
   </div>
 
-  <!-- MENU BELOW FILTERS -->
-  <div class="menu">
-    <a href="index.html">Home</a>
-    <a href="find-spots.html">Find Spots</a>
-    <a href="events.html">Events</a>
-    <a href="profile.html">Profile</a>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="calendar.html">🗓️ Calendar</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+    <li><a href="settings.html">⚙️ Settings</a></li>
+  </ul>
+</nav>
+
+<div class="search-panel">
+  <input id="searchInput" placeholder="Search: skatepark, rink, trail...">
+
+  <div class="category-buttons">
+    <div class="cat-btn" data-q="skatepark">Skateparks</div>
+    <div class="cat-btn" data-q="roller rink">Rinks</div>
+    <div class="cat-btn" data-q="trail">Trails</div>
+    <div class="cat-btn" data-q="parking lot">Parking Lots</div>
+    <div class="cat-btn" data-q="plaza">Plazas</div>
   </div>
 
-  <!-- SPOTS LIST -->
-  <div class="spots-container" id="spotsContainer"></div>
+  <button class="loc-btn" id="locateMe">Use My Location</button>
+</div>
 
-  <script>
-    const spots = [
-      {
-        name: "Piedmont Park",
-        type: "park",
-        difficulty: "easy",
-        img: "https://images.unsplash.com/photo-1503264116251-35a269479413",
-        description: "Smooth paths, open space, great for beginners.",
-        reviews: [
-          { user: "Alex", text: "Great place to practice dancing!" },
-          { user: "Mia", text: "Lots of space and friendly people." }
-        ]
-      },
-      {
-        name: "Underground Garage C5",
-        type: "garage",
-        difficulty: "medium",
-        img: "https://images.unsplash.com/photo-1502877338535-766e1452684a",
-        description: "Flat concrete, echoey, perfect for freestyle.",
-        reviews: [
-          { user: "Jay", text: "Perfect for late-night sessions." }
-        ]
-      },
-      {
-        name: "Midtown Street Loop",
-        type: "street",
-        difficulty: "hard",
-        img: "https://images.unsplash.com/photo-1500048993959-dc63f0b6a5c1",
-        description: "Fast pavement, traffic nearby, advanced riders only.",
-        reviews: [
-          { user: "Sam", text: "Challenging but worth it." }
-        ]
-      }
-    ];
+<div id="map"></div>
 
-    function renderSpots() {
-      const container = document.getElementById("spotsContainer");
-      const type = document.getElementById("typeFilter").value;
-      const difficulty = document.getElementById("difficultyFilter").value;
-      const search = document.getElementById("searchInput").value.toLowerCase();
+<!-- SPOT DETAILS -->
+<div id="spotDetails" class="spot-details">
+  <h2 id="spotName"></h2>
+  <p id="spotAddress"></p>
+  <button id="addToCalendar">Add to My Calendar</button>
+</div>
 
-      const filtered = spots.filter(spot => {
-        return (
-          (!type || spot.type === type) &&
-          (!difficulty || spot.difficulty === difficulty) &&
-          (!search || spot.name.toLowerCase().includes(search))
-        );
-      });
+<script>
+/* SIDEBAR */
+const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
 
-      container.innerHTML = filtered.map(spot => `
-        <div class="spot-card">
-          <img src="${spot.img}" alt="${spot.name}">
-          <div class="spot-info">
-            <h3>${spot.name}</h3>
-            <p>${spot.description}</p>
-          </div>
-          <div class="reviews">
-            ${spot.reviews.map(r => `
-              <div class="review"><strong>${r.user}:</strong> ${r.text}</div>
-            `).join("")}
-          </div>
-        </div>
-      `).join("");
-    }
+/* MAP */
+let map;
+let activeSpot = null;
 
-    document.querySelectorAll("#typeFilter, #difficultyFilter, #searchInput")
-      .forEach(el => el.addEventListener("input", renderSpots));
+const cosmicStyle=[
+  {elementType:"geometry",stylers:[{color:"#0a0a0a"}]},
+  {elementType:"labels.text.fill",stylers:[{color:"#fff"}]},
+  {elementType:"labels.text.stroke",stylers:[{color:"#000"}]},
+  {featureType:"poi",stylers:[{visibility:"off"}]},
+  {featureType:"road",stylers:[{color:"#222"}]},
+  {featureType:"water",stylers:[{color:"#111"}]}
+];
 
-    renderSpots();
-  </script>
+function initMap(){
+  map=new google.maps.Map(document.getElementById("map"),{
+    center:{lat:33.8,lng:-84.3},
+    zoom:11,
+    styles:cosmicStyle,
+    disableDefaultUI:true,
+  });
+
+  map.addListener("click",e=>{
+    const marker=new google.maps.marker.AdvancedMarkerElement({
+      map,
+      position:e.latLng,
+      title:"Custom Spot",
+    });
+
+    const infowindow=new google.maps.InfoWindow({
+      content:`<strong>Custom Spot</strong><br>${e.latLng.lat().toFixed(5)}, ${e.latLng.lng().toFixed(5)}`
+    });
+
+    marker.addListener("click",()=>infowindow.open({anchor:marker,map}));
+  });
+}
+
+window.onload=initMap;
+
+/* USER AVATAR MARKER */
+function placeUserMarker(lat,lng){
+  const profile=JSON.parse(localStorage.getItem("rc_profile")||"{}");
+  const avatar=profile.avatarUrl||"styles/default-avatar.png";
+
+  const el=document.createElement("img");
+  el.src=avatar;
+  el.style.width="50px";
+  el.style.height="50px";
+  el.style.borderRadius="50%";
+  el.style.boxShadow="0 0 15px rgba(255,255,255,0.9)";
+
+  new google.maps.marker.AdvancedMarkerElement({
+    map,
+    position:{lat,lng},
+    content:el
+  });
+}
+
+/* USE MY LOCATION */
+document.getElementById("locateMe").onclick=()=>{
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude,longitude}=pos.coords;
+    map.panTo({lat:latitude,lng:longitude});
+    map.setZoom(14);
+    placeUserMarker(latitude,longitude);
+  });
+};
+
+/* SPOT DETAILS PANEL */
+const details=document.getElementById("spotDetails");
+const nameEl=document.getElementById("spotName");
+const addrEl=document.getElementById("spotAddress");
+
+function showSpotDetails(name,address,lat,lng){
+  activeSpot={name,address,lat,lng};
+  nameEl.textContent=name;
+  addrEl.textContent=address;
+  details.style.display="block";
+}
+
+/* ADD TO CALENDAR (IN‑APP) */
+document.getElementById("addToCalendar").onclick=()=>{
+  if(!activeSpot) return;
+
+  const events=JSON.parse(localStorage.getItem("rc_calendar")||"[]");
+
+  events.push({
+    title:activeSpot.name,
+    location:activeSpot.address,
+    lat:activeSpot.lat,
+    lng:activeSpot.lng,
+    timestamp:Date.now()
+  });
+
+  localStorage.setItem("rc_calendar",JSON.stringify(events));
+
+  details.style.display="none";
+};
+
+/* SEARCH */
+function runSearch(q){
+  const service=new google.maps.places.PlacesService(map);
+
+  const request={
+    query:q,
+    fields:["name","geometry","formatted_address"]
+  };
+
+  service.findPlaceFromQuery(request,(results,status)=>{
+    if(status!==google.maps.places.PlacesServiceStatus.OK||!results.length) return;
+
+    const spot=results[0];
+    const loc=spot.geometry.location;
+
+    map.panTo(loc);
+    map.setZoom(14);
+
+    const marker=new google.maps.marker.AdvancedMarkerElement({
+      map,
+      position:loc,
+      title:spot.name
+    });
+
+    marker.addListener("click",()=>{
+      showSpotDetails(
+        spot.name,
+        spot.formatted_address,
+        loc.lat(),
+        loc.lng()
+      );
+    });
+  });
+}
+
+document.getElementById("searchInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter") runSearch(e.target.value);
+});
+
+document.querySelectorAll(".cat-btn").forEach(btn=>{
+  btn.onclick=()=>runSearch(btn.dataset.q);
+});
+</script>
 
 </body>
 </html>
