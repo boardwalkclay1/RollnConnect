@@ -944,3 +944,188 @@ const btnTypeSatellite = document.getElementById("btnTypeSatellite");
 
 function updateMapTypeButtons(type) {
   [btnTypeCosmic
+<script>
+/* CONTINUE MAP TYPE SWITCHER */
+function updateMapTypeButtons(type) {
+  btnTypeCosmic.classList.remove("active");
+  btnTypeStreet.classList.remove("active");
+  btnTypeSatellite.classList.remove("active");
+
+  if (type === "cosmic") btnTypeCosmic.classList.add("active");
+  if (type === "street") btnTypeStreet.classList.add("active");
+  if (type === "satellite") btnTypeSatellite.classList.add("active");
+}
+
+function setMapType(type) {
+  if (!map) return;
+  currentMapType = type;
+  updateMapTypeButtons(type);
+
+  if (type === "cosmic") {
+    map.setMapTypeId("roadmap");
+    map.setOptions({styles: cosmicStyle});
+    if (currentSpot) {
+      const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
+      renderPresence(spotId, true);
+      renderReviews(spotId);
+    }
+  }
+
+  if (type === "street") {
+    map.setMapTypeId("roadmap");
+    map.setOptions({styles: null});
+    if (currentSpot) {
+      renderPresence("", false);
+      renderReviews(currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`);
+    }
+  }
+
+  if (type === "satellite") {
+    map.setMapTypeId("satellite");
+    map.setOptions({styles: null});
+    if (currentSpot) {
+      renderPresence("", false);
+      renderReviews(currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`);
+    }
+  }
+}
+
+btnTypeCosmic.onclick = () => setMapType("cosmic");
+btnTypeStreet.onclick = () => setMapType("street");
+btnTypeSatellite.onclick = () => setMapType("satellite");
+
+/* USE MY LOCATION */
+document.getElementById("locateMe").onclick = () => {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(pos => {
+    const {latitude, longitude} = pos.coords;
+    map.panTo({lat:latitude, lng:longitude});
+    map.setZoom(14);
+
+    const spot = {
+      id: "user:" + OWNER_ID,
+      name: "Current location",
+      address: null,
+      lat: latitude,
+      lng: longitude,
+      categoryKey:null,
+      types:[]
+    };
+    setCurrentSpot(spot);
+  });
+};
+
+/* DRAG-ONLY DRAWER */
+const drawer = document.getElementById("drawer");
+const drawerGrab = document.getElementById("drawerGrab");
+
+let drawerStartY = 0;
+let drawerCurrentY = 0;
+let drawerBaseY = 0;
+let draggingDrawer = false;
+
+function getDrawerHeights() {
+  const vh = window.innerHeight;
+  return {
+    collapsed: 120,
+    mid: vh * 0.40,
+    expanded: vh * 0.75
+  };
+}
+
+let drawerState = "collapsed";
+
+function setDrawerToState(state, animate=true) {
+  const h = getDrawerHeights();
+  let target = h.collapsed;
+  if (state === "mid") target = h.mid;
+  if (state === "expanded") target = h.expanded;
+
+  drawerState = state;
+  drawerBaseY = target;
+
+  drawer.style.transition = animate ? "transform 0.2s ease-out" : "none";
+
+  const maxY = h.expanded;
+  const offset = maxY - target;
+  drawer.style.transform = `translateY(${offset}px)`;
+}
+
+function handleDrawerStart(y) {
+  draggingDrawer = true;
+  drawerStartY = y;
+
+  const h = getDrawerHeights();
+  const maxY = h.expanded;
+
+  const style = getComputedStyle(drawer);
+  const matrix = new WebKitCSSMatrix(style.transform);
+  const currentOffset = matrix.m42;
+
+  drawerBaseY = maxY - currentOffset;
+  drawer.style.transition = "none";
+}
+
+function handleDrawerMove(y) {
+  if (!draggingDrawer) return;
+
+  const dy = y - drawerStartY;
+  const h = getDrawerHeights();
+  const maxY = h.expanded;
+
+  let newY = drawerBaseY - dy;
+  if (newY < h.collapsed) newY = h.collapsed;
+  if (newY > h.expanded) newY = h.expanded;
+
+  drawerCurrentY = newY;
+  const offset = maxY - newY;
+  drawer.style.transform = `translateY(${offset}px)`;
+}
+
+function handleDrawerEnd() {
+  if (!draggingDrawer) return;
+  draggingDrawer = false;
+
+  const h = getDrawerHeights();
+  const y = drawerCurrentY || drawerBaseY;
+
+  const d = [
+    {state:"collapsed", v:Math.abs(y - h.collapsed)},
+    {state:"mid",       v:Math.abs(y - h.mid)},
+    {state:"expanded",  v:Math.abs(y - h.expanded)}
+  ];
+
+  d.sort((a,b)=>a.v - b.v);
+  setDrawerToState(d[0].state, true);
+}
+
+drawerGrab.addEventListener("mousedown", e => {
+  handleDrawerStart(e.clientY);
+  window.addEventListener("mousemove", onDrawerMove);
+  window.addEventListener("mouseup", onDrawerUp);
+});
+function onDrawerMove(e){ handleDrawerMove(e.clientY); }
+function onDrawerUp(e){
+  handleDrawerEnd();
+  window.removeEventListener("mousemove", onDrawerMove);
+  window.removeEventListener("mouseup", onDrawerUp);
+}
+
+drawerGrab.addEventListener("touchstart", e => {
+  handleDrawerStart(e.touches[0].clientY);
+},{passive:true});
+drawerGrab.addEventListener("touchmove", e => {
+  handleDrawerMove(e.touches[0].clientY);
+},{passive:true});
+drawerGrab.addEventListener("touchend", () => {
+  handleDrawerEnd();
+});
+
+/* INIT */
+window.onload = () => {
+  initMap();
+  setDrawerToState("collapsed", false);
+};
+</script>
+</body>
+</html>
