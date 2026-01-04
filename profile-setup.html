@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile Setup • Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- GLOBAL STYLES -->
+  <link rel="stylesheet" href="styles/style.css">
+
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      display: flex;
+    }
+
+    /* STARFIELDS */
+    .stars1, .stars2, .stars3 {
+      position: fixed;
+      inset: 0;
+      background: url('styles/stars-white.png') repeat;
+      z-index: -3;
+    }
+    .stars1 { opacity: 0.55; animation: drift1 140s linear infinite; }
+    .stars2 { opacity: 0.35; animation: drift2 200s linear infinite; }
+    .stars3 { opacity: 0.2; animation: drift3 260s linear infinite; }
+
+    @keyframes drift1 { from {background-position:0 0;} to {background-position:0 -5000px;} }
+    @keyframes drift2 { from {background-position:0 0;} to {background-position:-4000px -2000px;} }
+    @keyframes drift3 { from {background-position:0 0;} to {background-position:3000px 4000px;} }
+
+    /* RIGHT-SIDE NAVIGATION */
+    .side-nav {
+      width: 260px;
+      height: 100vh;
+      position: fixed;
+      right: 0;
+      top: 0;
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      border-left: 1px solid rgba(255,255,255,0.15);
+      padding: 30px 20px;
+      box-shadow: -5px 0 25px rgba(255,255,255,0.15);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .nav-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo-orb {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .nav-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .nav-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.15rem;
+      padding: 10px 14px;
+      border-radius: 12px;
+      transition: 0.25s;
+      display: block;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.15);
+      transform: translateX(-6px);
+    }
+
+    /* MAIN CONTENT AREA */
+    .page-content {
+      flex: 1;
+      padding: 60px;
+      padding-right: 320px; /* space for right nav */
+      max-width: 700px;
+      margin: auto;
+    }
+
+    /* PROFILE SETUP CARD */
+    .card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 35px rgba(160,120,255,0.3);
+      animation: fadeIn 1.2s ease;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 1rem;
+      backdrop-filter: blur(10px);
+      margin-bottom: 18px;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: #ffffff;
+      color: #000000;
+      padding: 16px;
+      border-radius: 16px;
+      font-size: 1.2rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(255,255,255,0.8);
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- STARFIELDS -->
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+
+<!-- RIGHT NAV -->
+<nav class="side-nav">
+  <div class="nav-header">
+    <div class="logo-orb">🛼</div>
+    <div class="nav-title">Roll ’n Connect</div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="settings.html">⚙️ Settings</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="page-content">
+
+  <div class="card">
+    <h1 style="font-size:1.6rem; margin-bottom:20px;">Set up your profile</h1>
+
+    <form action="dashboard.html">
+
+      <label for="avatar">Profile picture</label>
+      <input id="avatar" type="file" accept="image/*" />
+
+      <label for="bio">Bio</label>
+      <textarea id="bio" rows="3"
+        placeholder="Tell the world your skate style, favorite spots, and what you roll on."></textarea>
+
+      <label for="location">Location</label>
+      <input id="location" type="text" placeholder="City, State / Country" />
+
+      <label for="level">Skill level</label>
+      <select id="level">
+        <option>Beginner</option>
+        <option>Intermediate</option>
+        <option>Advanced</option>
+        <option>Pro</option>
+      </select>
+
+      <button type="submit" class="btn-primary">
+        Finish — Go to Dashboard
+      </button>
+
+    </form>
+  </div>
+
+</main>
+
+</body>
+</html>

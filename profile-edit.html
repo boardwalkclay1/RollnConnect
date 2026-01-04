@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root{--bg:#02040a;--card:#0c1020;--text:#fff;--border:rgba(255,255,255,0.18);}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      min-height:100vh;
+      background:radial-gradient(circle at top,#141b3a,#02040a 55%,#000);
+      font-family:system-ui,sans-serif;
+      color:var(--text);
+      padding:16px;
+    }
+    .page{max-width:960px;margin:0 auto;}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+    h2{margin-bottom:10px;}
+    .field{margin-bottom:10px;}
+    .field label{
+      display:block;
+      margin-bottom:4px;
+      opacity:0.8;
+      font-size:0.85rem;
+    }
+    .field input,.field textarea{
+      width:100%;
+      padding:8px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.05);
+      color:var(--text);
+      font-size:0.9rem;
+    }
+    textarea{resize:vertical;}
+    .btn{
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.1);
+      color:var(--text);
+      cursor:pointer;
+      font-size:0.85rem;
+      margin-right:8px;
+      margin-top:6px;
+    }
+    .btn-primary{background:rgba(125,249,255,0.18);}
+    .item{
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px;
+      margin-top:8px;
+      font-size:0.85rem;
+    }
+    .item button{margin-top:6px;}
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- PROFILE CARD -->
+    <div class="card">
+      <h2>Profile</h2>
+
+      <div class="field">
+        <label for="nameInput">Name</label>
+        <input id="nameInput" type="text" />
+      </div>
+
+      <div class="field">
+        <label for="usernameInput">Username / handle</label>
+        <input id="usernameInput" type="text" />
+      </div>
+
+      <div class="field">
+        <label for="bioInput">Bio</label>
+        <textarea id="bioInput" rows="3"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="avatarFileInput">Profile Picture</label>
+        <input id="avatarFileInput" type="file" accept="image/*" />
+      </div>
+
+      <div class="field">
+        <label for="profileClipFileInput">Profile Clip (Video)</label>
+        <input id="profileClipFileInput" type="file" accept="video/*" />
+      </div>
+
+      <button class="btn btn-primary" id="saveProfileBtn" type="button">Save profile</button>
+      <button class="btn" type="button" onclick="window.location.href='profile.html'">Back to profile</button>
+    </div>
+
+    <!-- LESSONS -->
+    <div class="card">
+      <h2>Lessons</h2>
+
+      <div class="field">
+        <label for="lessonTitleInput">Title</label>
+        <input id="lessonTitleInput" type="text" />
+      </div>
+
+      <div class="field">
+        <label for="lessonPriceInput">Price</label>
+        <input id="lessonPriceInput" type="number" min="0" />
+      </div>
+
+      <div class="field">
+        <label for="lessonDurationInput">Duration (min)</label>
+        <input id="lessonDurationInput" type="number" min="0" />
+      </div>
+
+      <div class="field">
+        <label for="lessonDescInput">Description</label>
+        <textarea id="lessonDescInput" rows="2"></textarea>
+      </div>
+
+      <button class="btn btn-primary" id="addLessonBtn" type="button">Add lesson</button>
+
+      <div id="lessonsList"></div>
+    </div>
+
+    <!-- CLIPS -->
+    <div class="card">
+      <h2>Clips</h2>
+
+      <div class="field">
+        <label for="clipFileInput">Upload Clip</label>
+        <input id="clipFileInput" type="file" accept="video/*" />
+      </div>
+
+      <button class="btn btn-primary" id="addClipBtn" type="button">Add clip</button>
+
+      <div id="clipsList"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const LS_PROFILE = "rc_user_profile";
+    const LS_LESSONS = "rc_user_lessons";
+    const LS_CLIPS   = "rc_user_clips";
+
+    function safeParse(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        return JSON.parse(raw);
+      } catch (e) {
+        return fallback;
+      }
+    }
+
+    function fileToBase64(file) {
+      return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function loadProfileForm() {
+      const p = safeParse(LS_PROFILE, {});
+      document.getElementById("nameInput").value         = p.name || "";
+      document.getElementById("usernameInput").value     = p.username || "";
+      document.getElementById("bioInput").value          = p.bio || "";
+    }
+
+    async function saveProfileForm() {
+      let p = safeParse(LS_PROFILE, {});
+
+      p.name        = document.getElementById("nameInput").value.trim();
+      p.username    = document.getElementById("usernameInput").value.trim();
+      p.bio         = document.getElementById("bioInput").value.trim();
+
+      const avatarFile = document.getElementById("avatarFileInput").files[0];
+      if (avatarFile) p.avatarUrl = await fileToBase64(avatarFile);
+
+      const clipFile = document.getElementById("profileClipFileInput").files[0];
+      if (clipFile) p.profileClipUrl = await fileToBase64(clipFile);
+
+      localStorage.setItem(LS_PROFILE, JSON.stringify(p));
+      alert("Profile saved.");
+    }
+
+    function renderLessons() {
+      const lessons = safeParse(LS_LESSONS, []);
+      const container = document.getElementById("lessonsList");
+      container.innerHTML = "";
+
+      if (!lessons.length) {
+        container.innerHTML = "<p style='font-size:0.85rem;opacity:0.7;'>No lessons yet.</p>";
+        return;
+      }
+
+      lessons.forEach((ls, index) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML =
+          "<strong>" + ls.title + "</strong><br>" +
+          (ls.price ? "$" + ls.price : "Free") + " • " + ls.duration + " min<br>" +
+          "<span style='opacity:0.8;'>" + ls.description + "</span><br>";
+
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.textContent = "Remove";
+        btn.onclick = () => {
+          const list = safeParse(LS_LESSONS, []);
+          list.splice(index, 1);
+          localStorage.setItem(LS_LESSONS, JSON.stringify(list));
+          renderLessons();
+        };
+
+        div.appendChild(btn);
+        container.appendChild(div);
+      });
+    }
+
+    function addLesson() {
+      const title = document.getElementById("lessonTitleInput").value.trim();
+      const price = document.getElementById("lessonPriceInput").value.trim();
+      const duration = document.getElementById("lessonDurationInput").value.trim();
+      const description = document.getElementById("lessonDescInput").value.trim();
+
+      if (!title) {
+        alert("Lesson needs a title.");
+        return;
+      }
+
+      const lessons = safeParse(LS_LESSONS, []);
+      lessons.push({ title, price, duration, description });
+      localStorage.setItem(LS_LESSONS, JSON.stringify(lessons));
+
+      document.getElementById("lessonTitleInput").value = "";
+      document.getElementById("lessonPriceInput").value = "";
+      document.getElementById("lessonDurationInput").value = "";
+      document.getElementById("lessonDescInput").value = "";
+
+      renderLessons();
+    }
+
+    function renderClips() {
+      const clips = safeParse(LS_CLIPS, []);
+      const container = document.getElementById("clipsList");
+      container.innerHTML = "";
+
+      if (!clips.length) {
+        container.innerHTML = "<p style='font-size:0.85rem;opacity:0.7;'>No clips saved.</p>";
+        return;
+      }
+
+      clips.forEach((url, index) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `<video src="${url}" controls style="width:100%;border-radius:10px;margin-bottom:6px;"></video>`;
+
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.textContent = "Remove";
+        btn.onclick = () => {
+          const list = safeParse(LS_CLIPS, []);
+          list.splice(index, 1);
+          localStorage.setItem(LS_CLIPS, JSON.stringify(list));
+          renderClips();
+        };
+
+        div.appendChild(btn);
+        container.appendChild(div);
+      });
+    }
+
+    function addClip() {
+      const file = document.getElementById("clipFileInput").files[0];
+      if (!file) {
+        alert("Please upload a video file.");
+        return;
+      }
+
+      fileToBase64(file).then(base64 => {
+        const clips = safeParse(LS_CLIPS, []);
+        clips.push(base64);
+        localStorage.setItem(LS_CLIPS, JSON.stringify(clips));
+        document.getElementById("clipFileInput").value = "";
+        renderClips();
+      });
+    }
+
+    document.getElementById("saveProfileBtn").onclick = saveProfileForm;
+    document.getElementById("addLessonBtn").onclick = addLesson;
+    document.getElementById("addClipBtn").onclick = addClip;
+
+    loadProfileForm();
+    renderLessons();
+    renderClips();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard – Roll ’n Connect</title>
+  <link rel="stylesheet" href="styles/style.css">
+
+  <style>
+    body {
+      background:#000;
+      color:#fff;
+      margin:0;
+      padding:0;
+      font-family:'Inter',sans-serif;
+      overflow-x:hidden;
+    }
+
+    .stars1,.stars2,.stars3 {
+      position:fixed; inset:0;
+      background:url('styles/stars-white.png') repeat;
+      z-index:-3;
+    }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
+
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+    .sidebar {
+      position:fixed;
+      top:50%;
+      left:-260px;
+      transform:translateY(-50%);
+      width:260px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:30px 20px;
+      border-radius:0 20px 20px 0;
+      box-shadow:10px 0 40px rgba(255,255,255,0.25);
+      transition:0.35s ease;
+      z-index:9998;
+    }
+    .sidebar.open { left:0; }
+
+    .hamburger {
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:9999;
+    }
+    .hamburger span {
+      height:4px;
+      width:100%;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+    .nav-header{text-align:center;margin-bottom:30px;}
+    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
+    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
+    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;}
+    .nav-links a{
+      color:#fff;text-decoration:none;font-size:1.05rem;
+      padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.05);
+      box-shadow:0 0 12px rgba(255,255,255,0.15);transition:0.25s;
+    }
+    .nav-links a:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(8px);
+      box-shadow:0 0 20px rgba(255,255,255,0.4);
+    }
+
+    .page-wrapper {
+      padding-top:120px;
+      padding-bottom:80px;
+      max-width:1200px;
+      margin:0 auto;
+    }
+
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:30px;
+    }
+
+    .card {
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      padding:26px;
+      border-radius:24px;
+      box-shadow:0 0 50px rgba(255,255,255,0.25);
+      transition:0.3s;
+    }
+    .card:hover {
+      transform:scale(1.03);
+      box-shadow:0 0 70px rgba(255,255,255,0.4);
+    }
+
+    .card-title {
+      font-size:1.4rem;
+      margin-bottom:14px;
+      font-weight:600;
+    }
+
+    .stat-row {
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:10px;
+      font-size:1.1rem;
+    }
+
+    .avatar {
+      width:80px;
+      height:80px;
+      border-radius:50%;
+      background-size:cover;
+      background-position:center;
+      box-shadow:0 0 20px rgba(255,255,255,0.7);
+      margin-bottom:10px;
+    }
+
+    .quick-links {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .quick-btn {
+      padding:10px 16px;
+      background:#fff;
+      color:#000;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:600;
+      font-size:0.9rem;
+      box-shadow:0 0 20px rgba(255,255,255,0.8);
+    }
+
+    .post-preview {
+      width:100%;
+      height:180px;
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(255,255,255,0.1);
+      margin-bottom:10px;
+    }
+    .post-preview img,
+    .post-preview video {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .lesson-item {
+      background:rgba(255,255,255,0.12);
+      padding:14px;
+      border-radius:16px;
+      margin-bottom:10px;
+    }
+    .lesson-title { font-weight:600; }
+    .lesson-meta { opacity:0.85;font-size:0.9rem; }
+  </style>
+</head>
+<body>
+
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+
+<nav id="sidebar" class="sidebar">
+  <div class="nav-header">
+    <div class="logo-orb">🚀</div>
+    <div class="nav-title">Dashboard</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="profile.html">👤 Profile</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="calendar.html">🗓️ Calendar</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+    <li><a href="settings.html">⚙️ Settings</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+
+  <div class="grid">
+
+    <!-- PROFILE SNAPSHOT -->
+    <div class="card">
+      <div class="card-title">Your Profile</div>
+      <div id="dashAvatar" class="avatar"></div>
+      <div id="dashName" style="font-size:1.2rem;font-weight:600;margin-bottom:6px;">Your Name</div>
+      <div id="dashBio" style="opacity:0.85;margin-bottom:14px;">Your bio goes here.</div>
+
+      <div class="stat-row"><span>Posts</span><span id="dashPosts">0</span></div>
+      <div class="stat-row"><span>Likes</span><span id="dashLikes">0</span></div>
+      <div class="stat-row"><span>Views</span><span id="dashViews">0</span></div>
+
+      <div class="quick-links" style="margin-top:14px;">
+        <a href="profile.html" class="quick-btn">View Profile</a>
+        <a href="profile-edit.html" class="quick-btn">Edit Profile</a>
+      </div>
+    </div>
+
+    <!-- RECENT POSTS -->
+    <div class="card">
+      <div class="card-title">Recent Posts</div>
+      <div id="recentPosts"></div>
+      <a href="profile.html" class="quick-btn">See All</a>
+    </div>
+
+    <!-- LESSONS -->
+    <div class="card">
+      <div class="card-title">Your Lessons</div>
+      <div id="dashLessons"></div>
+      <a href="profile-edit.html" class="quick-btn">Manage Lessons</a>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="card">
+      <div class="card-title">Quick Actions</div>
+      <div class="quick-links">
+        <a href="chatrooms.html" class="quick-btn">Open Chatrooms</a>
+        <a href="find-spots.html" class="quick-btn">Find Spots</a>
+        <a href="events.html" class="quick-btn">Events</a>
+        <a href="calendar.html" class="quick-btn">Calendar</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const hb=document.getElementById("hamburger"), sb=document.getElementById("sidebar");
+  hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
+
+  const profile = JSON.parse(localStorage.getItem("rc_user_profile") || "{}");
+  const lessons = JSON.parse(localStorage.getItem("rc_user_lessons") || "[]");
+  const clips   = JSON.parse(localStorage.getItem("rc_user_clips") || "[]");
+  const posts   = JSON.parse(localStorage.getItem("rc_user_posts") || "[]");
+
+  const dashAvatar=document.getElementById("dashAvatar");
+  const dashName=document.getElementById("dashName");
+  const dashBio=document.getElementById("dashBio");
+  const dashPosts=document.getElementById("dashPosts");
+  const dashLikes=document.getElementById("dashLikes");
+  const dashViews=document.getElementById("dashViews");
+  const recentPosts=document.getElementById("recentPosts");
+  const dashLessons=document.getElementById("dashLessons");
+
+  dashAvatar.style.backgroundImage = `url('${profile.avatarUrl || "styles/default-avatar.png"}')`;
+  dashName.textContent = profile.name || "Your Name";
+  dashBio.textContent = profile.bio || "Your bio goes here.";
+
+  dashPosts.textContent = posts.length;
+
+  let totalLikes=0,totalViews=0;
+  posts.forEach(p=>{
+    totalLikes += p.likes || 0;
+    totalViews += p.views || 0;
+  });
+  dashLikes.textContent = totalLikes;
+  dashViews.textContent = totalViews;
+
+  recentPosts.innerHTML="";
+  posts.slice(-3).reverse().forEach(p=>{
+    const wrap=document.createElement("div");
+    wrap.className="post-preview";
+    if(p.type==="video"){
+      const v=document.createElement("video");
+      v.src=p.url;v.muted=true;v.loop=true;v.autoplay=true;
+      wrap.appendChild(v);
+    }else{
+      const img=document.createElement("img");
+      img.src=p.url;
+      wrap.appendChild(img);
+    }
+    recentPosts.appendChild(wrap);
+  });
+
+  dashLessons.innerHTML="";
+  lessons.forEach(ls=>{
+    const div=document.createElement("div");
+    div.className="lesson-item";
+    div.innerHTML=`
+      <div class="lesson-title">${ls.title}</div>
+      <div class="lesson-meta">$${ls.price} • ${ls.duration} min</div>
+    `;
+    dashLessons.appendChild(div);
+  });
+</script>
+
+</body>
+</html>

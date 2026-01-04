@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search – Roll ’n Connect</title>
+
+  <style>
+    body { margin:0; padding:0; font-family:system-ui; background:#05050a; color:white; }
+    .container { max-width:900px; margin:80px auto; padding:20px; text-align:center; }
+    input { width:100%; padding:14px; border-radius:10px; background:#14141c; color:white; border:none; box-shadow:0 0 10px #4a4aff; margin-bottom:20px; }
+    .item-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:20px; }
+    .item-card { background:#0f0f18; border-radius:14px; padding:16px; cursor:pointer; box-shadow:0 0 14px rgba(74,74,255,0.25); }
+    .item-title { font-size:18px; font-weight:600; }
+    .item-price { font-size:16px; color:#4a4aff; font-weight:600; }
+    .item-meta { font-size:13px; opacity:0.7; }
+  </style>
+
+  <script>
+    function searchItems(){
+      const q = document.getElementById("search").value.toLowerCase();
+      let items = JSON.parse(localStorage.getItem("rc_market_items") || "[]");
+
+      const results = items.filter(i =>
+        i.title.toLowerCase().includes(q) ||
+        i.category.toLowerCase().includes(q)
+      );
+
+      document.getElementById("grid").innerHTML =
+        results.length
+          ? results.map(cardHTML).join("")
+          : `<div class="empty-state">No results found.</div>`;
+    }
+
+    function cardHTML(item){
+      return `
+        <div class="item-card" onclick="location.href='item-view.html?id=${item.id}'">
+          <div class="item-title">${item.title}</div>
+          <div class="item-price">${item.price === 0 ? "FREE" : "$" + item.price}</div>
+          <div class="item-meta">${item.category.toUpperCase()} • ${item.condition}</div>
+        </div>
+      `;
+    }
+  </script>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Search Marketplace</h1>
+
+    <input id="search" placeholder="Search items..." oninput="searchItems()" />
+
+    <div id="grid" class="item-grid"></div>
+  </div>
+
+</body>
+</html>

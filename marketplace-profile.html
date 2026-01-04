@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketplace Profile – Roll ’n Connect</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #05050a;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 40px;
+      height: 32px;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger div {
+      height: 6px;
+      background: #4a4aff;
+      border-radius: 4px;
+      box-shadow: 0 0 12px #4a4aff;
+      transition: 0.3s;
+    }
+
+    /* SIDE MENU – same pattern */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100vh;
+      background: #0d0d16;
+      padding: 40px 20px;
+      box-shadow: 0 0 20px #4a4aff;
+      transition: 0.35s ease;
+      z-index: 999;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .side-menu a {
+      display: block;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #14141c;
+      border-radius: 10px;
+      text-decoration: none;
+      color: white;
+      font-size: 18px;
+      box-shadow: 0 0 10px #4a4aff;
+      transition: 0.25s;
+    }
+
+    .side-menu a:hover {
+      background: #1f1f29;
+      box-shadow: 0 0 16px #4a4aff;
+    }
+
+    /* PAGE CONTENT */
+    .page-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+      font-weight: 700;
+      text-shadow: 0 0 12px #4a4aff;
+    }
+
+    .subtitle {
+      opacity: 0.7;
+      margin-bottom: 24px;
+    }
+
+    .profile-card {
+      background: #0f0f18;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 0 16px rgba(74, 74, 255, 0.35);
+      margin-bottom: 24px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffff, #4a4aff);
+      box-shadow: 0 0 16px #4a4aff;
+      flex-shrink: 0;
+    }
+
+    .profile-main {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .profile-meta {
+      font-size: 14px;
+      opacity: 0.75;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #14141c;
+      font-size: 12px;
+      opacity: 0.85;
+      box-shadow: 0 0 10px #4a4aff44;
+    }
+
+    .btn-primary {
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: #4a4aff;
+      color: black;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 0 16px #4a4aff;
+      transition: 0.25s;
+      margin-top: 10px;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 20px #6a6aff;
+      transform: translateY(-2px);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 18px 0 8px;
+    }
+
+    .list {
+      background: #0f0f18;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 0 14px rgba(74, 74, 255, 0.25);
+      font-size: 14px;
+    }
+
+    .list-item {
+      margin-bottom: 10px;
+      opacity: 0.9;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .list-item-title {
+      font-weight: 600;
+    }
+
+    .list-item-price {
+      color: #4a4aff;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .empty-state {
+      opacity: 0.7;
+      font-size: 14px;
+    }
+  </style>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector('.side-menu').classList.toggle('open');
+    }
+
+    function loadMarketplaceProfile() {
+      const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+      const items = JSON.parse(localStorage.getItem("rc_market_items") || "[]");
+
+      const name = profile.displayName || profile.username || "Your Name";
+      const handle = profile.username ? "@" + profile.username : "@handle";
+      const city = profile.city || "Add your city";
+
+      document.getElementById("profileName").textContent = name;
+      document.getElementById("profileHandle").textContent = handle;
+      document.getElementById("profileCity").textContent = city;
+
+      const yours = items.filter(i => i.seller === profile.username);
+      document.getElementById("listingCount").textContent = yours.length;
+
+      const listContainer = document.getElementById("yourListings");
+      if (!yours.length) {
+        listContainer.innerHTML =
+          `<div class="empty-state">You haven’t listed anything in the marketplace yet.</div>`;
+      } else {
+        listContainer.innerHTML = yours
+          .map(i => `
+            <div class="list-item" onclick="location.href='item-view.html?id=${i.id}'" style="cursor:pointer;">
+              <div class="list-item-title">${i.title}</div>
+              <div class="list-item-price">${i.price === 0 ? "FREE" : "$" + i.price}</div>
+            </div>
+          `)
+          .join("");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadMarketplaceProfile);
+  </script>
+</head>
+
+<body>
+
+  <!-- HAMBURGER -->
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <!-- SIDE MENU -->
+  <div class="side-menu">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="sell-item.html">Sell Item</a>
+    <a href="marketplace-profile.html">Marketplace Profile</a>
+    <a href="marketplace-settings.html">Marketplace Settings</a>
+    <a href="profile.html">Main Profile</a>
+    <a href="settings.html">Main Settings</a>
+  </div>
+
+  <div class="page-container">
+    <h1>Marketplace Profile</h1>
+    <div class="subtitle">
+      This view uses your main Roll ’n Connect profile but focuses on your marketplace presence.
+    </div>
+
+    <div class="profile-card">
+      <div class="avatar"></div>
+      <div class="profile-main">
+        <div id="profileName" class="profile-name">Your Name</div>
+        <div id="profileHandle" class="profile-meta">@handle</div>
+        <div id="profileCity" class="profile-meta" style="margin-top:4px;">City</div>
+        <div class="profile-meta" style="margin-top:8px;">
+          <span id="listingCount">0</span> active marketplace listings
+        </div>
+
+        <div class="tag-row">
+          <div class="tag">Marketplace Seller</div>
+          <div class="tag">Community Gear Flow</div>
+        </div>
+
+        <button class="btn-primary" onclick="location.href='profile.html'">
+          Edit Main Profile
+        </button>
+      </div>
+    </div>
+
+    <div class="section-title">Your Marketplace Listings</div>
+    <div id="yourListings" class="list">
+      <!-- JS fills -->
+    </div>
+  </div>
+</body>
+</html>

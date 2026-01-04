@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Longboard Dancing – Roll ’n Connect</title>
+  <link rel="stylesheet" href="styles/style.css">
+
+  <style>
+    body{background:#000;color:#fff;margin:0;padding:0;font-family:'Inter',sans-serif;overflow-x:hidden;}
+    .page-wrapper{padding-top:120px;text-align:center;}
+    .hero{
+      margin:0 auto 40px auto;padding:40px;max-width:900px;
+      background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);
+      border-radius:24px;box-shadow:0 0 50px rgba(255,255,255,0.2);
+    }
+    .enter-btn{
+      display:inline-block;margin-top:20px;padding:14px 24px;
+      background:#fff;color:#000;border-radius:14px;text-decoration:none;
+      font-size:1.2rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
+
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+
+<nav id="sidebar" class="sidebar">
+  <div class="nav-header"><div class="logo-orb">🛹</div><div class="nav-title">Longboard Dancing</div></div>
+  <ul class="nav-links">
+    <li><a href="longboard.html">⬅ Back to Longboard</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+
+  <div class="hero">
+    <h1 style="font-size:3rem;">Longboard Dancing</h1>
+    <p style="font-size:1.1rem;opacity:0.9;">
+      Flow, footwork, cross-steps, combos, and boardwalk style.  
+      Enter the chatroom to share clips, ask questions, and vibe with other dancers.
+    </p>
+
+    <a href="chatroom.html?room=longboard-dancing" class="enter-btn">Enter Dancing Chatroom</a>
+  </div>
+
+</div>
+
+<script>
+  const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
+  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+</script>
+
+</body>
+</html>

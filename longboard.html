@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Longboard — Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    /* Black & White Glowing Theme */
+    :root{
+      --bg-1:#000; --bg-2:#0a0a0a;
+      --panel:rgba(255,255,255,0.03);
+      --glow-1:rgba(255,255,255,0.12);
+      --accent:#ffffff;
+      --muted:rgba(255,255,255,0.55);
+      --card-radius:14px; --gap:18px; --max-width:1200px;
+    }
+
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--accent);font-family:Inter,system-ui,Segoe UI,Arial;-webkit-font-smoothing:antialiased}
+    a{color:inherit}
+
+    /* Layout */
+    .container{max-width:var(--max-width);margin:28px auto;padding:20px;display:grid;grid-template-columns:1fr;gap:20px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo-orb{width:46px;height:46px;border-radius:50%;background:linear-gradient(180deg,#fff,#ddd);box-shadow:0 0 30px rgba(255,255,255,0.12),0 6px 30px rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;color:#000;font-weight:900}
+    .title{font-size:1.6rem;font-weight:900;letter-spacing:0.6px}
+    .byline{font-size:0.9rem;color:var(--muted);margin-top:4px}
+
+    /* Burger + Sidebar */
+    .burger{width:48px;height:44px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;justify-content:center;gap:6px;padding:8px;cursor:pointer;backdrop-filter:blur(6px)}
+    .burger span{height:3px;background:linear-gradient(90deg,#fff,#ddd);border-radius:3px;display:block;transition:transform .28s,opacity .28s}
+    .burger.active span:nth-child(1){transform:translateY(8px) rotate(45deg)}
+    .burger.active span:nth-child(2){opacity:0}
+    .burger.active span:nth-child(3){transform:translateY(-8px) rotate(-45deg)}
+
+    .layout{display:grid;grid-template-columns:320px 1fr;gap:24px;margin-top:12px}
+    .sidebar{
+      position:relative;
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);
+      border-radius:14px;padding:18px;height:calc(100vh - 120px);box-shadow:0 10px 40px rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.04);backdrop-filter:blur(8px);overflow:auto;
+    }
+
+    /* Floating mobile sidebar */
+    .mobile-sidebar{
+      position:fixed;left:-320px;top:0;height:100vh;width:320px;padding:22px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);z-index:9999;transition:left .32s;box-shadow:20px 0 60px rgba(0,0,0,0.8);
+    }
+    .mobile-sidebar.open{left:0}
+
+    .nav-list{list-style:none;padding:0;margin:18px 0 0 0;display:flex;flex-direction:column;gap:10px}
+    .nav-list a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;text-decoration:none;color:var(--accent);background:transparent;border:1px solid rgba(255,255,255,0.02)}
+    .nav-list a:hover{background:rgba(255,255,255,0.03);transform:translateX(6px);box-shadow:0 6px 30px rgba(255,255,255,0.03)}
+
+    /* Main content */
+    .main{padding:22px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);box-shadow:0 10px 40px rgba(0,0,0,0.6);min-height:70vh}
+    .hero{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+    .hero-left{max-width:68%}
+    .hero .subtitle{color:var(--muted);margin-top:8px}
+    .cta-row{display:flex;gap:12px;margin-top:14px}
+
+    .cta-btn{padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:800;background:transparent;color:var(--accent);box-shadow:0 6px 30px rgba(255,255,255,0.03)}
+    .cta-primary{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:12px}
+
+    /* Realms grid */
+    .realms{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:22px}
+    .realm{padding:16px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(255,255,255,0.02)}
+    .realm h3{margin:0;font-size:1.05rem}
+    .realm p{color:var(--muted);margin:10px 0 0 0;font-size:0.95rem}
+    .realm-actions{display:flex;gap:10px;margin-top:14px;align-items:center}
+    .enter-btn{background:linear-gradient(90deg,#fff,#ddd);color:#000;padding:10px 12px;border-radius:10px;text-decoration:none;font-weight:800}
+    .open-spots{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--accent);padding:8px 10px;border-radius:10px;text-decoration:none}
+
+    /* Party Chat card */
+    .party{
+      margin-top:22px;padding:16px;border-radius:12px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 12px 40px rgba(255,255,255,0.02);
+    }
+    .party .label{font-weight:900;font-size:1.05rem}
+    .party .desc{color:var(--muted);font-size:0.95rem}
+
+    /* Footer note */
+    .note{margin-top:18px;color:var(--muted);font-size:0.9rem}
+
+    /* Small screens */
+    @media (max-width:980px){
+      .layout{grid-template-columns:1fr;gap:12px}
+      .sidebar{display:none}
+      .mobile-toggle{display:block}
+    }
+    @media (min-width:981px){
+      .mobile-sidebar{display:none}
+      .mobile-toggle{display:none}
+    }
+
+    /* Subtle animated glow */
+    .glow {
+      position:relative;
+    }
+    .glow::after{
+      content:"";position:absolute;inset:-6px;border-radius:14px;filter:blur(18px);opacity:0.12;background:linear-gradient(90deg,#fff,#ddd);z-index:-1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo-orb">📍</div>
+        <div>
+          <div class="title">ROLL ’N CONNECT</div>
+          <div class="byline">By Boardwalk Clay</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:12px">
+        <button id="mobileBurger" class="burger" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <!-- Desktop sidebar -->
+      <aside class="sidebar" aria-label="Primary navigation">
+        <nav>
+          <ul class="nav-list" role="menu">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="dashboard.html">📊 Dashboard</a></li>
+            <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+            <li><a href="find-spots.html">📍 Find Spots</a></li>
+            <li><a href="events.html">📅 Events</a></li>
+            <li><a href="profile.html">👤 Your Profile</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Mobile floating sidebar -->
+      <aside id="mobileSidebar" class="mobile-sidebar" aria-hidden="true" aria-label="Mobile navigation">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="logo-orb" style="width:40px;height:40px;font-size:18px">📍</div>
+            <div style="font-weight:800">ROLL ’N CONNECT</div>
+          </div>
+          <button id="closeMobile" class="burger" aria-label="Close menu"><span></span><span></span><span></span></button>
+        </div>
+
+        <nav style="margin-top:18px">
+          <ul class="nav-list" role="menu">
+            <li><a href="index.html">🏠 Home</a></li>
+            <li><a href="dashboard.html">📊 Dashboard</a></li>
+            <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+            <li><a href="find-spots.html">📍 Find Spots</a></li>
+            <li><a href="events.html">📅 Events</a></li>
+            <li><a href="profile.html">👤 Your Profile</a></li>
+            <li><a href="settings.html">⚙️ Settings</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Main -->
+      <main class="main" role="main" aria-labelledby="longboard-heading">
+        <div class="hero">
+          <div class="hero-left">
+            <div id="longboard-heading" style="font-size:1.8rem;font-weight:900">Longboard</div>
+            <div class="subtitle">Longboarding is the discipline. Choose a realm below to join focused chatrooms with message effects, emoji blasts, and per‑room notifications.</div>
+            <div class="note">This hub leads to Dancing, Cruising, Downhill, and Party Chat realms and to curated Find Spots for each style.</div>
+
+            <div class="cta-row">
+              <a class="cta-btn cta-primary" href="chatrooms.html">Enter Chatrooms</a>
+              <a class="cta-btn" href="events.html">Events</a>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end">
+            <div class="pill" style="background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:999px;font-weight:800">Discipline Hub</div>
+            <div style="color:var(--muted);font-size:0.9rem">Black & white glowing theme</div>
+          </div>
+        </div>
+
+        <section class="realms" aria-label="Longboard Realms">
+          <article class="realm glow" id="realm-dancing" data-room="dancing">
+            <div>
+              <h3>Dancing</h3>
+              <p>Flow, footwork, combos, and boardwalk‑style movement. Perfect for freestyle and choreography meetups.</p>
+              <div style="margin-top:10px;color:var(--muted);font-size:0.85rem">Default packs: Elements, Hearts</div>
+            </div>
+            <div class="realm-actions">
+              <a class="enter-btn" href="room-dancing.html" aria-label="Enter Dancing Chat">Enter Dancing Chat</a>
+              <a class="open-spots" href="find-spots.html?tag=dancing" aria-label="Find Spots for Dancing">Open Spots</a>
+            </div>
+          </article>
+
+          <article class="realm glow" id="realm-cruising" data-room="cruising">
+            <div>
+              <h3>Cruising</h3>
+              <p>Chill rides, smooth pushes, city laps, and mellow flow. Great for route sharing and casual meetups.</p>
+              <div style="margin-top:10px;color:var(--muted);font-size:0.85rem">Default packs: Hearts, Elements</div>
+            </div>
+            <div class="realm-actions">
+              <a class="enter-btn" href="room-cruising.html" aria-label="Enter Cruising Chat">Enter Cruising Chat</a>
+              <a class="open-spots" href="find-spots.html?tag=cruising" aria-label="Find Spots for Cruising">Open Spots</a>
+            </div>
+          </article>
+
+          <article class="realm glow" id="realm-downhill" data-room="downhill">
+            <div>
+              <h3>Downhill</h3>
+              <p>Speed, freeride, slides, and hill bombing. Safety tips, race meetups, and route scouting live here.</p>
+              <div style="margin-top:10px;color:var(--muted);font-size:0.85rem">Default packs: Downhill, Longboard</div>
+            </div>
+            <div class="realm-actions">
+              <a class="enter-btn" href="room-downhill.html" aria-label="Enter Downhill Chat">Enter Downhill Chat</a>
+              <a class="open-spots" href="find-spots.html?tag=downhill" aria-label="Find Spots for Downhill">Open Spots</a>
+            </div>
+          </article>
+        </section>
+
+        <!-- Party Chat Section -->
+        <div class="party glow" role="region" aria-label="Party Chat">
+          <div>
+            <div class="label">Party Chat</div>
+            <div class="desc">Casual, high-energy channel for meetups, after-ride hangs, and community shoutouts. Emoji blasts and reveal/slam effects encouraged.</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <a class="enter-btn" href="room-party.html" aria-label="Enter Party Chat">Enter Party Chat</a>
+            <a class="open-spots" href="find-spots.html?tag=party" aria-label="Find Party Spots">Open Spots</a>
+          </div>
+        </div>
+
+        <div class="note" style="margin-top:22px">
+          Each realm supports message effects (slam, reveal, quiet), emoji customization, polls, event posting, and location drops that open Find Spots with directions.
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Mobile sidebar toggle
+    const mobileBurger = document.getElementById('mobileBurger');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+    const closeMobile = document.getElementById('closeMobile');
+
+    mobileBurger.addEventListener('click', () => {
+      mobileSidebar.classList.add('open');
+      mobileSidebar.setAttribute('aria-hidden', 'false');
+      mobileBurger.classList.add('active');
+    });
+
+    closeMobile.addEventListener('click', () => {
+      mobileSidebar.classList.remove('open');
+      mobileSidebar.setAttribute('aria-hidden', 'true');
+      mobileBurger.classList.remove('active');
+    });
+
+    // Desktop burger animation (visual only)
+    document.querySelectorAll('.burger').forEach(b => {
+      b.addEventListener('click', () => b.classList.toggle('active'));
+    });
+
+    // Dev-time link check (non-blocking)
+    (function validateLinks(){
+      const links = document.querySelectorAll('.enter-btn, .open-spots, .nav-list a');
+      links.forEach(a=>{
+        const href = a.getAttribute('href');
+        if(!href) return;
+        // Non-blocking HEAD check to warn in console during development
+        fetch(href, { method: 'HEAD' }).then(res=>{
+          if(!res.ok) console.warn('Linked page may be missing:', href);
+        }).catch(()=> console.warn('Could not reach linked page (dev check):', href));
+      });
+    })();
+  </script>
+</body>
+</html>

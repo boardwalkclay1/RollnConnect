@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Marketplace Item – Roll ’n Connect</title>
+
+  <style>
+    body{
+      background:#000;color:#fff;margin:0;padding:0;
+      font-family:'Inter',sans-serif;overflow-x:hidden;overflow-y:auto;
+    }
+
+    .stars1,.stars2,.stars3{
+      position:fixed;inset:0;
+      background:url('styles/stars-white.png') repeat;
+      z-index:-3;pointer-events:none;
+    }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2;animation:drift3 260s linear infinite;}
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+    .sidebar{
+      position:fixed;top:0;left:0;height:100vh;width:260px;
+      background:rgba(10,10,20,0.92);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:26px 20px;
+      box-shadow:10px 0 40px rgba(0,0,0,0.7);
+      z-index:9000;
+    }
+
+    .nav-header{text-align:center;margin-bottom:24px;}
+    .logo-orb{font-size:2.4rem;margin-bottom:6px;text-shadow:0 0 20px rgba(255,255,255,0.9);}
+    .nav-title{font-size:1.2rem;font-weight:600;text-shadow:0 0 10px rgba(255,255,255,0.7);}
+    .nav-links{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;}
+    .nav-links a{
+      display:block;color:#fff;text-decoration:none;font-size:0.95rem;
+      padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);
+      box-shadow:0 0 10px rgba(255,255,255,0.15);transition:0.25s;
+    }
+    .nav-links a:hover{
+      background:rgba(255,255,255,0.2);
+      transform:translateX(5px);
+      box-shadow:0 0 18px rgba(255,255,255,0.4);
+    }
+
+    .main{
+      margin-left:260px;
+      padding:40px;
+      min-height:100vh;
+    }
+
+    .item-top{
+      display:flex;flex-wrap:wrap;gap:24px;margin-bottom:30px;
+    }
+    .item-image{
+      flex:0 0 320px;height:320px;border-radius:20px;
+      background:rgba(255,255,255,0.15);overflow:hidden;
+      box-shadow:0 0 40px rgba(255,255,255,0.3);
+    }
+    .item-image img{width:100%;height:100%;object-fit:cover;}
+    .item-main{flex:1;min-width:260px;}
+
+    .item-title{font-size:2.2rem;font-weight:700;margin-bottom:8px;}
+    .item-disc{font-size:1rem;opacity:0.85;margin-bottom:6px;}
+    .item-price{font-size:1.6rem;margin-bottom:10px;}
+    .item-desc{opacity:0.9;margin-bottom:16px;}
+    .item-donate{font-size:0.9rem;opacity:0.9;margin-bottom:16px;}
+
+    .seller-text{font-size:0.95rem;opacity:0.9;margin-bottom:16px;}
+
+    .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
+    .btn{
+      padding:10px 16px;border-radius:12px;border:none;
+      font-weight:600;cursor:pointer;font-size:0.95rem;
+    }
+    .btn-primary{background:#fff;color:#000;}
+    .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.5);}
+    .btn-danger{background:#ff4b4b;color:#fff;}
+
+    .edit-card{
+      margin-top:30px;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(25px);
+      padding:20px;border-radius:16px;
+      box-shadow:0 0 40px rgba(255,255,255,0.3);
+    }
+
+    label{font-size:0.85rem;opacity:0.85;display:block;margin-bottom:4px;}
+    input,textarea,select{
+      width:100%;padding:10px 12px;margin-bottom:12px;
+      border:none;border-radius:12px;
+      background:rgba(255,255,255,0.16);color:#fff;font-size:0.95rem;
+    }
+    textarea{resize:vertical;}
+
+    .toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+    .toggle-row input[type="checkbox"]{width:auto;height:auto;}
+
+    .status-msg{
+      margin-top:10px;font-size:0.9rem;opacity:0.9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
+
+<nav class="sidebar">
+  <div class="nav-header">
+    <div class="logo-orb">🛒</div>
+    <div class="nav-title">Item Detail</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="marketplace.html">⬅ Back to Marketplace</a></li>
+    <li><a href="sell-item.html">Sell Item</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="index.html">🏠 Home</a></li>
+  </ul>
+</nav>
+
+<div class="main" id="main" style="display:none;">
+  <div class="item-top">
+    <div class="item-image" id="itemImageBox"></div>
+    <div class="item-main">
+      <div class="item-title" id="itemTitleText"></div>
+      <div class="item-disc" id="itemDiscText"></div>
+      <div class="item-price" id="itemPriceText"></div>
+      <div class="item-desc" id="itemDescText"></div>
+      <div class="item-donate" id="itemDonateText"></div>
+      <div class="seller-text" id="sellerText"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="buyNowBtn">Buy Now</button>
+        <button class="btn btn-ghost" id="saveBtn">Save Item</button>
+        <button class="btn btn-ghost" id="reportBtn">Report Item</button>
+      </div>
+
+      <div class="status-msg" id="statusMsg"></div>
+    </div>
+  </div>
+
+  <div class="edit-card" id="editCard" style="display:none;">
+    <h3 style="margin-top:0;margin-bottom:10px;">Edit Item</h3>
+
+    <label>Title</label>
+    <input id="editTitle">
+
+    <div style="display:flex;gap:12px;">
+      <div style="flex:1;">
+        <label>Price (USD)</label>
+        <input id="editPrice">
+      </div>
+      <div style="flex:1;">
+        <label>Discipline</label>
+        <select id="editDiscipline">
+          <option value="">Select</option>
+          <option value="Quads">Quads</option>
+          <option value="Blades">Blades</option>
+          <option value="Longboard">Longboard</option>
+          <option value="Skateboard">Skateboard</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Description</label>
+    <textarea id="editDescription" rows="3"></textarea>
+
+    <label>Change Image</label>
+    <input id="editImage" type="file" accept="image/*">
+
+    <div class="toggle-row">
+      <input type="checkbox" id="editDonate">
+      <label for="editDonate">Donate this item to the Giveaway pool</label>
+    </div>
+
+    <button class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
+    <button class="btn btn-danger" id="deleteItemBtn">Delete Item</button>
+    <div class="status-msg" id="editStatusMsg"></div>
+  </div>
+</div>
+
+<div id="notFound" style="display:none;text-align:center;padding-top:160px;">
+  Item not found.
+</div>
+
+<script>
+  function getItems(){
+    try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}
+    catch(e){return [];}
+  }
+  function saveItems(items){
+    localStorage.setItem("rc_marketplace_items",JSON.stringify(items));
+  }
+  function getProfile(){
+    try{return JSON.parse(localStorage.getItem("rc_profile")||"{}");}
+    catch(e){return {};}
+  }
+  function getNotifications(){
+    try{return JSON.parse(localStorage.getItem("rc_notifications")||"[]");}
+    catch(e){return [];}
+  }
+  function saveNotifications(list){
+    localStorage.setItem("rc_notifications",JSON.stringify(list));
+  }
+
+  function getIdFromQuery(){
+    const params=new URLSearchParams(window.location.search);
+    return params.get("id");
+  }
+
+  const id=getIdFromQuery();
+  const items=getItems();
+  const idx=items.findIndex(i=>i.id===id);
+  const main=document.getElementById("main");
+  const notFound=document.getElementById("notFound");
+
+  if(idx===-1){
+    notFound.style.display="block";
+  }else{
+    main.style.display="block";
+    let item=items[idx];
+    const profile=getProfile();
+
+    const imgBox=document.getElementById("itemImageBox");
+    const tTitle=document.getElementById("itemTitleText");
+    const tDisc=document.getElementById("itemDiscText");
+    const tPrice=document.getElementById("itemPriceText");
+    const tDesc=document.getElementById("itemDescText");
+    const tDonate=document.getElementById("itemDonateText");
+    const sellerText=document.getElementById("sellerText");
+    const statusMsg=document.getElementById("statusMsg");
+
+    const editCard=document.getElementById("editCard");
+    const eTitle=document.getElementById("editTitle");
+    const ePrice=document.getElementById("editPrice");
+    const eDisc=document.getElementById("editDiscipline");
+    const eDesc=document.getElementById("editDescription");
+    const eImage=document.getElementById("editImage");
+    const eDonate=document.getElementById("editDonate");
+    const saveChangesBtn=document.getElementById("saveChangesBtn");
+    const deleteItemBtn=document.getElementById("deleteItemBtn");
+    const editStatusMsg=document.getElementById("editStatusMsg");
+
+    const buyNowBtn=document.getElementById("buyNowBtn");
+    const saveBtn=document.getElementById("saveBtn");
+    const reportBtn=document.getElementById("reportBtn");
+
+    const isSeller = profile.id && profile.id===item.sellerId;
+
+    if(isSeller) editCard.style.display="block";
+
+    function render(){
+      imgBox.innerHTML = item.imageDataUrl ? `<img src="${item.imageDataUrl}">` : "";
+      tTitle.textContent=item.title;
+      tDisc.textContent=item.discipline || "Unlabeled";
+      tPrice.textContent="$"+item.price;
+      tDesc.textContent=item.description || "";
+      tDonate.textContent=item.donateToGiveaway ? "Donated to Giveaway pool" : "Not donated to Giveaway";
+
+      const sellerName=item.sellerName || "Unknown seller";
+      sellerText.textContent = "Seller: " + sellerName;
+
+      eTitle.value=item.title;
+      ePrice.value=item.price;
+      eDisc.value=item.discipline || "";
+      eDesc.value=item.description || "";
+      eDonate.checked=!!item.donateToGiveaway;
+    }
+    render();
+
+    buyNowBtn.onclick=()=>{
+      if(!profile.name){
+        statusMsg.textContent="Set up your profile first to send a buy request.";
+        return;
+      }
+      const notifs=getNotifications();
+      const notifId=Date.now().toString()+"-"+Math.random().toString(36).slice(2);
+      notifs.push({
+        id:notifId,
+        type:"buy_request",
+        itemId:item.id,
+        itemTitle:item.title,
+        buyerName:profile.name || "Unknown buyer",
+        sellerName:item.sellerName || "",
+        status:"pending",
+        timestamp:Date.now()
+      });
+      saveNotifications(notifs);
+      statusMsg.textContent="Buy request sent to seller.";
+    };
+
+    saveBtn.onclick=()=>{
+      statusMsg.textContent="Item saved (local only for now).";
+    };
+    reportBtn.onclick=()=>{
+      statusMsg.textContent="Thanks. Report noted (local only).";
+    };
+
+    saveChangesBtn.onclick=()=>{
+      item.title=eTitle.value.trim() || item.title;
+      item.price=ePrice.value.trim() || item.price;
+      item.discipline=eDisc.value;
+      item.description=eDesc.value.trim();
+      item.donateToGiveaway=eDonate.checked;
+
+      const file=eImage.files[0];
+
+      function finish(imgData){
+        if(imgData!==null) item.imageDataUrl=imgData;
+        items[idx]=item;
+        saveItems(items);
+        render();
+        editStatusMsg.textContent="Changes saved.";
+      }
+
+      if(file){
+        const reader=new FileReader();
+        reader.onload=e=>finish(e.target.result);
+        reader.readAsDataURL(file);
+      }else{
+        finish(null);
+      }
+    };
+
+    deleteItemBtn.onclick=()=>{
+      if(!confirm("Delete this item?"))return;
+      items.splice(idx,1);
+      saveItems(items);
+      window.location.href="marketplace.html";
+    };
+  }
+</script>
+
+</body>
+</html>

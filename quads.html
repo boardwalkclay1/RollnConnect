@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quads – Roll ’n Connect</title>
+  <link rel="stylesheet" href="styles/style.css">
+
+  <style>
+    body {
+      background:#000;
+      color:#fff;
+      margin:0;
+      padding:0;
+      font-family:'Inter',sans-serif;
+      overflow-x:hidden;
+    }
+
+    /* STARFIELDS — WHITE ONLY */
+    .stars1,.stars2,.stars3 {
+      position:fixed; inset:0;
+      background:url('styles/stars-white.png') repeat;
+      z-index:-3;
+    }
+    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
+    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
+    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
+
+    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+    /* SIGNATURE WHITE GLOW OVERLAY */
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.12), transparent 70%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.08), transparent 70%);
+      z-index:-2;
+      pointer-events:none;
+    }
+
+    /* FLOATING SIDEBAR — PURE BLACK + WHITE GLOW */
+    .sidebar {
+      position:fixed;
+      top:50%;
+      left:-260px;
+      transform:translateY(-50%);
+      width:260px;
+      background:rgba(0,0,0,0.85);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.35);
+      padding:30px 20px;
+      border-radius:0 20px 20px 0;
+      box-shadow:
+        0 0 40px rgba(255,255,255,0.25),
+        inset -10px 0 40px rgba(255,255,255,0.08);
+      transition:0.35s ease;
+      z-index:9998;
+    }
+    .sidebar.open { left:0; }
+
+    /* BURGER */
+    .hamburger {
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:9999;
+    }
+    .hamburger span {
+      height:4px;
+      width:100%;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+    /* NAV LINKS */
+    .nav-header{text-align:center;margin-bottom:30px;}
+    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
+    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
+
+    .nav-links {
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .nav-links a {
+      color:#fff;
+      text-decoration:none;
+      font-size:1.15rem;
+      padding:10px 14px;
+      border-radius:12px;
+      transition:0.25s;
+      display:block;
+      background:rgba(255,255,255,0.05);
+      box-shadow:0 0 12px rgba(255,255,255,0.15);
+      text-shadow:0 0 8px rgba(255,255,255,0.4);
+    }
+    .nav-links a:hover {
+      background:rgba(255,255,255,0.2);
+      transform:translateX(8px);
+      box-shadow:0 0 20px rgba(255,255,255,0.4);
+    }
+
+    /* PAGE WRAPPER */
+    .page-wrapper {
+      padding-top:120px;
+      padding-bottom:80px;
+      text-align:center;
+      position:relative;
+    }
+
+    .page-wrapper::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at center, rgba(255,255,255,0.06), transparent 70%);
+      z-index:-1;
+    }
+
+    /* HERO */
+    .hero {
+      margin:0 auto 40px auto;
+      padding:40px;
+      max-width:900px;
+      background:rgba(0,0,0,0.75);
+      backdrop-filter:blur(25px);
+      border-radius:24px;
+      box-shadow:
+        0 0 40px rgba(255,255,255,0.25),
+        inset 0 0 40px rgba(255,255,255,0.08);
+    }
+
+    /* SUBCATEGORY GRID */
+    .sub-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:40px;
+      padding:0 40px;
+    }
+
+    .sub-card {
+      background:rgba(0,0,0,0.75);
+      backdrop-filter:blur(25px);
+      padding:24px;
+      border-radius:20px;
+      box-shadow:
+        0 0 40px rgba(255,255,255,0.25),
+        inset 0 0 30px rgba(255,255,255,0.08);
+      transition:0.3s;
+      text-align:left;
+    }
+    .sub-card:hover {
+      transform:scale(1.08) translateY(-6px);
+      box-shadow:
+        0 0 60px rgba(255,255,255,0.5),
+        inset 0 0 40px rgba(255,255,255,0.12);
+    }
+
+    .enter-btn {
+      display:inline-block;
+      margin-top:14px;
+      padding:10px 18px;
+      background:#fff;
+      color:#000;
+      border-radius:12px;
+      text-decoration:none;
+      font-weight:600;
+      box-shadow:0 0 20px rgba(255,255,255,0.4);
+      transition:0.3s;
+    }
+    .enter-btn:hover {
+      transform:scale(1.12);
+      box-shadow:
+        0 0 30px rgba(255,255,255,0.8),
+        0 0 60px rgba(255,255,255,0.6);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
+
+<!-- BURGER -->
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+
+<!-- FLOATING SIDEBAR -->
+<nav id="sidebar" class="sidebar">
+  <div class="nav-header">
+    <div class="logo-orb">🛼</div>
+    <div class="nav-title">Quads</div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="chatrooms.html">⬅ Back to Chatrooms</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+  </ul>
+</nav>
+
+<div class="page-wrapper">
+
+  <div class="hero">
+    <h1 style="font-size:3rem;">Quads Chat Realms</h1>
+    <p style="font-size:1.05rem;opacity:0.9;line-height:1.7;">
+      Explore the three pillars of quad skating culture.  
+      Each realm leads to its own cosmic chatroom with message effects,  
+      emoji blasts, reveal messages, slam messages, and per‑room notifications.
+    </p>
+  </div>
+
+  <section class="sub-grid">
+
+    <div class="sub-card">
+      <h2>Rink Culture</h2>
+      <p>Indoor rhythm, line dances, routines, and classic rink energy.</p>
+      <a href="room-rink.html" class="enter-btn">Enter Rink Chat</a>
+    </div>
+
+    <div class="sub-card">
+      <h2>Street Culture</h2>
+      <p>Urban quadding, plazas, outdoor rinks, parking lots, and freestyle flow.</p>
+      <a href="room-qstreet.html" class="enter-btn">Enter Street Chat</a>
+    </div>
+
+    <div class="sub-card">
+      <h2>Park</h2>
+      <p>Bowls, transitions, coping tricks, and quad park progression.</p>
+      <a href="room-qpark.html" class="enter-btn">Enter Park Chat</a>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+  const h=document.getElementById("hamburger"),
+        s=document.getElementById("sidebar");
+  h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
+</script>
+
+</body>
+</html>

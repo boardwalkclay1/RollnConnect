@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Hub – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="rollnconnect.css" />
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="app-header">
+    <div class="app-header-left">
+      <div class="brand-logo">R</div>
+      <div class="brand-name">Roll ’n Connect</div>
+    </div>
+    <div class="app-header-right">
+      <a href="dashboard.html" class="icon-btn">👤</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1>Student Hub</h1>
+
+    <section class="section">
+      <div class="card">
+        <div class="card-title">Learn from real riders</div>
+        <p class="card-text">
+          The Student Hub is where newcomers connect with experienced riders teaching longboard dance,
+          park skating, street, roller rhythm, downhill, and more.
+        </p>
+        <p class="card-text">
+          Instructors can turn on “Lessons” in their profile, set rates and availability, and showcase
+          their clips so students can get a feel for their style.
+        </p>
+
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">
+          <a href="#find-teachers" class="btn btn-primary">
+            Find a teacher
+          </a>
+          <a href="profile-edit.html" class="btn btn-outline">
+            Become an instructor
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="find-teachers" class="section">
+      <h2 class="section-title">Featured instructors</h2>
+      <p class="section-sub">
+        These are example instructor cards. Later, this will be powered by real profiles where “Lessons”
+        are turned on.
+      </p>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-card-title">@FlowRider • Longboard dance</div>
+          <div class="feature-card-text">
+            Teaches: beginner to intermediate dancing and footwork.  
+            From: Atlanta, GA • Starting at $40/hr
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-title">@QuadQueen • Roller rhythm</div>
+          <div class="feature-card-text">
+            Teaches: rink flow, rhythm skating, and confidence on quads.  
+            From: Chicago, IL • Starting at $35/hr
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-title">@HillBomber • Downhill & speed</div>
+          <div class="feature-card-text">
+            Teaches: safety, sliding, and hill bombing fundamentals.  
+            From: Denver, CO • Starting at $50/hr
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">How lessons work</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-card-title">1. Instructor sets profile</div>
+          <div class="feature-card-text">
+            Instructors fill out their bio, upload a profile pic, add clips, rates, and availability,
+            then toggle “Lessons” on.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-title">2. Students explore</div>
+          <div class="feature-card-text">
+            Students browse profiles, watch clips, and pick instructors who match their style and location.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-title">3. Coordinate via chat</div>
+          <div class="feature-card-text">
+            Use chatrooms or DMs to schedule, share spots, and keep a running conversation about progress.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-row">
+      <span>© <span id="year"></span> Roll ’n Connect.</span>
+    </div>
+  </footer>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🏠</div>
+      <span>Home</span>
+    </a>
+    <a href="spots-map.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🧭</div>
+      <span>Explore</span>
+    </a>
+    <a href="clips-feed.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">▶</div>
+      <span>Clips</span>
+    </a>
+    <a href="marketplace.html" class="bottom-nav-link">
+      <div class="bottom-nav-icon">🛒</div>
+      <span>Market</span>
+    </a>
+    <a href="dashboard.html" class="bottom-nav-link bottom-nav-link-active">
+      <div class="bottom-nav-icon">👤</div>
+      <span>Profile</span>
+    </a>
+  </nav>
+</div>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

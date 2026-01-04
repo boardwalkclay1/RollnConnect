@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offers – Roll ’n Connect</title>
+
+  <style>
+    body { margin:0; padding:0; font-family:system-ui; background:#05050a; color:white; }
+    .hamburger { position:fixed; top:20px; left:20px; width:40px; height:32px; cursor:pointer; z-index:1000; display:flex; flex-direction:column; justify-content:space-between; }
+    .hamburger div { height:6px; background:#4a4aff; border-radius:4px; box-shadow:0 0 12px #4a4aff; }
+    .side-menu { position:fixed; top:0; left:-260px; width:260px; height:100vh; background:#0d0d16; padding:40px 20px; box-shadow:0 0 20px #4a4aff; transition:0.35s; z-index:999; }
+    .side-menu.open { left:0; }
+    .side-menu a { display:block; padding:14px; margin-bottom:14px; background:#14141c; border-radius:10px; text-decoration:none; color:white; font-size:18px; box-shadow:0 0 10px #4a4aff; }
+    .page-container { max-width:900px; margin:0 auto; padding:80px 20px; }
+    h1 { text-shadow:0 0 12px #4a4aff; margin-bottom:14px; }
+    .section-title { margin-top:24px; margin-bottom:10px; font-weight:600; }
+    .offer-card { background:#0f0f18; border-radius:14px; padding:14px; margin-bottom:10px; box-shadow:0 0 14px rgba(74,74,255,0.25); }
+    .offer-meta { font-size:13px; opacity:0.7; margin-top:4px; }
+    .empty-state { opacity:0.6; margin-top:8px; }
+  </style>
+
+  <script>
+    function toggleMenu(){ document.querySelector('.side-menu').classList.toggle('open'); }
+    function rcGet(key, fallback){ return JSON.parse(localStorage.getItem(key) || fallback); }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const profile = rcGet("rc_profile", "{}");
+      const username = profile.username || "Unknown";
+
+      const offers = rcGet("rc_market_offers", "[]");
+
+      const incoming = offers.filter(o => o.to === username);
+      const outgoing = offers.filter(o => o.from === username);
+
+      const inBox = document.getElementById("incoming");
+      const outBox = document.getElementById("outgoing");
+
+      inBox.innerHTML = incoming.length
+        ? incoming.map(offerHTML).join("")
+        : `<div class="empty-state">No incoming offers.</div>`;
+
+      outBox.innerHTML = outgoing.length
+        ? outgoing.map(offerHTML).join("")
+        : `<div class="empty-state">No outgoing offers.</div>`;
+    });
+
+    function offerHTML(o){
+      return `
+        <div class="offer-card">
+          <div><strong>${o.itemTitle}</strong></div>
+          <div>Offer: $${o.amount}</div>
+          <div class="offer-meta">From ${o.from} → To ${o.to} • Status: ${o.status}</div>
+        </div>
+      `;
+    }
+  </script>
+</head>
+
+<body>
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+  </div>
+
+  <div class="side-menu">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="sell-item.html">Sell Item</a>
+    <a href="your-listings.html">Your Listings</a>
+    <a href="giveaways.html">Giveaways</a>
+    <a href="marketplace-messages.html">Messages</a>
+    <a href="marketplace-offers.html">Offers</a>
+    <a href="marketplace-favorites.html">Favorites</a>
+    <a href="marketplace-notifications.html">Notifications</a>
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
+  </div>
+
+  <div class="page-container">
+    <h1>Offers</h1>
+
+    <div class="section-title">Incoming Offers</div>
+    <div id="incoming"></div>
+
+    <div class="section-title">Your Offers</div>
+    <div id="outgoing"></div>
+  </div>
+</body>
+</html>

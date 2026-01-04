@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{CITYNAME}} Chatrooms – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="rollnconnect.css" />
+</head>
+<body>
+<div class="app-shell">
+
+<header class="app-header">
+  <div class="app-header-left">
+    <div class="brand-logo">R</div>
+    <div class="brand-name">{{CITYNAME}} Chatrooms</div>
+  </div>
+  <div class="app-header-right">
+    <a href="chat-cities.html" class="icon-btn">←</a>
+  </div>
+</header>
+
+<main class="page">
+  <h1>{{CITYNAME}} Disciplines</h1>
+  <p class="section-sub">Choose a discipline to enter the {{CITYNAME}} skate chatrooms.</p>
+
+  <div class="disc-grid">
+    {{DISCIPLINE_BUTTONS}}
+  </div>
+</main>
+
+<footer>
+  <div class="footer-row">
+    <span>© <span id="year"></span> Roll ’n Connect.</span>
+  </div>
+</footer>
+
+</div>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

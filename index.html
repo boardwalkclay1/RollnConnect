@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Roll ’n Connect — by Boardwalk Clay</title>
+
+<style>
+/* GLOBAL */
+body {
+  background:#000;
+  color:#fff;
+  margin:0;
+  padding:0;
+  font-family:'Inter',sans-serif;
+  overflow-x:hidden;
+  overflow-y:auto;
+  position:relative;
+  min-height:100vh;
+}
+
+/* STARFIELDS */
+.stars1,.stars2,.stars3 {
+  position:fixed; inset:0;
+  background:url('styles/stars-white.png') repeat;
+  z-index:-3;
+  pointer-events:none;
+}
+.stars1{opacity:.55;animation:drift1 140s linear infinite;}
+.stars2{opacity:.35;animation:drift2 200s linear infinite;}
+.stars3{opacity:.2; animation:drift3 260s linear infinite;}
+
+@keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
+@keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
+@keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
+
+/* BURGER MENU */
+.hamburger {
+  position:fixed;
+  top:25px;
+  left:25px;
+  width:40px;
+  height:30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  cursor:pointer;
+  z-index:99999;
+}
+.hamburger span {
+  height:4px;
+  width:100%;
+  background:#fff;
+  border-radius:4px;
+  box-shadow:0 0 12px rgba(255,255,255,0.9);
+  transition:0.3s;
+}
+.hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+.hamburger.active span:nth-child(2){opacity:0;}
+.hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+/* SIDEBAR */
+.sidebar {
+  position:fixed;
+  top:0;
+  left:-260px;
+  height:100vh;
+  width:260px;
+  background:rgba(10,10,20,0.92);
+  backdrop-filter:blur(25px);
+  border-right:1px solid rgba(255,255,255,0.25);
+  padding:26px 20px;
+  box-shadow:10px 0 40px rgba(0,0,0,0.7);
+  transition:0.35s ease;
+  z-index:99998;
+}
+.sidebar.open { left:0; }
+
+.nav-header{text-align:center;margin-bottom:24px;}
+.logo-orb{font-size:2.4rem;margin-bottom:6px;text-shadow:0 0 20px rgba(255,255,255,0.9);}
+.nav-title{font-size:1.2rem;font-weight:600;text-shadow:0 0 10px rgba(255,255,255,0.7);}
+
+.nav-links {
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.nav-links a {
+  display:block;
+  color:#fff;
+  text-decoration:none;
+  font-size:0.95rem;
+  padding:10px 14px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.05);
+  box-shadow:0 0 10px rgba(255,255,255,0.15);
+  transition:0.25s;
+}
+.nav-links a:hover {
+  background:rgba(255,255,255,0.2);
+  transform:translateX(5px);
+  box-shadow:0 0 18px rgba(255,255,255,0.4);
+}
+
+.notif-dot {
+  display:inline-block;
+  width:10px;
+  height:10px;
+  background:#ff3b3b;
+  border-radius:50%;
+  margin-left:6px;
+  box-shadow:0 0 10px #ff3b3b;
+}
+
+/* MAIN CONTENT */
+.main-wrapper{padding:40px 20px 80px;}
+
+/* HERO */
+.title-wrapper {
+  text-align:center;
+  padding-top:140px;
+  padding-bottom:200px;
+  z-index:5;
+  position:relative;
+}
+.main-title {
+  font-size:8rem;
+  font-weight:900;
+  letter-spacing:4px;
+  text-shadow:0 0 80px rgba(255,255,255,1);
+  margin-bottom:20px;
+}
+.subtitle {
+  font-size:1.8rem;
+  opacity:0.9;
+  max-width:900px;
+  margin:0 auto;
+  text-shadow:0 0 30px rgba(255,255,255,0.8);
+}
+.signature {
+  margin-top:20px;
+  font-size:1.2rem;
+  opacity:0.8;
+}
+
+/* PANELS */
+.panel {
+  width:100%;
+  padding:60px 20px;
+  background:rgba(255,255,255,0.06);
+  backdrop-filter:blur(20px);
+  box-shadow:0 0 60px rgba(255,255,255,0.25);
+  margin-bottom:60px;
+  border-top:1px solid rgba(255,255,255,0.2);
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  position:relative;
+  z-index:2;
+}
+.panel-title {
+  font-size:2.4rem;
+  text-align:center;
+  margin-bottom:30px;
+  text-shadow:0 0 30px rgba(255,255,255,0.8);
+}
+
+.items-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.item-card {
+  background:rgba(255,255,255,0.12);
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 0 40px rgba(255,255,255,0.3);
+  text-align:center;
+}
+
+.item-img {
+  width:100%;
+  height:160px;
+  border-radius:16px;
+  background:rgba(255,255,255,0.2);
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.item-img img{width:100%;height:100%;object-fit:cover;}
+
+.item-title { font-size:1.2rem;font-weight:600;margin-bottom:4px; }
+.item-disc { font-size:0.9rem;opacity:0.8;margin-bottom:4px; }
+.item-price { opacity:0.9;margin-bottom:8px; }
+
+.item-btn {
+  padding:8px 14px;
+  background:#fff;
+  color:#000;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+  font-size:0.9rem;
+}
+
+/* FLOATING BUBBLES */
+.bubble {
+  position:fixed;
+  width:200px;
+  height:200px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(22px);
+  box-shadow:0 0 40px rgba(255,255,255,0.5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color:#fff;
+  font-size:1.4rem;
+  text-align:center;
+  padding:10px;
+  transition:0.3s;
+  z-index:99997;
+}
+.bubble:hover {
+  transform:scale(1.12);
+  box-shadow:0 0 60px rgba(255,255,255,1);
+}
+</style>
+</head>
+
+<body>
+
+<div class="stars1"></div>
+<div class="stars2"></div>
+<div class="stars3"></div>
+
+<!-- BURGER -->
+<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar" class="sidebar">
+  <div class="nav-header">
+    <div class="logo-orb">🛼</div>
+    <div class="nav-title">Roll ’n Connect</div>
+  </div>
+
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="notifications.html">🔔 Notifications <span id="notifDot"></span></a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+  </ul>
+</nav>
+
+<div class="main-wrapper">
+
+  <!-- HERO -->
+  <div class="title-wrapper">
+    <div class="main-title">ROLL ’N CONNECT</div>
+    <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
+    <div class="signature">by Boardwalk Clay</div>
+  </div>
+
+  <!-- MARKETPLACE PREVIEW -->
+  <div class="panel">
+    <div class="panel-title">Marketplace</div>
+    <div class="items-grid" id="marketplaceItems"></div>
+  </div>
+
+  <!-- GIVEAWAY PREVIEW -->
+  <div class="panel">
+    <div class="panel-title">Giveaway Items</div>
+    <div class="items-grid" id="giveawayItems"></div>
+  </div>
+
+</div>
+
+<!-- FLOATING BUTTONS -->
+<a href="chatrooms.html" class="bubble" id="b1">Chatrooms</a>
+<a href="find-spots.html" class="bubble" id="b2">Find Spots</a>
+<a href="events.html" class="bubble" id="b3">Events</a>
+<a href="profile.html" class="bubble" id="b4">Your Profile</a>
+<a href="marketplace.html" class="bubble" id="b5">Marketplace</a>
+<a href="notifications.html" class="bubble" id="b6">Notifications</a>
+
+<script>
+/* BURGER */
+const hb=document.getElementById("hamburger");
+const sb=document.getElementById("sidebar");
+hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
+
+/* DATA HELPERS */
+function getItems(){
+  try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}
+  catch(e){return [];}
+}
+function getNotifications(){
+  try{return JSON.parse(localStorage.getItem("rc_notifications")||"[]");}
+  catch(e){return [];}
+}
+
+/* NOTIF DOT */
+function renderNotifDot(){
+  const dotEl=document.getElementById("notifDot");
+  const notifs=getNotifications();
+  const hasPending=notifs.some(n=>n.status==="pending");
+  dotEl.innerHTML = hasPending ? "<span class='notif-dot'></span>" : "";
+}
+renderNotifDot();
+
+/* MARKETPLACE + GIVEAWAY PREVIEW */
+function renderIndexMarketplace(){
+  const items = getItems();
+  const marketWrap = document.getElementById("marketplaceItems");
+  const giveawayWrap = document.getElementById("giveawayItems");
+
+  marketWrap.innerHTML="";
+  giveawayWrap.innerHTML="";
+
+  items.slice(-4).reverse().forEach(item=>{
+    marketWrap.appendChild(makeCard(item,false));
+  });
+
+  items.filter(i=>i.donateToGiveaway).forEach(item=>{
+    giveawayWrap.appendChild(makeCard(item,true));
+  });
+
+  if(!marketWrap.children.length){
+    marketWrap.innerHTML="<div style='text-align:center;opacity:0.8;'>No items yet.</div>";
+  }
+  if(!giveawayWrap.children.length){
+    giveawayWrap.innerHTML="<div style='text-align:center;opacity:0.8;'>No donated items yet.</div>";
+  }
+}
+
+function makeCard(item,isGiveaway){
+  const div=document.createElement("div");
+  div.className="item-card";
+  div.innerHTML=`
+    <div class="item-img">${item.imageDataUrl?`<img src="${item.imageDataUrl}">`:""}</div>
+    <div class="item-title">${item.title}</div>
+    <div class="item-disc">${item.discipline || "Unlabeled"}</div>
+    <div class="item-price">${isGiveaway ? "Donated • $" + item.price : "$"+item.price}</div>
+    <a class="item-btn" href="marketplace-item.html?id=${encodeURIComponent(item.id)}">View Item</a>
+  `;
+  return div;
+}
+
+renderIndexMarketplace();
+
+/* FLOATING BUBBLES — CSP SAFE */
+const bubbles = [
+  { el: document.getElementById("b1"), x:320, y:120, vx:1.8, vy:1.2 },
+  { el: document.getElementById("b2"), x:720, y:220, vx:-2.1, vy:1.9 },
+  { el: document.getElementById("b3"), x:520, y:420, vx:2.2, vy:-1.7 },
+  { el: document.getElementById("b4"), x:260, y:520, vx:-1.9, vy:-1.4 },
+  { el: document.getElementById("b5"), x:860, y:120, vx:2.0, vy:2.1 },
+  { el: document.getElementById("b6"), x:640, y:360, vx:-2.3, vy:1.6 },
+];
+
+function animateBubbles() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  for (let b of bubbles) {
+    b.x += b.vx;
+    b.y += b.vy;
+
+    if (b.x <= 0 || b.x + 200 >= w) b.vx *= -1;
+    if (b.y <= 0 || b.y + 200 >= h) b.vy *= -1;
+
+    for (let other of bubbles) {
+      if (other === b) continue;
+      const dx = (b.x + 100) - (other.x + 100);
+      const dy = (b.y + 100) - (other.y + 100);
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 200) {
+        b.vx *= -1;
+        b.vy *= -1;
+        other.vx *= -1;
+        other.vy *= -1;
+      }
+    }
+
+    b.el.style.left = b.x + "px";
+    b.el.style.top = b.y + "px";
+  }
+
+  requestAnimationFrame(animateBubbles);
+}
+animateBubbles();
+</script>
+<script src="rc_app_config.js"></script>
+
+</body>
+</html>
+

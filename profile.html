@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Roll ’n Connect – Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    /* ====== GLOBAL COSMIC BASE ====== */
+    :root {
+      --bg-color: #02040a;
+      --bg-panel: rgba(12, 16, 32, 0.95);
+      --border-soft: rgba(255, 255, 255, 0.25);
+      --border-strong: rgba(255, 255, 255, 0.4);
+      --text-main: #ffffff;
+      --accent-soft: rgba(255, 255, 255, 0.12);
+      --accent-strong: rgba(255, 255, 255, 0.5);
+      --glow-strong: 0 0 32px rgba(255, 255, 255, 0.65);
+      --glow-soft: 0 0 18px rgba(255, 255, 255, 0.3);
+      --radius-soft: 14px;
+      --radius-pill: 999px;
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.25s ease-out;
+      --calendar-cell-size: 40px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      background: radial-gradient(circle at top, #10152c 0%, #02040a 55%, #000000 100%);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    /* ====== LAYOUT WRAPPER ====== */
+    .app-shell {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ====== SIDEBAR / BURGER MENU ====== */
+    .sidebar {
+      width: 260px;
+      background: linear-gradient(180deg, rgba(5, 9, 20, 0.98), rgba(2, 4, 10, 0.98));
+      border-right: 1px solid var(--border-soft);
+      box-shadow: 12px 0 45px rgba(0, 0, 0, 0.6);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .sidebar-title {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .burger-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--border-strong);
+      background: radial-gradient(circle at 30% 0, rgba(255,255,255,0.22), rgba(255,255,255,0.04));
+      box-shadow: var(--glow-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      padding: 0;
+    }
+
+    .burger-lines {
+      width: 16px;
+      height: 12px;
+      position: relative;
+    }
+
+    .burger-lines span {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #ffffff;
+      border-radius: 999px;
+      transition: var(--transition-fast);
+    }
+
+    .burger-lines span:nth-child(1) { top: 0; }
+    .burger-lines span:nth-child(2) { top: 5px; }
+    .burger-lines span:nth-child(3) { top: 10px; }
+
+    .burger-btn:hover {
+      transform: translateY(-1px) scale(1.03);
+      box-shadow: var(--glow-strong);
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      background: transparent;
+      transition: var(--transition-fast);
+    }
+
+    .nav-item span.label {
+      font-size: 0.9rem;
+      opacity: 0.84;
+    }
+
+    .nav-item .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: transparent;
+      box-shadow: none;
+      transition: var(--transition-fast);
+    }
+
+    .nav-item.active,
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.4);
+    }
+
+    .nav-item.active span.label {
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .nav-item.has-notifications .nav-dot {
+      background: #ffffff;
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.8);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 0.75rem;
+      opacity: 0.6;
+    }
+
+    /* ====== MOBILE BURGER NAV OVERLAY ====== */
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      z-index: 40;
+    }
+
+    .sidebar-overlay.open {
+      display: block;
+    }
+
+    .sidebar-mobile {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 260px;
+      background: linear-gradient(180deg, rgba(5, 9, 20, 0.98), rgba(2, 4, 10, 0.98));
+      border-right: 1px solid var(--border-soft);
+      padding: 18px 16px;
+      transform: translateX(-100%);
+      transition: var(--transition-med);
+      z-index: 41;
+    }
+
+    .sidebar-mobile.open {
+      transform: translateX(0);
+    }
+
+    .sidebar-mobile .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 4px;
+      margin-left: auto;
+      display: block;
+    }
+
+    /* ====== MAIN CONTENT ====== */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 16px 24px 24px;
+      position: relative;
+    }
+
+    .main-scroll {
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      gap: 12px;
+    }
+
+    .page-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .page-title {
+      font-size: 1.4rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .page-subtitle {
+      font-size: 0.82rem;
+      opacity: 0.7;
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .pill-btn {
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-strong);
+      background: radial-gradient(circle at 30% 0, rgba(255,255,255,0.2), rgba(255,255,255,0.06));
+      color: #ffffff;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .pill-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--glow-soft);
+    }
+
+    .pill-btn.secondary {
+      background: transparent;
+      border-color: rgba(255, 255, 255, 0.3);
+      opacity: 0.9;
+    }
+
+    /* ====== PROFILE HEADER ====== */
+    .profile-header {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      padding: 18px 20px;
+      border-radius: var(--radius-soft);
+      background: var(--bg-panel);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--glow-soft);
+      margin-bottom: 16px;
+    }
+
+    .profile-avatar-wrapper {
+      position: relative;
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 0, rgba(255,255,255,0.35), rgba(255,255,255,0.05));
+      border: 2px solid var(--border-strong);
+      box-shadow: var(--glow-strong);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .profile-avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .profile-avatar-initials {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .profile-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .profile-username {
+      font-size: 0.85rem;
+      opacity: 0.74;
+    }
+
+    .profile-bio {
+      font-size: 0.85rem;
+      opacity: 0.84;
+      margin-top: 4px;
+    }
+
+    .profile-stats {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 10px;
+      font-size: 0.82rem;
+    }
+
+    .profile-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .profile-stat-label {
+      opacity: 0.65;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+    }
+
+    .profile-stat-value {
+      font-weight: 600;
+    }
+
+    .profile-clip-preview {
+      width: 160px;
+      height: 90px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at 30% 0, rgba(255,255,255,0.2), rgba(255,255,255,0.02));
+      box-shadow: var(--glow-soft);
+      position: relative;
+    }
+
+    .profile-clip-preview video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .clip-overlay-tag {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+    }
+
+    /* ====== PANELS WRAP ====== */
+    .panels-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    /* ====== POSTS PANEL ====== */
+    .panel {
+      border-radius: var(--radius-soft);
+      background: var(--bg-panel);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--glow-soft);
+      padding: 16px 18px 18px;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.9;
+    }
+
+    .panel-subtitle {
+      font-size: 0.78rem;
+      opacity: 0.7;
+    }
+
+    .panel-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ====== COSMIC FILE SELECTORS ====== */
+    .cosmic-file {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 14px;
+      background: radial-gradient(circle at 30% 0, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--glow-soft);
+      cursor: pointer;
+      overflow: hidden;
+      transition: var(--transition-med);
+    }
+
+    .cosmic-file span {
+      background: linear-gradient(to top, #000000, #ffffff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .cosmic-file:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--glow-strong);
+      background: radial-gradient(circle at 20% 0, rgba(255,255,255,0.28), rgba(255,255,255,0.1));
+    }
+
+    .cosmic-file input {
+      display: none;
+    }
+
+    .file-selected-name {
+      font-size: 0.72rem;
+      opacity: 0.7;
+      margin-left: 6px;
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ====== POSTS GRID ====== */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 8px;
+    }
+
+    .post-card {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: radial-gradient(circle at 30% 0, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      min-height: 120px;
+    }
+
+    .post-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow-strong);
+    }
+
+    .post-media {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .post-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 6px 7px;
+      font-size: 0.7rem;
+    }
+
+    .post-likes {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .post-likes span.count {
+      font-weight: 600;
+    }
+
+    .post-type-tag {
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ====== CENTERED COSMIC CALENDAR ====== */
+    .calendar-panel {
+      display: flex;
+      justify-content: center;
+    }
+
+    .calendar-inner {
+      width: 100%;
+      max-width: 640px;
+      border-radius: var(--radius-soft);
+      background: var(--bg-panel);
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--glow-soft);
+      padding: 14px 16px 16px;
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .calendar-orb-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border-strong);
+      background: radial-gradient(circle at 30% 0, rgba(255,255,255,0.26), rgba(255,255,255,0.05));
+      box-shadow: var(--glow-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      font-size: 0.78rem;
+      color: #ffffff;
+    }
+
+    .calendar-orb-btn:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: var(--glow-strong);
+    }
+
+    .calendar-month-title {
+      min-width: 160px;
+      text-align: center;
+      font-size: 0.92rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      background: linear-gradient(to top, #000000, #ffffff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.7;
+      margin-bottom: 6px;
+      padding: 0 2px;
+    }
+
+    .calendar-weekdays div {
+      text-align: center;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .calendar-cell {
+      width: 100%;
+      min-height: var(--calendar-cell-size);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: radial-gradient(circle at 30% 0, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+      box-shadow: 0 0 0 rgba(255, 255, 255, 0);
+      padding: 4px 4px 4px;
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition-fast);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .calendar-cell:hover {
+      box-shadow: var(--glow-soft);
+      transform: translateY(-1px);
+    }
+
+    .calendar-cell.disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .calendar-day-number {
+      font-size: 0.72rem;
+      opacity: 0.85;
+    }
+
+    .calendar-labels {
+      margin-top: 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .calendar-label {
+      font-size: 0.6rem;
+      padding: 2px 4px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .calendar-cell.today {
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.6), 0 0 24px rgba(255, 255, 255, 0.7);
+      animation: todayPulse 1.8s infinite ease-in-out;
+    }
+
+    @keyframes todayPulse {
+      0% { box-shadow: 0 0 0 1px rgba(255,255,255,0.5), 0 0 22px rgba(255,255,255,0.6); }
+      50% { box-shadow: 0 0 0 3px rgba(255,255,255,0.7), 0 0 32px rgba(255,255,255,0.9); }
+      100% { box-shadow: 0 0 0 1px rgba(255,255,255,0.5), 0 0 22px rgba(255,255,255,0.6); }
+    }
+
+    /* ====== NOTIFICATIONS PREVIEW BAR ====== */
+    .notifications-preview {
+      margin-top: 12px;
+      font-size: 0.75rem;
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .notif-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+
+    .notif-pill-count {
+      font-weight: 600;
+    }
+
+    .notif-link {
+      text-decoration: underline;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 900px) {
+      .sidebar {
+        display: none;
+      }
+
+      .main {
+        padding: 12px 14px 18px;
+      }
+
+      .profile-header {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+      }
+
+      .profile-clip-preview {
+        grid-column: 1 / -1;
+        justify-self: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- DESKTOP SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">Roll ’n Connect</div>
+        <button class="burger-btn" type="button" id="openMobileMenu">
+          <div class="burger-lines">
+            <span></span><span></span><span></span>
+          </div>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav" id="sidebarNav">
+        <div class="nav-item" data-link="index.html">
+          <span class="label">Home</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="dashboard.html">
+          <span class="label">Dashboard</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item active" data-link="profile.html">
+          <span class="label">Profile</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="profile-edit.html">
+          <span class="label">Edit Profile</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="chatrooms.html">
+          <span class="label">Chatrooms</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="events.html">
+          <span class="label">Events</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="find-spots.html">
+          <span class="label">Find Spots</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="marketplace.html">
+          <span class="label">Marketplace</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item has-notifications" data-link="notifications.html" id="notificationsNavItem">
+          <span class="label">Notifications</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="calendar.html">
+          <span class="label">Calendar</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="clips.html">
+          <span class="label">Clips Feed</span>
+          <span class="nav-dot"></span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        Cosmic build • Boardwalk edition
+      </div>
+    </aside>
+
+    <!-- MOBILE SIDEBAR -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar-mobile" id="sidebarMobile">
+      <button class="close-btn" type="button" id="closeMobileMenu">&times;</button>
+      <nav class="sidebar-nav" id="sidebarNavMobile">
+        <!-- Same items as desktop -->
+        <div class="nav-item" data-link="index.html">
+          <span class="label">Home</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="dashboard.html">
+          <span class="label">Dashboard</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item active" data-link="profile.html">
+          <span class="label">Profile</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="profile-edit.html">
+          <span class="label">Edit Profile</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="chatrooms.html">
+          <span class="label">Chatrooms</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="events.html">
+          <span class="label">Events</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="find-spots.html">
+          <span class="label">Find Spots</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="marketplace.html">
+          <span class="label">Marketplace</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="notifications.html" id="notificationsNavItemMobile">
+          <span class="label">Notifications</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="calendar.html">
+          <span class="label">Calendar</span>
+          <span class="nav-dot"></span>
+        </div>
+        <div class="nav-item" data-link="clips.html">
+          <span class="label">Clips Feed</span>
+          <span class="nav-dot"></span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <div class="main-scroll">
+        <header class="page-header">
+          <div class="page-title-block">
+            <div class="page-title">Profile</div>
+            <div class="page-subtitle">Your cosmic hub: posts, clips, calendar, notifications.</div>
+          </div>
+          <div class="page-actions">
+            <button class="pill-btn secondary" type="button" id="editProfileBtn">Edit Profile</button>
+            <button class="pill-btn" type="button" id="openClipsFeedBtn">Clips Feed</button>
+          </div>
+        </header>
+
+        <!-- PROFILE HEADER -->
+        <section class="profile-header">
+          <div class="profile-avatar-wrapper">
+            <!-- If avatar exists, show <img>, else initials -->
+            <img src="" alt="Avatar" class="profile-avatar" id="profileAvatar" style="display: none;">
+            <div class="profile-avatar-initials" id="profileAvatarInitials">BW</div>
+          </div>
+
+          <div class="profile-info">
+            <div class="profile-name" id="profileName">Boardwalk Clay</div>
+            <div class="profile-username" id="profileUsername">@boardwalk</div>
+            <div class="profile-bio" id="profileBio">
+              Cosmic longboard dancer • builder • protector of creators.
+            </div>
+
+            <div class="profile-stats">
+              <div class="profile-stat">
+                <div class="profile-stat-label">Posts</div>
+                <div class="profile-stat-value" id="statPosts">0</div>
+              </div>
+              <div class="profile-stat">
+                <div class="profile-stat-label">Clips</div>
+                <div class="profile-stat-value" id="statClips">0</div>
+              </div>
+              <div class="profile-stat">
+                <div class="profile-stat-label">Events</div>
+                <div class="profile-stat-value" id="statEvents">0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-clip-preview">
+            <video id="profileClip" muted loop playsinline></video>
+            <div class="clip-overlay-tag">Profile Clip</div>
+          </div>
+        </section>
+
+        <div class="panels-wrap">
+          <!-- POSTS PANEL -->
+          <section class="panel" id="postsPanel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Posts</div>
+                <div class="panel-subtitle">Your photos + clips</div>
+              </div>
+              <div class="panel-actions">
+                <!-- Cosmic file selector for photo post -->
+                <label class="cosmic-file">
+                  <span>Photo Post</span>
+                  <input type="file" accept="image/*" id="photoPostInput">
+                </label>
+                <span class="file-selected-name" id="photoPostFileName"></span>
+
+                <!-- Cosmic file selector for clip post -->
+                <label class="cosmic-file">
+                  <span>Clip Post</span>
+                  <input type="file" accept="video/*" id="clipPostInput">
+                </label>
+                <span class="file-selected-name" id="clipPostFileName"></span>
+              </div>
+            </div>
+
+            <div class="posts-grid" id="postsGrid">
+              <!-- Posts rendered here -->
+            </div>
+          </section>
+<!-- LESSONS PANEL -->
+<section class="panel" id="lessonsPanel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-title">Lessons</div>
+      <div class="panel-subtitle">Book time with this creator</div>
+    </div>
+  </div>
+  <div id="lessonsPublicList"></div>
+</section>
+
+<!-- BOOKING SHEET (simple inline modal) -->
+<div id="lessonBookingSheet" style="display:none;position:fixed;left:0;right:0;bottom:0;background:rgba(2,4,10,0.98);border-top:1px solid rgba(255,255,255,0.3);box-shadow:0 -8px 40px rgba(0,0,0,0.8);padding:14px 16px;z-index:50;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <div style="font-size:0.9rem;text-transform:uppercase;letter-spacing:0.08em;">Book Lesson</div>
+    <button type="button" id="closeBookingSheetBtn" style="border:none;background:transparent;color:white;font-size:1.3rem;cursor:pointer;">×</button>
+  </div>
+  <div id="bookingLessonTitle" style="font-weight:600;margin-bottom:4px;"></div>
+  <div id="lessons-section"></div>
+  <div id="bookingLessonPrice" style="font-size:0.8rem;opacity:0.8;margin-bottom:8px;"></div>
+
+  <div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+    <div style="display:flex;gap:8px;">
+      <div style="flex:1;">
+        <div style="opacity:0.7;margin-bottom:2px;">Date</div>
+        <input type="date" id="bookingDateInput" style="width:100%;">
+      </div>
+      <div style="flex:1;">
+        <div style="opacity:0.7;margin-bottom:2px;">Time</div>
+        <input type="time" id="bookingTimeInput" style="width:100%;">
+      </div>
+    </div>
+    <div>
+      <div style="opacity:0.7;margin-bottom:2px;">Note (optional)</div>
+      <textarea id="bookingNoteInput" rows="2" style="width:100%;"></textarea>
+    </div>
+    <button class="pill-btn" type="button" id="confirmBookingBtn">Confirm Booking</button>
+  </div>
+</div>
+          <!-- CALENDAR PANEL (CENTERED) -->
+          <section class="panel calendar-panel" id="calendarPanel">
+            <div class="calendar-inner">
+              <div class="panel-header" style="margin-bottom: 6px;">
+                <div>
+                  <div class="panel-title">Calendar</div>
+                  <div class="panel-subtitle">Events + Spots from your ecosystem</div>
+                </div>
+              </div>
+
+              <div class="calendar-header">
+                <button class="calendar-orb-btn" type="button" id="prevMonthBtn">&#9664;</button>
+                <div class="calendar-month-title" id="calendarMonthTitle">January 2026</div>
+                <button class="calendar-orb-btn" type="button" id="nextMonthBtn">&#9654;</button>
+              </div>
+
+              <div class="calendar-weekdays">
+                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+              </div>
+              <div class="calendar-grid" id="calendarGrid"></div>
+
+              <div class="notifications-preview" id="notificationsPreview">
+                <div>
+                  <span class="notif-pill">
+                    <span class="notif-pill-count" id="notifPreviewCount">0</span>
+                    <span>New activity</span>
+                  </span>
+                </div>
+                <div class="notif-link" id="openNotificationsFromCalendar">View all</div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ========= LOCALSTORAGE KEYS =========
+    const LS_KEYS = {
+      PROFILE: 'rc_user_profile',
+      POSTS: 'rc_user_posts',
+      CLIPS_GLOBAL: 'rc_clips_global',
+      NOTIFICATIONS: 'rc_notifications',
+      EVENTS: 'rc_user_saved_events',
+      SPOTS: 'rc_user_saved_spots'
+    };
+
+    // ========= UTIL: SAFE LOCALSTORAGE =========
+    function safeGet(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.warn('Failed to parse localStorage key:', key, e);
+        return fallback;
+      }
+    }
+
+    function safeSet(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        console.warn('Failed to set localStorage key:', key, e);
+      }
+    }
+
+    // ========= PROFILE INIT =========
+    function initProfileHeader() {
+      const profile = safeGet(LS_KEYS.PROFILE, {
+        name: 'Boardwalk Clay',
+        username: '@boardwalk',
+        bio: 'Cosmic longboard dancer • builder • protector of creators.',
+        avatarUrl: '',
+        clipUrl: ''
+      });
+
+      const nameEl = document.getElementById('profileName');
+      const usernameEl = document.getElementById('profileUsername');
+      const bioEl = document.getElementById('profileBio');
+      const avatarImg = document.getElementById('profileAvatar');
+      const avatarInitials = document.getElementById('profileAvatarInitials');
+      const clipVideo = document.getElementById('profileClip');
+
+      nameEl.textContent = profile.name || 'Boardwalk Clay';
+      usernameEl.textContent = profile.username || '@boardwalk';
+      bioEl.textContent = profile.bio || '';
+
+      if (profile.avatarUrl) {
+        avatarImg.src = profile.avatarUrl;
+        avatarImg.style.display = 'block';
+        avatarInitials.style.display = 'none';
+      } else {
+        avatarImg.style.display = 'none';
+        avatarInitials.style.display = 'flex';
+        const initials = (profile.name || 'Boardwalk Clay')
+          .split(' ')
+          .map(part => part[0])
+          .join('')
+          .slice(0, 2)
+          .toUpperCase();
+        avatarInitials.textContent = initials;
+      }
+
+      if (profile.clipUrl) {
+        clipVideo.src = profile.clipUrl;
+        clipVideo.play().catch(() => {});
+      }
+    }
+
+    // ========= POSTS / CLIPS LOGIC =========
+    function initPosts() {
+      const postsGrid = document.getElementById('postsGrid');
+      const statPosts = document.getElementById('statPosts');
+      const statClips = document.getElementById('statClips');
+
+      function renderPosts() {
+        const posts = safeGet(LS_KEYS.POSTS, []);
+        postsGrid.innerHTML = '';
+        let clipCount = 0;
+
+        posts.slice().reverse().forEach(post => {
+          const card = document.createElement('div');
+          card.className = 'post-card';
+          card.dataset.id = post.id;
+
+          const isClip = post.type === 'clip';
+          let mediaEl;
+          if (isClip) {
+            mediaEl = document.createElement('video');
+            mediaEl.src = post.url;
+            mediaEl.muted = true;
+            mediaEl.loop = true;
+            mediaEl.playsInline = true;
+            mediaEl.className = 'post-media';
+            mediaEl.play().catch(() => {});
+            clipCount += 1;
+          } else {
+            mediaEl = document.createElement('img');
+            mediaEl.src = post.url;
+            mediaEl.alt = 'Post';
+            mediaEl.className = 'post-media';
+          }
+
+          const overlay = document.createElement('div');
+          overlay.className = 'post-overlay';
+
+          const likes = document.createElement('div');
+          likes.className = 'post-likes';
+          const heartSpan = document.createElement('span');
+          heartSpan.textContent = '♥';
+          const countSpan = document.createElement('span');
+          countSpan.className = 'count';
+          countSpan.textContent = String(post.likes || 0);
+          likes.appendChild(heartSpan);
+          likes.appendChild(countSpan);
+
+          const typeTag = document.createElement('div');
+          typeTag.className = 'post-type-tag';
+          typeTag.textContent = isClip ? 'CLIP' : 'PHOTO';
+
+          overlay.appendChild(likes);
+          overlay.appendChild(typeTag);
+
+          card.appendChild(mediaEl);
+          card.appendChild(overlay);
+
+          card.addEventListener('click', () => {
+            handlePostLike(post.id);
+          });
+
+          postsGrid.appendChild(card);
+        });
+
+        statPosts.textContent = String(safeGet(LS_KEYS.POSTS, []).length);
+        statClips.textContent = String(clipCount);
+      }
+
+      function handlePostLike(postId) {
+        const posts = safeGet(LS_KEYS.POSTS, []);
+        const idx = posts.findIndex(p => p.id === postId);
+        if (idx === -1) return;
+
+        const post = posts[idx];
+        const currentLikes = post.likes || 0;
+
+        if (currentLikes >= 3) {
+          posts[idx].likes = 0;
+        } else {
+          posts[idx].likes = currentLikes + 1;
+        }
+
+        safeSet(LS_KEYS.POSTS, posts);
+        createGroupedNotification('likes', 'You have new likes', 1);
+        renderPosts();
+        updateNotificationsUI();
+      }
+
+      renderPosts();
+    }
+
+    // ========= FILE SELECTORS + POST CREATION =========
+    function initFileSelectorsAndPosting() {
+      const photoInput = document.getElementById('photoPostInput');
+      const clipInput = document.getElementById('clipPostInput');
+      const photoLabel = document.getElementById('photoPostFileName');
+      const clipLabel = document.getElementById('clipPostFileName');
+
+      function createPost(url, type) {
+        const posts = safeGet(LS_KEYS.POSTS, []);
+        const newPost = {
+          id: 'post_' + Date.now() + '_' + Math.random().toString(16).slice(2),
+          type, // 'photo' | 'clip'
+          url,
+          createdAt: new Date().toISOString(),
+          likes: 0
+        };
+        posts.push(newPost);
+        safeSet(LS_KEYS.POSTS, posts);
+
+        // Notification: new content
+        createGroupedNotification('content', 'You posted new content', 1);
+
+        // If clip, also push to global clips feed
+        if (type === 'clip') {
+          const clipsGlobal = safeGet(LS_KEYS.CLIPS_GLOBAL, []);
+          clipsGlobal.push({
+            id: newPost.id,
+            url: newPost.url,
+            createdAt: newPost.createdAt,
+            user: safeGet(LS_KEYS.PROFILE, { username: '@boardwalk' }).username || '@boardwalk'
+          });
+          safeSet(LS_KEYS.CLIPS_GLOBAL, clipsGlobal);
+
+          // Notification for clips
+          createGroupedNotification('clips', 'New clips added', 1);
+        }
+
+        // Trigger UI updates
+        initPosts();
+        updateNotificationsUI();
+      }
+
+      function handleFileSelection(inputEl, labelEl, type) {
+        const file = inputEl.files && inputEl.files[0];
+        if (!file) {
+          labelEl.textContent = '';
+          return;
+        }
+        labelEl.textContent = file.name;
+
+        // For local demo: create blob URL
+        const url = URL.createObjectURL(file);
+        createPost(url, type);
+      }
+
+      photoInput.addEventListener('change', () => {
+        handleFileSelection(photoInput, photoLabel, 'photo');
+      });
+
+      clipInput.addEventListener('change', () => {
+        handleFileSelection(clipInput, clipLabel, 'clip');
+      });
+    }
+
+    // ========= CALENDAR LOGIC =========
+    const calendarState = {
+      currentYear: new Date().getFullYear(),
+      currentMonth: new Date().getMonth() // 0-11
+    };
+
+    function initCalendar() {
+      const monthTitleEl = document.getElementById('calendarMonthTitle');
+      const calendarGrid = document.getElementById('calendarGrid');
+      const prevBtn = document.getElementById('prevMonthBtn');
+      const nextBtn = document.getElementById('nextMonthBtn');
+      const statEvents = document.getElementById('statEvents');
+
+      function getEventsAndSpots() {
+        const events = safeGet(LS_KEYS.EVENTS, []);
+        const spots = safeGet(LS_KEYS.SPOTS, []);
+        return { events, spots };
+      }
+
+      function renderCalendar() {
+        const { currentYear, currentMonth } = calendarState;
+        const firstDay = new Date(currentYear, currentMonth, 1);
+        const startDay = firstDay.getDay(); // 0-6 Sun-Sat
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        const monthName = firstDay.toLocaleString('default', { month: 'long' });
+        monthTitleEl.textContent = `${monthName} ${currentYear}`;
+
+        calendarGrid.innerHTML = '';
+
+        const today = new Date();
+        const todayY = today.getFullYear();
+        const todayM = today.getMonth();
+        const todayD = today.getDate();
+
+        const { events, spots } = getEventsAndSpots();
+        statEvents.textContent = String((events || []).length + (spots || []).length);
+
+        // Helper to format date key as YYYY-MM-DD
+        function dateKey(y, m, d) {
+          const mm = String(m + 1).padStart(2, '0');
+          const dd = String(d).padStart(2, '0');
+          return `${y}-${mm}-${dd}`;
+        }
+
+        const labelMap = {};
+        (events || []).forEach(ev => {
+          const key = ev.date || ev.dateKey || ev.dateString;
+          if (!key) return;
+          if (!labelMap[key]) labelMap[key] = [];
+          labelMap[key].push('Event');
+        });
+        (spots || []).forEach(sp => {
+          const key = sp.date || sp.dateKey || sp.dateString;
+          if (!key) return;
+          if (!labelMap[key]) labelMap[key] = [];
+          labelMap[key].push('Spot');
+        });
+
+        const totalCells = 42; // 6 weeks * 7 days
+        let dayCounter = 1;
+
+        for (let i = 0; i < totalCells; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'calendar-cell';
+
+          if (i < startDay || dayCounter > daysInMonth) {
+            cell.classList.add('disabled');
+            calendarGrid.appendChild(cell);
+            continue;
+          }
+
+          const dayNumber = dayCounter;
+          const dayNumberEl = document.createElement('div');
+          dayNumberEl.className = 'calendar-day-number';
+          dayNumberEl.textContent = String(dayNumber);
+
+          const labelsWrap = document.createElement('div');
+          labelsWrap.className = 'calendar-labels';
+
+          const key = dateKey(currentYear, currentMonth, dayNumber);
+          const labels = labelMap[key] || [];
+
+          labels.slice(0, 2).forEach(labelText => {
+            const lbl = document.createElement('div');
+            lbl.className = 'calendar-label';
+            lbl.textContent = labelText;
+            labelsWrap.appendChild(lbl);
+          });
+
+          cell.appendChild(dayNumberEl);
+          cell.appendChild(labelsWrap);
+
+          if (currentYear === todayY && currentMonth === todayM && dayNumber === todayD) {
+            cell.classList.add('today');
+          }
+
+          cell.addEventListener('click', () => {
+            window.location.href = 'calendar.html';
+          });
+
+          calendarGrid.appendChild(cell);
+          dayCounter++;
+        }
+      }
+
+      prevBtn.addEventListener('click', () => {
+        calendarState.currentMonth -= 1;
+        if (calendarState.currentMonth < 0) {
+          calendarState.currentMonth = 11;
+          calendarState.currentYear -= 1;
+        }
+        renderCalendar();
+      });
+
+      nextBtn.addEventListener('click', () => {
+        calendarState.currentMonth += 1;
+        if (calendarState.currentMonth > 11) {
+          calendarState.currentMonth = 0;
+          calendarState.currentYear += 1;
+        }
+        renderCalendar();
+      });
+
+      renderCalendar();
+    }
+
+    // ========= NOTIFICATIONS (GROUPED) =========
+    function createGroupedNotification(type, baseMessage, incrementBy) {
+      const notifArray = safeGet(LS_KEYS.NOTIFICATIONS, []);
+      const nowISO = new Date().toISOString();
+
+      const existing = notifArray.find(n => n.type === type && n.read === false);
+      if (existing) {
+        existing.count = (existing.count || 1) + (incrementBy || 1);
+        existing.message = baseMessage.replace(/\d+/, String(existing.count)) || baseMessage;
+        existing.updatedAt = nowISO;
+      } else {
+        notifArray.push({
+          id: 'notif_' + Date.now() + '_' + Math.random().toString(16).slice(2),
+          type,
+          count: incrementBy || 1,
+          message: baseMessage,
+          createdAt: nowISO,
+          updatedAt: nowISO,
+          read: false
+        });
+      }
+      safeSet(LS_KEYS.NOTIFICATIONS, notifArray);
+    }
+
+    function computeGroupedPreview(notifs) {
+      // Combine "likes", "content", "clips", "calendar", etc. into a single count
+      let total = 0;
+      notifs.forEach(n => {
+        total += n.count || 1;
+      });
+      return total;
+    }
+
+    function updateNotificationsUI() {
+      const notifArray = safeGet(LS_KEYS.NOTIFICATIONS, []);
+      const unread = notifArray.filter(n => !n.read);
+      const totalGrouped = computeGroupedPreview(unread);
+
+      const previewCountEl = document.getElementById('notifPreviewCount');
+      const notifNavItem = document.getElementById('notificationsNavItem');
+      const notifNavItemMobile = document.getElementById('notificationsNavItemMobile');
+
+      previewCountEl.textContent = String(totalGrouped);
+
+      if (totalGrouped > 0) {
+        notifNavItem.classList.add('has-notifications');
+        notifNavItemMobile.classList.add('has-notifications');
+      } else {
+        notifNavItem.classList.remove('has-notifications');
+        notifNavItemMobile.classList.remove('has-notifications');
+      }
+    }
+
+    function initNotificationsPreviewLink() {
+      const btn = document.getElementById('openNotificationsFromCalendar');
+      btn.addEventListener('click', () => {
+        window.location.href = 'notifications.html';
+      });
+    }
+
+    // ========= SIDEBAR NAVIGATION =========
+    function initSidebarNavigation() {
+      function wireNav(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const items = container.querySelectorAll('.nav-item');
+        items.forEach(item => {
+          item.addEventListener('click', () => {
+            const link = item.getAttribute('data-link');
+            if (link) {
+              window.location.href = link;
+            }
+          });
+        });
+      }
+      wireNav('sidebarNav');
+      wireNav('sidebarNavMobile');
+
+      const editBtn = document.getElementById('editProfileBtn');
+      editBtn.addEventListener('click', () => {
+        window.location.href = 'profile-edit.html';
+      });
+
+      const clipsBtn = document.getElementById('openClipsFeedBtn');
+      clipsBtn.addEventListener('click', () => {
+        window.location.href = 'clips.html';
+      });
+    }
+
+    // ========= BURGER MENU (MOBILE) =========
+    function initBurgerMenu() {
+      const openBtn = document.getElementById('openMobileMenu');
+      const closeBtn = document.getElementById('closeMobileMenu');
+      const overlay = document.getElementById('sidebarOverlay');
+      const drawer = document.getElementById('sidebarMobile');
+
+      function openMenu() {
+        overlay.classList.add('open');
+        drawer.classList.add('open');
+      }
+
+      function closeMenu() {
+        overlay.classList.remove('open');
+        drawer.classList.remove('open');
+      }
+
+      openBtn.addEventListener('click', openMenu);
+      closeBtn.addEventListener('click', closeMenu);
+      overlay.addEventListener('click', closeMenu);
+    }
+
+    // ========= REAL-TIME SYNC VIA STORAGE EVENTS =========
+    function initStorageSync() {
+      window.addEventListener('storage', (event) => {
+        if (!event.key) return;
+
+        switch (event.key) {
+          case LS_KEYS.POSTS:
+          case LS_KEYS.CLIPS_GLOBAL:
+            initPosts();
+            break;
+          case LS_KEYS.NOTIFICATIONS:
+            updateNotificationsUI();
+            break;
+          case LS_KEYS.EVENTS:
+          case LS_KEYS.SPOTS:
+            initCalendar();
+            break;
+          case LS_KEYS.PROFILE:
+            initProfileHeader();
+            break;
+          default:
+            break;
+        }
+      });
+    }
+
+    // ========= INIT =========
+    document.addEventListener('DOMContentLoaded', () => {
+      initProfileHeader();
+      initPosts();
+      initFileSelectorsAndPosting();
+      initCalendar();
+      initNotificationsPreviewLink();
+      initSidebarNavigation();
+      initBurgerMenu();
+      updateNotificationsUI();
+      initStorageSync();
+    });
+  </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const LS_LESSONS = "rc_user_lessons";
+
+  function safeParse(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return fallback;
+      return JSON.parse(raw);
+    } catch {
+      return fallback;
+    }
+  }
+
+  const lessons = safeParse(LS_LESSONS, []);
+  const container = document.getElementById("lessons-section");
+
+  if (container) {
+    container.innerHTML = lessons.length
+      ? lessons.map(ls => `
+          <div class="item">
+            <strong>${ls.title}</strong><br>
+            ${ls.price ? "$" + ls.price : "Free"} • ${ls.duration} min<br>
+            <span>${ls.description || ""}</span>
+          </div>
+        `).join("")
+      : "<p>No lessons yet.</p>";
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Find Spots – Roll ’n Connect</title>
+
+  <!-- GOOGLE MAPS (REPLACE API_KEY WITH YOUR REAL KEY) -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places&callback=initMap"
+    async
+    defer
+  ></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: #05050a;
+      color: #fff;
+    }
+
+    header {
+      padding: 12px 16px;
+      background: #111827;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    header a {
+      color: #9ca3af;
+      text-decoration: none;
+      margin-left: 12px;
+      font-size: 0.85rem;
+    }
+
+    #map {
+      width: 100%;
+      height: 320px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 10px;
+      background: #1f2937;
+      border-bottom: 1px solid #374151;
+    }
+
+    .filter-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+      background: #111827;
+      color: #fff;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot.skatepark { background: #38bdf8; }
+    .dot.rink      { background: #a855f7; }
+    .dot.water     { background: #0ea5e9; }
+    .dot.food      { background: #f97316; }
+    .dot.parking   { background: #e5e7eb; }
+    .dot.restroom  { background: #22c55e; }
+
+    .filter-btn.active {
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+
+    .content {
+      padding: 16px;
+    }
+
+    .spot-card {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .spot-card-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .spot-card-meta {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
+    .load-more {
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      background: #1f2937;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .details {
+      margin-top: 20px;
+      padding: 16px;
+      background: #111827;
+      border-radius: 12px;
+      border: 1px solid #374151;
+      display: none;
+    }
+
+    .rating-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+      font-size: 0.85rem;
+    }
+
+    .review-form input,
+    .review-form textarea,
+    .review-form select {
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #374151;
+      background: #1f2937;
+      color: #fff;
+    }
+
+    .primary-btn {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: #000;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .review-item {
+      background: #1f2937;
+      padding: 8px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+
+    .review-meta {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    #liveBtn,
+    #locateBtn {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #4b5563;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div>Find Spots</div>
+  <div>
+    <a href="events.html">Events</a>
+    <a href="calendar.html">Calendar</a>
+    <a href="profile.html">Profile</a>
+  </div>
+</header>
+
+<div id="map"></div>
+
+<div class="filters">
+  <button class="filter-btn" data-q="skatepark"><div class="dot skatepark"></div>Skateparks</button>
+  <button class="filter-btn" data-q="roller rink"><div class="dot rink"></div>Rinks</button>
+  <button class="filter-btn" data-q="water fountain"><div class="dot water"></div>Water</button>
+  <button class="filter-btn" data-q="food"><div class="dot food"></div>Food</button>
+  <button class="filter-btn" data-q="parking lot"><div class="dot parking"></div>Parking</button>
+  <button class="filter-btn" data-q="restroom"><div class="dot restroom"></div>Restrooms</button>
+</div>
+
+<div class="content">
+  <button id="locateBtn">Use My Location</button>
+  <button id="liveBtn">Toggle Live Location</button>
+
+  <div id="spotList"></div>
+  <div id="loadMore" class="load-more" style="display:none;">Load more</div>
+
+  <div id="details" class="details">
+    <h2 id="dName"></h2>
+    <div id="dAddress" style="opacity:0.8;margin-bottom:6px;"></div>
+    <div id="dRating" style="opacity:0.8;margin-bottom:10px;"></div>
+
+    <button id="directionsBtn" class="primary-btn">Get Directions</button>
+
+    <h3 style="margin-top:16px;">Community Ratings</h3>
+    <div class="rating-row"><span>Smoothness</span><span id="avgSmooth">–</span></div>
+    <div class="rating-row"><span>Difficulty</span><span id="avgDifficulty">–</span></div>
+
+    <h3 style="margin-top:16px;">Leave a Review</h3>
+    <div class="review-form">
+      <input id="rName" placeholder="Your name" />
+      <textarea id="rText" rows="2" placeholder="Your experience"></textarea>
+
+      <select id="rSmooth">
+        <option value="">Smoothness –</option>
+        <option value="1">1 Rough</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5 Glass</option>
+      </select>
+
+      <select id="rDifficulty">
+        <option value="">Difficulty –</option>
+        <option value="1">1 Easy</option>
+        <option value="2">2</option>
+        <option value="3">3 Medium</option>
+        <option value="4">4</option>
+        <option value="5">5 Hard</option>
+      </select>
+
+      <button id="submitReview" class="primary-btn">Post Review</button>
+    </div>
+
+    <h3 style="margin-top:16px;">Reviews</h3>
+    <div id="reviewList"></div>
+  </div>
+</div>
+
+<script>
+  let map, places;
+  let spots = [];
+  let markers = [];
+  let activeFilters = [];
+  let pageIndex = 0;
+  const pageSize = 5;
+
+  let userMarker = null;
+  let liveWatch = null;
+  let activeSpot = null;
+
+  let openInfoWindow = null;
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 33.8, lng: -84.3 },
+      zoom: 11
+    });
+    places = new google.maps.places.PlacesService(map);
+
+    setupFilters();
+    setupButtons();
+    runSearch();
+  }
+
+  function setupFilters() {
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.onclick = () => {
+        const q = btn.dataset.q;
+
+        if (btn.classList.contains("active")) {
+          btn.classList.remove("active");
+          activeFilters = activeFilters.filter(f => f !== q);
+        } else {
+          if (activeFilters.length >= 3) return;
+          btn.classList.add("active");
+          activeFilters.push(q);
+        }
+
+        runSearch();
+      };
+    });
+  }
+
+  function setupButtons() {
+    document.getElementById("locateBtn").onclick = () => {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(pos => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        map.panTo(loc);
+        map.setZoom(14);
+        placeUserMarker(loc);
+      });
+    };
+
+    document.getElementById("liveBtn").onclick = () => {
+      if (liveWatch) {
+        navigator.geolocation.clearWatch(liveWatch);
+        liveWatch = null;
+        return;
+      }
+      if (!navigator.geolocation) return;
+      liveWatch = navigator.geolocation.watchPosition(pos => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        placeUserMarker(loc);
+      });
+    };
+
+    document.getElementById("loadMore").onclick = () => {
+      pageIndex++;
+      renderPage();
+    };
+
+    document.getElementById("submitReview").onclick = () => {
+      if (!activeSpot) return;
+      const name   = document.getElementById("rName").value || "Anonymous";
+      const text   = document.getElementById("rText").value;
+      const smooth = document.getElementById("rSmooth").value;
+      const diff   = document.getElementById("rDifficulty").value;
+
+      const id = activeSpot.place_id;
+      const reviews = loadReviews(id);
+
+      reviews.push({
+        name,
+        text,
+        smoothness: Number(smooth) || null,
+        difficulty: Number(diff) || null
+      });
+
+      saveReviews(id, reviews);
+      renderReviews(id);
+    };
+  }
+
+  function runSearch() {
+    if (!places) return;
+
+    const query = activeFilters.length
+      ? activeFilters.join(" OR ")
+      : "skatepark OR roller rink OR trail";
+
+    places.textSearch(
+      { query, location: map.getCenter(), radius: 20000 },
+      (results, status) => {
+        if (status !== google.maps.places.PlacesServiceStatus.OK || !results) return;
+        spots = results;
+        pageIndex = 0;
+        renderPage();
+        renderMarkers();
+      }
+    );
+  }
+
+  function renderPage() {
+    const list = document.getElementById("spotList");
+    list.innerHTML = "";
+
+    const slice = spots.slice(0, (pageIndex + 1) * pageSize);
+
+    slice.forEach(spot => {
+      const div = document.createElement("div");
+      div.className = "spot-card";
+      div.innerHTML = `
+        <div class="spot-card-title">${spot.name}</div>
+        <div class="spot-card-meta">${spot.formatted_address || ""}</div>
+      `;
+      div.onclick = () => openDetails(spot);
+      list.appendChild(div);
+    });
+
+    document.getElementById("loadMore").style.display =
+      spots.length > slice.length ? "block" : "none";
+  }
+
+  function getMarkerColor() {
+    const first = activeFilters[0] || "skatepark";
+    const mapColors = {
+      "skatepark": "#38bdf8",
+      "roller rink": "#a855f7",
+      "water fountain": "#0ea5e9",
+      "food": "#f97316",
+      "parking lot": "#e5e7eb",
+      "restroom": "#22c55e"
+    };
+    return mapColors[first] || "#ffffff";
+  }
+
+  function clearMarkers() {
+    markers.forEach(m => m.setMap(null));
+    markers = [];
+  }
+
+  function renderMarkers() {
+    if (!map) return;
+    clearMarkers();
+
+    const color = getMarkerColor();
+
+    spots.forEach(spot => {
+      const loc = spot.geometry.location;
+      const popupId = `cosmic-${spot.place_id}`;
+
+      const infoContent = `
+        <div id="${popupId}" style="
+          color:white;
+          font-size:15px;
+          padding:18px;
+          border-radius:16px;
+          background: radial-gradient(circle at top, #1a1a2e, #0f0f1a 70%);
+          box-shadow: 0 0 22px rgba(90,120,255,0.8), 0 0 40px rgba(60,80,255,0.4);
+          font-family:system-ui;
+          line-height:1.5;
+          width:260px;
+          border:1px solid rgba(120,140,255,0.4);
+          position:relative;
+        ">
+          <div style="font-weight:700;font-size:17px;margin-bottom:8px;">
+            ${spot.name}
+          </div>
+
+          <div style="opacity:0.8;margin-bottom:10px;">
+            ${spot.formatted_address || ""}
+          </div>
+
+          <div style="margin-bottom:10px;">
+            ${spot.rating ? `⭐ ${spot.rating.toFixed(1)} Google` : "No Google rating"}
+          </div>
+
+          <div id="popupCommunity_${spot.place_id}" style="margin-bottom:14px;opacity:0.9;">
+            Loading community ratings…
+          </div>
+
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${loc.lat()},${loc.lng()}"
+             target="_blank"
+             style="
+               display:inline-block;
+               padding:8px 12px;
+               background:#4a4aff;
+               color:white;
+               border-radius:8px;
+               font-weight:600;
+               text-decoration:none;
+               box-shadow:0 0 12px #4a4aff;
+             ">
+            Get Directions →
+          </a>
+        </div>
+      `;
+
+      const info = new google.maps.InfoWindow({ content: infoContent });
+
+      const marker = new google.maps.Marker({
+        map,
+        position: loc,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillColor: color,
+          fillOpacity: 1,
+          strokeWeight: 1,
+          strokeColor: "#000"
+        }
+      });
+
+      // CLICK TO OPEN – STAYS OPEN WHILE HOVERING POPUP, CLOSES WHEN LEAVE POPUP
+      marker.addListener("click", () => {
+        if (openInfoWindow) openInfoWindow.close();
+        info.open(map, marker);
+        openInfoWindow = info;
+
+        injectCommunityRatings(spot.place_id);
+
+        setTimeout(() => {
+          const popup = document.getElementById(popupId);
+          if (!popup) return;
+
+          popup.addEventListener("mouseleave", () => {
+            if (openInfoWindow === info) {
+              info.close();
+              openInfoWindow = null;
+            }
+          });
+        }, 50);
+      });
+
+      marker.addListener("dblclick", () => openDetails(spot));
+
+      markers.push(marker);
+    });
+  }
+
+  function injectCommunityRatings(placeId) {
+    const reviews = loadReviews(placeId);
+    const el = document.getElementById("popupCommunity_" + placeId);
+
+    if (!el) return;
+
+    if (!reviews.length) {
+      el.innerHTML = "⭐ No community reviews yet";
+      return;
+    }
+
+    const avg = key => {
+      const vals = reviews.map(r => r[key]).filter(v => v);
+      return vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1) : "–";
+    };
+
+    el.innerHTML = `
+      ⭐ Smoothness: ${avg("smoothness")}<br>
+      ⭐ Difficulty: ${avg("difficulty")}
+    `;
+  }
+
+  function openDetails(spot) {
+    activeSpot = spot;
+    document.getElementById("details").style.display = "block";
+
+    document.getElementById("dName").textContent = spot.name;
+    document.getElementById("dAddress").textContent = spot.formatted_address || "";
+    document.getElementById("dRating").textContent =
+      spot.rating ? `⭐ ${spot.rating.toFixed(1)} (${spot.user_ratings_total || 0})` : "No rating";
+
+    document.getElementById("directionsBtn").onclick = () => {
+      const lat = spot.geometry.location.lat();
+      const lng = spot.geometry.location.lng();
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
+    };
+
+    renderReviews(spot.place_id);
+  }
+
+  function loadReviews(id) {
+    return JSON.parse(localStorage.getItem("rc_reviews_" + id) || "[]");
+  }
+
+  function saveReviews(id, data) {
+    localStorage.setItem("rc_reviews_" + id, JSON.stringify(data));
+  }
+
+  function renderReviews(id) {
+    const list = document.getElementById("reviewList");
+    const reviews = loadReviews(id);
+    list.innerHTML = "";
+
+    if (!reviews.length) {
+      list.innerHTML = "<div>No reviews yet.</div>";
+      document.getElementById("avgSmooth").textContent = "–";
+      document.getElementById("avgDifficulty").textContent = "–";
+      return;
+    }
+
+    const avg = key => {
+      const vals = reviews.map(r => r[key]).filter(v => v);
+      return vals.length ? (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(1) : "–";
+    };
+
+    document.getElementById("avgSmooth").textContent = avg("smoothness");
+    document.getElementById("avgDifficulty").textContent = avg("difficulty");
+
+    reviews.forEach(r => {
+      const div = document.createElement("div");
+      div.className = "review-item";
+      div.innerHTML = `
+        <div class="review-meta">${r.name}</div>
+        <div>${r.text}</div>
+        <div style="opacity:0.8;font-size:0.75rem;">
+          Smoothness: ${r.smoothness || "–"} • Difficulty: ${r.difficulty || "–"}
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  function placeUserMarker(loc) {
+    const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+    const avatar = profile.avatarUrl || "styles/default-avatar.png";
+
+    if (!userMarker) {
+      userMarker = new google.maps.Marker({
+        map,
+        position: loc,
+        icon: {
+          url: avatar,
+          scaledSize: new google.maps.Size(40, 40),
+          anchor: new google.maps.Point(20, 20)
+        }
+      });
+    } else {
+      userMarker.setPosition(loc);
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Item View – Roll ’n Connect</title>
+
+  <style>
+    body { margin: 0; padding: 0; font-family: system-ui; background: #05050a; color: white; }
+    .hamburger { position: fixed; top: 20px; left: 20px; width: 40px; height: 32px; cursor: pointer; z-index: 1000; display: flex; flex-direction: column; justify-content: space-between; }
+    .hamburger div { height: 6px; background: #4a4aff; border-radius: 4px; box-shadow: 0 0 12px #4a4aff; }
+    .side-menu { position: fixed; top: 0; left: -260px; width: 260px; height: 100vh; background: #0d0d16; padding: 40px 20px; box-shadow: 0 0 20px #4a4aff; transition: 0.35s; z-index: 999; }
+    .side-menu.open { left: 0; }
+    .side-menu a { display: block; padding: 14px; margin-bottom: 14px; background: #14141c; border-radius: 10px; text-decoration: none; color: white; font-size: 18px; box-shadow: 0 0 10px #4a4aff; }
+    .page-container { max-width: 600px; margin: 0 auto; padding: 80px 20px; }
+    h1 { text-shadow: 0 0 12px #4a4aff; }
+    .meta { opacity: 0.7; margin-bottom: 20px; }
+    .price { font-size: 26px; color: #4a4aff; margin-bottom: 20px; }
+    button { width: 100%; padding: 14px; border-radius: 10px; border: none; background: #4a4aff; color: black; font-size: 18px; cursor: pointer; box-shadow: 0 0 14px #4a4aff; }
+  </style>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector('.side-menu').classList.toggle('open');
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(location.search);
+      const id = Number(params.get("id"));
+
+      let items = JSON.parse(localStorage.getItem("rc_market_items") || "[]");
+      const item = items.find(i => i.id === id);
+
+      if (!item) {
+        document.getElementById("content").innerHTML = "<h2>Item not found.</h2>";
+        return;
+      }
+
+      document.getElementById("title").textContent = item.title;
+      document.getElementById("price").textContent = item.price === 0 ? "FREE" : "$" + item.price;
+      document.getElementById("meta").textContent = `${item.category.toUpperCase()} • ${item.condition}`;
+      document.getElementById("seller").textContent = "Seller: " + item.seller;
+    });
+  </script>
+</head>
+
+<body>
+
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+  </div>
+
+  <div class="side-menu">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="sell-item.html">Sell Item</a>
+    <a href="your-listings.html">Your Listings</a>
+    <a href="item-view.html">View Item</a>
+    <a href="edit-item.html">Edit Item</a>
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
+  </div>
+
+  <div class="page-container" id="content">
+    <h1 id="title"></h1>
+    <div class="price" id="price"></div>
+    <div class="meta" id="meta"></div>
+    <div class="meta" id="seller"></div>
+  </div>
+
+</body>
+</html>

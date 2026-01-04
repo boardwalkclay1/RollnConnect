@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketplace Dashboard – Roll ’n Connect</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #05050a;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 40px;
+      height: 32px;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger div {
+      height: 6px;
+      background: #4a4aff;
+      border-radius: 4px;
+      box-shadow: 0 0 12px #4a4aff;
+      transition: 0.3s;
+    }
+
+    /* SCROLLABLE SIDE MENU */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100vh;
+      background: #0d0d16;
+      padding: 40px 20px;
+      box-shadow: 0 0 20px #4a4aff;
+      transition: 0.35s ease;
+      z-index: 999;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .side-menu::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .side-menu::-webkit-scrollbar-thumb {
+      background: #4a4aff;
+      border-radius: 10px;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .side-menu a {
+      display: block;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #14141c;
+      border-radius: 10px;
+      text-decoration: none;
+      color: white;
+      font-size: 18px;
+      box-shadow: 0 0 10px #4a4aff;
+      transition: 0.25s;
+    }
+
+    .side-menu a:hover {
+      background: #1f1f29;
+      box-shadow: 0 0 16px #4a4aff;
+    }
+
+    /* PAGE CONTENT */
+    .page-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px;
+    }
+
+    h1 {
+      font-size: 34px;
+      margin-bottom: 8px;
+      font-weight: 700;
+      text-shadow: 0 0 12px #4a4aff;
+    }
+
+    .subtitle {
+      opacity: 0.7;
+      margin-bottom: 32px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #0f0f18;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 0 16px rgba(74, 74, 255, 0.35);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .card-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #4a4aff;
+      margin: 4px 0;
+    }
+
+    .card-meta {
+      font-size: 13px;
+      opacity: 0.75;
+    }
+
+    .btn {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.25s;
+    }
+
+    .btn-primary {
+      background: #4a4aff;
+      color: black;
+      box-shadow: 0 0 14px #4a4aff;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 18px #6a6aff;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #4a4aff;
+      color: #4a4aff;
+    }
+
+    .btn-outline:hover {
+      background: #14141c;
+      box-shadow: 0 0 14px #4a4aff;
+    }
+  </style>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector('.side-menu').classList.toggle('open');
+    }
+
+    function loadMarketplaceDashboard() {
+      const items = JSON.parse(localStorage.getItem("rc_market_items") || "[]");
+      const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+
+      const messages = JSON.parse(localStorage.getItem("rc_market_messages") || "[]");
+      const offers = JSON.parse(localStorage.getItem("rc_market_offers") || "[]");
+      const favorites = JSON.parse(localStorage.getItem("rc_market_favorites") || "[]");
+      const notifications = JSON.parse(localStorage.getItem("rc_market_notifications") || "[]");
+
+      const username = profile.username || "Unknown";
+
+      document.getElementById("statTotal").textContent = items.length;
+      document.getElementById("statGiveaway").textContent = items.filter(i => i.price === 0).length;
+      document.getElementById("statYours").textContent = items.filter(i => i.seller === username).length;
+
+      document.getElementById("statMessages").textContent = messages.filter(m => m.to === username || m.from === username).length;
+      document.getElementById("statOffers").textContent = offers.filter(o => o.to === username || o.from === username).length;
+      document.getElementById("statFavorites").textContent = favorites.length;
+      document.getElementById("statNotifications").textContent = notifications.filter(n => n.to === username).length;
+
+      document.getElementById("welcomeName").textContent =
+        profile.displayName || profile.username || "Roller";
+    }
+
+    document.addEventListener("DOMContentLoaded", loadMarketplaceDashboard);
+  </script>
+</head>
+
+<body>
+
+  <!-- HAMBURGER -->
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+  </div>
+
+  <!-- UPDATED UNIVERSAL MARKETPLACE SIDEBAR -->
+  <div class="side-menu">
+
+    <!-- Marketplace Core -->
+    <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="sell-item.html">Sell Item</a>
+    <a href="your-listings.html">Your Listings</a>
+    <a href="giveaways.html">Giveaways</a>
+
+    <!-- Marketplace Expanded -->
+    <a href="marketplace-messages.html">Messages</a>
+    <a href="marketplace-offers.html">Offers</a>
+    <a href="marketplace-favorites.html">Favorites</a>
+    <a href="marketplace-notifications.html">Notifications</a>
+
+    <!-- Marketplace User -->
+    <a href="marketplace-profile.html">Marketplace Profile</a>
+    <a href="marketplace-settings.html">Marketplace Settings</a>
+
+  </div>
+
+  <div class="page-container">
+    <h1>Marketplace Dashboard</h1>
+    <div class="subtitle">
+      Welcome back, <span id="welcomeName">...</span>. Here’s your marketplace at a glance.
+    </div>
+
+    <div class="grid">
+
+      <!-- TOTAL ITEMS -->
+      <div class="card">
+        <div class="card-title">Total Marketplace Items</div>
+        <div id="statTotal" class="card-value">0</div>
+        <div class="card-meta">All listings currently visible.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace.html'">Open Marketplace</button>
+      </div>
+
+      <!-- YOUR LISTINGS -->
+      <div class="card">
+        <div class="card-title">Your Listings</div>
+        <div id="statYours" class="card-value">0</div>
+        <div class="card-meta">Items you have listed.</div>
+        <button class="btn btn-primary" onclick="location.href='sell-item.html'">List New Item</button>
+        <button class="btn btn-outline" onclick="location.href='your-listings.html'">View Listings</button>
+      </div>
+
+      <!-- GIVEAWAYS -->
+      <div class="card">
+        <div class="card-title">Giveaway Items</div>
+        <div id="statGiveaway" class="card-value">0</div>
+        <div class="card-meta">Items listed as FREE.</div>
+        <button class="btn btn-primary" onclick="location.href='giveaways.html'">Explore Giveaways</button>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="card">
+        <div class="card-title">Messages</div>
+        <div id="statMessages" class="card-value">0</div>
+        <div class="card-meta">Conversations about your items.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace-messages.html'">Open Messages</button>
+      </div>
+
+      <!-- OFFERS -->
+      <div class="card">
+        <div class="card-title">Offers</div>
+        <div id="statOffers" class="card-value">0</div>
+        <div class="card-meta">Incoming and outgoing offers.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace-offers.html'">View Offers</button>
+      </div>
+
+      <!-- FAVORITES -->
+      <div class="card">
+        <div class="card-title">Favorites</div>
+        <div id="statFavorites" class="card-value">0</div>
+        <div class="card-meta">Items you saved.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace-favorites.html'">View Favorites</button>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="card">
+        <div class="card-title">Notifications</div>
+        <div id="statNotifications" class="card-value">0</div>
+        <div class="card-meta">Unread marketplace alerts.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace-notifications.html'">Open Notifications</button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
