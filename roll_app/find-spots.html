@@ -5,7 +5,7 @@
   <title>Find Spots – Roll ’n Connect</title>
 
   <!-- GOOGLE MAPS (REPLACE API_KEY LOCALLY) -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places"></script>
 
   <style>
     body {
@@ -13,7 +13,6 @@
       font-family:system-ui, sans-serif;
       background:#0b0e16;
       color:#fff;
-      overflow-x:hidden;
     }
 
     header {
@@ -57,7 +56,23 @@
       cursor:pointer;
       white-space:nowrap;
       font-size:0.8rem;
+      display:flex;
+      align-items:center;
+      gap:6px;
     }
+
+    .dot {
+      width:10px;
+      height:10px;
+      border-radius:50%;
+    }
+
+    .dot.skatepark { background:#38bdf8; }
+    .dot.rink { background:#a855f7; }
+    .dot.water { background:#0ea5e9; }
+    .dot.food { background:#f97316; }
+    .dot.parking { background:#e5e7eb; }
+    .dot.restroom { background:#22c55e; }
 
     .filter-btn.active {
       background:#fff;
@@ -150,24 +165,6 @@
       margin-bottom:2px;
     }
 
-    .user-live {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px;
-      background:#1f2937;
-      border-radius:10px;
-      margin-top:10px;
-      border:1px solid #374151;
-    }
-
-    .user-live img {
-      width:36px;
-      height:36px;
-      border-radius:50%;
-      object-fit:cover;
-    }
-
     #nearbyNotice {
       display:none;
       padding:8px;
@@ -195,12 +192,12 @@
 <div id="map"></div>
 
 <div class="filters">
-  <button class="filter-btn" data-q="skatepark">Skateparks</button>
-  <button class="filter-btn" data-q="roller rink">Rinks</button>
-  <button class="filter-btn" data-q="water fountain">Water</button>
-  <button class="filter-btn" data-q="food">Food</button>
-  <button class="filter-btn" data-q="parking lot">Parking</button>
-  <button class="filter-btn" data-q="restroom">Restrooms</button>
+  <button class="filter-btn" data-q="skatepark"><div class="dot skatepark"></div>Skateparks</button>
+  <button class="filter-btn" data-q="roller rink"><div class="dot rink"></div>Rinks</button>
+  <button class="filter-btn" data-q="water fountain"><div class="dot water"></div>Water</button>
+  <button class="filter-btn" data-q="food"><div class="dot food"></div>Food</button>
+  <button class="filter-btn" data-q="parking lot"><div class="dot parking"></div>Parking</button>
+  <button class="filter-btn" data-q="restroom"><div class="dot restroom"></div>Restrooms</button>
 </div>
 
 <div class="content">
@@ -247,19 +244,10 @@
     <h3 style="margin-top:16px;">Reviews</h3>
     <div id="reviewList"></div>
   </div>
-
-  <div id="userLive" class="user-live" style="display:none;">
-    <img id="userAvatar">
-    <div id="userLiveText">Live location active</div>
-  </div>
-
-  <button id="liveBtn" class="primary-btn">Toggle Live Location</button>
 </div>
 
 <script>
-let map, places, markers=[], spots=[], activeSpot=null;
-let pageIndex=0;
-const pageSize=5;
+let map, places, spots=[], pageIndex=0, pageSize=5;
 let activeFilters=[];
 
 /* INIT MAP */
@@ -272,7 +260,7 @@ function initMap(){
 }
 window.onload=initMap;
 
-/* FILTERS — allow up to 3 active */
+/* FILTERS — allow up to 3 */
 document.querySelectorAll(".filter-btn").forEach(btn=>{
   btn.onclick=()=>{
     const q=btn.dataset.q;
@@ -292,7 +280,9 @@ document.querySelectorAll(".filter-btn").forEach(btn=>{
 
 /* SEARCH */
 function runSearch(){
-  const query = activeFilters.length ? activeFilters.join(" OR ") : "skate spot";
+  const query = activeFilters.length
+    ? activeFilters.join(" OR ")
+    : "skatepark OR roller rink OR trail";
 
   places.textSearch({query, location:map.getCenter(), radius:20000}, (results,status)=>{
     if(status!=="OK") return;
@@ -302,14 +292,14 @@ function runSearch(){
   });
 }
 
-/* PAGINATION — show 5 at a time */
+/* PAGINATION */
 function renderPage(){
   const list=document.getElementById("spotList");
   list.innerHTML="";
 
   const slice=spots.slice(0,(pageIndex+1)*pageSize);
 
-  slice.forEach((spot,i)=>{
+  slice.forEach(spot=>{
     const div=document.createElement("div");
     div.className="spot-card";
     div.innerHTML=`
@@ -331,7 +321,6 @@ document.getElementById("loadMore").onclick=()=>{
 
 /* DETAILS */
 function openDetails(spot){
-  activeSpot=spot;
   document.getElementById("details").style.display="block";
 
   document.getElementById("dName").textContent=spot.name;
@@ -339,13 +328,13 @@ function openDetails(spot){
   document.getElementById("dRating").textContent=
     spot.rating ? `⭐ ${spot.rating.toFixed(1)} (${spot.user_ratings_total||0})` : "No rating";
 
-  renderReviews(spot.place_id);
-
   document.getElementById("directionsBtn").onclick=()=>{
     const lat=spot.geometry.location.lat();
     const lng=spot.geometry.location.lng();
     window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
   };
+
+  renderReviews(spot.place_id);
 }
 
 /* REVIEWS */
@@ -391,14 +380,14 @@ function renderReviews(id){
 }
 
 document.getElementById("submitReview").onclick=()=>{
-  if(!activeSpot) return;
-
   const name=document.getElementById("rName").value||"Anonymous";
   const text=document.getElementById("rText").value;
   const smooth=document.getElementById("rSmooth").value;
   const diff=document.getElementById("rDifficulty").value;
 
-  const reviews=loadReviews(activeSpot.place_id);
+  const id=activeSpot.place_id;
+  const reviews=loadReviews(id);
+
   reviews.push({
     name,
     text,
@@ -406,60 +395,9 @@ document.getElementById("submitReview").onclick=()=>{
     difficulty:Number(diff)||null
   });
 
-  saveReviews(activeSpot.place_id,reviews);
-  renderReviews(activeSpot.place_id);
+  saveReviews(id,reviews);
+  renderReviews(id);
 };
-
-/* LIVE LOCATION */
-let liveWatch=null;
-const userLive=document.getElementById("userLive");
-const userAvatar=document.getElementById("userAvatar");
-
-document.getElementById("liveBtn").onclick=()=>{
-  if(liveWatch){
-    navigator.geolocation.clearWatch(liveWatch);
-    liveWatch=null;
-    userLive.style.display="none";
-    return;
-  }
-
-  liveWatch=navigator.geolocation.watchPosition(pos=>{
-    const {latitude,longitude}=pos.coords;
-    userLive.style.display="flex";
-
-    const profile=JSON.parse(localStorage.getItem("rc_profile")||"{}");
-    userAvatar.src=profile.avatarUrl||"styles/default-avatar.png";
-
-    localStorage.setItem("rc_live_me",JSON.stringify({
-      lat:latitude, lng:longitude, avatar:userAvatar.src, updated:Date.now()
-    }));
-
-    checkNearby(latitude,longitude);
-  });
-};
-
-/* NEARBY SKATERS */
-function checkNearby(lat,lng){
-  const others=JSON.parse(localStorage.getItem("rc_live_skaters")||"[]");
-  let found=false;
-
-  others.forEach(o=>{
-    const d=distance(lat,lng,o.lat,o.lng);
-    if(d<=5) found=true;
-  });
-
-  document.getElementById("nearbyNotice").style.display = found ? "block" : "none";
-}
-
-function distance(lat1,lon1,lat2,lon2){
-  const R=3958.8;
-  const dLat=(lat2-lat1)*Math.PI/180;
-  const dLon=(lon2-lon1)*Math.PI/180;
-  const a=Math.sin(dLat/2)**2 +
-          Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) *
-          Math.sin(dLon/2)**2;
-  return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
-}
 </script>
 
 </body>
