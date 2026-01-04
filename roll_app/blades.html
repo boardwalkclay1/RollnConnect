@@ -15,7 +15,6 @@
       overflow-x:hidden;
     }
 
-    /* STARFIELDS */
     .stars1,.stars2,.stars3 {
       position:fixed; inset:0;
       background:url('styles/stars-white.png') repeat;
@@ -29,7 +28,6 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* FLOATING FUTURISTIC SIDEBAR */
     .sidebar {
       position:fixed;
       top:50%;
@@ -47,7 +45,6 @@
     }
     .sidebar.open { left:0; }
 
-    /* BURGER */
     .hamburger {
       position:fixed;
       top:25px;
@@ -72,7 +69,6 @@
     .hamburger.active span:nth-child(2){opacity:0;}
     .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
 
-    /* NAV LINKS */
     .nav-header{text-align:center;margin-bottom:30px;}
     .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
     .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
@@ -102,14 +98,12 @@
       box-shadow:0 0 20px rgba(255,255,255,0.4);
     }
 
-    /* PAGE WRAPPER */
     .page-wrapper {
       padding-top:120px;
       padding-bottom:80px;
       text-align:center;
     }
 
-    /* HERO */
     .hero {
       margin:0 auto 40px auto;
       padding:40px;
@@ -120,7 +114,6 @@
       box-shadow:0 0 60px rgba(255,255,255,0.3);
     }
 
-    /* SUBCATEGORY GRID */
     .sub-grid {
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
@@ -159,10 +152,8 @@
 
 <div class="stars1"></div><div class="stars2"></div><div class="stars3"></div>
 
-<!-- BURGER -->
 <div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
 
-<!-- FLOATING SIDEBAR -->
 <nav id="sidebar" class="sidebar">
   <div class="nav-header">
     <div class="logo-orb">🛼</div>
@@ -182,8 +173,8 @@
   <div class="hero">
     <h1 style="font-size:3rem;">Blades Chat Realms</h1>
     <p style="font-size:1.05rem;opacity:0.9;line-height:1.7;">
-      Inline skating splits into two major cultures here.  
-      Each subcategory leads to a chatroom with message effects, emoji blasts,  
+      Inline skating splits into two major cultures here.
+      Each subcategory leads to a chatroom with message effects, emoji blasts,
       reveal messages, slam messages, quiet messages, and per‑room notifications.
     </p>
   </div>
@@ -193,13 +184,15 @@
     <div class="sub-card">
       <h2>Street</h2>
       <p>Urban flow, stair rides, gaps, rails, and city cruising.</p>
-      <a href="chatroom.html?room=blades-street" class="enter-btn">Enter Street Chat</a>
+      <!-- FIXED LINK -->
+      <a href="room-blades-street.html" class="enter-btn">Enter Street Chat</a>
     </div>
 
     <div class="sub-card">
       <h2>Skatepark</h2>
       <p>Bowls, transitions, coping tricks, and park progression.</p>
-      <a href="chatroom.html?room=blades-park" class="enter-btn">Enter Skatepark Chat</a>
+      <!-- FIXED LINK -->
+      <a href="room-blades-park.html" class="enter-btn">Enter Skatepark Chat</a>
     </div>
 
   </section>
