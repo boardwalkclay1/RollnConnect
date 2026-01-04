@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Find Spots – Roll ’n Connect</title>
-  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/style.css"/>
 
-  <!-- GOOGLE MAPS -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places,marker"></script>
+  <!-- GOOGLE MAPS EXTENDED COMPONENT LIBRARY -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js"></script>
 
   <style>
     body {
@@ -33,7 +33,7 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* FLOATING SIDEBAR */
+    /* SIDEBAR */
     .sidebar {
       position:fixed;
       top:50%;
@@ -51,32 +51,6 @@
     }
     .sidebar.open { left:0; }
 
-    /* BURGER */
-    .hamburger {
-      position:fixed;
-      top:25px;
-      left:25px;
-      width:40px;
-      height:30px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      cursor:pointer;
-      z-index:9999;
-    }
-    .hamburger span {
-      height:4px;
-      width:100%;
-      background:#fff;
-      border-radius:4px;
-      box-shadow:0 0 12px rgba(255,255,255,0.9);
-      transition:0.3s;
-    }
-    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
-    .hamburger.active span:nth-child(2){opacity:0;}
-    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
-
-    /* NAV LINKS */
     .nav-header{text-align:center;margin-bottom:30px;}
     .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
     .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
@@ -106,14 +80,62 @@
       box-shadow:0 0 20px rgba(255,255,255,0.4);
     }
 
-    /* MAP */
-    #map {
-      position:absolute;
-      top:0;
-      left:0;
+    /* BURGER */
+    .hamburger {
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:9999;
+    }
+    .hamburger span {
+      height:4px;
       width:100%;
-      height:100vh;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+    /* FLOATING BUBBLES */
+    .bubble {
+      position:fixed;
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(16px);
+      box-shadow:0 0 40px rgba(255,255,255,0.4);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      text-decoration:none;
+      font-size:0.9rem;
+      text-align:center;
+      padding:10px;
+      z-index:5;
+      transition:transform 0.2s;
+    }
+    .bubble:hover { transform:scale(1.08); }
+
+    /* MAP CONTAINER */
+    .map-wrapper {
+      position:absolute;
+      inset:0;
       z-index:1;
+    }
+    gmp-map {
+      width:100%;
+      height:100%;
     }
 
     /* SEARCH PANEL */
@@ -121,38 +143,46 @@
       position:fixed;
       top:25px;
       right:25px;
-      background:rgba(0,0,0,0.65);
+      background:rgba(0,0,0,0.70);
       backdrop-filter:blur(20px);
       padding:20px;
       border-radius:20px;
       box-shadow:0 0 30px rgba(255,255,255,0.3);
       z-index:9999;
-      width:300px;
+      width:320px;
     }
 
-    .search-panel input {
-      width:100%;
-      padding:10px 14px;
-      border-radius:12px;
-      border:none;
+    .search-panel-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .panel-title {
+      font-size:1rem;
+      font-weight:600;
+    }
+    .theme-toggle {
+      font-size:0.8rem;
+      cursor:pointer;
+      padding:4px 8px;
+      border-radius:999px;
       background:rgba(255,255,255,0.15);
-      color:#fff;
-      margin-bottom:12px;
     }
 
     .category-buttons {
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:4px;
+      margin-top:10px;
     }
 
     .cat-btn {
-      padding:8px 14px;
+      padding:7px 12px;
       background:rgba(255,255,255,0.15);
       border-radius:12px;
       cursor:pointer;
-      font-size:0.9rem;
+      font-size:0.85rem;
       transition:0.25s;
     }
     .cat-btn:hover {
@@ -218,28 +248,6 @@
       color:#fff;
     }
 
-    /* FLOATING BUBBLES */
-    .bubble {
-      position:fixed;
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      background:rgba(255,255,255,0.12);
-      backdrop-filter:blur(16px);
-      box-shadow:0 0 40px rgba(255,255,255,0.4);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      text-decoration:none;
-      font-size:0.9rem;
-      text-align:center;
-      padding:10px;
-      z-index:5;
-      transition:transform 0.2s;
-    }
-    .bubble:hover { transform:scale(1.08); }
-
     /* MODAL */
     .modal-backdrop {
       position:fixed;
@@ -299,10 +307,36 @@
     .modal-save { background:#fff; color:#000; }
     .modal-cancel { background:rgba(255,255,255,0.2); color:#fff; }
 
+    /* THEME LIGHT OVERRIDE */
+    body.light-mode {
+      background:#f5f5f5;
+      color:#000;
+    }
+    body.light-mode .search-panel {
+      background:rgba(255,255,255,0.95);
+      color:#000;
+    }
+    body.light-mode .sidebar {
+      background:rgba(255,255,255,0.95);
+      color:#000;
+    }
+    body.light-mode .nav-links a {
+      background:rgba(0,0,0,0.05);
+      color:#000;
+    }
+    body.light-mode .current-spot {
+      background:rgba(0,0,0,0.06);
+      color:#000;
+    }
+    body.light-mode .bubble {
+      background:rgba(0,0,0,0.1);
+      color:#000;
+      box-shadow:0 0 40px rgba(0,0,0,0.2);
+    }
   </style>
 </head>
 
-<body>
+<body class="cosmic-mode">
 
 <div class="stars1"></div>
 <div class="stars2"></div>
@@ -335,9 +369,31 @@
 <a href="dashboard.html" class="bubble" id="bubbleDashboard">Dashboard</a>
 <a href="profile.html" class="bubble" id="bubbleProfile">Profile</a>
 
+<!-- MAP + COMPONENTS -->
+<gmpx-api-loader
+  key="AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc"
+  solution-channel="ROLLNCONNECT_FINDSPOTS">
+</gmpx-api-loader>
+
+<div class="map-wrapper">
+  <gmp-map id="rnMap"
+    center="33.8000,-84.3000"
+    zoom="11"
+    map-id="DEMO_MAP_ID">
+    <div slot="control-block-start-inline-start" class="place-picker-container">
+      <gmpx-place-picker id="placePicker" placeholder="Search for a spot"></gmpx-place-picker>
+    </div>
+    <!-- Advanced marker for selected place -->
+    <gmp-advanced-marker id="selectedMarker"></gmp-advanced-marker>
+  </gmp-map>
+</div>
+
 <!-- SEARCH PANEL -->
 <div class="search-panel">
-  <input id="searchInput" placeholder="Search: skatepark, rink, trail...">
+  <div class="search-panel-header">
+    <div class="panel-title">Find Spots</div>
+    <div class="theme-toggle" id="themeToggle">Cosmic</div>
+  </div>
 
   <div class="category-buttons">
     <div class="cat-btn" data-q="skatepark near me">Skateparks</div>
@@ -350,7 +406,7 @@
   <button class="loc-btn" id="locateMe">Use My Location</button>
 
   <div class="status-text" id="statusText">
-    Online: search and map powered by Google. Offline: you can still create events from custom clicks.
+    Online: Places search + map active. Offline: you can still click the map and create calendar events.
   </div>
 
   <!-- CURRENT SPOT CARD -->
@@ -363,9 +419,6 @@
     </div>
   </div>
 </div>
-
-<!-- MAP -->
-<div id="map"></div>
 
 <!-- EVENT MODAL -->
 <div class="modal-backdrop" id="eventModalBackdrop">
@@ -402,9 +455,8 @@
   </div>
 </div>
 
-<!-- MAP + LOGIC -->
 <script>
-/* SIDEBAR */
+/* BURGER + SIDEBAR */
 const h = document.getElementById("hamburger");
 const s = document.getElementById("sidebar");
 h.onclick = () => {
@@ -452,13 +504,31 @@ function animateBubbles() {
 positionBubbles();
 requestAnimationFrame(animateBubbles);
 
+/* THEME TOGGLE (COSMIC / LIGHT) */
+const themeToggle = document.getElementById("themeToggle");
+function setTheme(mode) {
+  if (mode === "light") {
+    document.body.classList.add("light-mode");
+    themeToggle.textContent = "Light";
+  } else {
+    document.body.classList.remove("light-mode");
+    themeToggle.textContent = "Cosmic";
+  }
+  localStorage.setItem("rn_map_theme", mode);
+  applyMapStyle(mode);
+}
+themeToggle.onclick = () => {
+  const current = localStorage.getItem("rn_map_theme") || "cosmic";
+  setTheme(current === "cosmic" ? "light" : "cosmic");
+};
+
 /* OFFLINE STATUS */
 const statusText = document.getElementById("statusText");
 function updateOnlineStatus() {
   if (navigator.onLine) {
-    statusText.textContent = "Online: search and map powered by Google. Offline: you can still create events from custom clicks.";
+    statusText.textContent = "Online: Places search + map active. Offline: you can still click the map and create calendar events.";
   } else {
-    statusText.textContent = "Offline: map and search may be limited, but you can still click to mark spots and create calendar events.";
+    statusText.textContent = "Offline: map tiles/search may be limited, but you can still click to mark spots and create calendar events.";
   }
 }
 window.addEventListener("online", updateOnlineStatus);
@@ -607,7 +677,7 @@ saveEventBtn.onclick = () => {
     notes,
     privacy,
     groups,
-    link: ""  // could later point to a dedicated spot details page
+    link: ""
   });
 
   alert("Event created and added to your calendar.");
@@ -628,8 +698,8 @@ btnShareToChat.onclick = () => {
   alert("Spot shared to chat drafts. Open Chatrooms to drop it into a conversation.");
 };
 
-/* GOOGLE MAP INIT */
-let map;
+/* MAP + COMPONENTS (WEB COMPONENTS) */
+let innerMap = null;
 const cosmicStyle = [
   { elementType:"geometry", stylers:[{color:"#0a0a0a"}] },
   { elementType:"labels.text.fill", stylers:[{color:"#ffffff"}] },
@@ -639,60 +709,94 @@ const cosmicStyle = [
   { featureType:"water", stylers:[{color:"#111"}] }
 ];
 
-function initMap() {
-  try {
-    map = new google.maps.Map(document.getElementById("map"), {
-      center:{lat:33.8,lng:-84.3},
-      zoom:11,
-      styles:cosmicStyle,
-      disableDefaultUI:true,
-    });
-
-    // CLICK TO DROP CUSTOM SPOT + SET CURRENT SPOT
-    map.addListener("click", (e) => {
-      const lat = e.latLng.lat();
-      const lng = e.latLng.lng();
-
-      new google.maps.marker.AdvancedMarkerElement({
-        map,
-        position:e.latLng,
-        title:"Custom Spot",
-      });
-
-      setCurrentSpot({
-        id: null,
-        name:"Custom Spot",
-        address:null,
-        lat,
-        lng
-      });
-    });
-  } catch(err) {
-    console.error("Map init failed:", err);
-    document.getElementById("map").innerHTML =
-      "<div style='color:#fff;text-align:center;margin-top:40vh;'>Map failed to load. You can still create events from spots later.</div>";
+function applyMapStyle(mode) {
+  if (!innerMap || !window.google) return;
+  if (mode === "light") {
+    innerMap.setOptions({styles: null});
+  } else {
+    innerMap.setOptions({styles: cosmicStyle});
   }
 }
-window.onload = initMap;
 
-/* USER AVATAR MARKER */
-function placeUserMarker(lng,lat){
-  const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
-  const avatar = profile.avatarUrl || "styles/default-avatar.png";
+customElements.whenDefined("gmp-map").then(() => {
+  const mapEl = document.getElementById("rnMap");
+  innerMap = mapEl.innerMap;
 
-  const el = document.createElement("img");
-  el.src = avatar;
-  el.style.width="50px";
-  el.style.height="50px";
-  el.style.borderRadius="50%";
-  el.style.boxShadow="0 0 15px rgba(255,255,255,0.9)";
+  // Apply initial theme
+  const storedTheme = localStorage.getItem("rn_map_theme") || "cosmic";
+  setTheme(storedTheme);
 
-  new google.maps.marker.AdvancedMarkerElement({
-    map,
-    position:{lat, lng},
-    content:el
+  // Allow click-to-drop custom spot
+  innerMap.addListener("click", (e) => {
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    new google.maps.marker.AdvancedMarkerElement({
+      map: innerMap,
+      position: e.latLng,
+      title: "Custom Spot"
+    });
+    setCurrentSpot({
+      id: null,
+      name: "Custom Spot",
+      address: null,
+      lat,
+      lng
+    });
   });
-}
+
+  // User avatar marker (if profile has avatar)
+  try {
+    const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+    if (profile && profile.homeLat && profile.homeLng) {
+      const el = document.createElement("img");
+      el.src = profile.avatarUrl || "styles/default-avatar.png";
+      el.style.width="50px";
+      el.style.height="50px";
+      el.style.borderRadius="50%";
+      el.style.boxShadow="0 0 15px rgba(255,255,255,0.9)";
+      new google.maps.marker.AdvancedMarkerElement({
+        map: innerMap,
+        position: {lat:profile.homeLat, lng:profile.homeLng},
+        content: el
+      });
+    }
+  } catch(e) {}
+});
+
+/* PLACE PICKER INTEGRATION */
+customElements.whenDefined("gmpx-place-picker").then(() => {
+  const placePicker = document.getElementById("placePicker");
+  const selectedMarker = document.getElementById("selectedMarker");
+
+  placePicker.addEventListener("gmpx-placechange", () => {
+    const place = placePicker.value;
+    if (!place || !place.location || !innerMap) return;
+
+    innerMap.panTo(place.location);
+    innerMap.setZoom(14);
+
+    selectedMarker.position = place.location;
+    selectedMarker.title = place.displayName || "Selected Spot";
+
+    setCurrentSpot({
+      id: place.id || null,
+      name: place.displayName || "Selected Spot",
+      address: place.formattedAddress || "",
+      lat: place.location.lat(),
+      lng: place.location.lng()
+    });
+  });
+});
+
+/* CATEGORY SEARCH USING PLACE PICKER QUERY */
+document.querySelectorAll(".cat-btn").forEach(btn => {
+  btn.onclick = () => {
+    const q = btn.dataset.q;
+    const placePicker = document.getElementById("placePicker");
+    placePicker.value = q;
+    // Let Google handle search UI; user picks a result and gmpx-placechange fires
+  };
+});
 
 /* USE MY LOCATION */
 document.getElementById("locateMe").onclick = () => {
@@ -700,68 +804,21 @@ document.getElementById("locateMe").onclick = () => {
     alert("Geolocation not available.");
     return;
   }
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const {latitude,longitude}=pos.coords;
-    if (map) {
-      map.panTo({lat:latitude,lng:longitude});
-      map.setZoom(14);
-      placeUserMarker(longitude,latitude);
+  navigator.geolocation.getCurrentPosition(pos => {
+    const {latitude, longitude} = pos.coords;
+    if (innerMap) {
+      innerMap.panTo({lat:latitude, lng:longitude});
+      innerMap.setZoom(14);
+      new google.maps.marker.AdvancedMarkerElement({
+        map: innerMap,
+        position: {lat:latitude, lng:longitude},
+        title: "You are here"
+      });
     }
   }, () => {
     alert("Could not get your location.");
   });
 };
-
-/* SEARCH FUNCTION */
-function runSearch(q){
-  if (!navigator.onLine) {
-    alert("You appear to be offline. Search may not work, but you can still click the map to mark spots.");
-  }
-  if (!map || !window.google || !google.maps.places) return;
-
-  const service = new google.maps.places.PlacesService(map);
-
-  const request = {
-    query:q,
-    fields:["name","geometry","formatted_address","place_id"]
-  };
-
-  service.findPlaceFromQuery(request,(results,status)=>{
-    if(status !== google.maps.places.PlacesServiceStatus.OK || !results || !results.length) return;
-
-    const spot = results[0];
-    map.panTo(spot.geometry.location);
-    map.setZoom(14);
-
-    const marker = new google.maps.marker.AdvancedMarkerElement({
-      map,
-      position:spot.geometry.location,
-      title:spot.name
-    });
-
-    const infowindow = new google.maps.InfoWindow({
-      content:`<strong>${spot.name}</strong><br>${spot.formatted_address || ""}`
-    });
-
-    marker.addListener("click", () => infowindow.open({anchor:marker, map}));
-
-    // Set current spot so user can save/share
-    setCurrentSpot({
-      id: spot.place_id || null,
-      name: spot.name,
-      address: spot.formatted_address || "",
-      lat: spot.geometry.location.lat(),
-      lng: spot.geometry.location.lng()
-    });
-  });
-}
-
-document.getElementById("searchInput").addEventListener("keydown",e=>{
-  if(e.key==="Enter") runSearch(e.target.value);
-});
-document.querySelectorAll(".cat-btn").forEach(btn=>{
-  btn.onclick=()=>runSearch(btn.dataset.q);
-});
 </script>
 
 </body>
