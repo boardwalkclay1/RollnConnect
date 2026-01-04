@@ -6,42 +6,154 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
+    body {
+      margin:0;
+      padding:0;
+      background:#000;
+      color:#fff;
+      font-family:'Inter',sans-serif;
+      overflow-x:hidden;
+    }
+
+    /* STARFIELDS */
+    .stars1,.stars2,.stars3 {
+      position:fixed; inset:0;
+      background:url('styles/stars-white.png') repeat;
+      pointer-events:none;
+      z-index:-3;
+    }
+    .stars1 { opacity:.55; animation: drift1 140s linear infinite; }
+    .stars2 { opacity:.35; animation: drift2 200s linear infinite; }
+    .stars3 { opacity:.2;  animation: drift3 260s linear infinite; }
+
+    @keyframes drift1 { from{background-position:0 0;} to{background-position:0 -5000px;} }
+    @keyframes drift2 { from{background-position:0 0;} to{background-position:-4000px -2000px;} }
+    @keyframes drift3 { from{background-position:0 0;} to{background-position:3000px 4000px;} }
+
+    /* BURGER */
+    .hamburger {
+      position:fixed;
+      top:25px;
+      left:25px;
+      width:40px;
+      height:30px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
+      z-index:9999;
+    }
+    .hamburger span {
+      height:4px;
+      width:100%;
+      background:#fff;
+      border-radius:4px;
+      box-shadow:0 0 12px rgba(255,255,255,0.9);
+      transition:0.3s;
+    }
+    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
+    .hamburger.active span:nth-child(2){opacity:0;}
+    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
+
+    /* SIDEBAR */
+    .sidebar {
+      position:fixed;
+      top:0;
+      left:-260px;
+      width:260px;
+      height:100vh;
+      background:rgba(10,10,20,0.95);
+      backdrop-filter:blur(25px);
+      border-right:1px solid rgba(255,255,255,0.25);
+      padding:26px 20px;
+      transition:0.35s ease;
+      z-index:9998;
+    }
+    .sidebar.open { left:0; }
+    .sidebar a {
+      display:block;
+      padding:10px 14px;
+      margin-bottom:10px;
+      background:rgba(255,255,255,0.08);
+      border-radius:10px;
+      color:#fff;
+      text-decoration:none;
+      box-shadow:0 0 10px rgba(255,255,255,0.15);
+    }
+
+    /* FLOATING BUBBLES */
+    .bubble {
+      position:fixed;
+      width:150px;
+      height:150px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(16px);
+      box-shadow:0 0 40px rgba(255,255,255,0.4);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      text-decoration:none;
+      font-size:0.9rem;
+      text-align:center;
+      padding:10px;
+      z-index:5;
+      transition:transform 0.2s;
+    }
+    .bubble:hover { transform:scale(1.08); }
+
+    /* MAIN SECTION */
     .section {
-      max-width: 900px;
-      margin: 120px auto;
-      padding: 40px;
-      text-align: center;
-      animation: fadeIn 1.2s ease;
+      max-width:900px;
+      margin:140px auto;
+      padding:40px;
+      text-align:center;
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(20px);
+      border-radius:20px;
+      box-shadow:0 0 40px rgba(255,255,255,0.25);
     }
 
     .event-card {
-      background: rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 22px;
-      margin-top: 18px;
-      text-align: left;
-      box-shadow: 0 0 22px rgba(120,80,255,0.4);
+      background:rgba(255,255,255,0.08);
+      border-radius:18px;
+      padding:22px;
+      margin-top:18px;
+      text-align:left;
+      box-shadow:0 0 22px rgba(120,80,255,0.4);
     }
 
     .event-name {
-      font-size: 1.4rem;
-      margin-bottom: 6px;
-      color: #e0e4ff;
+      font-size:1.4rem;
+      margin-bottom:6px;
+      color:#e0e4ff;
     }
 
     .event-meta {
-      font-size: 0.98rem;
-      opacity: 0.9;
-      margin-bottom: 6px;
+      font-size:0.98rem;
+      opacity:0.9;
+      margin-bottom:6px;
     }
 
     .event-tag {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.16);
-      font-size: 0.85rem;
-      margin-right: 6px;
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.16);
+      font-size:0.85rem;
+      margin-right:6px;
+    }
+
+    .add-btn {
+      margin-top:10px;
+      padding:8px 14px;
+      border:none;
+      border-radius:999px;
+      background:#fff;
+      color:#000;
+      cursor:pointer;
+      font-size:0.9rem;
     }
   </style>
 </head>
@@ -51,14 +163,36 @@
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
-<div class="nebula-haze"></div>
 
-<div class="section glass">
+<!-- BURGER -->
+<div class="hamburger" id="hamburger">
+  <span></span><span></span><span></span>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <a href="dashboard.html">Dashboard</a>
+  <a href="profile.html">Profile</a>
+  <a href="chatrooms.html">Chatrooms</a>
+  <a href="find-spots.html">Find Spots</a>
+  <a href="events.html">Events</a>
+  <a href="calendar.html">Calendar</a>
+</div>
+
+<!-- FLOATING BUBBLES -->
+<a href="chatrooms.html" class="bubble" id="bubbleChat">Chat</a>
+<a href="profile.html" class="bubble" id="bubbleProfile">Profile</a>
+<a href="find-spots.html" class="bubble" id="bubbleSpots">Spots</a>
+<a href="calendar.html" class="bubble" id="bubbleCalendar">Calendar</a>
+
+<!-- MAIN CONTENT -->
+<div class="section">
   <h1 class="section-title">Events</h1>
   <p style="opacity:0.9; font-size:1.15rem;">
     Stay in the loop with group rides, meetups, workshops, and competitions.
   </p>
 
+  <!-- EVENT 1 -->
   <div class="event-card">
     <div class="event-name">Atlanta Night Ride</div>
     <div class="event-meta">Friday • 8:00 PM • Downtown → BeltLine</div>
@@ -68,8 +202,10 @@
       <span class="event-tag">Longboard</span>
       <span class="event-tag">Cruising</span>
     </div>
+    <button class="add-btn" onclick="addEventToCalendar('Atlanta Night Ride','Friday','8:00 PM','Downtown → BeltLine')">Add to Calendar</button>
   </div>
 
+  <!-- EVENT 2 -->
   <div class="event-card">
     <div class="event-name">Beginner Dance Workshop</div>
     <div class="event-meta">Saturday • 2:00 PM • Galaxy Lot</div>
@@ -78,8 +214,10 @@
       <span class="event-tag">Workshop</span>
       <span class="event-tag">Dance</span>
     </div>
+    <button class="add-btn" onclick="addEventToCalendar('Beginner Dance Workshop','Saturday','2:00 PM','Galaxy Lot')">Add to Calendar</button>
   </div>
 
+  <!-- EVENT 3 -->
   <div class="event-card">
     <div class="event-name">Street Jam Session</div>
     <div class="event-meta">Sunday • 4:00 PM • Downtown Plaza</div>
@@ -88,9 +226,62 @@
       <span class="event-tag">Street</span>
       <span class="event-tag">Jam</span>
     </div>
+    <button class="add-btn" onclick="addEventToCalendar('Street Jam Session','Sunday','4:00 PM','Downtown Plaza')">Add to Calendar</button>
   </div>
 
 </div>
+
+<script>
+/* BURGER */
+document.getElementById("hamburger").onclick = () => {
+  document.getElementById("hamburger").classList.toggle("active");
+  document.getElementById("sidebar").classList.toggle("open");
+};
+
+/* FLOATING BUBBLES PONG */
+const bubbles = [
+  { el: bubbleChat, x:60, y:120, vx:1.4, vy:1.1 },
+  { el: bubbleProfile, x:window.innerWidth-220, y:80, vx:-1.3, vy:1.4 },
+  { el: bubbleSpots, x:80, y:window.innerHeight-250, vx:1.6, vy:-1.2 },
+  { el: bubbleCalendar, x:window.innerWidth-220, y:window.innerHeight-250, vx:-1.5, vy:-1.3 }
+];
+function animateBubbles() {
+  const w = window.innerWidth, h = window.innerHeight, size = 150;
+  bubbles.forEach(b => {
+    b.x += b.vx; b.y += b.vy;
+    if (b.x <= 0 || b.x + size >= w) b.vx *= -1;
+    if (b.y <= 0 || b.y + size >= h) b.vy *= -1;
+    b.el.style.left = b.x + "px";
+    b.el.style.top = b.y + "px";
+  });
+  requestAnimationFrame(animateBubbles);
+}
+animateBubbles();
+
+/* UNIVERSAL ADD-TO-CALENDAR API */
+function addEventToCalendar(title, day, time, location) {
+  const user = JSON.parse(localStorage.getItem("rc_user")) || { id:"guest" };
+  const ownerId = user.id || user.username || "guest";
+
+  const items = JSON.parse(localStorage.getItem("rc_calendar_items") || "[]");
+
+  items.push({
+    id: "cal_" + Date.now(),
+    ownerId,
+    type: "event",
+    title,
+    date: day,
+    time,
+    location,
+    link: "",
+    privacy: "public",
+    groups: []
+  });
+
+  localStorage.setItem("rc_calendar_items", JSON.stringify(items));
+  alert("Added to your calendar!");
+}
+</script>
 
 </body>
 </html>
