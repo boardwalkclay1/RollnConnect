@@ -8,79 +8,7 @@
   <link rel="stylesheet" href="styles/style.css">
 
   <!-- GOOGLE MAPS (REPLACE API_KEY LOCALLY) -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=<!DOCTYPE html>
-<html>
-  <head>
-    <title>Maps and Places Autocomplete</title>
-    <script>
-      async function init() {
-        await customElements.whenDefined('gmp-map');
-
-        const map = document.querySelector('gmp-map');
-        const marker = document.querySelector('gmp-advanced-marker');
-        const placePicker = document.querySelector('gmpx-place-picker');
-        const infowindow = new google.maps.InfoWindow();
-
-        map.innerMap.setOptions({
-          mapTypeControl: false
-        });
-
-        placePicker.addEventListener('gmpx-placechange', () => {
-          const place = placePicker.value;
-
-          if (!place.location) {
-            window.alert(
-              "No details available for input: '" + place.name + "'"
-            );
-            infowindow.close();
-            marker.position = null;
-            return;
-          }
-
-          if (place.viewport) {
-            map.innerMap.fitBounds(place.viewport);
-          } else {
-            map.center = place.location;
-            map.zoom = 17;
-          }
-
-          marker.position = place.location;
-          infowindow.setContent(
-            `<strong>${place.displayName}</strong><br>
-             <span>${place.formattedAddress}</span>
-          `);
-          infowindow.open(map.innerMap, marker);
-        });
-      }
-
-      document.addEventListener('DOMContentLoaded', init);
-    </script>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js">
-    </script>
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
-      .place-picker-container {
-        padding: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <gmpx-api-loader key="AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc" solution-channel="GMP_GE_mapsandplacesautocomplete_v2">
-    </gmpx-api-loader>
-    <gmp-map center="40.749933,-73.98633" zoom="13" map-id="DEMO_MAP_ID">
-      <div slot="control-block-start-inline-start" class="place-picker-container">
-        <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
-      </div>
-      <gmp-advanced-marker></gmp-advanced-marker>
-    </gmp-map>
-  </body>
-</html>&libraries=places"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places"></script>
 
   <style>
     body {
@@ -97,14 +25,14 @@
     }
 
     header {
-      padding:12px 16px;
+      padding:10px 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       background:radial-gradient(circle at top,#1d2340,#050712 55%,#02040a);
       position:sticky;
       top:0;
-      z-index:10;
+      z-index:20;
     }
 
     .app-title {
@@ -121,9 +49,23 @@
     }
     nav a:hover { opacity:1; }
 
+    .nearby-notice {
+      position:sticky;
+      top:44px;
+      z-index:19;
+      padding:6px 12px;
+      background:rgba(110,231,183,0.16);
+      border-bottom:1px solid rgba(110,231,183,0.7);
+      font-size:0.8rem;
+      display:none;
+    }
+    .nearby-notice strong {
+      color:#6ee7b7;
+    }
+
     .map-wrap {
       position:relative;
-      height:320px;
+      height:300px;
       width:100%;
     }
 
@@ -133,7 +75,7 @@
     }
 
     .filters-bar {
-      padding:10px 12px;
+      padding:8px 10px;
       display:flex;
       gap:8px;
       overflow-x:auto;
@@ -145,16 +87,56 @@
       padding:6px 10px;
       font-size:0.8rem;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,0.2);
+      border:1px solid transparent;
       background:rgba(255,255,255,0.05);
       color:#fff;
       cursor:pointer;
       white-space:nowrap;
+      display:flex;
+      align-items:center;
+      gap:6px;
     }
-    .filter-btn.active {
+    .filter-dot {
+      width:10px;
+      height:10px;
+      border-radius:999px;
       background:#fff;
-      color:#000;
-      border-color:#fff;
+    }
+    .filter-btn[data-type="skatepark"] .filter-dot { background:#38bdf8; }
+    .filter-btn[data-type="rink"] .filter-dot { background:#a855f7; }
+    .filter-btn[data-type="water"] .filter-dot { background:#0ea5e9; }
+    .filter-btn[data-type="food"] .filter-dot { background:#f97316; }
+    .filter-btn[data-type="parking"] .filter-dot { background:#e5e7eb; }
+    .filter-btn[data-type="restroom"] .filter-dot { background:#22c55e; }
+    .filter-btn[data-type=""] .filter-dot { background:#facc15; }
+
+    .filter-btn.active[data-type="skatepark"] {
+      background:rgba(56,189,248,0.2);
+      border-color:#38bdf8;
+    }
+    .filter-btn.active[data-type="rink"] {
+      background:rgba(168,85,247,0.2);
+      border-color:#a855f7;
+    }
+    .filter-btn.active[data-type="water"] {
+      background:rgba(14,165,233,0.2);
+      border-color:#0ea5e9;
+    }
+    .filter-btn.active[data-type="food"] {
+      background:rgba(249,115,22,0.2);
+      border-color:#f97316;
+    }
+    .filter-btn.active[data-type="parking"] {
+      background:rgba(229,231,235,0.12);
+      border-color:#e5e7eb;
+    }
+    .filter-btn.active[data-type="restroom"] {
+      background:rgba(34,197,94,0.2);
+      border-color:#22c55e;
+    }
+    .filter-btn.active[data-type=""] {
+      background:rgba(250,204,21,0.18);
+      border-color:#facc15;
     }
 
     .content {
@@ -165,9 +147,11 @@
       display:flex;
       gap:8px;
       margin-bottom:10px;
+      flex-wrap:wrap;
     }
     .search-row input {
       flex:1;
+      min-width:140px;
       padding:8px 10px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,0.25);
@@ -184,6 +168,11 @@
       cursor:pointer;
       background:#fff;
       color:#000;
+    }
+    .secondary-btn {
+      background:rgba(255,255,255,0.08);
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.3);
     }
 
     .spot-list {
@@ -296,6 +285,39 @@
     .link-row a:hover {
       text-decoration:underline;
     }
+
+    .user-summary {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:0.8rem;
+      margin-top:8px;
+      padding:6px 8px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .user-avatar {
+      width:26px;
+      height:26px;
+      border-radius:999px;
+      overflow:hidden;
+      flex-shrink:0;
+    }
+    .user-avatar img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .user-summary button {
+      border:none;
+      background:transparent;
+      color:#8bd5ff;
+      font-size:0.78rem;
+      cursor:pointer;
+      padding:0;
+    }
   </style>
 </head>
 
@@ -310,24 +332,52 @@
     </nav>
   </header>
 
+  <div id="nearbyNotice" class="nearby-notice">
+    <strong>Nearby skaters:</strong> Someone is rolling within 5 miles of you.
+  </div>
+
   <div class="map-wrap">
     <div id="map"></div>
   </div>
 
   <div class="filters-bar">
-    <button class="filter-btn active" data-type="">All</button>
-    <button class="filter-btn" data-type="skatepark">Skateparks</button>
-    <button class="filter-btn" data-type="rink">Rinks</button>
-    <button class="filter-btn" data-type="water">Water</button>
-    <button class="filter-btn" data-type="food">Food</button>
-    <button class="filter-btn" data-type="parking">Parking Lots</button>
-    <button class="filter-btn" data-type="restroom">Restrooms</button>
+    <button class="filter-btn active" data-type="">
+      <span class="filter-dot"></span>All
+    </button>
+    <button class="filter-btn" data-type="skatepark">
+      <span class="filter-dot"></span>Skateparks
+    </button>
+    <button class="filter-btn" data-type="rink">
+      <span class="filter-dot"></span>Rinks
+    </button>
+    <button class="filter-btn" data-type="water">
+      <span class="filter-dot"></span>Water
+    </button>
+    <button class="filter-btn" data-type="food">
+      <span class="filter-dot"></span>Food
+    </button>
+    <button class="filter-btn" data-type="parking">
+      <span class="filter-dot"></span>Parking
+    </button>
+    <button class="filter-btn" data-type="restroom">
+      <span class="filter-dot"></span>Restrooms
+    </button>
   </div>
 
   <main class="content">
     <div class="search-row">
       <input id="searchInput" placeholder="Search a place or address">
       <button id="searchBtn">Search</button>
+      <button id="locateBtn" class="secondary-btn">My location</button>
+      <button id="liveBtn" class="secondary-btn">Live on</button>
+    </div>
+
+    <div id="userSummary" class="user-summary" style="display:none;">
+      <div class="user-avatar"><img id="userAvatarImg" src="" alt=""></div>
+      <div style="flex:1;">
+        <div id="userSummaryText">You are live on the map.</div>
+        <button id="profileBtn">View profile</button>
+      </div>
     </div>
 
     <div class="spot-list" id="spotList"></div>
@@ -405,6 +455,18 @@ const reviewTextEl=document.getElementById("reviewText");
 const rateSmoothEl=document.getElementById("rateSmooth");
 const rateDifficultyEl=document.getElementById("rateDifficulty");
 
+const nearbyNotice=document.getElementById("nearbyNotice");
+
+/* user + live location */
+let userMarker=null;
+let liveWatchId=null;
+const userSummary=document.getElementById("userSummary");
+const userAvatarImg=document.getElementById("userAvatarImg");
+const userSummaryText=document.getElementById("userSummaryText");
+
+/* other skaters placeholder (expects shared storage: rc_live_skaters) */
+let otherSkaterMarkers=[];
+
 function initMap(){
   map=new google.maps.Map(document.getElementById("map"),{
     center:{lat:33.8,lng:-84.3},
@@ -412,6 +474,9 @@ function initMap(){
     disableDefaultUI:false
   });
   placesService=new google.maps.places.PlacesService(map);
+
+  loadUserProfile();
+  renderOtherSkaters();
 }
 window.onload=initMap;
 
@@ -420,6 +485,7 @@ function clearMarkers(){
   markers=[];
 }
 
+/* list + reviews */
 function renderSpotList(){
   spotListEl.innerHTML="";
   spots.forEach((spot,index)=>{
@@ -515,6 +581,7 @@ function focusSpot(index){
   spotDetailsSection.style.display="block";
 }
 
+/* search + filters */
 function runSearch(query){
   if(!query||!placesService) return;
 
@@ -572,6 +639,7 @@ document.querySelectorAll(".filter-btn").forEach(btn=>{
   });
 });
 
+/* reviews submit */
 document.getElementById("submitReview").onclick=()=>{
   if(!activeSpot) return;
   const name=(reviewNameEl.value||"Anonymous").trim();
@@ -596,6 +664,7 @@ document.getElementById("submitReview").onclick=()=>{
   rateDifficultyEl.value="";
 };
 
+/* calendar + events linkage */
 document.getElementById("addToCalendarBtn").onclick=()=>{
   if(!activeSpot) return;
   const events=JSON.parse(localStorage.getItem("rc_calendar")||"[]");
@@ -622,6 +691,151 @@ document.getElementById("addToCalendarBtn").onclick=()=>{
   });
   localStorage.setItem("rc_events",JSON.stringify(allEvents));
 };
+
+/* simple location + live mode */
+function locateOnce(){
+  if(!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const {latitude,longitude}=pos.coords;
+    const loc={lat:latitude,lng:longitude};
+    map.panTo(loc);
+    map.setZoom(14);
+    placeOrMoveUserMarker(loc);
+    checkNearbySkaters(loc);
+  });
+}
+
+document.getElementById("locateBtn").onclick=locateOnce;
+
+function placeOrMoveUserMarker(loc){
+  const profile=JSON.parse(localStorage.getItem("rc_profile")||"{}");
+  const avatar=profile.avatarUrl||"styles/default-avatar.png";
+
+  if(!userMarker){
+    const icon={
+      url:avatar,
+      scaledSize:new google.maps.Size(40,40),
+      origin:new google.maps.Point(0,0),
+      anchor:new google.maps.Point(20,20)
+    };
+    userMarker=new google.maps.Marker({
+      map,
+      position:loc,
+      icon,
+      title:profile.displayName||"You"
+    });
+    userMarker.addListener("click",()=>{
+      window.location.href="profile.html";
+    });
+  }else{
+    userMarker.setPosition(loc);
+  }
+
+  userAvatarImg.src=avatar;
+  userSummaryText.textContent="Your live location is visible on this device.";
+  userSummary.style.display="flex";
+
+  // set own live data for shared storage
+  const me={
+    id:"me",
+    name:profile.displayName||"You",
+    lat:loc.lat,
+    lng:loc.lng,
+    avatarUrl:avatar,
+    updatedAt:Date.now()
+  };
+  localStorage.setItem("rc_live_me",JSON.stringify(me));
+}
+
+/* live tracking toggle */
+document.getElementById("liveBtn").onclick=()=>{
+  const btn=document.getElementById("liveBtn");
+  if(liveWatchId!==null){
+    navigator.geolocation.clearWatch(liveWatchId);
+    liveWatchId=null;
+    btn.textContent="Live on";
+    userSummaryText.textContent="Live location is off.";
+    nearbyNotice.style.display="none";
+    return;
+  }
+  if(!navigator.geolocation) return;
+  liveWatchId=navigator.geolocation.watchPosition(pos=>{
+    const loc={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    placeOrMoveUserMarker(loc);
+    checkNearbySkaters(loc);
+  });
+  btn.textContent="Live off";
+};
+
+/* profile navigation */
+document.getElementById("profileBtn").onclick=()=>{
+  window.location.href="profile.html";
+};
+
+/* other skaters + notification logic
+   expects localStorage rc_live_skaters = [ { id,name,lat,lng,avatarUrl,updatedAt }, ... ]
+*/
+function renderOtherSkaters(){
+  otherSkaterMarkers.forEach(m=>m.setMap(null));
+  otherSkaterMarkers=[];
+
+  const arr=JSON.parse(localStorage.getItem("rc_live_skaters")||"[]");
+  arr.forEach(s=>{
+    const icon={
+      url:s.avatarUrl||"styles/default-avatar.png",
+      scaledSize:new google.maps.Size(34,34),
+      origin:new google.maps.Point(0,0),
+      anchor:new google.maps.Point(17,17)
+    };
+    const marker=new google.maps.Marker({
+      map,
+      position:{lat:s.lat,lng:s.lng},
+      icon,
+      title:s.name||"Skater"
+    });
+    otherSkaterMarkers.push(marker);
+  });
+}
+
+function milesBetween(lat1,lng1,lat2,lng2){
+  const toRad=x=>x*Math.PI/180;
+  const R=3958.8;
+  const dLat=toRad(lat2-lat1);
+  const dLng=toRad(lng2-lng1);
+  const a=Math.sin(dLat/2)**2+
+          Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLng/2)**2;
+  const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  return R*c;
+}
+
+function checkNearbySkaters(loc){
+  const arr=JSON.parse(localStorage.getItem("rc_live_skaters")||"[]");
+  let found=false;
+  arr.forEach(s=>{
+    const d=milesBetween(loc.lat,loc.lng,s.lat,s.lng);
+    if(d<=5) found=true;
+  });
+  nearbyNotice.style.display=found?"block":"none";
+}
+
+/* periodically refresh other skaters from shared storage */
+setInterval(()=>{
+  renderOtherSkaters();
+  if(userMarker){
+    const pos=userMarker.getPosition();
+    if(pos) checkNearbySkaters({lat:pos.lat(),lng:pos.lng()});
+  }
+},8000);
+
+/* load profile summary on start (even before live) */
+function loadUserProfile(){
+  const profile=JSON.parse(localStorage.getItem("rc_profile")||"{}");
+  if(!profile || Object.keys(profile).length===0) return;
+  const avatar=profile.avatarUrl||"styles/default-avatar.png";
+  userAvatarImg.src=avatar;
+  userSummaryText.textContent="Set live to share your current location.";
+  userSummary.style.display="flex";
+}
 </script>
 </body>
 </html>
