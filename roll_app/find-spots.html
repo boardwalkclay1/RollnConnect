@@ -6,8 +6,8 @@
 
   <link rel="stylesheet" href="styles/style.css">
 
-  <!-- GOOGLE MAPS -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places,marker"></script>
+  <!-- GOOGLE MAPS (REPLACE API_KEY LOCALLY) -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places,marker"></script>
 
   <style>
     body {
@@ -121,7 +121,7 @@
       border-radius:20px;
       box-shadow:0 0 30px rgba(255,255,255,0.3);
       z-index:9999;
-      width:280px;
+      width:320px;
     }
 
     .search-panel input {
@@ -139,6 +139,7 @@
       flex-wrap:wrap;
       gap:10px;
       margin-top:10px;
+      margin-bottom:10px;
     }
 
     .cat-btn {
@@ -156,7 +157,7 @@
     }
 
     .loc-btn {
-      margin-top:12px;
+      margin-top:6px;
       width:100%;
       padding:10px;
       background:#fff;
@@ -172,38 +173,135 @@
       box-shadow:0 0 20px rgba(255,255,255,0.8);
     }
 
-    /* SPOT DETAILS PANEL */
+    .results-list {
+      max-height:180px;
+      margin-top:10px;
+      overflow-y:auto;
+      padding-right:4px;
+    }
+    .result-item {
+      padding:8px 10px;
+      border-radius:10px;
+      background:rgba(255,255,255,0.05);
+      margin-bottom:6px;
+      cursor:pointer;
+      font-size:0.85rem;
+    }
+    .result-item:hover {
+      background:rgba(255,255,255,0.2);
+    }
+    .result-item-title {
+      font-weight:600;
+      margin-bottom:2px;
+    }
+    .result-item-meta {
+      font-size:0.75rem;
+      opacity:0.85;
+    }
+
     .spot-details {
       position:fixed;
       bottom:0;
       left:50%;
       transform:translateX(-50%);
       width:90%;
-      max-width:420px;
-      background:rgba(0,0,0,0.75);
+      max-width:480px;
+      background:rgba(0,0,0,0.82);
       backdrop-filter:blur(20px);
-      padding:20px;
+      padding:18px 18px 14px;
       border-radius:20px 20px 0 0;
       box-shadow:0 0 30px rgba(255,255,255,0.3);
       z-index:9999;
       display:none;
+      max-height:55vh;
+      overflow-y:auto;
     }
 
-    .spot-details h2 {
-      margin:0 0 10px;
-      font-size:1.4rem;
+    .spot-header {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      margin-bottom:8px;
+    }
+    .spot-header h2 {
+      margin:0;
+      font-size:1.3rem;
+    }
+    .spot-rating {
+      font-size:0.85rem;
+      text-align:right;
+      opacity:0.9;
+    }
+    .spot-address {
+      font-size:0.85rem;
+      opacity:0.9;
+      margin-bottom:8px;
     }
 
-    .spot-details button {
+    .spot-actions {
+      margin:8px 0 12px;
+    }
+    .spot-actions button {
       width:100%;
-      padding:12px;
+      padding:10px;
       background:#fff;
       color:#000;
       border:none;
-      border-radius:12px;
+      border-radius:10px;
       font-weight:600;
-      margin-top:15px;
       cursor:pointer;
+      margin-bottom:8px;
+    }
+
+    .reviews-section {
+      border-top:1px solid rgba(255,255,255,0.15);
+      padding-top:8px;
+      margin-top:8px;
+    }
+    .reviews-section h3 {
+      font-size:1rem;
+      margin:0 0 6px;
+    }
+    .reviews-list {
+      max-height:120px;
+      overflow-y:auto;
+      margin-bottom:8px;
+    }
+    .review-item {
+      padding:6px 8px;
+      border-radius:8px;
+      background:rgba(255,255,255,0.06);
+      margin-bottom:4px;
+      font-size:0.8rem;
+    }
+    .review-meta {
+      font-weight:600;
+      margin-bottom:2px;
+      font-size:0.78rem;
+    }
+
+    .review-form input,
+    .review-form textarea {
+      width:100%;
+      border-radius:8px;
+      border:none;
+      padding:6px 8px;
+      margin-bottom:6px;
+      font-size:0.8rem;
+      background:rgba(255,255,255,0.12);
+      color:#fff;
+    }
+    .review-form button {
+      width:100%;
+      padding:8px;
+      border:none;
+      border-radius:8px;
+      font-size:0.85rem;
+      font-weight:600;
+      cursor:pointer;
+      background:#fff;
+      color:#000;
     }
   </style>
 </head>
@@ -245,15 +343,32 @@
   </div>
 
   <button class="loc-btn" id="locateMe">Use My Location</button>
+
+  <div class="results-list" id="resultsList"></div>
 </div>
 
 <div id="map"></div>
 
-<!-- SPOT DETAILS -->
 <div id="spotDetails" class="spot-details">
-  <h2 id="spotName"></h2>
-  <p id="spotAddress"></p>
-  <button id="addToCalendar">Add to My Calendar</button>
+  <div class="spot-header">
+    <h2 id="spotName"></h2>
+    <div class="spot-rating" id="spotRating"></div>
+  </div>
+  <div class="spot-address" id="spotAddress"></div>
+
+  <div class="spot-actions">
+    <button id="addToCalendar">Add to My Calendar</button>
+  </div>
+
+  <div class="reviews-section">
+    <h3>Session Reviews</h3>
+    <div class="reviews-list" id="reviewsList"></div>
+    <div class="review-form">
+      <input id="reviewName" placeholder="Your name or handle">
+      <textarea id="reviewText" rows="2" placeholder="How was the surface, vibe, safety?"></textarea>
+      <button id="submitReview">Post Review</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -261,9 +376,14 @@
 const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
 h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
 
-/* MAP */
+/* MAP + PLACES */
 let map;
-let activeSpot = null;
+let placesService;
+let markers=[];
+let currentSpots=[];
+let activeSpot=null;
+
+const resultsList=document.getElementById("resultsList");
 
 const cosmicStyle=[
   {elementType:"geometry",stylers:[{color:"#0a0a0a"}]},
@@ -281,6 +401,8 @@ function initMap(){
     styles:cosmicStyle,
     disableDefaultUI:true,
   });
+
+  placesService=new google.maps.places.PlacesService(map);
 
   map.addListener("click",e=>{
     const marker=new google.maps.marker.AdvancedMarkerElement({
@@ -320,6 +442,7 @@ function placeUserMarker(lat,lng){
 
 /* USE MY LOCATION */
 document.getElementById("locateMe").onclick=()=>{
+  if(!navigator.geolocation) return;
   navigator.geolocation.getCurrentPosition(pos=>{
     const {latitude,longitude}=pos.coords;
     map.panTo({lat:latitude,lng:longitude});
@@ -328,24 +451,128 @@ document.getElementById("locateMe").onclick=()=>{
   });
 };
 
+/* CLEAR MARKERS */
+function clearMarkers(){
+  markers.forEach(m=>m.map=null);
+  markers=[];
+}
+
+/* RESULTS LIST RENDER */
+function renderResultsList(spots){
+  resultsList.innerHTML="";
+  spots.forEach((spot,idx)=>{
+    const div=document.createElement("div");
+    div.className="result-item";
+    div.dataset.index=idx;
+
+    const title=document.createElement("div");
+    title.className="result-item-title";
+    title.textContent=spot.name;
+
+    const meta=document.createElement("div");
+    meta.className="result-item-meta";
+    const ratingPart=spot.rating?`⭐ ${spot.rating.toFixed(1)} · `:"";
+    meta.textContent=`${ratingPart}${spot.formatted_address||""}`;
+
+    div.appendChild(title);
+    div.appendChild(meta);
+
+    div.onclick=()=>focusSpot(idx);
+
+    resultsList.appendChild(div);
+  });
+}
+
 /* SPOT DETAILS PANEL */
 const details=document.getElementById("spotDetails");
 const nameEl=document.getElementById("spotName");
 const addrEl=document.getElementById("spotAddress");
+const ratingEl=document.getElementById("spotRating");
+const reviewsList=document.getElementById("reviewsList");
+const reviewName=document.getElementById("reviewName");
+const reviewText=document.getElementById("reviewText");
 
-function showSpotDetails(name,address,lat,lng){
-  activeSpot={name,address,lat,lng};
-  nameEl.textContent=name;
-  addrEl.textContent=address;
+function loadReviews(placeId){
+  const key="rc_reviews_"+placeId;
+  return JSON.parse(localStorage.getItem(key)||"[]");
+}
+
+function saveReviews(placeId,reviews){
+  const key="rc_reviews_"+placeId;
+  localStorage.setItem(key,JSON.stringify(reviews));
+}
+
+function renderReviews(placeId){
+  const reviews=loadReviews(placeId);
+  reviewsList.innerHTML="";
+  if(!reviews.length){
+    const empty=document.createElement("div");
+    empty.style.fontSize="0.8rem";
+    empty.style.opacity="0.7";
+    empty.textContent="No reviews yet. Be the first to log this spot.";
+    reviewsList.appendChild(empty);
+    return;
+  }
+  reviews.forEach(r=>{
+    const item=document.createElement("div");
+    item.className="review-item";
+
+    const meta=document.createElement("div");
+    meta.className="review-meta";
+    meta.textContent=`${r.name||"Anonymous"} · ${new Date(r.time).toLocaleDateString()}`;
+
+    const body=document.createElement("div");
+    body.textContent=r.text;
+
+    item.appendChild(meta);
+    item.appendChild(body);
+    reviewsList.appendChild(item);
+  });
+}
+
+function showSpotDetails(spot){
+  activeSpot={
+    placeId:spot.place_id,
+    name:spot.name,
+    address:spot.formatted_address||"",
+    lat:spot.geometry.location.lat(),
+    lng:spot.geometry.location.lng(),
+    rating:spot.rating||null,
+    userRatings:spot.user_ratings_total||0
+  };
+
+  nameEl.textContent=activeSpot.name;
+  addrEl.textContent=activeSpot.address;
+
+  if(activeSpot.rating){
+    ratingEl.textContent=`⭐ ${activeSpot.rating.toFixed(1)} (${activeSpot.userRatings} Google ratings)`;
+  }else{
+    ratingEl.textContent="No rating data";
+  }
+
+  reviewName.value="";
+  reviewText.value="";
+  renderReviews(activeSpot.placeId);
+
   details.style.display="block";
+}
+
+/* FOCUS SPOT FROM LIST */
+function focusSpot(index){
+  const spot=currentSpots[index];
+  if(!spot) return;
+
+  const loc=spot.geometry.location;
+  map.panTo(loc);
+  map.setZoom(15);
+
+  showSpotDetails(spot);
 }
 
 /* ADD TO CALENDAR (IN‑APP) */
 document.getElementById("addToCalendar").onclick=()=>{
   if(!activeSpot) return;
-
   const events=JSON.parse(localStorage.getItem("rc_calendar")||"[]");
-
   events.push({
     title:activeSpot.name,
     location:activeSpot.address,
@@ -353,44 +580,62 @@ document.getElementById("addToCalendar").onclick=()=>{
     lng:activeSpot.lng,
     timestamp:Date.now()
   });
-
   localStorage.setItem("rc_calendar",JSON.stringify(events));
-
   details.style.display="none";
 };
 
-/* SEARCH */
+/* SUBMIT REVIEW */
+document.getElementById("submitReview").onclick=()=>{
+  if(!activeSpot) return;
+  const name=(reviewName.value||"Anonymous").trim();
+  const text=(reviewText.value||"").trim();
+  if(!text) return;
+
+  const reviews=loadReviews(activeSpot.placeId);
+  reviews.push({
+    name,
+    text,
+    time:Date.now()
+  });
+  saveReviews(activeSpot.placeId,reviews);
+  renderReviews(activeSpot.placeId);
+  reviewText.value="";
+};
+
+/* SEARCH (MULTI‑RESULT, REAL DATA) */
 function runSearch(q){
-  const service=new google.maps.places.PlacesService(map);
+  if(!q||!map||!placesService) return;
 
   const request={
     query:q,
-    fields:["name","geometry","formatted_address"]
+    location:map.getCenter(),
+    radius:15000
   };
 
-  service.findPlaceFromQuery(request,(results,status)=>{
-    if(status!==google.maps.places.PlacesServiceStatus.OK||!results.length) return;
+  placesService.textSearch(request,(results,status)=>{
+    if(status!==google.maps.places.PlacesServiceStatus.OK||!results||!results.length) return;
 
-    const spot=results[0];
-    const loc=spot.geometry.location;
+    currentSpots=results;
+    clearMarkers();
 
-    map.panTo(loc);
+    results.forEach((spot,idx)=>{
+      const loc=spot.geometry.location;
+      const marker=new google.maps.marker.AdvancedMarkerElement({
+        map,
+        position:loc,
+        title:spot.name
+      });
+      marker.addListener("click",()=>{
+        focusSpot(idx);
+      });
+      markers.push(marker);
+    });
+
+    renderResultsList(results);
+
+    map.panTo(results[0].geometry.location);
     map.setZoom(14);
-
-    const marker=new google.maps.marker.AdvancedMarkerElement({
-      map,
-      position:loc,
-      title:spot.name
-    });
-
-    marker.addListener("click",()=>{
-      showSpotDetails(
-        spot.name,
-        spot.formatted_address,
-        loc.lat(),
-        loc.lng()
-      );
-    });
+    showSpotDetails(results[0]);
   });
 }
 
