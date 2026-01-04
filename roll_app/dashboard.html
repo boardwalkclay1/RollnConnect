@@ -15,7 +15,6 @@
       overflow-x:hidden;
     }
 
-    /* STARFIELDS */
     .stars1,.stars2,.stars3 {
       position:fixed; inset:0;
       background:url('styles/stars-white.png') repeat;
@@ -29,7 +28,6 @@
     @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
     @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-    /* SIDEBAR */
     .sidebar {
       position:fixed;
       top:50%;
@@ -47,7 +45,6 @@
     }
     .sidebar.open { left:0; }
 
-    /* BURGER */
     .hamburger {
       position:fixed;
       top:25px;
@@ -87,7 +84,6 @@
       box-shadow:0 0 20px rgba(255,255,255,0.4);
     }
 
-    /* PAGE WRAPPER */
     .page-wrapper {
       padding-top:120px;
       padding-bottom:80px;
@@ -95,7 +91,6 @@
       margin:0 auto;
     }
 
-    /* DASHBOARD GRID */
     .grid {
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
@@ -259,9 +254,10 @@
   const hb=document.getElementById("hamburger"), sb=document.getElementById("sidebar");
   hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
 
-  let profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
-  profile.posts = profile.posts || [];
-  profile.lessons = profile.lessons || [];
+  const profile = JSON.parse(localStorage.getItem("rc_user_profile") || "{}");
+  const lessons = JSON.parse(localStorage.getItem("rc_user_lessons") || "[]");
+  const clips   = JSON.parse(localStorage.getItem("rc_user_clips") || "[]");
+  const posts   = JSON.parse(localStorage.getItem("rc_user_posts") || "[]");
 
   const dashAvatar=document.getElementById("dashAvatar");
   const dashName=document.getElementById("dashName");
@@ -272,14 +268,14 @@
   const recentPosts=document.getElementById("recentPosts");
   const dashLessons=document.getElementById("dashLessons");
 
-  dashAvatar.style.backgroundImage = `url('${profile.avatarDataUrl || "styles/default-avatar.png"}')`;
+  dashAvatar.style.backgroundImage = `url('${profile.avatarUrl || "styles/default-avatar.png"}')`;
   dashName.textContent = profile.name || "Your Name";
   dashBio.textContent = profile.bio || "Your bio goes here.";
 
-  dashPosts.textContent = profile.posts.length;
+  dashPosts.textContent = posts.length;
 
   let totalLikes=0,totalViews=0;
-  profile.posts.forEach(p=>{
+  posts.forEach(p=>{
     totalLikes += p.likes || 0;
     totalViews += p.views || 0;
   });
@@ -287,7 +283,7 @@
   dashViews.textContent = totalViews;
 
   recentPosts.innerHTML="";
-  profile.posts.slice(-3).reverse().forEach(p=>{
+  posts.slice(-3).reverse().forEach(p=>{
     const wrap=document.createElement("div");
     wrap.className="post-preview";
     if(p.type==="video"){
@@ -303,7 +299,7 @@
   });
 
   dashLessons.innerHTML="";
-  profile.lessons.forEach(ls=>{
+  lessons.forEach(ls=>{
     const div=document.createElement("div");
     div.className="lesson-item";
     div.innerHTML=`
