@@ -49,6 +49,7 @@
       box-shadow: 0 0 20px #4a4aff;
       transition: 0.35s ease;
       z-index: 999;
+      overflow-y: auto;
     }
 
     .side-menu.open {
@@ -135,11 +136,6 @@
       box-shadow: 0 0 16px rgba(255, 74, 106, 0.8);
     }
 
-    .btn-danger:hover {
-      box-shadow: 0 0 20px rgba(255, 110, 140, 1);
-      transform: translateY(-2px);
-    }
-
     .btn-outline {
       background: transparent;
       border: 1px solid #4a4aff;
@@ -163,7 +159,7 @@
     }
 
     code {
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
       font-size: 12px;
       background: #14141c;
       padding: 2px 4px;
@@ -192,7 +188,7 @@
         return;
       }
       localStorage.removeItem("rc_market_items");
-      alert("Marketplace items cleared from this browser.");
+      alert("Marketplace items cleared.");
       box.checked = false;
       loadMarketplaceSettings();
     }
@@ -204,8 +200,7 @@
         return;
       }
       localStorage.removeItem("rc_market_items");
-      // rc_profile stays, because main app uses it too – unified profile
-      alert("Marketplace item data cleared. Profile is preserved.");
+      alert("Marketplace data cleared.");
       box.checked = false;
       loadMarketplaceSettings();
     }
@@ -218,27 +213,35 @@
 
   <!-- HAMBURGER -->
   <div class="hamburger" onclick="toggleMenu()">
-    <div></div>
-    <div></div>
-    <div></div>
+    <div></div><div></div><div></div>
   </div>
 
-  <!-- SIDE MENU -->
+  <!-- FIXED MARKETPLACE‑ONLY SIDEBAR -->
   <div class="side-menu">
-    <a href="dashboard.html">Dashboard</a>
+
+    <!-- Marketplace Core -->
     <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
     <a href="marketplace.html">Marketplace</a>
     <a href="sell-item.html">Sell Item</a>
+    <a href="your-listings.html">Your Listings</a>
+    <a href="giveaways.html">Giveaways</a>
+
+    <!-- Marketplace Expanded -->
+    <a href="marketplace-messages.html">Messages</a>
+    <a href="marketplace-offers.html">Offers</a>
+    <a href="marketplace-favorites.html">Favorites</a>
+    <a href="marketplace-notifications.html">Notifications</a>
+
+    <!-- Marketplace User -->
     <a href="marketplace-profile.html">Marketplace Profile</a>
     <a href="marketplace-settings.html">Marketplace Settings</a>
-    <a href="profile.html">Main Profile</a>
-    <a href="settings.html">Main Settings</a>
+
   </div>
 
   <div class="page-container">
     <h1>Marketplace Settings</h1>
     <div class="subtitle">
-      Control marketplace data stored locally in this browser while keeping your main Roll ’n Connect profile unified.
+      Manage marketplace data stored locally in this browser.
     </div>
 
     <div class="section">
@@ -249,44 +252,38 @@
       <div class="section-text">
         Current username: <strong id="currentUser">...</strong>
       </div>
-      <div class="small">
-        To change your name, handle, or city, edit your main profile:
-        <a href="profile.html" style="color:#aaaaff;">Open Main Profile</a>
-      </div>
     </div>
 
     <div class="section">
       <div class="section-title">Marketplace Items Storage</div>
       <div class="section-text">
-        All marketplace items are stored locally under <code>rc_market_items</code>.
+        Items stored locally under <code>rc_market_items</code>.
         <br />
         Current stored items: <strong id="itemCount">0</strong>
       </div>
       <label class="confirm-text">
         <input type="checkbox" id="confirmMarket" />
-        I understand this removes all marketplace items from this browser.
+        I understand this removes all marketplace items.
       </label>
       <button class="btn-danger" onclick="clearMarketplaceItems()">
         Clear Marketplace Items
       </button>
-      <div class="small">
-        This doesn’t touch your main profile. It only resets marketplace listings in this browser.
-      </div>
     </div>
 
     <div class="section">
-      <div class="section-title">Reset Marketplace Data Only</div>
+      <div class="section-title">Reset Marketplace Data</div>
       <div class="section-text">
-        Use this if you want to wipe all marketplace item data but keep your unified app profile untouched.
+        Clears all marketplace item data but keeps your main profile.
       </div>
       <label class="confirm-text">
         <input type="checkbox" id="confirmAll" />
-        I understand this will clear all marketplace item data from this browser.
+        I understand this will clear all marketplace data.
       </label>
       <button class="btn-outline" onclick="clearAllMarketplaceData()">
         Reset Marketplace Data
       </button>
     </div>
+
   </div>
 </body>
 </html>
