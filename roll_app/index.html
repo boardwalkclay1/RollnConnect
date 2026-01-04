@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Roll ’n Connect — Cosmic Hub</title>
-
-<link rel="stylesheet" href="styles.css">
+<title>Roll ’n Connect — by Boardwalk Clay</title>
 
 <style>
 /* GLOBAL */
@@ -16,6 +14,7 @@ body {
   font-family:'Inter',sans-serif;
   overflow-x:hidden;
   overflow-y:auto;
+  position:relative;
   min-height:100vh;
 }
 
@@ -34,7 +33,7 @@ body {
 @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
 @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
 
-/* BURGER */
+/* BURGER MENU */
 .hamburger {
   position:fixed;
   top:25px;
@@ -105,26 +104,32 @@ body {
   box-shadow:0 0 18px rgba(255,255,255,0.4);
 }
 
+/* MAIN CONTENT */
+.main-wrapper{padding:40px 20px 80px;}
+
 /* HERO */
-.hero {
+.title-wrapper {
   text-align:center;
-  padding-top:160px;
-  padding-bottom:160px;
+  padding-top:140px;
+  padding-bottom:200px;
+  z-index:5;
+  position:relative;
 }
-.hero-title {
-  font-size:7rem;
+.main-title {
+  font-size:8rem;
   font-weight:900;
-  letter-spacing:3px;
+  letter-spacing:4px;
   text-shadow:0 0 80px rgba(255,255,255,1);
+  margin-bottom:20px;
 }
-.hero-sub {
-  font-size:1.6rem;
+.subtitle {
+  font-size:1.8rem;
   opacity:0.9;
-  max-width:800px;
-  margin:20px auto 0;
+  max-width:900px;
+  margin:0 auto;
   text-shadow:0 0 30px rgba(255,255,255,0.8);
 }
-.hero-user {
+.signature {
   margin-top:20px;
   font-size:1.2rem;
   opacity:0.8;
@@ -140,6 +145,8 @@ body {
   margin-bottom:60px;
   border-top:1px solid rgba(255,255,255,0.2);
   border-bottom:1px solid rgba(255,255,255,0.2);
+  position:relative;
+  z-index:2;
 }
 .panel-title {
   font-size:2.4rem;
@@ -233,25 +240,30 @@ body {
   <ul class="nav-links" id="navLinks"></ul>
 </nav>
 
+<div class="main-wrapper">
+
 <!-- HERO -->
-<div class="hero" id="heroBlock">
-  <div class="hero-title">ROLL ’N CONNECT</div>
-  <div class="hero-sub">The cosmic skating universe — floating, glowing, alive.</div>
+<div class="title-wrapper" id="heroBlock">
+  <div class="main-title">ROLL ’N CONNECT</div>
+  <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
+  <div class="signature">by Boardwalk Clay</div>
 </div>
 
-<!-- MARKETPLACE -->
+<!-- MARKETPLACE PREVIEW -->
 <div class="panel">
   <div class="panel-title">Marketplace</div>
   <div class="items-grid" id="marketplaceItems"></div>
 </div>
 
-<!-- GIVEAWAY -->
+<!-- GIVEAWAY PREVIEW -->
 <div class="panel">
   <div class="panel-title">Giveaway Items</div>
   <div class="items-grid" id="giveawayItems"></div>
 </div>
 
-<!-- FLOATING BUBBLES -->
+</div>
+
+<!-- FLOATING BUTTONS -->
 <a href="chatrooms.html" class="bubble" id="b1">Chatrooms</a>
 <a href="find-spots.html" class="bubble" id="b2">Find Spots</a>
 <a href="events.html" class="bubble" id="b3">Events</a>
@@ -304,8 +316,9 @@ function renderHero() {
 
   const hero = document.getElementById("heroBlock");
   hero.innerHTML = `
-    <div class="hero-title">Welcome back, ${user.profile.name || user.username}!</div>
-    <div class="hero-sub">${user.profile.bio || "Your cosmic skating journey continues."}</div>
+    <div class="main-title">Welcome back, ${user.profile.name || user.username}!</div>
+    <div class="subtitle">${user.profile.bio || "Your cosmic skating journey continues."}</div>
+    <div class="signature">Roll ’n Connect — by Boardwalk Clay</div>
   `;
 }
 renderHero();
