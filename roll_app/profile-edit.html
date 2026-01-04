@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Edit Profile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     :root{--bg:#02040a;--card:#0c1020;--text:#fff;--border:rgba(255,255,255,0.18);}
     *{box-sizing:border-box;margin:0;padding:0;}
@@ -86,13 +87,13 @@
       </div>
 
       <div class="field">
-        <label for="avatarUrlInput">Avatar URL</label>
-        <input id="avatarUrlInput" type="url" />
+        <label for="avatarFileInput">Profile Picture</label>
+        <input id="avatarFileInput" type="file" accept="image/*" />
       </div>
 
       <div class="field">
-        <label for="profileClipUrlInput">Profile Clip URL</label>
-        <input id="profileClipUrlInput" type="url" />
+        <label for="profileClipFileInput">Profile Clip (Video)</label>
+        <input id="profileClipFileInput" type="file" accept="video/*" />
       </div>
 
       <div class="field">
@@ -111,8 +112,6 @@
       </div>
 
       <button class="btn btn-primary" id="saveProfileBtn" type="button">Save profile</button>
-
-      <!-- FIXED LINE BELOW -->
       <button class="btn" type="button" onclick="window.location.href='profile.html'">Back to profile</button>
     </div>
 
@@ -150,8 +149,8 @@
       <h2>Clips</h2>
 
       <div class="field">
-        <label for="clipUrlInput">Clip URL</label>
-        <input id="clipUrlInput" type="url" />
+        <label for="clipFileInput">Upload Clip</label>
+        <input id="clipFileInput" type="file" accept="video/*" />
       </div>
 
       <button class="btn btn-primary" id="addClipBtn" type="button">Add clip</button>
@@ -176,29 +175,40 @@
       }
     }
 
-    function loadProfileForm() {
+    function fileToBase64(file) {
+      return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function loadProfileForm() {
       const p = safeParse(LS_PROFILE, {});
       document.getElementById("nameInput").value         = p.name || "";
       document.getElementById("usernameInput").value     = p.username || "";
       document.getElementById("bioInput").value          = p.bio || "";
-      document.getElementById("avatarUrlInput").value    = p.avatarUrl || "";
-      document.getElementById("profileClipUrlInput").value = p.profileClipUrl || "";
       document.getElementById("postsCountInput").value   = p.postsCount || 0;
       document.getElementById("clipsCountInput").value   = p.clipsCount || 0;
       document.getElementById("eventsCountInput").value  = p.eventsCount || 0;
     }
 
-    function saveProfileForm() {
-      const p = {
-        name:        document.getElementById("nameInput").value.trim(),
-        username:    document.getElementById("usernameInput").value.trim(),
-        bio:         document.getElementById("bioInput").value.trim(),
-        avatarUrl:   document.getElementById("avatarUrlInput").value.trim(),
-        profileClipUrl: document.getElementById("profileClipUrlInput").value.trim(),
-        postsCount:  Number(document.getElementById("postsCountInput").value) || 0,
-        clipsCount:  Number(document.getElementById("clipsCountInput").value) || 0,
-        eventsCount: Number(document.getElementById("eventsCountInput").value) || 0
-      };
+    async function saveProfileForm() {
+      let p = safeParse(LS_PROFILE, {});
+
+      p.name        = document.getElementById("nameInput").value.trim();
+      p.username    = document.getElementById("usernameInput").value.trim();
+      p.bio         = document.getElementById("bioInput").value.trim();
+      p.postsCount  = Number(document.getElementById("postsCountInput").value) || 0;
+      p.clipsCount  = Number(document.getElementById("clipsCountInput").value) || 0;
+      p.eventsCount = Number(document.getElementById("eventsCountInput").value) || 0;
+
+      const avatarFile = document.getElementById("avatarFileInput").files[0];
+      if (avatarFile) p.avatarUrl = await fileToBase64(avatarFile);
+
+      const clipFile = document.getElementById("profileClipFileInput").files[0];
+      if (clipFile) p.profileClipUrl = await fileToBase64(clipFile);
+
       localStorage.setItem(LS_PROFILE, JSON.stringify(p));
       alert("Profile saved.");
     }
@@ -209,22 +219,22 @@
       container.innerHTML = "";
 
       if (!lessons.length) {
-        container.innerHTML = "<p style=\"font-size:0.85rem;opacity:0.7;\">No lessons yet.</p>";
+        container.innerHTML = "<p style='font-size:0.85rem;opacity:0.7;'>No lessons yet.</p>";
         return;
       }
 
-      lessons.forEach(function(ls, index) {
+      lessons.forEach((ls, index) => {
         const div = document.createElement("div");
         div.className = "item";
         div.innerHTML =
-          "<strong>" + (ls.title || "Lesson " + (index + 1)) + "</strong><br>" +
-          (ls.price ? "$" + ls.price : "Free") + " • " + (ls.duration || 0) + " min<br>" +
-          "<span style=\"opacity:0.8;\">" + (ls.description || "") + "</span><br>";
+          "<strong>" + ls.title + "</strong><br>" +
+          (ls.price ? "$" + ls.price : "Free") + " • " + ls.duration + " min<br>" +
+          "<span style='opacity:0.8;'>" + ls.description + "</span><br>";
 
         const btn = document.createElement("button");
         btn.className = "btn";
         btn.textContent = "Remove";
-        btn.onclick = function () {
+        btn.onclick = () => {
           const list = safeParse(LS_LESSONS, []);
           list.splice(index, 1);
           localStorage.setItem(LS_LESSONS, JSON.stringify(list));
@@ -248,7 +258,7 @@
       }
 
       const lessons = safeParse(LS_LESSONS, []);
-      lessons.push({ title: title, price: price, duration: duration, description: description });
+      lessons.push({ title, price, duration, description });
       localStorage.setItem(LS_LESSONS, JSON.stringify(lessons));
 
       document.getElementById("lessonTitleInput").value = "";
@@ -265,19 +275,19 @@
       container.innerHTML = "";
 
       if (!clips.length) {
-        container.innerHTML = "<p style=\"font-size:0.85rem;opacity:0.7;\">No clips saved.</p>";
+        container.innerHTML = "<p style='font-size:0.85rem;opacity:0.7;'>No clips saved.</p>";
         return;
       }
 
-      clips.forEach(function(url, index) {
+      clips.forEach((url, index) => {
         const div = document.createElement("div");
         div.className = "item";
-        div.innerHTML = "<span style=\"font-size:0.85rem;\">" + url + "</span><br>";
+        div.innerHTML = `<video src="${url}" controls style="width:100%;border-radius:10px;margin-bottom:6px;"></video>`;
 
         const btn = document.createElement("button");
         btn.className = "btn";
         btn.textContent = "Remove";
-        btn.onclick = function () {
+        btn.onclick = () => {
           const list = safeParse(LS_CLIPS, []);
           list.splice(index, 1);
           localStorage.setItem(LS_CLIPS, JSON.stringify(list));
@@ -290,16 +300,19 @@
     }
 
     function addClip() {
-      const url = document.getElementById("clipUrlInput").value.trim();
-      if (!url) {
-        alert("Clip URL required.");
+      const file = document.getElementById("clipFileInput").files[0];
+      if (!file) {
+        alert("Please upload a video file.");
         return;
       }
-      const clips = safeParse(LS_CLIPS, []);
-      clips.push(url);
-      localStorage.setItem(LS_CLIPS, JSON.stringify(clips));
-      document.getElementById("clipUrlInput").value = "";
-      renderClips();
+
+      fileToBase64(file).then(base64 => {
+        const clips = safeParse(LS_CLIPS, []);
+        clips.push(base64);
+        localStorage.setItem(LS_CLIPS, JSON.stringify(clips));
+        document.getElementById("clipFileInput").value = "";
+        renderClips();
+      });
     }
 
     document.getElementById("saveProfileBtn").onclick = saveProfileForm;
