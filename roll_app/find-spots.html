@@ -1,1214 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Find Spots – Roll n Connect</title>
-
-  <!-- GOOGLE MAPS JS API -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places,marker"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Spots</title>
 
   <style>
     body {
-      background:#000;
-      color:#fff;
-      margin:0;
-      padding:0;
-      font-family:'Inter',sans-serif;
-      overflow:hidden;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
     }
 
-    /* STARFIELDS */
-    .stars1,.stars2,.stars3 {
-      position:fixed; inset:0;
-      background:url('styles/stars-white.png') repeat;
-      z-index:-3;
-      pointer-events:none;
-    }
-    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
-    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
-    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
-
-    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
-    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
-    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
-
-    /* SIDEBAR */
-    .sidebar {
-      position:fixed;
-      top:50%;
-      left:-260px;
-      transform:translateY(-50%);
-      width:260px;
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(25px);
-      border-right:1px solid rgba(255,255,255,0.25);
-      padding:30px 20px;
-      border-radius:0 20px 20px 0;
-      box-shadow:10px 0 40px rgba(255,255,255,0.25);
-      transition:0.35s ease;
-      z-index:9998;
-    }
-    .sidebar.open { left:0; }
-
-    .nav-header{text-align:center;margin-bottom:30px;}
-    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
-    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
-
-    .nav-links {
-      list-style:none;
-      padding:0;
-      margin:0;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-    .nav-links a {
-      color:#fff;
-      text-decoration:none;
-      font-size:1.05rem;
-      padding:10px 14px;
-      border-radius:12px;
-      transition:0.25s;
-      display:block;
-      background:rgba(255,255,255,0.05);
-      box-shadow:0 0 12px rgba(255,255,255,0.15);
-    }
-    .nav-links a:hover {
-      background:rgba(255,255,255,0.2);
-      transform:translateX(8px);
-      box-shadow:0 0 20px rgba(255,255,255,0.4);
+    header {
+      background: #111;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
     }
 
-    /* BURGER */
-    .hamburger {
-      position:fixed;
-      top:25px;
-      left:25px;
-      width:40px;
-      height:30px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      cursor:pointer;
-      z-index:9999;
-    }
-    .hamburger span {
-      height:4px;
-      width:100%;
-      background:#fff;
-      border-radius:4px;
-      box-shadow:0 0 12px rgba(255,255,255,0.9);
-      transition:0.3s;
-    }
-    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
-    .hamburger.active span:nth-child(2){opacity:0;}
-    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
-
-    /* MAP */
-    #map {
-      position:absolute;
-      inset:0;
-      z-index:1;
+    /* FILTERS */
+    .filters {
+      background: white;
+      padding: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #ddd;
     }
 
-    /* TOP CONTROLS */
-    .top-controls {
-      position:fixed;
-      top:20px;
-      left:80px;
-      right:80px;
-      max-width:700px;
-      margin:0 auto;
-      z-index:9999;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      pointer-events:none;
-    }
-    .map-type-row {
-      display:flex;
-      gap:6px;
-      pointer-events:auto;
-    }
-    .map-type-btn {
-      flex:1;
-      padding:6px 8px;
-      border-radius:999px;
-      border:none;
-      cursor:pointer;
-      font-size:0.8rem;
-      background:rgba(0,0,0,0.7);
-      color:#fff;
-      border:1px solid rgba(255,255,255,0.25);
-    }
-    .map-type-btn.active {
-      background:#fff;
-      color:#000;
+    .filters select,
+    .filters input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
     }
 
-    .status-pill {
-      margin-top:4px;
-      font-size:0.75rem;
-      padding:4px 8px;
-      border-radius:999px;
-      background:rgba(0,0,0,0.7);
-      border:1px solid rgba(255,255,255,0.25);
-      color:#fff;
-      pointer-events:auto;
+    /* MENU BELOW FILTERS */
+    .menu {
+      background: #222;
+      color: white;
+      padding: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      font-size: 16px;
     }
 
-    /* DRAWER */
-    .drawer-shell {
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:9999;
-      display:flex;
-      justify-content:center;
-      pointer-events:none;
+    .menu a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
     }
 
-    .drawer-inner {
-      position:absolute;
-      left:10px;
-      right:10px;
-      bottom:0;
-      background:rgba(0,0,0,0.9);
-      backdrop-filter:blur(20px);
-      border-radius:18px 18px 12px 12px;
-      box-shadow:0 0 30px rgba(0,0,0,0.8);
-      padding:8px 12px 8px;
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      transform:translateY(0);
-      touch-action:none;
-      pointer-events:auto;
+    /* SPOT LIST */
+    .spots-container {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
 
-    .drawer-grab {
-      width:50px;
-      height:6px;
-      border-radius:999px;
-      background:rgba(255,255,255,0.7);
-      margin:6px auto 10px;
+    .spot-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    .drawer-header-row {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      font-size:0.8rem;
-      margin-bottom:4px;
+    .spot-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
     }
 
-    .rt-switch {
-      width:40px;
-      height:20px;
-      border-radius:999px;
-      background:rgba(255,255,255,0.15);
-      position:relative;
-      cursor:pointer;
-    }
-    .rt-knob {
-      position:absolute;
-      top:2px;
-      left:2px;
-      width:16px;
-      height:16px;
-      border-radius:50%;
-      background:#fff;
-      transition:transform 0.2s;
-    }
-    .rt-switch.on {
-      background:#4dff4d;
-    }
-    .rt-switch.on .rt-knob {
-      transform:translateX(18px);
+    .spot-info {
+      padding: 15px;
     }
 
-    .filters-row {
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-    }
-    .filter-btn {
-      padding:5px 9px;
-      border-radius:999px;
-      border:none;
-      cursor:pointer;
-      font-size:0.75rem;
-      background:rgba(255,255,255,0.12);
-      color:#fff;
-      display:flex;
-      align-items:center;
-      gap:4px;
-    }
-    .filter-btn.active {
-      border:1px solid #fff;
-      box-shadow:0 0 8px rgba(255,255,255,0.4);
-    }
-    .filter-color-dot {
-      width:10px;
-      height:10px;
-      border-radius:50%;
+    .spot-info h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
     }
 
-    .loc-btn {
-      padding:5px 10px;
-      border-radius:999px;
-      border:none;
-      cursor:pointer;
-      font-size:0.75rem;
-      background:#fff;
-      color:#000;
-      font-weight:600;
+    .spot-info p {
+      margin: 0 0 10px;
+      color: #555;
+      font-size: 14px;
     }
 
-    .results-list {
-      max-height:140px;
-      overflow-y:auto;
-      border-radius:10px;
-      background:rgba(255,255,255,0.04);
-      padding:4px;
-      font-size:0.78rem;
+    .reviews {
+      padding: 15px;
+      border-top: 1px solid #eee;
+      background: #fafafa;
     }
 
-    .result-item {
-      padding:5px;
-      border-radius:8px;
-      cursor:pointer;
-    }
-    .result-item:hover {
-      background:rgba(255,255,255,0.12);
+    .review {
+      margin-bottom: 10px;
+      font-size: 14px;
     }
 
-    .current-spot {
-      border-radius:10px;
-      background:rgba(255,255,255,0.04);
-      padding:6px;
-      font-size:0.78rem;
-    }
-
-    .tag-pill {
-      display:inline-block;
-      padding:2px 6px;
-      border-radius:999px;
-      font-size:0.7rem;
-      margin-right:4px;
-      margin-bottom:3px;
-      background:rgba(255,255,255,0.12);
-    }
-
-    .btn-small {
-      padding:5px 9px;
-      border-radius:999px;
-      border:none;
-      cursor:pointer;
-      font-size:0.75rem;
-    }
-    .btn-primary {
-      background:#fff;
-      color:#000;
-    }
-    .btn-ghost {
-      background:rgba(255,255,255,0.15);
-      color:#fff;
-    }
-
-    .presence-list,
-    .reviews-list {
-      max-height:70px;
-      overflow-y:auto;
-      margin-top:2px;
-    }
-
-    .review-form textarea {
-      width:100%;
-      padding:4px;
-      border-radius:8px;
-      border:none;
-      background:rgba(255,255,255,0.15);
-      color:#fff;
-      font-size:0.72rem;
-      resize:vertical;
-      min-height:32px;
-      margin-top:3px;
-    }
-    .review-form button {
-      margin-top:3px;
-      padding:3px 8px;
-      border-radius:999px;
-      border:none;
-      cursor:pointer;
-      font-size:0.72rem;
-      background:#fff;
-      color:#000;
-    }
-
-    /* MODAL */
-    .modal-backdrop {
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.75);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:10000;
-    }
-    .modal {
-      width:90%;
-      max-width:420px;
-      background:#05030a;
-      border-radius:14px;
-      padding:16px 16px 12px;
-      border:1px solid rgba(255,255,255,0.35);
-      box-shadow:0 0 40px rgba(255,255,255,0.25);
-      font-size:0.84rem;
-    }
-    .modal h2 {
-      margin:0 0 6px;
-      font-size:1rem;
-    }
-    .modal label {
-      display:block;
-      margin-top:6px;
-      margin-bottom:2px;
-      font-size:0.75rem;
-      opacity:0.9;
-    }
-    .modal input,
-    .modal textarea,
-    .modal select {
-      width:100%;
-      border-radius:8px;
-      border:1px solid rgba(255,255,255,0.4);
-      background:rgba(0,0,0,0.7);
-      color:#fff;
-      padding:4px 6px;
-      font-size:0.78rem;
-      box-sizing:border-box;
-    }
-    .modal textarea {
-      min-height:50px;
-      resize:vertical;
-    }
-    .modal-actions {
-      display:flex;
-      justify-content:flex-end;
-      gap:6px;
-      margin-top:10px;
-    }
-    .modal-cancel,
-    .modal-save {
-      padding:4px 10px;
-      border-radius:999px;
-      border:none;
-      cursor:pointer;
-      font-size:0.8rem;
-    }
-    .modal-cancel {
-      background:rgba(255,255,255,0.12);
-      color:#fff;
-    }
-    .modal-save {
-      background:#fff;
-      color:#000;
-      font-weight:600;
+    .review strong {
+      color: #333;
     }
   </style>
 </head>
 
 <body>
-<div class="stars1"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
 
-<!-- BURGER -->
-<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
+  <header>Find Spots</header>
 
-<!-- SIDEBAR -->
-<nav id="sidebar" class="sidebar">
-  <div class="nav-header">
-    <div class="logo-orb">📍</div>
-    <div class="nav-title">Find Spots</div>
-  </div>
-
-  <ul class="nav-links">
-    <li><a href="dashboard.html">📊 Dashboard</a></li>
-    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
-    <li><a href="events.html">📅 Events</a></li>
-    <li><a href="calendar.html">🗓️ Calendar</a></li>
-    <li><a href="profile.html">👤 Your Profile</a></li>
-    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
-    <li><a href="settings.html">⚙️ Settings</a></li>
-  </ul>
-</nav>
-
-<!-- MAP -->
-<div id="map"></div>
-
-<!-- TOP CONTROLS -->
-<div class="top-controls">
-  <div class="map-type-row">
-    <button class="map-type-btn active" id="btnTypeCosmic">Cosmic map</button>
-    <button class="map-type-btn" id="btnTypeStreet">Street map</button>
-    <button class="map-type-btn" id="btnTypeSatellite">Satellite map</button>
-  </div>
-  <div class="status-pill" id="statusText">
-    Online mode shows live spots. Offline mode lets you mark custom sessions.
-  </div>
-</div>
-
-<!-- BOTTOM DRAWER -->
-<div class="drawer-shell">
-  <div class="drawer-inner" id="drawer">
-    <div class="drawer-grab" id="drawerGrab"></div>
-
-    <div class="drawer-header-row">
-      <div>Spots</div>
-      <div class="rt-switch" id="rtSwitch">
-        <div class="rt-knob"></div>
-      </div>
-    </div>
-
-    <div class="filters-row" id="filtersRow"></div>
-    <button class="loc-btn" id="locateMe">Location</button>
-
-    <div class="results-list" id="resultsList">
-      <div style="opacity:0.8;">Toggle filters to load spots around your view.</div>
-    </div>
-
-    <div class="current-spot" id="currentSpotCard" style="display:none;">
-      <div id="currentSpotName"></div>
-      <div id="currentSpotAddress"></div>
-      <div id="currentSpotTags"></div>
-
-      <div class="current-spot-actions">
-        <button class="btn-small btn-primary" id="btnSaveToCalendar">Add</button>
-        <button class="btn-small btn-ghost" id="btnShareToChat">Share</button>
-        <button class="btn-small btn-ghost" id="btnMarkHere">Here</button>
-        <button class="btn-small btn-ghost" id="btnOpenMaps">Maps</button>
-      </div>
-
-      <div class="presence-list" id="presenceList"></div>
-      <div class="reviews-list" id="reviewsList"></div>
-
-      <div class="review-form">
-        <textarea id="reviewInput" placeholder="Review"></textarea>
-        <button id="reviewSubmit">Post</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- EVENT MODAL -->
-<div class="modal-backdrop" id="eventModalBackdrop">
-  <div class="modal" id="eventModal">
-    <h2>Create calendar event</h2>
-    <p style="font-size:0.8rem;opacity:0.9;" id="eventSpotSummary"></p>
-
-    <label for="eventTitle">Title or reason</label>
-    <input id="eventTitle">
-
-    <label for="eventDate">Date</label>
-    <input id="eventDate" type="date">
-
-    <label for="eventTime">Time</label>
-    <input id="eventTime" type="time">
-
-    <label for="eventNotes">Notes</label>
-    <textarea id="eventNotes"></textarea>
-
-    <label for="eventPrivacy">Privacy</label>
-    <select id="eventPrivacy">
-      <option value="public">Public</option>
-      <option value="private">Private</option>
-      <option value="groups">Groups</option>
+  <!-- FILTERS AT TOP -->
+  <div class="filters">
+    <select id="typeFilter">
+      <option value="">Spot Type</option>
+      <option value="park">Park</option>
+      <option value="garage">Garage</option>
+      <option value="street">Street</option>
     </select>
 
-    <label for="eventGroups">Groups separated by commas</label>
-    <input id="eventGroups">
+    <select id="difficultyFilter">
+      <option value="">Difficulty</option>
+      <option value="easy">Easy</option>
+      <option value="medium">Medium</option>
+      <option value="hard">Hard</option>
+    </select>
 
-    <div class="modal-actions">
-      <button class="modal-cancel" id="cancelEventBtn">Cancel</button>
-      <button class="modal-save" id="saveEventBtn">Save event</button>
-    </div>
+    <input type="text" id="searchInput" placeholder="Search spots..." />
   </div>
-</div>
 
-<script>
-/* BURGER + SIDEBAR */
-const h = document.getElementById("hamburger");
-const s = document.getElementById("sidebar");
-h.onclick = () => {
-  h.classList.toggle("active");
-  s.classList.toggle("open");
-};
+  <!-- MENU BELOW FILTERS -->
+  <div class="menu">
+    <a href="index.html">Home</a>
+    <a href="find-spots.html">Find Spots</a>
+    <a href="events.html">Events</a>
+    <a href="profile.html">Profile</a>
+  </div>
 
-/* ONLINE/OFFLINE STATUS */
-const statusText = document.getElementById("statusText");
-function updateOnlineStatus() {
-  if (navigator.onLine) {
-    statusText.textContent = "Online mode shows live spots. Offline mode lets you mark custom sessions.";
-  } else {
-    statusText.textContent = "Offline mode limits search but still lets you mark spots and create sessions.";
-  }
-}
-window.addEventListener("online", updateOnlineStatus);
-window.addEventListener("offline", updateOnlineStatus);
-updateOnlineStatus();
+  <!-- SPOTS LIST -->
+  <div class="spots-container" id="spotsContainer"></div>
 
-/* USER CONTEXT */
-let user = null;
-try { user = JSON.parse(localStorage.getItem("rc_user")); } catch(e) { user = null; }
-if (!user) user = { id:"guest_" + Date.now(), username:"Guest" };
-const OWNER_ID = user.id || user.username || "anonymous";
-
-/* CALENDAR + CHAT HELPERS */
-function getCalendarItems() {
-  try { return JSON.parse(localStorage.getItem("rc_calendar_items") || "[]"); }
-  catch(e){ return []; }
-}
-function saveCalendarItems(items) {
-  localStorage.setItem("rc_calendar_items", JSON.stringify(items));
-}
-function addToCalendar(item) {
-  const items = getCalendarItems();
-  items.push({
-    id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
-    ownerId: OWNER_ID,
-    type: item.type || "spot",
-    refId: item.refId || null,
-    title: item.title || "Untitled",
-    date: item.date || null,
-    time: item.time || "",
-    location: item.location || "",
-    distance: item.distance || null,
-    link: item.link || "",
-    privacy: item.privacy || "public",
-    groups: item.groups || [],
-    notes: item.notes || ""
-  });
-  saveCalendarItems(items);
-}
-
-function shareToChat(payload) {
-  let drafts = [];
-  try { drafts = JSON.parse(localStorage.getItem("rc_chat_drafts") || "[]"); }
-  catch(e){ drafts = []; }
-  drafts.push({
-    id: "draft_" + Date.now(),
-    ownerId: OWNER_ID,
-    type: "spot",
-    payload,
-    createdAt: new Date().toISOString()
-  });
-  localStorage.setItem("rc_chat_drafts", JSON.stringify(drafts));
-}
-
-/* PRESENCE + REVIEWS */
-function getSpotPresence(spotId) {
-  try { return JSON.parse(localStorage.getItem("rc_spot_presence") || "{}")[spotId] || []; }
-  catch(e){ return []; }
-}
-function setSpotPresence(spotId, list) {
-  let all = {};
-  try { all = JSON.parse(localStorage.getItem("rc_spot_presence") || "{}"); }
-  catch(e){ all = {}; }
-  all[spotId] = list;
-  localStorage.setItem("rc_spot_presence", JSON.stringify(all));
-}
-
-function getSpotReviews(spotId) {
-  try { return JSON.parse(localStorage.getItem("rc_spot_reviews") || "{}")[spotId] || []; }
-  catch(e){ return []; }
-}
-function setSpotReviews(spotId, list) {
-  let all = {};
-  try { all = JSON.parse(localStorage.getItem("rc_spot_reviews") || "{}"); }
-  catch(e){ all = {}; }
-  all[spotId] = list;
-  localStorage.setItem("rc_spot_reviews", JSON.stringify(all));
-}
-
-/* REAL TIME TOGGLE */
-let realtimeEnabled = false;
-const rtSwitch = document.getElementById("rtSwitch");
-rtSwitch.addEventListener("click", () => {
-  realtimeEnabled = !realtimeEnabled;
-  rtSwitch.classList.toggle("on", realtimeEnabled);
-});
-
-function broadcastRealtimeUpdate(payload) {
-  if (!realtimeEnabled) return;
-  console.log("Realtime update", payload);
-}
-
-/* CURRENT SPOT UI */
-let currentSpot = null;
-const currentSpotCard = document.getElementById("currentSpotCard");
-const currentSpotName = document.getElementById("currentSpotName");
-const currentSpotAddress = document.getElementById("currentSpotAddress");
-const currentSpotTags = document.getElementById("currentSpotTags");
-const presenceList = document.getElementById("presenceList");
-const reviewsList = document.getElementById("reviewsList");
-const reviewInput = document.getElementById("reviewInput");
-const reviewSubmit = document.getElementById("reviewSubmit");
-
-function renderPresence(spotId, show) {
-  if (!show) {
-    presenceList.innerHTML = "";
-    return;
-  }
-  presenceList.innerHTML = "";
-  const presence = getSpotPresence(spotId);
-  if (!presence.length) {
-    presenceList.innerHTML = "<div style='opacity:0.7;'>No one here yet.</div>";
-    return;
-  }
-  presence.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "presence-user";
-    const profileUrl = `profile.html?user=${encodeURIComponent(p.userId)}`;
-    div.innerHTML = `<a href="${profileUrl}">${p.username}</a> <span style="opacity:0.7;">${new Date(p.timestamp).toLocaleTimeString()}</span>`;
-    presenceList.appendChild(div);
-  });
-}
-
-function renderReviews(spotId) {
-  reviewsList.innerHTML = "";
-  const reviews = getSpotReviews(spotId);
-  if (!reviews.length) {
-    reviewsList.innerHTML = "<div style='opacity:0.7;'>No reviews yet.</div>";
-    return;
-  }
-  reviews.forEach(r => {
-    const div = document.createElement("div");
-    div.className = "review-item";
-    div.innerHTML = `<strong>${r.username}:</strong> ${r.text}`;
-    reviewsList.appendChild(div);
-  });
-}
-
-function categoryTagsFromSpot(spot) {
-  const tags = new Set();
-  if (spot.categoryKey) tags.add(spot.categoryKey);
-  if (spot.types && spot.types.length) {
-    if (spot.types.includes("park")) tags.add("park");
-    if (spot.types.includes("restaurant")) tags.add("food");
-    if (spot.types.includes("parking")) tags.add("parking");
-  }
-  return Array.from(tags);
-}
-
-function setCurrentSpot(spot) {
-  currentSpot = spot;
-  if (!spot) {
-    currentSpotCard.style.display = "none";
-    return;
-  }
-  currentSpotCard.style.display = "block";
-  currentSpotName.textContent = spot.name;
-  currentSpotAddress.textContent = spot.address || `${spot.lat}, ${spot.lng}`;
-
-  const tags = categoryTagsFromSpot(spot);
-  currentSpotTags.innerHTML = "";
-  tags.forEach(t => {
-    const span = document.createElement("span");
-    span.className = "tag-pill";
-    span.textContent = t;
-    currentSpotTags.appendChild(span);
-  });
-
-  const spotId = spot.id || `${spot.lat},${spot.lng}`;
-  const cosmicActive = currentMapType === "cosmic";
-  renderPresence(spotId, cosmicActive);
-  renderReviews(spotId);
-}
-
-/* EVENT MODAL */
-const eventModalBackdrop = document.getElementById("eventModalBackdrop");
-const eventSpotSummary = document.getElementById("eventSpotSummary");
-const eventTitle = document.getElementById("eventTitle");
-const eventDate = document.getElementById("eventDate");
-const eventTime = document.getElementById("eventTime");
-const eventNotes = document.getElementById("eventNotes");
-const eventPrivacy = document.getElementById("eventPrivacy");
-const eventGroups = document.getElementById("eventGroups");
-const cancelEventBtn = document.getElementById("cancelEventBtn");
-const saveEventBtn = document.getElementById("saveEventBtn");
-
-function openEventModalFromSpot() {
-  if (!currentSpot) return;
-  eventSpotSummary.textContent =
-    currentSpot.name + " — " +
-    (currentSpot.address || `${currentSpot.lat}, ${currentSpot.lng}`);
-
-  eventTitle.value = currentSpot.name;
-  eventDate.value = "";
-  eventTime.value = "";
-  eventNotes.value = "";
-  eventPrivacy.value = "public";
-  eventGroups.value = "";
-
-  eventModalBackdrop.style.display = "flex";
-}
-function closeEventModal() {
-  eventModalBackdrop.style.display = "none";
-}
-
-document.getElementById("btnSaveToCalendar").onclick = openEventModalFromSpot;
-cancelEventBtn.onclick = closeEventModal;
-
-saveEventBtn.onclick = () => {
-  if (!currentSpot) return;
-  const title = eventTitle.value.trim() || currentSpot.name;
-  const date = eventDate.value;
-  const time = eventTime.value;
-  if (!date || !time) return;
-
-  const notes = eventNotes.value.trim();
-  const privacy = eventPrivacy.value;
-  const groupsStr = eventGroups.value.trim();
-  const groups = groupsStr ? groupsStr.split(",").map(x => x.trim()).filter(Boolean) : [];
-  const locString = currentSpot.address || `${currentSpot.lat},${currentSpot.lng}`;
-  const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
-
-  addToCalendar({
-    type: "spot",
-    refId: spotId,
-    title,
-    date,
-    time,
-    location: locString,
-    notes,
-    privacy,
-    groups,
-    link: ""
-  });
-
-  broadcastRealtimeUpdate({ kind:"calendar_event", spotId, title, date, time });
-  closeEventModal();
-};
-
-/* SHARE + HERE + MAPS */
-document.getElementById("btnShareToChat").onclick = () => {
-  if (!currentSpot) return;
-  const payload = {
-    name: currentSpot.name,
-    address: currentSpot.address || `${currentSpot.lat},${currentSpot.lng}`,
-    lat: currentSpot.lat,
-    lng: currentSpot.lng
-  };
-  shareToChat(payload);
-  broadcastRealtimeUpdate({ kind:"chat_share", spotId: currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`, payload });
-};
-
-document.getElementById("btnMarkHere").onclick = () => {
-  if (!currentSpot) return;
-  const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
-  let presence = getSpotPresence(spotId);
-  const existingIndex = presence.findIndex(p => p.userId === OWNER_ID);
-  const entry = {
-    userId: OWNER_ID,
-    username: user.username,
-    timestamp: new Date().toISOString()
-  };
-  if (existingIndex >= 0) presence[existingIndex] = entry;
-  else presence.push(entry);
-  setSpotPresence(spotId, presence);
-  if (currentMapType === "cosmic") renderPresence(spotId, true);
-  broadcastRealtimeUpdate({ kind:"presence", spotId, entry });
-};
-
-document.getElementById("btnOpenMaps").onclick = () => {
-  if (!currentSpot) return;
-  const url = `https://www.google.com/maps/search/?api=1&query=${currentSpot.lat},${currentSpot.lng}`;
-  window.open(url, "_blank");
-};
-
-/* REVIEW SUBMIT */
-reviewSubmit.onclick = () => {
-  if (!currentSpot) return;
-  const text = reviewInput.value.trim();
-  if (!text) return;
-  const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
-  let reviews = getSpotReviews(spotId);
-  const entry = {
-    userId: OWNER_ID,
-    username: user.username,
-    text,
-    timestamp: new Date().toISOString()
-  };
-  reviews.push(entry);
-  setSpotReviews(spotId, reviews);
-  reviewInput.value = "";
-  renderReviews(spotId);
-  broadcastRealtimeUpdate({ kind:"review", spotId, entry });
-};
-
-/* MAP + FILTERS + MARKERS */
-let map = null;
-let placesService = null;
-let currentMapType = "cosmic";
-
-const cosmicStyle = [
-  { elementType:"geometry", stylers:[{color:"#040311"}] },
-  { elementType:"labels.text.fill", stylers:[{color:"#ffffff"}] },
-  { elementType:"labels.text.stroke", stylers:[{color:"#000000"}] },
-  { featureType:"poi", stylers:[{visibility:"off"}] },
-  { featureType:"road", stylers:[{color:"#2e1a4f"}] },
-  { featureType:"road.highway", stylers:[{color:"#5c2aa8"}] },
-  { featureType:"road.arterial", stylers:[{color:"#3d235f"}] },
-  { featureType:"water", stylers:[{color:"#10174f"}] },
-  { featureType:"landscape", stylers:[{color:"#050818"}] }
-];
-
-const filterConfig = {
-  skatepark:{label:"Skateparks",color:"#ff4d4d"},
-  park:{label:"Parks",color:"#4dff4d"},
-  rink:{label:"Rinks",color:"#4dd2ff"},
-  trail:{label:"Trails",color:"#ffaa00"},
-  parking:{label:"Parking",color:"#cccccc"},
-  plaza:{label:"Plazas",color:"#ff66ff"},
-  water:{label:"Water",color:"#4d79ff"},
-  food:{label:"Food",color:"#ffff66"}
-};
-
-const activeFilters = {
-  skatepark:false,park:false,rink:false,trail:false,
-  parking:false,plaza:false,water:false,food:false
-};
-
-const markersByFilter = {
-  skatepark:[],park:[],rink:[],trail:[],
-  parking:[],plaza:[],water:[],food:[]
-};
-
-const resultsList = document.getElementById("resultsList");
-
-function makeColoredMarker(color) {
-  const div=document.createElement("div");
-  div.innerHTML=`
-    <svg width="20" height="20" viewBox="0 0 30 30">
-      <circle cx="15" cy="15" r="7" fill="${color}" stroke="white" stroke-width="2"/>
-    </svg>`;
-  div.style.filter="drop-shadow(0 0 6px rgba(255,255,255,0.6))";
-  return div;
-}
-
-function clearMarkersForFilter(key){
-  markersByFilter[key].forEach(m=>m.setMap(null));
-  markersByFilter[key]=[];
-}
-
-function renderResultsFromMarkers(){
-  const merged=[];
-  Object.keys(markersByFilter).forEach(key=>{
-    markersByFilter[key].forEach(m=>{
-      if(m._spot) merged.push(m._spot);
-    });
-  });
-  resultsList.innerHTML="";
-  if(!merged.length){
-    resultsList.innerHTML="<div style='opacity:0.8;'>No spots loaded yet.</div>";
-    return;
-  }
-  merged.forEach(spot=>{
-    const div=document.createElement("div");
-    div.className="result-item";
-    div.innerHTML=`<div>${spot.name}</div><div>${spot.address||""}</div>`;
-    div.onclick=()=>{
-      map.panTo({lat:spot.lat,lng:spot.lng});
-      map.setZoom(15);
-      setCurrentSpot(spot);
-    };
-    resultsList.appendChild(div);
-  });
-}
-
-function runCategorySearch(typeKey){
-  const center=map.getCenter();
-  const request={location:center,radius:4000};
-
-  if(typeKey==="skatepark"){request.keyword="skatepark";request.type="park";}
-  if(typeKey==="park"){request.type="park";}
-  if(typeKey==="rink"){request.keyword="roller rink";request.type="establishment";}
-  if(typeKey==="trail"){request.keyword="trail";request.type="park";}
-  if(typeKey==="parking"){request.type="parking";}
-  if(typeKey==="plaza"){request.keyword="plaza";request.type="establishment";}
-  if(typeKey==="water"){request.keyword="lake OR river OR waterfront";request.type="tourist_attraction";}
-  if(typeKey==="food"){request.type="restaurant";}
-
-  placesService.nearbySearch(request,(results,status)=>{
-    if(status!=="OK"||!results){
-      clearMarkersForFilter(typeKey);
-      renderResultsFromMarkers();
-      return;
-    }
-    clearMarkersForFilter(typeKey);
-    const color=filterConfig[typeKey].color;
-    results.forEach(r=>{
-      const loc=r.geometry.location;
-      const marker=new google.maps.marker.AdvancedMarkerElement({
-        map,
-        position:loc,
-        content:makeColoredMarker(color)
-      });
-      const spot={
-        id:r.place_id||null,
-        name:r.name,
-        address:r.vicinity||"",
-        lat:loc.lat(),
-        lng:loc.lng(),
-        categoryKey:typeKey,
-        types:r.types||[]
-      };
-      marker._spot=spot;
-      marker.addListener("click",()=>setCurrentSpot(spot));
-      markersByFilter[typeKey].push(marker);
-    });
-    renderResultsFromMarkers();
-  });
-}
-
-/* FILTER BUTTONS */
-const filtersRow = document.getElementById("filtersRow");
-Object.keys(filterConfig).forEach(key=>{
-  const cfg = filterConfig[key];
-  const btn = document.createElement("button");
-  btn.className="filter-btn";
-  btn.dataset.key=key;
-  btn.innerHTML=`<span class="filter-color-dot" style="background:${cfg.color}"></span>${cfg.label}`;
-  btn.onclick=()=>{
-    activeFilters[key]=!activeFilters[key];
-    btn.classList.toggle("active",activeFilters[key]);
-    if(activeFilters[key]) runCategorySearch(key);
-    else {
-      clearMarkersForFilter(key);
-      renderResultsFromMarkers();
-      if(currentSpot && currentSpot.categoryKey===key){
-        setCurrentSpot(null);
+  <script>
+    const spots = [
+      {
+        name: "Piedmont Park",
+        type: "park",
+        difficulty: "easy",
+        img: "https://images.unsplash.com/photo-1503264116251-35a269479413",
+        description: "Smooth paths, open space, great for beginners.",
+        reviews: [
+          { user: "Alex", text: "Great place to practice dancing!" },
+          { user: "Mia", text: "Lots of space and friendly people." }
+        ]
+      },
+      {
+        name: "Underground Garage C5",
+        type: "garage",
+        difficulty: "medium",
+        img: "https://images.unsplash.com/photo-1502877338535-766e1452684a",
+        description: "Flat concrete, echoey, perfect for freestyle.",
+        reviews: [
+          { user: "Jay", text: "Perfect for late-night sessions." }
+        ]
+      },
+      {
+        name: "Midtown Street Loop",
+        type: "street",
+        difficulty: "hard",
+        img: "https://images.unsplash.com/photo-1500048993959-dc63f0b6a5c1",
+        description: "Fast pavement, traffic nearby, advanced riders only.",
+        reviews: [
+          { user: "Sam", text: "Challenging but worth it." }
+        ]
       }
+    ];
+
+    function renderSpots() {
+      const container = document.getElementById("spotsContainer");
+      const type = document.getElementById("typeFilter").value;
+      const difficulty = document.getElementById("difficultyFilter").value;
+      const search = document.getElementById("searchInput").value.toLowerCase();
+
+      const filtered = spots.filter(spot => {
+        return (
+          (!type || spot.type === type) &&
+          (!difficulty || spot.difficulty === difficulty) &&
+          (!search || spot.name.toLowerCase().includes(search))
+        );
+      });
+
+      container.innerHTML = filtered.map(spot => `
+        <div class="spot-card">
+          <img src="${spot.img}" alt="${spot.name}">
+          <div class="spot-info">
+            <h3>${spot.name}</h3>
+            <p>${spot.description}</p>
+          </div>
+          <div class="reviews">
+            ${spot.reviews.map(r => `
+              <div class="review"><strong>${r.user}:</strong> ${r.text}</div>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
     }
-  };
-  filtersRow.appendChild(btn);
-});
 
-/* MAP INIT */
-function initMap() {
-  map = new google.maps.Map(document.getElementById("map"), {
-    center:{lat:33.8,lng:-84.3},
-    zoom:11,
-    mapTypeId:"roadmap",
-    styles: cosmicStyle
-  });
+    document.querySelectorAll("#typeFilter, #difficultyFilter, #searchInput")
+      .forEach(el => el.addEventListener("input", renderSpots));
 
-  placesService = new google.maps.places.PlacesService(map);
+    renderSpots();
+  </script>
 
-  map.addListener("click", e => {
-    const lat = e.latLng.lat();
-    const lng = e.latLng.lng();
-    const spot = {
-      id: null,
-      name: "Custom spot",
-      address: null,
-      lat,
-      lng,
-      categoryKey:null,
-      types:[]
-    };
-    setCurrentSpot(spot);
-  });
-}
-
-/* MAP TYPE SWITCHER */
-const btnTypeCosmic = document.getElementById("btnTypeCosmic");
-const btnTypeStreet = document.getElementById("btnTypeStreet");
-const btnTypeSatellite = document.getElementById("btnTypeSatellite");
-
-function updateMapTypeButtons(type) {
-  btnTypeCosmic.classList.remove("active");
-  btnTypeStreet.classList.remove("active");
-  btnTypeSatellite.classList.remove("active");
-
-  if (type === "cosmic") btnTypeCosmic.classList.add("active");
-  if (type === "street") btnTypeStreet.classList.add("active");
-  if (type === "satellite") btnTypeSatellite.classList.add("active");
-}
-
-function setMapType(type) {
-  if (!map) return;
-  currentMapType = type;
-  updateMapTypeButtons(type);
-
-  if (type === "cosmic") {
-    map.setMapTypeId("roadmap");
-    map.setOptions({styles: cosmicStyle});
-    if (currentSpot) {
-      const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
-      renderPresence(spotId, true);
-      renderReviews(spotId);
-    }
-  }
-
-  if (type === "street") {
-    map.setMapTypeId("roadmap");
-    map.setOptions({styles: null});
-    if (currentSpot) {
-      renderPresence("", false);
-      renderReviews(currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`);
-    }
-  }
-
-  if (type === "satellite") {
-    map.setMapTypeId("satellite");
-    map.setOptions({styles: null});
-    if (currentSpot) {
-      renderPresence("", false);
-      renderReviews(currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`);
-    }
-  }
-}
-
-btnTypeCosmic.onclick = () => setMapType("cosmic");
-btnTypeStreet.onclick = () => setMapType("street");
-btnTypeSatellite.onclick = () => setMapType("satellite");
-
-/* USE MY LOCATION */
-document.getElementById("locateMe").onclick = () => {
-  if (!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(pos => {
-    const {latitude, longitude} = pos.coords;
-    map.panTo({lat:latitude, lng:longitude});
-    map.setZoom(14);
-
-    const spot = {
-      id: "user:" + OWNER_ID,
-      name: "Current location",
-      address: null,
-      lat: latitude,
-      lng: longitude,
-      categoryKey:null,
-      types:[]
-    };
-    setCurrentSpot(spot);
-  });
-};
-
-/* DRAG-ONLY DRAWER */
-const drawer = document.getElementById("drawer");
-const drawerGrab = document.getElementById("drawerGrab");
-
-let drawerStartY = 0;
-let drawerCurrentY = 0;
-let drawerBaseY = 0;
-let draggingDrawer = false;
-
-function getDrawerHeights() {
-  const vh = window.innerHeight;
-  return {
-    collapsed: 120,
-    mid: vh * 0.40,
-    expanded: vh * 0.75
-  };
-}
-
-let drawerState = "collapsed";
-
-function setDrawerToState(state, animate=true) {
-  const h = getDrawerHeights();
-  let target = h.collapsed;
-  if (state === "mid") target = h.mid;
-  if (state === "expanded") target = h.expanded;
-
-  drawerState = state;
-  drawerBaseY = target;
-
-  drawer.style.transition = animate ? "transform 0.2s ease-out" : "none";
-
-  const maxY = h.expanded;
-  const offset = maxY - target;
-  drawer.style.transform = `translateY(${offset}px)`;
-}
-
-function handleDrawerStart(y) {
-  draggingDrawer = true;
-  drawerStartY = y;
-
-  const h = getDrawerHeights();
-  const maxY = h.expanded;
-
-  const style = getComputedStyle(drawer);
-  const matrix = new WebKitCSSMatrix(style.transform);
-  const currentOffset = matrix.m42;
-
-  drawerBaseY = maxY - currentOffset;
-  drawer.style.transition = "none";
-}
-
-function handleDrawerMove(y) {
-  if (!draggingDrawer) return;
-
-  const dy = y - drawerStartY;
-  const h = getDrawerHeights();
-  const maxY = h.expanded;
-
-  let newY = drawerBaseY - dy;
-  if (newY < h.collapsed) newY = h.collapsed;
-  if (newY > h.expanded) newY = h.expanded;
-
-  drawerCurrentY = newY;
-  const offset = maxY - newY;
-  drawer.style.transform = `translateY(${offset}px)`;
-}
-
-function handleDrawerEnd() {
-  if (!draggingDrawer) return;
-  draggingDrawer = false;
-
-  const h = getDrawerHeights();
-  const y = drawerCurrentY || drawerBaseY;
-
-  const d = [
-    {state:"collapsed", v:Math.abs(y - h.collapsed)},
-    {state:"mid",       v:Math.abs(y - h.mid)},
-    {state:"expanded",  v:Math.abs(y - h.expanded)}
-  ];
-
-  d.sort((a,b)=>a.v - b.v);
-  setDrawerToState(d[0].state, true);
-}
-
-drawerGrab.addEventListener("mousedown", e => {
-  handleDrawerStart(e.clientY);
-  window.addEventListener("mousemove", onDrawerMove);
-  window.addEventListener("mouseup", onDrawerUp);
-});
-function onDrawerMove(e){ handleDrawerMove(e.clientY); }
-function onDrawerUp(e){
-  handleDrawerEnd();
-  window.removeEventListener("mousemove", onDrawerMove);
-  window.removeEventListener("mouseup", onDrawerUp);
-}
-
-drawerGrab.addEventListener("touchstart", e => {
-  handleDrawerStart(e.touches[0].clientY);
-},{passive:true});
-drawerGrab.addEventListener("touchmove", e => {
-  handleDrawerMove(e.touches[0].clientY);
-},{passive:true});
-drawerGrab.addEventListener("touchend", () => {
-  handleDrawerEnd();
-});
-
-/* INIT */
-window.onload = () => {
-  initMap();
-  setDrawerToState("collapsed", false);
-};
-</script>
 </body>
 </html>
