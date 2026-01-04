@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Blades Street Chatroom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #050509;
+      --bg-soft: #0b0b12;
+      --bg-softer: #101018;
+      --accent: #ffffff;
+      --accent-soft: #cfcfcf;
+      --accent-muted: #8a8a8a;
+      --border-glow: rgba(255, 255, 255, 0.18);
+      --shadow-glow: 0 0 18px rgba(255, 255, 255, 0.18);
+      --danger: #ff4b6a;
+      --success: #4bffb5;
+      --scroll-track: #050509;
+      --scroll-thumb: #2a2a3a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: radial-gradient(circle at top, #151522 0, #050509 45%, #000000 100%);
+      color: var(--accent);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--scroll-track);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--scroll-thumb);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3a3a4a;
+    }
+
+    /* Layout */
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "sidebar header"
+        "sidebar main";
+      height: 100%;
+    }
+
+    @media (max-width: 900px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "header"
+          "main";
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: -270px;
+        width: 260px;
+        height: 100%;
+        z-index: 50;
+        transition: left 0.2s ease-out;
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 40;
+        display: none;
+      }
+
+      .sidebar-overlay.visible {
+        display: block;
+      }
+    }
+
+    .app-header {
+      grid-area: header;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border-glow);
+      background: linear-gradient(90deg, rgba(5, 5, 9, 0.96), rgba(10, 10, 18, 0.96));
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .burger {
+      display: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border-glow);
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .burger span,
+    .burger span::before,
+    .burger span::after {
+      display: block;
+      width: 16px;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--accent);
+      position: relative;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+
+    .burger span::before,
+    .burger span::after {
+      content: "";
+      position: absolute;
+      left: 0;
+    }
+
+    .burger span::before {
+      top: -5px;
+    }
+
+    .burger span::after {
+      top: 5px;
+    }
+
+    .burger.open span {
+      transform: rotate(45deg);
+    }
+
+    .burger.open span::before {
+      transform: rotate(90deg);
+      top: 0;
+    }
+
+    .burger.open span::after {
+      opacity: 0;
+    }
+
+    @media (max-width: 900px) {
+      .burger {
+        display: flex;
+      }
+    }
+
+    .header-title-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-title {
+      font-size: 15px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-soft);
+    }
+
+    .header-subtitle {
+      font-size: 12px;
+      color: var(--accent-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .back-btn {
+      border-radius: 999px;
+      border: 1px solid var(--border-glow);
+      background: rgba(0, 0, 0, 0.6);
+      color: var(--accent-soft);
+      font-size: 12px;
+      padding: 6px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--border-glow);
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--accent-muted);
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .pill span {
+      color: var(--accent-soft);
+      font-weight: 600;
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+      grid-area: sidebar;
+      background: radial-gradient(circle at top, #181822 0, #050509 70%);
+      border-right: 1px solid var(--border-glow);
+      box-shadow: var(--shadow-glow);
+      padding: 14px 14px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      z-index: 45;
+    }
+
+    .sidebar-section {
+      padding: 10px 10px 8px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(5, 5, 10, 0.9);
+    }
+
+    .sidebar-section-title {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent-muted);
+      margin-bottom: 6px;
+    }
+
+    .sidebar-main-link {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 0 2px 0;
+    }
+
+    .sidebar-nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 6px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sidebar-nav-item {
+      font-size: 13px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      cursor: pointer;
+      color: var(--accent-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sidebar-nav-item span.label {
+      opacity: 0.9;
+    }
+
+    .sidebar-nav-item span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    .sidebar-nav-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar-nav-item.current {
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .sidebar-nav-item.current span.dot {
+      background: var(--accent);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--accent-muted);
+      opacity: 0.85;
+    }
+
+    .sidebar-footer a {
+      color: var(--accent-soft);
+    }
+
+    /* Main */
+
+    .main {
+      grid-area: main;
+      display: flex;
+      padding: 10px 12px 12px 12px;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 900px) {
+      .main {
+        padding: 8px;
+      }
+    }
+
+    .column {
+      border-radius: 16px;
+      border: 1px solid var(--border-glow);
+      background: rgba(5, 5, 10, 0.92);
+      box-shadow: var(--shadow-glow);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .column-left {
+      flex: 2.3;
+      margin-right: 4px;
+    }
+
+    .column-right {
+      flex: 1.4;
+      margin-left: 4px;
+    }
+
+    @media (max-width: 1100px) {
+      .main {
+        flex-direction: column;
+      }
+      .column-left,
+      .column-right {
+        margin: 0 0 8px 0;
+      }
+    }
+
+    .column-header {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .column-header-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .column-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .column-subtitle {
+      font-size: 11px;
+      color: var(--accent-muted);
+    }
+
+    .chip-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--accent-muted);
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .chip strong {
+      color: var(--accent-soft);
+    }
+
+    /* Toggle */
+
+    .toggle-group {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.7);
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .toggle-btn {
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--accent-muted);
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .toggle-btn.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent-soft);
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Chat */
+
+    .column-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 8px 10px 10px 10px;
+      min-height: 0;
+    }
+
+    .chat-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      gap: 6px;
+    }
+
+    .chat-stream {
+      flex: 1;
+      overflow-y: auto;
+      padding: 6px 4px 6px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .message-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 13px;
+    }
+
+    .message-row.self .message-bubble {
+      background: linear-gradient(135deg, #ffffff, #d3d3d3);
+      color: #050509;
+      align-self: flex-end;
+    }
+
+    .avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: radial-gradient(circle at 30% 0, #ffffff, #555);
+      flex-shrink: 0;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .avatar::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      border: 2px solid #050509;
+    }
+
+    .avatar[data-user] {
+      position: relative;
+    }
+
+    .profile-hover-card {
+      position: absolute;
+      left: 32px;
+      top: -4px;
+      width: 220px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(5, 5, 11, 0.98);
+      box-shadow: var(--shadow-glow);
+      z-index: 20;
+      font-size: 11px;
+      display: none;
+    }
+
+    .avatar:hover .profile-hover-card {
+      display: block;
+    }
+
+    .profile-hover-name {
+      font-weight: 600;
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    .profile-hover-line {
+      color: var(--accent-muted);
+      margin-bottom: 4px;
+    }
+
+    .profile-hover-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .profile-hover-actions button {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(0, 0, 0, 0.7);
+      color: var(--accent-soft);
+      font-size: 10px;
+      padding: 3px 8px;
+      cursor: pointer;
+    }
+
+    .profile-hover-actions button:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .message-bubble {
+      max-width: 80%;
+      padding: 6px 9px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.08);
+    }
+
+    .message-meta {
+      font-size: 10px;
+      color: var(--accent-muted);
+      margin-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .message-text {
+      font-size: 13px;
+      line-height: 1.35;
+      word-wrap: break-word;
+    }
+
+    .message-text .tag {
+      font-size: 11px;
+      opacity: 0.85;
+    }
+
+    .message-voice {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      font-size: 12px;
+    }
+
+    .voice-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 4px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.9);
+    }
+
+    .voice-wave {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+    }
+
+    .voice-bar {
+      width: 2px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.4);
+      animation: wave 1s infinite ease-in-out;
+    }
+
+    .voice-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+    .voice-bar:nth-child(2) { height: 12px; animation-delay: 0.08s; }
+    .voice-bar:nth-child(3) { height: 6px; animation-delay: 0.15s; }
+    .voice-bar:nth-child(4) { height: 10px; animation-delay: 0.22s; }
+
+    @keyframes wave {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.4); }
+    }
+
+    /* Composer */
+
+    .composer-wrapper {
+      border-radius: 13px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(0, 0, 0, 0.8);
+      padding: 6px 8px 6px 8px;
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .composer-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .composer-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--accent-soft);
+      font-size: 13px;
+      padding: 4px 2px;
+      outline: none;
+    }
+
+    .composer-input::placeholder {
+      color: var(--accent-muted);
+    }
+
+    .composer-select {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(0, 0, 0, 0.9);
+      color: var(--accent-soft);
+      font-size: 11px;
+      padding: 4px 8px;
+    }
+
+    .btn-icon {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(0, 0, 0, 0.8);
+      color: var(--accent-soft);
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      background: #ffffff;
+      color: #050509;
+      font-size: 12px;
+      padding: 4px 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-primary:hover {
+      box-shadow: var(--shadow-glow);
+    }
+
+    .composer-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .emoji-strip {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      font-size: 16px;
+    }
+
+    .emoji-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .emoji-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .composer-note {
+      font-size: 10px;
+      color: var(--accent-muted);
+      opacity: 0.9;
+    }
+
+    /* Right column: people + groups + context */
+
+    .panel-section {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+      padding: 8px 10px;
+    }
+
+    .panel-section:last-child {
+      border-bottom: none;
+    }
+
+    .panel-section-title {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent-muted);
+      margin-bottom: 4px;
+    }
+
+    .people-list {
+      max-height: 130px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 4px;
+    }
+
+    .person-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      border-radius: 10px;
+      padding: 4px 6px;
+      cursor: pointer;
+    }
+
+    .person-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .person-main {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .person-name {
+      font-size: 12px;
+    }
+
+    .person-meta {
+      font-size: 10px;
+      color: var(--accent-muted);
+    }
+
+    .person-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tag-pill {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 2px 6px;
+      font-size: 10px;
+      color: var(--accent-muted);
+    }
+
+    .tag-pill.live {
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .group-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 4px 6px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .group-row:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .group-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .group-name {
+      font-size: 12px;
+    }
+
+    .group-meta {
+      font-size: 10px;
+      color: var(--accent-muted);
+    }
+
+    .group-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .btn-outline {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: transparent;
+      color: var(--accent-soft);
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px dashed rgba(255, 255, 255, 0.4);
+      background: transparent;
+      color: var(--accent-muted);
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .context-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .btn-block {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .context-note {
+      font-size: 10px;
+      color: var(--accent-muted);
+      margin-top: 2px;
+    }
+
+    /* Modal (for events/spots selection – simple stub) */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+    }
+
+    .modal {
+      width: min(420px, 92vw);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: radial-gradient(circle at top, #1a1a26 0, #050509 70%);
+      box-shadow: var(--shadow-glow);
+      padding: 12px 14px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .modal-body {
+      max-height: 260px;
+      overflow-y: auto;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-right: 4px;
+    }
+
+    .modal-item {
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 6px 8px;
+      cursor: pointer;
+    }
+
+    .modal-item:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .modal-item-title {
+      font-size: 12px;
+      margin-bottom: 2px;
+    }
+
+    .modal-item-meta {
+      font-size: 11px;
+      color: var(--accent-muted);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+
+    .btn-close {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: transparent;
+      color: var(--accent-soft);
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+
+    .btn-close:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="app-shell">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">You are in</div>
+        <div class="sidebar-main-link">Blades · Street Room</div>
+        <div style="font-size:11px;color:var(--accent-muted);margin-top:4px;">
+          Voice‑ready, message‑first chat lane for inline street runs.
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Navigation</div>
+        <ul class="sidebar-nav-list">
+          <li class="sidebar-nav-item" data-link="dashboard.html">
+            <span class="label">Dashboard</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="chatrooms.html">
+            <span class="label">Chatrooms</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="virtual.html">
+            <span class="label">Virtual Park</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="clips.html">
+            <span class="label">Clips Feed</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="events.html">
+            <span class="label">Events</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="find-spots.html">
+            <span class="label">Find Spots</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="notifications.html">
+            <span class="label">Notifications</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="profile.html">
+            <span class="label">Profile</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="settings.html">
+            <span class="label">Settings</span>
+            <span class="dot"></span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Room quick links</div>
+        <ul class="sidebar-nav-list">
+          <li class="sidebar-nav-item current" data-link="room-blades-street.html">
+            <span class="label">Blades · Street</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="room-virtual-sp.html">
+            <span class="label">Virtual · General</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="room-tricks-vsp.html">
+            <span class="label">Virtual · Tricks</span>
+            <span class="dot"></span>
+          </li>
+          <li class="sidebar-nav-item" data-link="room-gearset.html">
+            <span class="label">Virtual · Gearset</span>
+            <span class="dot"></span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        Need to switch rooms? Use the <a href="chatrooms.html">Chatrooms</a> grid or the quick links above.
+      </div>
+    </aside>
+
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <button class="burger" id="burgerBtn" aria-label="Toggle navigation">
+          <span></span>
+        </button>
+        <div class="header-title-block">
+          <div class="header-title">Blades · Street Chatroom</div>
+          <div class="header-subtitle">Voice & messages · Black/white glow · Connected to events & spots</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="back-btn" id="backBtn">
+          ← Back
+        </button>
+        <div class="pill">
+          Mode: <span id="modeLabel">Public</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- LEFT: CHAT -->
+      <section class="column column-left">
+        <div class="column-header">
+          <div class="column-header-title-block">
+            <div class="column-title">Room feed</div>
+            <div class="column-subtitle">
+              Only voice notes, regular messages, gifts, and event/spot drops.
+            </div>
+          </div>
+          <div class="chip-row">
+            <div class="toggle-group" id="publicPrivateToggle">
+              <button class="toggle-btn active" data-mode="public">Public</button>
+              <button class="toggle-btn" data-mode="private">Private</button>
+            </div>
+            <div class="chip">
+              <strong>Blades · Street</strong> · real‑time lane
+            </div>
+          </div>
+        </div>
+
+        <div class="column-body">
+          <div class="chat-wrapper">
+            <div class="chat-stream" id="chatStream">
+              <!-- Sample messages -->
+              <div class="message-row">
+                <div class="avatar" data-user="aria">
+                  <div class="profile-hover-card">
+                    <div class="profile-hover-name">Aria Glide</div>
+                    <div class="profile-hover-line">
+                      City: Atlanta · Discipline: Blades Street
+                    </div>
+                    <div class="profile-hover-line">
+                      Bio: late‑night curb slaps & sidewalk lines.
+                    </div>
+                    <div class="profile-hover-actions">
+                      <button data-action="view-profile" data-user="aria">View profile</button>
+                      <button data-action="request-private" data-user="aria">Request private chat</button>
+                      <button data-action="invite-group" data-user="aria">Invite to group</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="message-bubble">
+                  <div class="message-meta">
+                    <span>Aria · 2m ago</span>
+                    <span>Public lane</span>
+                  </div>
+                  <div class="message-text">
+                    Dropped into downtown curb line, pavement is smooth tonight.
+                  </div>
+                </div>
+              </div>
+
+              <div class="message-row self">
+                <div class="avatar" data-user="you">
+                  <div class="profile-hover-card">
+                    <div class="profile-hover-name">You</div>
+                    <div class="profile-hover-line">
+                      Hover here to jump to your profile or manage groups.
+                    </div>
+                    <div class="profile-hover-actions">
+                      <button data-action="view-profile" data-user="you">View profile</button>
+                      <button data-action="manage-groups" data-user="you">Manage groups</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="message-bubble">
+                  <div class="message-meta">
+                    <span>You · 1m ago</span>
+                    <span>Voice note</span>
+                  </div>
+                  <div class="message-text">
+                    <span class="tag">Voice message:</span>
+                    <div class="message-voice">
+                      <button class="voice-pill" type="button">
+                        ▶ Play
+                        <div class="voice-wave">
+                          <div class="voice-bar"></div>
+                          <div class="voice-bar"></div>
+                          <div class="voice-bar"></div>
+                          <div class="voice-bar"></div>
+                        </div>
+                        <span style="font-size:10px;color:var(--accent-muted);">0:23</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- COMPOSER -->
+            <div class="composer-wrapper">
+              <div class="composer-row">
+                <select class="composer-select" id="targetUser">
+                  <option value="room">Send to room</option>
+                  <option value="aria">Send to Aria</option>
+                  <option value="broadcast">Send to everyone here</option>
+                </select>
+                <input
+                  type="text"
+                  class="composer-input"
+                  id="messageInput"
+                  placeholder="Type a message or add a caption for your voice note..."
+                />
+                <button class="btn-icon" id="voiceBtn" title="Send voice message" type="button">
+                  🎙
+                </button>
+                <button class="btn-icon" id="giftsBtn" title="Send emoji / gift" type="button">
+                  💝
+                </button>
+                <button class="btn-primary" id="sendBtn" type="button">
+                  Send
+                </button>
+              </div>
+              <div class="composer-meta-row">
+                <div class="emoji-strip" id="emojiStrip">
+                  <button class="emoji-btn" data-emoji="😊" title="Smile">😊</button>
+                  <button class="emoji-btn" data-emoji="😂" title="Laugh">😂</button>
+                  <button class="emoji-btn" data-emoji="🔥" title="On fire">🔥</button>
+                  <button class="emoji-btn" data-emoji="✨" title="Sparkle">✨</button>
+                  <button class="emoji-btn" data-emoji="💀" title="Send it">💀</button>
+                  <button class="emoji-btn" data-emoji="❤️" title="Heart">❤️</button>
+                  <button class="emoji-btn" data-emoji="💋" title="Kiss">💋</button>
+                  <button class="emoji-btn" data-emoji="🤗" title="Hug">🤗</button>
+                  <button class="emoji-btn" data-emoji="🌹" title="Rose">🌹</button>
+                </div>
+                <div class="composer-note">
+                  Emojis & gifts are attached to the selected recipient, not the whole room.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: PEOPLE / PRIVATE / EVENTS / SPOTS -->
+      <section class="column column-right">
+        <div class="panel-section">
+          <div class="panel-section-title">People in lane</div>
+          <div class="people-list" id="peopleList">
+            <div class="person-row" data-user="aria">
+              <div class="person-main">
+                <div class="avatar"></div>
+                <div>
+                  <div class="person-name">Aria Glide</div>
+                  <div class="person-meta">Blades · Street · ATL</div>
+                </div>
+              </div>
+              <div class="person-actions">
+                <button class="btn-icon" type="button" title="View profile" data-action="view-profile" data-user="aria">👁</button>
+                <button class="btn-icon" type="button" title="Request private chat" data-action="request-private" data-user="aria">🔒</button>
+              </div>
+            </div>
+
+            <div class="person-row" data-user="kane">
+              <div class="person-main">
+                <div class="avatar"></div>
+                <div>
+                  <div class="person-name">Kane Rail</div>
+                  <div class="person-meta">Blades · Rails · Nearby</div>
+                </div>
+              </div>
+              <div class="person-actions">
+                <button class="btn-icon" type="button" title="View profile" data-action="view-profile" data-user="kane">👁</button>
+                <button class="btn-icon" type="button" title="Request private chat" data-action="request-private" data-user="kane">🔒</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-section-title">Private groups</div>
+          <div class="group-row" data-group="nightline">
+            <div class="group-main">
+              <div class="group-name">Nightline Squad</div>
+              <div class="group-meta">4 members · blades street core</div>
+            </div>
+            <div class="group-actions">
+              <button class="btn-outline btn-small" type="button" data-action="join-group" data-group="nightline">
+                Join live
+              </button>
+              <div class="tag-pill live">Live voice</div>
+            </div>
+          </div>
+
+          <div style="margin-top:6px;">
+            <button class="btn-ghost btn-block" type="button" id="startGroupBtn">
+              + Start your own private group
+            </button>
+            <div class="context-note">
+              Groups support live voice (like a call) + text in the same space.
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <div class="panel-section-title">Events & spots</div>
+          <div class="context-actions">
+            <button class="btn-outline btn-block" type="button" id="attachEventBtn">
+              Attach event from Events page
+            </button>
+            <button class="btn-outline btn-block" type="button" id="attachSpotBtn">
+              Attach spot from Find Spots page
+            </button>
+            <div class="context-note">
+              Events and spots carry full details — distance, timing, and an optional tap‑through for directions.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL FOR EVENTS/SPOTS (simple stub – app would wire real data) -->
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" id="selectionModal">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Select item</div>
+        <button class="btn-close" type="button" id="closeModalBtn">Close</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Stub sample items -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn-close" type="button" id="cancelModalBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Burger / sidebar
+    const burgerBtn = document.getElementById("burgerBtn");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+    function closeSidebar() {
+      sidebar.classList.remove("open");
+      burgerBtn && burgerBtn.classList.remove("open");
+      sidebarOverlay && sidebarOverlay.classList.remove("visible");
+    }
+
+    if (burgerBtn) {
+      burgerBtn.addEventListener("click", () => {
+        const isOpen = sidebar.classList.toggle("open");
+        burgerBtn.classList.toggle("open", isOpen);
+        sidebarOverlay.classList.toggle("visible", isOpen);
+      });
+    }
+
+    if (sidebarOverlay) {
+      sidebarOverlay.addEventListener("click", () => {
+        closeSidebar();
+      });
+    }
+
+    // Sidebar nav links
+    document.querySelectorAll(".sidebar-nav-item[data-link]").forEach(item => {
+      item.addEventListener("click", () => {
+        const link = item.getAttribute("data-link");
+        if (link) {
+          window.location.href = link;
+        }
+      });
+    });
+
+    // Back button
+    const backBtn = document.getElementById("backBtn");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          window.location.href = "chatrooms.html";
+        }
+      });
+    }
+
+    // Public / Private toggle
+    const publicPrivateToggle = document.getElementById("publicPrivateToggle");
+    const modeLabel = document.getElementById("modeLabel");
+    const chatStream = document.getElementById("chatStream");
+
+    let currentMode = "public";
+
+    if (publicPrivateToggle) {
+      publicPrivateToggle.querySelectorAll(".toggle-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const mode = btn.getAttribute("data-mode");
+          if (mode && mode !== currentMode) {
+            currentMode = mode;
+            publicPrivateToggle.querySelectorAll(".toggle-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            if (modeLabel) modeLabel.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+
+            // Simple UI hint for mode change (no backend, just local)
+            const systemMsg = document.createElement("div");
+            systemMsg.className = "message-row";
+            systemMsg.innerHTML = `
+              <div class="avatar"></div>
+              <div class="message-bubble">
+                <div class="message-meta">
+                  <span>System</span>
+                  <span>Now in ${mode === "public" ? "public" : "private group"} view</span>
+                </div>
+                <div class="message-text">
+                  You’re viewing the ${mode === "public" ? "main room feed" : "private groups / requests"}.
+                </div>
+              </div>
+            `;
+            chatStream.appendChild(systemMsg);
+            chatStream.scrollTop = chatStream.scrollHeight;
+          }
+        });
+      });
+    }
+
+    // Simple message sending simulation (text + voice + emoji/gifts)
+    const messageInput = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const voiceBtn = document.getElementById("voiceBtn");
+    const giftsBtn = document.getElementById("giftsBtn");
+    const targetUser = document.getElementById("targetUser");
+
+    function formatTargetLabel(target) {
+      if (target === "room") return "Room";
+      if (target === "broadcast") return "Everyone";
+      return `To ${target}`;
+    }
+
+    function appendMessage({ text, asVoice = false, giftEmoji = null }) {
+      if (!chatStream) return;
+      const target = targetUser ? targetUser.value : "room";
+      const metaTarget = formatTargetLabel(target);
+      const trimmed = (text || "").trim();
+      if (!trimmed && !asVoice && !giftEmoji) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "message-row self";
+      const safeText = trimmed ? trimmed.replace(/</g, "&lt;").replace(/>/g, "&gt;") : "";
+
+      let messageBody = "";
+
+      if (!asVoice) {
+        messageBody += `<div class="message-text">${safeText || ""}</div>`;
+      }
+
+      if (asVoice) {
+        messageBody += `
+          <div class="message-text">
+            <span class="tag">Voice message:</span>
+            <div class="message-voice">
+              <button class="voice-pill" type="button">
+                ▶ Play
+                <div class="voice-wave">
+                  <div class="voice-bar"></div>
+                  <div class="voice-bar"></div>
+                  <div class="voice-bar"></div>
+                  <div class="voice-bar"></div>
+                </div>
+                <span style="font-size:10px;color:var(--accent-muted);">0:21</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      if (giftEmoji) {
+        messageBody += `
+          <div class="message-text" style="margin-top:4px;">
+            Sent to <strong>${metaTarget}</strong>:
+            <span style="font-size:18px;margin-left:4px;">${giftEmoji}</span>
+          </div>
+        `;
+      }
+
+      wrapper.innerHTML = `
+        <div class="avatar" data-user="you">
+          <div class="profile-hover-card">
+            <div class="profile-hover-name">You</div>
+            <div class="profile-hover-line">
+              Hover to jump to your profile and groups.
+            </div>
+            <div class="profile-hover-actions">
+              <button data-action="view-profile" data-user="you">View profile</button>
+              <button data-action="manage-groups" data-user="you">Manage groups</button>
+            </div>
+          </div>
+        </div>
+        <div class="message-bubble">
+          <div class="message-meta">
+            <span>You</span>
+            <span>${metaTarget}</span>
+          </div>
+          ${messageBody}
+        </div>
+      `;
+      chatStream.appendChild(wrapper);
+      chatStream.scrollTop = chatStream.scrollHeight;
+    }
+
+    if (sendBtn) {
+      sendBtn.addEventListener("click", () => {
+        appendMessage({ text: messageInput.value, asVoice: false });
+        messageInput.value = "";
+      });
+    }
+
+    if (messageInput) {
+      messageInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          appendMessage({ text: messageInput.value, asVoice: false });
+          messageInput.value = "";
+        }
+      });
+    }
+
+    if (voiceBtn) {
+      voiceBtn.addEventListener("click", () => {
+        appendMessage({ text: messageInput.value, asVoice: true });
+        messageInput.value = "";
+      });
+    }
+
+    const emojiStrip = document.getElementById("emojiStrip");
+    if (emojiStrip) {
+      emojiStrip.querySelectorAll(".emoji-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const emoji = btn.getAttribute("data-emoji");
+          appendMessage({ text: messageInput.value, asVoice: false, giftEmoji: emoji });
+          messageInput.value = "";
+        });
+      });
+    }
+
+    if (giftsBtn) {
+      giftsBtn.addEventListener("click", () => {
+        // Simple hint – actual gifts are handled via emoji buttons
+        alert("Use the emoji strip to send kisses, hugs, roses, and other gifts to the selected user.");
+      });
+    }
+
+    // Hover profile actions
+    document.body.addEventListener("click", (e) => {
+      const actionBtn = e.target.closest("[data-action]");
+      if (!actionBtn) return;
+      const action = actionBtn.getAttribute("data-action");
+      const user = actionBtn.getAttribute("data-user");
+      const group = actionBtn.getAttribute("data-group");
+
+      if (action === "view-profile" && user) {
+        window.location.href = "profile.html";
+      }
+
+      if (action === "request-private" && user) {
+        // Navigate to generic private chat; backend would key it to user
+        window.location.href = "private-chat.html";
+      }
+
+      if (action === "invite-group" && user) {
+        alert(`Invite sent to ${user} to join your private group (UI stub; app would handle real invite).`);
+      }
+
+      if (action === "join-group" && group) {
+        alert(`Joining group "${group}" with live voice enabled (UI stub).`);
+      }
+
+      if (action === "manage-groups") {
+        alert("Open your group management overlay (UI stub – connect to your real group manager).");
+      }
+    });
+
+    // Start own group
+    const startGroupBtn = document.getElementById("startGroupBtn");
+    if (startGroupBtn) {
+      startGroupBtn.addEventListener("click", () => {
+        alert("Group created (stub). In the full app, this opens a form to name the group and start live voice.");
+      });
+    }
+
+    // Events / Spots modal – simple selectable stub
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalBody = document.getElementById("modalBody");
+    const modalTitle = document.getElementById("modalTitle");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const cancelModalBtn = document.getElementById("cancelModalBtn");
+    const attachEventBtn = document.getElementById("attachEventBtn");
+    const attachSpotBtn = document.getElementById("attachSpotBtn");
+
+    function openModal(type) {
+      if (!modalBackdrop || !modalBody || !modalTitle) return;
+      modalBody.innerHTML = "";
+      if (type === "event") {
+        modalTitle.textContent = "Attach event from Events page";
+        const items = [
+          {
+            id: "night-session",
+            title: "Midnight Street Roll",
+            meta: "Tonight · 10:00 PM · 1.8 miles away"
+          },
+          {
+            id: "lot-session",
+            title: "Parking Lot Flatland Jam",
+            meta: "Saturday · 3:00 PM · 4.2 miles away"
+          }
+        ];
+        items.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "modal-item";
+          div.setAttribute("data-type", "event");
+          div.setAttribute("data-id", item.id);
+          div.innerHTML = `
+            <div class="modal-item-title">${item.title}</div>
+            <div class="modal-item-meta">${item.meta}</div>
+          `;
+          modalBody.appendChild(div);
+        });
+      } else {
+        modalTitle.textContent = "Attach spot from Find Spots page";
+        const items = [
+          {
+            id: "downtown-ledge",
+            title: "Downtown Ledge Line",
+            meta: "2.4 miles · directions available"
+          },
+          {
+            id: "river-trail",
+            title: "Riverfront Night Trail",
+            meta: "5.9 miles · directions available"
+          }
+        ];
+        items.forEach(item => {
+          const div = document.createElement("div");
+          div.className = "modal-item";
+          div.setAttribute("data-type", "spot");
+          div.setAttribute("data-id", item.id);
+          div.innerHTML = `
+            <div class="modal-item-title">${item.title}</div>
+            <div class="modal-item-meta">${item.meta}</div>
+          `;
+          modalBody.appendChild(div);
+        });
+      }
+      modalBackdrop.style.display = "flex";
+    }
+
+    function closeModal() {
+      if (modalBackdrop) {
+        modalBackdrop.style.display = "none";
+      }
+    }
+
+    if (attachEventBtn) {
+      attachEventBtn.addEventListener("click", () => {
+        openModal("event");
+      });
+    }
+
+    if (attachSpotBtn) {
+      attachSpotBtn.addEventListener("click", () => {
+        openModal("spot");
+      });
+    }
+
+    if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
+    if (cancelModalBtn) cancelModalBtn.addEventListener("click", closeModal);
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener("click", (e) => {
+        if (e.target === modalBackdrop) closeModal();
+      });
+    }
+
+    if (modalBody) {
+      modalBody.addEventListener("click", (e) => {
+        const item = e.target.closest(".modal-item");
+        if (!item) return;
+        const type = item.getAttribute("data-type");
+        const title = item.querySelector(".modal-item-title")?.textContent || "";
+        const meta = item.querySelector(".modal-item-meta")?.textContent || "";
+        let text;
+        if (type === "event") {
+          text = `Event dropped from Events page:\n${title}\n${meta}\nTap for full details & directions.`;
+        } else {
+          text = `Spot dropped from Find Spots:\n${title}\n${meta}\nTap for full details & directions.`;
+        }
+        appendMessage({ text, asVoice: false });
+        closeModal();
+      });
+    }
+  </script>
+</body>
+</html>
