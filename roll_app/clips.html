@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clips Feed – Roll ’n Connect</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      padding: 14px 16px;
+      margin: 0 -16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .header-sub {
+      font-size: 0.8rem;
+      color: #9fb4ff;
+      margin-top: 2px;
+    }
+
+    .header-right a {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .clips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .clip-card {
+      border-radius: 16px;
+      background: radial-gradient(circle at top left, rgba(76,172,255,0.22), rgba(15,15,20,0.98));
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 12px 12px 10px;
+      box-shadow: 0 0 24px rgba(0,0,0,0.7);
+    }
+
+    .clip-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .clip-user {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .clip-meta {
+      font-size: 0.72rem;
+      opacity: 0.7;
+    }
+
+    .clip-video {
+      width: 100%;
+      border-radius: 12px;
+      margin: 6px 0 8px;
+      background: #050505;
+    }
+
+    .clip-video video {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+    }
+
+    .clip-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .clip-actions-left,
+    .clip-actions-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-like {
+      background: rgba(255,82,152,0.16);
+      border: 1px solid rgba(255,108,180,0.7);
+    }
+
+    .btn-share {
+      background: rgba(76,172,255,0.16);
+      border: 1px solid rgba(132,201,255,0.7);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    .counts {
+      font-size: 0.72rem;
+      opacity: 0.8;
+    }
+
+    .comments {
+      border-top: 1px solid rgba(255,255,255,0.12);
+      margin-top: 6px;
+      padding-top: 6px;
+    }
+
+    .comments-list {
+      max-height: 120px;
+      overflow-y: auto;
+      margin-bottom: 6px;
+    }
+
+    .comment {
+      font-size: 0.78rem;
+      margin-bottom: 4px;
+    }
+
+    .comment-user {
+      font-weight: 600;
+    }
+
+    .comment-text {
+      opacity: 0.9;
+    }
+
+    .comment-time {
+      font-size: 0.7rem;
+      opacity: 0.6;
+      margin-left: 4px;
+    }
+
+    .comment-form {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .comment-input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      padding: 6px 10px;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      font-size: 0.78rem;
+    }
+
+    .comment-input::placeholder {
+      color: rgba(255,255,255,0.35);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 10px;
+      font-size: 0.9rem;
+      opacity: 0.75;
+    }
+
+    .pill {
+      display: inline-flex;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      font-size: 0.7rem;
+      opacity: 0.8;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #4cacff;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <div class="header-left">
+        <div class="header-title">Clips Feed</div>
+        <div class="header-sub">All clips from every profile in one stream</div>
+      </div>
+      <div class="header-right">
+        <a href="profile.html">Back to Profile</a>
+      </div>
+    </header>
+
+    <div id="clipsList" class="clips-list"></div>
+  </div>
+
+  <script>
+    // CONFIG KEYS (aligned with your app)
+    const CLIPS_KEY = 'rc_clips';
+    const PROFILE_KEY = 'rc_profile';
+    const USER_KEY = 'rc_user';
+
+    function getCurrentUser() {
+      try {
+        const user = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
+        if (user && user.username) return user.username;
+      } catch (e) {}
+      try {
+        const profile = JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null');
+        if (profile && profile.username) return profile.username;
+      } catch (e) {}
+      return null;
+    }
+
+    function getClips() {
+      try {
+        return JSON.parse(localStorage.getItem(CLIPS_KEY) || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveClips(list) {
+      localStorage.setItem(CLIPS_KEY, JSON.stringify(list));
+    }
+
+    function likeClip(clipId, username) {
+      if (!username) return;
+      const clips = getClips();
+      const clip = clips.find(c => c.id === clipId);
+      if (!clip) return;
+
+      if (!Array.isArray(clip.likes)) clip.likes = [];
+      const userLikes = clip.likes.filter(u => u === username).length;
+
+      if (userLikes < 3) {
+        clip.likes.push(username);
+        saveClips(clips);
+        renderClips();
+      }
+    }
+
+    function commentOnClip(clipId, username, text) {
+      if (!username || !text.trim()) return;
+      const clips = getClips();
+      const clip = clips.find(c => c.id === clipId);
+      if (!clip) return;
+
+      if (!Array.isArray(clip.comments)) clip.comments = [];
+      clip.comments.push({
+        user: username,
+        text: text.trim(),
+        time: Date.now()
+      });
+
+      saveClips(clips);
+      renderClips();
+    }
+
+    function shareClip(clipId, username) {
+      if (!username) return;
+
+      let profile = {};
+      try {
+        profile = JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}');
+      } catch (e) {
+        profile = {};
+      }
+
+      if (!profile.username) profile.username = username;
+      if (!Array.isArray(profile.sharedClips)) profile.sharedClips = [];
+
+      if (!profile.sharedClips.includes(clipId)) {
+        profile.sharedClips.push(clipId);
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+      }
+      // optional: could trigger notification later
+    }
+
+    function formatTime(ts) {
+      if (!ts) return '';
+      try {
+        const d = new Date(ts);
+        return d.toLocaleString();
+      } catch (e) {
+        return '';
+      }
+    }
+
+    function renderClips() {
+      const container = document.getElementById('clipsList');
+      const clips = getClips();
+      const currentUser = getCurrentUser();
+
+      if (!clips.length) {
+        container.innerHTML = '<div class="empty-state">No clips yet. Add clips from your profile page.</div>';
+        return;
+      }
+
+      const html = clips.map(clip => {
+        const likes = Array.isArray(clip.likes) ? clip.likes : [];
+        const comments = Array.isArray(clip.comments) ? clip.comments : [];
+        const userLikesCount = currentUser ? likes.filter(u => u === currentUser).length : 0;
+        const canLike = currentUser && userLikesCount < 3;
+        const totalLikes = likes.length;
+        const totalComments = comments.length;
+        const shares = Array.isArray(clip.shares) ? clip.shares.length : 0;
+
+        return `
+          <article class="clip-card" data-id="${clip.id}">
+            <div class="clip-header">
+              <div>
+                <div class="clip-user">@${clip.user || 'unknown'}</div>
+                <div class="clip-meta">${clip.title || 'Clip'} ${clip.createdAt ? '• ' + formatTime(clip.createdAt) : ''}</div>
+              </div>
+              <div class="pill">
+                <span class="pill-dot"></span>
+                <span>Global feed</span>
+              </div>
+            </div>
+
+            <div class="clip-video">
+              ${
+                clip.video
+                  ? `<video src="${clip.video}" controls preload="metadata"></video>`
+                  : `<div style="padding:16px;font-size:0.85rem;opacity:0.7;">No video source set for this clip.</div>`
+              }
+            </div>
+
+            <div class="clip-actions">
+              <div class="clip-actions-left">
+                <button class="btn btn-like" data-action="like" ${canLike ? '' : 'disabled'}>
+                  <span>❤️ Like</span>
+                  <span>(${userLikesCount}/3)</span>
+                </button>
+                <span class="counts">${totalLikes} total</span>
+              </div>
+              <div class="clip-actions-right">
+                <span class="counts">${shares} shared</span>
+                <button class="btn btn-share" data-action="share">
+                  🔁 Share
+                </button>
+              </div>
+            </div>
+
+            <div class="comments">
+              <div class="comments-list">
+                ${
+                  comments.length
+                    ? comments.map(c => `
+                        <div class="comment">
+                          <span class="comment-user">@${c.user}</span>
+                          <span class="comment-text">${c.text}</span>
+                          <span class="comment-time">${formatTime(c.time)}</span>
+                        </div>
+                      `).join('')
+                    : `<div class="comment" style="opacity:0.7;">No comments yet.</div>`
+                }
+              </div>
+              <form class="comment-form" data-action="comment-form">
+                <input class="comment-input" type="text" placeholder="Add a comment..." />
+                <button class="btn" type="submit">Post</button>
+              </form>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      container.innerHTML = html;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('clipsList');
+      const currentUser = getCurrentUser();
+
+      // Event delegation for like, share, comment
+      container.addEventListener('click', (e) => {
+        const card = e.target.closest('.clip-card');
+        if (!card) return;
+        const clipId = card.getAttribute('data-id');
+        if (!clipId) return;
+
+        const likeBtn = e.target.closest('[data-action="like"]');
+        if (likeBtn) {
+          likeClip(clipId, currentUser);
+          return;
+        }
+
+        const shareBtn = e.target.closest('[data-action="share"]');
+        if (shareBtn) {
+          shareClip(clipId, currentUser);
+          renderClips();
+          return;
+        }
+      });
+
+      container.addEventListener('submit', (e) => {
+        const form = e.target.closest('[data-action="comment-form"]');
+        if (!form) return;
+        e.preventDefault();
+
+        const card = form.closest('.clip-card');
+        if (!card) return;
+        const clipId = card.getAttribute('data-id');
+        const input = form.querySelector('.comment-input');
+        if (!input) return;
+
+        const text = input.value;
+        commentOnClip(clipId, currentUser, text);
+        input.value = '';
+      });
+
+      renderClips();
+    });
+  </script>
+</body>
+</html>
