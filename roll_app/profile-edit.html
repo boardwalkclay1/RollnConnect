@@ -96,21 +96,6 @@
         <input id="profileClipFileInput" type="file" accept="video/*" />
       </div>
 
-      <div class="field">
-        <label for="postsCountInput">Posts count</label>
-        <input id="postsCountInput" type="number" min="0" />
-      </div>
-
-      <div class="field">
-        <label for="clipsCountInput">Clips count</label>
-        <input id="clipsCountInput" type="number" min="0" />
-      </div>
-
-      <div class="field">
-        <label for="eventsCountInput">Events count</label>
-        <input id="eventsCountInput" type="number" min="0" />
-      </div>
-
       <button class="btn btn-primary" id="saveProfileBtn" type="button">Save profile</button>
       <button class="btn" type="button" onclick="window.location.href='profile.html'">Back to profile</button>
     </div>
@@ -188,9 +173,6 @@
       document.getElementById("nameInput").value         = p.name || "";
       document.getElementById("usernameInput").value     = p.username || "";
       document.getElementById("bioInput").value          = p.bio || "";
-      document.getElementById("postsCountInput").value   = p.postsCount || 0;
-      document.getElementById("clipsCountInput").value   = p.clipsCount || 0;
-      document.getElementById("eventsCountInput").value  = p.eventsCount || 0;
     }
 
     async function saveProfileForm() {
@@ -199,9 +181,6 @@
       p.name        = document.getElementById("nameInput").value.trim();
       p.username    = document.getElementById("usernameInput").value.trim();
       p.bio         = document.getElementById("bioInput").value.trim();
-      p.postsCount  = Number(document.getElementById("postsCountInput").value) || 0;
-      p.clipsCount  = Number(document.getElementById("clipsCountInput").value) || 0;
-      p.eventsCount = Number(document.getElementById("eventsCountInput").value) || 0;
 
       const avatarFile = document.getElementById("avatarFileInput").files[0];
       if (avatarFile) p.avatarUrl = await fileToBase64(avatarFile);
