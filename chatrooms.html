@@ -148,7 +148,58 @@
 </head>
 
 <body>
+<!-- FLOATING SIGNATURE ELEMENTS -->
+<div class="float-orb orb1"></div>
+<div class="float-orb orb2"></div>
+<div class="float-orb orb3"></div>
 
+<style>
+  /* FLOATING SIGNATURE ORBS */
+  .float-orb {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.25), rgba(255,255,255,0.05));
+    box-shadow: 0 0 40px rgba(255,255,255,0.25);
+    filter: blur(1px);
+    z-index: -2;
+    animation: floaty 18s ease-in-out infinite;
+  }
+
+  .orb1 { top: 12%; left: 8%; animation-delay: 0s; }
+  .orb2 { top: 68%; left: 72%; animation-delay: 4s; }
+  .orb3 { top: 40%; left: 30%; animation-delay: 8s; }
+
+  @keyframes floaty {
+    0%   { transform: translateY(0px) translateX(0px) scale(1); }
+    50%  { transform: translateY(-40px) translateX(20px) scale(1.15); }
+    100% { transform: translateY(0px) translateX(0px) scale(1); }
+  }
+</style>
+
+<!-- UPDATED HERO TEXT -->
+<div class="hero">
+  <h1 style="font-size:3rem;">Chatrooms</h1>
+  <p style="font-size:1.2rem;opacity:0.9;line-height:1.7;">
+    Every discipline has its own world — and every world has sub‑realms.
+    Each realm leads to a fully upgraded chatroom experience with:
+    <br><br>
+
+    🎙 <strong>Voice messages</strong> (tap, record, send — clean and simple)<br>
+    😊 <strong>Emoji & gift sending</strong> (kisses, hugs, roses, reactions)<br>
+    🧊 <strong>Hover‑profiles</strong> with mini‑summaries & quick actions<br>
+    🔒 <strong>Private chat requests</strong> between users<br>
+    🎧 <strong>Private groups with live voice</strong> (like being on a call together)<br>
+    📅 <strong>Drop events into the chat</strong> directly from the Events page<br>
+    📍 <strong>Drop spots into the chat</strong> with distance + directions<br>
+    🌌 <strong>Cosmic black‑and‑white glow UI</strong> with floating elements<br>
+    🌀 <strong>Fun learning experience</strong> — every room teaches you how to use it<br>
+
+    <br>
+    Choose your discipline to enter its universe.
+  </p>
+</div>
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
