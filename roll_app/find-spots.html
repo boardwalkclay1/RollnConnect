@@ -5,7 +5,7 @@
   <title>Find Spots – Roll ’n Connect</title>
 
   <!-- GOOGLE MAPS (REPLACE API_KEY LOCALLY) -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places"></script>
 
   <style>
     body {
@@ -173,6 +173,18 @@
       text-align:center;
       font-size:0.85rem;
     }
+
+    #liveBtn, #locateBtn {
+      margin-top:10px;
+      width:100%;
+      padding:10px;
+      border:none;
+      border-radius:8px;
+      background:#4b5563;
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+    }
   </style>
 </head>
 
@@ -201,6 +213,10 @@
 </div>
 
 <div class="content">
+
+  <button id="locateBtn">Use My Location</button>
+  <button id="liveBtn">Toggle Live Location</button>
+
   <div id="spotList"></div>
   <div id="loadMore" class="load-more" style="display:none;">Load more</div>
 
@@ -249,6 +265,8 @@
 <script>
 let map, places, spots=[], pageIndex=0, pageSize=5;
 let activeFilters=[];
+let userMarker=null;
+let liveWatch=null;
 
 /* INIT MAP */
 function initMap(){
@@ -260,7 +278,7 @@ function initMap(){
 }
 window.onload=initMap;
 
-/* FILTERS — allow up to 3 */
+/* FILTERS — up to 3 */
 document.querySelectorAll(".filter-btn").forEach(btn=>{
   btn.onclick=()=>{
     const q=btn.dataset.q;
@@ -398,6 +416,74 @@ document.getElementById("submitReview").onclick=()=>{
   saveReviews(id,reviews);
   renderReviews(id);
 };
+
+/* LOCATION */
+document.getElementById("locateBtn").onclick=()=>{
+  if(!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const loc={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    map.panTo(loc);
+    map.setZoom(14);
+    placeUserMarker(loc);
+  });
+};
+
+function placeUserMarker(loc){
+  const profile=JSON.parse(localStorage.getItem("rc_profile")||"{}");
+  const avatar=profile.avatarUrl||"styles/default-avatar.png";
+
+  if(!userMarker){
+    userMarker=new google.maps.Marker({
+      map,
+      position:loc,
+      icon:{
+        url:avatar,
+        scaledSize:new google.maps.Size(40,40),
+        anchor:new google.maps.Point(20,20)
+      }
+    });
+  } else {
+    userMarker.setPosition(loc);
+  }
+}
+
+/* LIVE LOCATION */
+document.getElementById("liveBtn").onclick=()=>{
+  if(liveWatch){
+    navigator.geolocation.clearWatch(liveWatch);
+    liveWatch=null;
+    return;
+  }
+
+  liveWatch=navigator.geolocation.watchPosition(pos=>{
+    const loc={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    placeUserMarker(loc);
+    checkNearby(loc);
+  });
+};
+
+/* NEARBY SKATERS */
+function checkNearby(loc){
+  const others=JSON.parse(localStorage.getItem("rc_live_skaters")||"[]");
+  let found=false;
+
+  others.forEach(o=>{
+    const d=distance(loc.lat,loc.lng,o.lat,o.lng);
+    if(d<=5) found=true;
+  });
+
+  document.getElementById("nearbyNotice").style.display = found ? "block" : "none";
+}
+
+function distance(lat1,lon1,lat2,lon2){
+  const R=3958.8;
+  const dLat=(lat2-lat1)*Math.PI/180;
+  const dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2 +
+          Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) *
+          Math.sin(dLon/2)**2;
+  return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+}
 </script>
 
 </body>
