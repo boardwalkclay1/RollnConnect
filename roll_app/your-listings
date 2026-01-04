@@ -36,7 +36,7 @@
       box-shadow: 0 0 12px #4a4aff;
     }
 
-    /* SIDE MENU */
+    /* SCROLLABLE SIDE MENU */
     .side-menu {
       position: fixed;
       top: 0;
@@ -48,6 +48,17 @@
       box-shadow: 0 0 20px #4a4aff;
       transition: 0.35s ease;
       z-index: 999;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .side-menu::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .side-menu::-webkit-scrollbar-thumb {
+      background: #4a4aff;
+      border-radius: 10px;
     }
 
     .side-menu.open {
@@ -171,19 +182,30 @@
     <div></div><div></div><div></div>
   </div>
 
-  <!-- SIDE MENU -->
+  <!-- UPDATED UNIVERSAL MARKETPLACE SIDEBAR -->
   <div class="side-menu">
-    <a href="dashboard.html">Dashboard</a>
 
+    <!-- MARKETPLACE CORE -->
+    <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
     <a href="marketplace.html">Marketplace</a>
     <a href="sell-item.html">Sell Item</a>
     <a href="your-listings.html">Your Listings</a>
+    <a href="giveaways.html">Giveaways</a>
 
+    <!-- MARKETPLACE EXPANDED -->
+    <a href="marketplace-messages.html">Messages</a>
+    <a href="marketplace-offers.html">Offers</a>
+    <a href="marketplace-favorites.html">Favorites</a>
+    <a href="marketplace-notifications.html">Notifications</a>
+
+    <!-- ITEM UTILITIES -->
     <a href="item-view.html">View Item</a>
     <a href="edit-item.html">Edit Item</a>
 
-    <a href="profile.html">Profile</a>
-    <a href="settings.html">Settings</a>
+    <!-- MARKETPLACE USER -->
+    <a href="marketplace-profile.html">Marketplace Profile</a>
+    <a href="marketplace-settings.html">Marketplace Settings</a>
+
   </div>
 
   <div class="page-container">
