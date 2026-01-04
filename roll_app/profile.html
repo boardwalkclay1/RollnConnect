@@ -1,813 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<title>My Profile – Roll ’n Connect</title>
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Boardwalk Profile</title> <link rel="stylesheet" href="styles/style.css" /> <script> document.addEventListener("DOMContentLoaded", () => { const USER_ID = "boardwalk";
 
-<style>
-/* GLOBAL */
-body {
-  background:#000;
-  color:#fff;
-  margin:0;
-  padding:0;
-  font-family:'Inter',sans-serif;
-  overflow-x:hidden;
-  min-height:100vh;
-}
-
-/* STARFIELDS */
-.stars1,.stars2,.stars3 {
-  position:fixed; inset:0;
-  background:url('styles/stars-white.png') repeat;
-  z-index:-3;
-  pointer-events:none;
-}
-.stars1{opacity:.55;animation:drift1 140s linear infinite;}
-.stars2{opacity:.35;animation:drift2 200s linear infinite;}
-.stars3{opacity:.2; animation:drift3 260s linear infinite;}
-
-@keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
-@keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
-@keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
-
-/* BURGER */
-.hamburger {
-  position:fixed;
-  top:25px;
-  left:25px;
-  width:40px;
-  height:30px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  cursor:pointer;
-  z-index:99999;
-}
-.hamburger span {
-  height:4px;
-  width:100%;
-  background:#fff;
-  border-radius:4px;
-  box-shadow:0 0 12px rgba(255,255,255,0.9);
-  transition:0.3s;
-}
-.hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
-.hamburger.active span:nth-child(2){opacity:0;}
-.hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
-
-/* SIDEBAR */
-.sidebar {
-  position:fixed;
-  top:0;
-  left:-260px;
-  width:260px;
-  height:100vh;
-  background:rgba(10,10,20,0.92);
-  backdrop-filter:blur(25px);
-  border-right:1px solid rgba(255,255,255,0.25);
-  padding:26px 20px;
-  box-shadow:10px 0 40px rgba(0,0,0,0.7);
-  transition:0.35s ease;
-  z-index:99998;
-}
-.sidebar.open { left:0; }
-
-.sidebar-header {
-  text-align:center;
-  margin-bottom:24px;
-}
-.sidebar-header h2 {
-  font-size:1.4rem;
-  text-shadow:0 0 20px #fff;
-}
-
-.sidebar a {
-  display:block;
-  color:#fff;
-  text-decoration:none;
-  padding:10px 14px;
-  margin-bottom:10px;
-  border-radius:10px;
-  background:rgba(255,255,255,0.05);
-  box-shadow:0 0 10px rgba(255,255,255,0.15);
-  transition:0.25s;
-}
-.sidebar a:hover {
-  background:rgba(255,255,255,0.2);
-  transform:translateX(5px);
-  box-shadow:0 0 18px rgba(255,255,255,0.4);
-}
-
-/* MAIN WRAPPER */
-.profile-wrapper {
-  padding:140px 20px 80px;
-  max-width:1100px;
-  margin:0 auto;
-}
-
-/* GLASS PANEL */
-.glass {
-  background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(20px);
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 0 40px rgba(255,255,255,0.25);
-  margin-bottom:40px;
-}
-
-.section-title {
-  font-size:2.2rem;
-  text-shadow:0 0 40px #fff;
-  margin-bottom:20px;
-}
-
-/* PROFILE HEADER */
-.profile-header {
-  display:flex;
-  gap:24px;
-  align-items:flex-start;
-  flex-wrap:wrap;
-}
-
-.profile-media {
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-}
-
-.profile-avatar {
-  width:140px;
-  height:140px;
-  border-radius:50%;
-  background:rgba(255,255,255,0.12);
-  border:2px solid rgba(255,255,255,0.6);
-  box-shadow:0 0 25px rgba(255,255,255,0.7);
-  overflow:hidden;
-}
-.profile-avatar img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.profile-clip {
-  width:180px;
-  height:100px;
-  border-radius:16px;
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.5);
-  box-shadow:0 0 25px rgba(255,255,255,0.5);
-  overflow:hidden;
-}
-.profile-clip video {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-/* PROFILE TEXT + STATS */
-.profile-main {
-  flex:1;
-  min-width:260px;
-}
-
-.profile-name {
-  font-size:2rem;
-  font-weight:700;
-  text-shadow:0 0 20px #fff;
-}
-
-.profile-username {
-  opacity:0.8;
-  margin-top:4px;
-}
-
-.profile-bio {
-  opacity:0.9;
-  margin-top:10px;
-}
-
-.profile-stats {
-  display:flex;
-  gap:20px;
-  margin-top:16px;
-  flex-wrap:wrap;
-}
-.profile-stat {
-  font-size:0.95rem;
-}
-.profile-stat span {
-  font-weight:700;
-}
-
-/* UPLOAD CONTROLS */
-.profile-controls {
-  margin-top:18px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-}
-.profile-controls label {
-  font-size:0.85rem;
-  opacity:0.9;
-}
-
-/* POSTS SECTION */
-.posts-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:10px;
-}
-
-.post-filters {
-  display:flex;
-  gap:8px;
-}
-.post-filter-btn {
-  padding:6px 12px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,0.6);
-  background:transparent;
-  color:#fff;
-  font-size:0.85rem;
-  cursor:pointer;
-}
-.post-filter-btn.active {
-  background:#fff;
-  color:#000;
-}
-
-/* NEW POST FORM */
-.new-post {
-  margin-top:16px;
-  padding-top:16px;
-  border-top:1px solid rgba(255,255,255,0.2);
-}
-.new-post-row {
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  align-items:center;
-  margin-bottom:10px;
-}
-.new-post-row input[type="file"] {
-  font-size:0.85rem;
-}
-.new-post-row textarea {
-  flex:1;
-  min-width:220px;
-  min-height:40px;
-  border-radius:10px;
-  border:none;
-  padding:8px;
-  font-family:inherit;
-}
-.new-post-row button {
-  padding:8px 14px;
-  border-radius:999px;
-  border:none;
-  background:#fff;
-  color:#000;
-  font-weight:600;
-  cursor:pointer;
-}
-
-/* POSTS GRID */
-.posts-grid {
-  margin-top:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-}
-
-.post-card {
-  background:rgba(255,255,255,0.12);
-  border-radius:16px;
-  box-shadow:0 0 30px rgba(255,255,255,0.25);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-
-.post-media {
-  width:100%;
-  height:220px;
-  background:rgba(255,255,255,0.2);
-  overflow:hidden;
-}
-.post-media img,
-.post-media video {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.post-body {
-  padding:10px 12px 12px;
-  font-size:0.9rem;
-}
-.post-caption {
-  margin-bottom:6px;
-}
-.post-meta {
-  font-size:0.8rem;
-  opacity:0.8;
-  margin-bottom:6px;
-}
-.post-actions {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:4px;
-}
-.like-btn {
-  padding:4px 10px;
-  border-radius:999px;
-  border:none;
-  cursor:pointer;
-  font-size:0.8rem;
-  font-weight:600;
-}
-.like-btn.liked {
-  background:#fff;
-  color:#000;
-}
-.like-btn.not-liked {
-  background:transparent;
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.7);
-}
-</style>
-</head>
-
-<body>
-
-<div class="stars1"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
-
-<!-- BURGER -->
-<div id="hamburger" class="hamburger">
-  <span></span><span></span><span></span>
-</div>
-
-<!-- SIDEBAR -->
-<div id="sidebar" class="sidebar">
-  <div class="sidebar-header"><h2>Menu</h2></div>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="profile.html">My Profile</a>
-  <a href="profile-edit.html">Edit Profile</a>
-  <a href="chatrooms.html">Chatrooms</a>
-  <a href="events.html">Events</a>
-  <a href="find-spots.html">Find Spots</a>
-  <a href="marketplace.html">Marketplace</a>
-  <a href="notifications.html">Notifications</a>
-</div>
-
-<div class="profile-wrapper">
-
-  <!-- PROFILE HEADER -->
-  <div class="glass">
-    <div class="profile-header">
-      <div class="profile-media">
-        <div class="profile-avatar" id="profileAvatar"></div>
-        <label>
-          <span style="font-size:0.8rem;">Change photo</span><br>
-          <input type="file" id="avatarInput" accept="image/*" />
-        </label>
-
-        <div class="profile-clip" id="profileClipContainer"></div>
-        <label>
-          <span style="font-size:0.8rem;">3s profile clip</span><br>
-          <input type="file" id="clipInput" accept="video/*" />
-        </label>
-      </div>
-
-      <div class="profile-main">
-        <div class="profile-name" id="profileName">My Profile</div>
-        <div class="profile-username" id="profileUsername">@username</div>
-        <div class="profile-bio" id="profileBio">No bio yet.</div>
-
-        <div class="profile-stats">
-          <div class="profile-stat"><span id="statPosts">0</span> posts</div>
-          <div class="profile-stat"><span id="statPhotos">0</span> photos</div>
-          <div class="profile-stat"><span id="statClips">0</span> clips</div>
-          <div class="profile-stat"><span id="statLikes">0</span> likes</div>
-        </div>
-
-        <div class="profile-controls">
-          <label>
-            <span style="font-size:0.8rem;">Display name</span><br>
-            <input type="text" id="nameEdit" style="border-radius:8px;border:none;padding:6px;min-width:180px;" />
-          </label>
-          <label>
-            <span style="font-size:0.8rem;">Bio</span><br>
-            <input type="text" id="bioEdit" style="border-radius:8px;border:none;padding:6px;min-width:220px;" />
-          </label>
-          <button id="saveProfileBtn" style="padding:8px 14px;border-radius:999px;border:none;background:#fff;color:#000;font-weight:600;cursor:pointer;margin-top:18px;">
-            Save Profile
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- POSTS + CALENDAR -->
-  <div class="glass">
-    <div class="posts-header">
-      <h2 class="section-title" style="margin:0;">Posts</h2>
-      <div class="post-filters">
-        <button class="post-filter-btn active" data-filter="all">All</button>
-        <button class="post-filter-btn" data-filter="photo">Photos</button>
-        <button class="post-filter-btn" data-filter="clip">Clips</button>
-      </div>
-    </div>
-
-    <!-- NEW POST -->
-    <div class="new-post">
-      <div class="new-post-row">
-        <label>
-          <span style="font-size:0.8rem;">Photo</span><br>
-          <input type="file" id="newPhotoInput" accept="image/*" />
-        </label>
-        <label>
-          <span style="font-size:0.8rem;">Clip</span><br>
-          <input type="file" id="newClipInput" accept="video/*" />
-        </label>
-        <textarea id="newPostCaption" placeholder="Write a caption..."></textarea>
-        <button id="createPostBtn">Post</button>
-      </div>
-      <p style="opacity:0.7;font-size:0.8rem;margin:0;">
-        Clips will automatically appear in the global Clips feed.
-      </p>
-    </div>
-
-    <!-- POSTS GRID -->
-    <div class="posts-grid" id="postsGrid"></div>
-  </div>
-
-  <!-- CALENDAR INLINE -->
-  <div class="glass">
-    <h2 class="section-title">My Calendar</h2>
-    <ul id="calendarList" class="calendar-list"></ul>
-    <p id="calendarEmpty" style="display:none; opacity:0.7;">Nothing saved yet.</p>
-  </div>
-
-</div>
-
-<script>
-/* AUTH CHECK */
-const user = JSON.parse(localStorage.getItem("rc_user"));
-if (!user) window.location.href = "index.html";
-
-/* SIMPLE IDs */
-const USER_ID = user.id || "local-user";
-
-/* BURGER */
-const h = document.getElementById("hamburger");
-const s = document.getElementById("sidebar");
-h.onclick = () => {
-  h.classList.toggle("active");
-  s.classList.toggle("open");
-};
-
-/* PROFILE INFO */
-const profileNameEl = document.getElementById("profileName");
-const profileUsernameEl = document.getElementById("profileUsername");
-const profileBioEl = document.getElementById("profileBio");
-const nameEditEl = document.getElementById("nameEdit");
-const bioEditEl = document.getElementById("bioEdit");
-
-function loadProfileInfo() {
-  const storedUser = JSON.parse(localStorage.getItem("rc_user")) || {};
-  profileNameEl.textContent = storedUser.name || "My Profile";
-  profileUsernameEl.textContent = storedUser.username ? "@" + storedUser.username : "@user";
-  profileBioEl.textContent = storedUser.bio || "No bio yet.";
-  nameEditEl.value = storedUser.name || "";
-  bioEditEl.value = storedUser.bio || "";
-}
-loadProfileInfo();
-
-document.getElementById("saveProfileBtn").onclick = () => {
-  const storedUser = JSON.parse(localStorage.getItem("rc_user")) || {};
-  storedUser.name = nameEditEl.value || storedUser.name;
-  storedUser.bio = bioEditEl.value || storedUser.bio;
-  localStorage.setItem("rc_user", JSON.stringify(storedUser));
-  loadProfileInfo();
-};
-
-/* PROFILE AVATAR + 3s CLIP */
-const avatarEl = document.getElementById("profileAvatar");
-const avatarInput = document.getElementById("avatarInput");
-const clipContainer = document.getElementById("profileClipContainer");
-const clipInput = document.getElementById("clipInput");
-
-function loadAvatar() {
-  const avatarData = localStorage.getItem("rc_profile_avatar");
-  avatarEl.innerHTML = avatarData ? `<img src="${avatarData}">` : "";
-}
-loadAvatar();
-
-avatarInput.onchange = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    localStorage.setItem("rc_profile_avatar", reader.result);
-    loadAvatar();
-  };
-  reader.readAsDataURL(file);
-};
-
-function loadProfileClip() {
-  const clipData = localStorage.getItem("rc_profile_clip");
-  clipContainer.innerHTML = clipData ? `<video src="${clipData}" autoplay muted loop></video>` : "";
-}
-loadProfileClip();
-
-clipInput.onchange = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    localStorage.setItem("rc_profile_clip", reader.result);
-    loadProfileClip();
-  };
-  reader.readAsDataURL(file);
-};
-
-/* POSTS DATA MODEL
-   rc_user_posts: array of {id, userId, type: 'photo'|'clip', mediaData, caption, createdAt, likes: [userId] }
-   rc_user_likes: array of postIds that this user has liked (max 3 at a time)
-   rc_clips_global: array of clip posts for global clips page
-*/
-
-function getUserPosts() {
-  return JSON.parse(localStorage.getItem("rc_user_posts") || "[]").filter(p => p.userId === USER_ID);
-}
-function setUserPosts(posts) {
-  const all = JSON.parse(localStorage.getItem("rc_user_posts") || "[]").filter(p => p.userId !== USER_ID).concat(posts);
-  localStorage.setItem("rc_user_posts", JSON.stringify(all));
-}
-function getUserLikes() {
-  return JSON.parse(localStorage.getItem("rc_user_likes") || "[]");
-}
-function setUserLikes(likes) {
-  localStorage.setItem("rc_user_likes", JSON.stringify(likes));
-}
-
-/* CREATE POST */
-const newPhotoInput = document.getElementById("newPhotoInput");
-const newClipInput = document.getElementById("newClipInput");
-const newPostCaption = document.getElementById("newPostCaption");
-const createPostBtn = document.getElementById("createPostBtn");
-
-createPostBtn.onclick = () => {
-  const photoFile = newPhotoInput.files[0];
-  const clipFile = newClipInput.files[0];
-  const caption = newPostCaption.value.trim();
-
-  if (!photoFile && !clipFile) {
-    alert("Add a photo or a clip first.");
-    return;
+  function getUserData() {
+    return JSON.parse(localStorage.getItem("rc_users") || "[]").find(u => u.id === USER_ID) || {};
   }
 
-  if (photoFile && clipFile) {
-    alert("Choose either a photo OR a clip for a single post.");
-    return;
+  function getUserPosts() {
+    return (JSON.parse(localStorage.getItem("rc_user_posts") || "[]")).filter(p => p.user === USER_ID);
   }
 
-  if (photoFile) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      createPost("photo", reader.result, caption);
-      newPhotoInput.value = "";
-      newPostCaption.value = "";
-    };
-    reader.readAsDataURL(photoFile);
-  } else if (clipFile) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      createPost("clip", reader.result, caption);
-      newClipInput.value = "";
-      newPostCaption.value = "";
-    };
-    reader.readAsDataURL(clipFile);
-  }
-};
-
-function createPost(type, mediaData, caption) {
-  const posts = getUserPosts();
-  const id = "post_" + Date.now();
-  const post = {
-    id,
-    userId: USER_ID,
-    type,
-    mediaData,
-    caption,
-    createdAt: new Date().toISOString(),
-    likes: []
-  };
-  posts.push(post);
-  setUserPosts(posts);
-
-  if (type === "clip") {
-    const clips = JSON.parse(localStorage.getItem("rc_clips_global") || "[]");
-    clips.push(post);
-    localStorage.setItem("rc_clips_global", JSON.stringify(clips));
+  function getUserLikes() {
+    return JSON.parse(localStorage.getItem("rc_user_likes") || "[]");
   }
 
-  renderPosts(currentFilter);
-  updateStats();
-}
+  function setUserLikes(likes) {
+    localStorage.setItem("rc_user_likes", JSON.stringify(likes));
+  }
 
-/* RENDER POSTS */
-const postsGrid = document.getElementById("postsGrid");
-let currentFilter = "all";
+  function updateStats() {
+    document.getElementById("post-count").textContent = getUserPosts().length;
+    document.getElementById("clip-count").textContent = getUserData().clips?.length || 0;
+    document.getElementById("event-count").textContent = getUserData().events?.length || 0;
+  }
 
-function renderPosts(filter = "all") {
-  currentFilter = filter;
-  const posts = getUserPosts().sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
-  postsGrid.innerHTML = "";
+  function renderProfile() {
+    const user = getUserData();
+    document.getElementById("username").textContent = user.name || "Boardwalk Clay";
+    document.getElementById("handle").textContent = "@" + USER_ID;
+    document.getElementById("bio").textContent = user.bio || "Cosmic longboard dancer • builder • protector of creators";
+    document.getElementById("avatar").src = user.avatar || "assets/default-avatar.png";
+    document.getElementById("clip-preview").src = user.clip || "assets/default-clip.png";
+  }
 
-  posts
-    .filter(p => filter === "all" || p.type === filter)
-    .forEach(p => {
-      const card = document.createElement("div");
-      card.className = "post-card";
-
-      const mediaHtml = p.type === "photo"
-        ? `<img src="${p.mediaData}">`
-        : `<video src="${p.mediaData}" muted loop></video>`;
-
-      const dateStr = new Date(p.createdAt).toLocaleString();
-
-      const likesCount = p.likes.length;
-      const userLikes = getUserLikes();
-      const likedByUser = userLikes.includes(p.id);
-
-      card.innerHTML = `
-        <div class="post-media">${mediaHtml}</div>
-        <div class="post-body">
-          <div class="post-caption">${p.caption || ""}</div>
-          <div class="post-meta">
-            ${p.type === "photo" ? "Photo" : "Clip"} · ${dateStr}<br>
-            ❤️ <span class="like-count">${likesCount}</span> likes
-          </div>
-          <div class="post-actions">
-            <button class="like-btn ${likedByUser ? "liked" : "not-liked"}" data-id="${p.id}">
-              ${likedByUser ? "Unlike" : "Like"}
-            </button>
-          </div>
-        </div>
-      `;
-      postsGrid.appendChild(card);
+  function renderPosts(filter = "all") {
+    const posts = getUserPosts();
+    const container = document.getElementById("post-feed");
+    container.innerHTML = "";
+    posts.forEach(post => {
+      const div = document.createElement("div");
+      div.className = "post";
+      div.innerHTML = `<img src="${post.image}" alt="Post" /><p>${post.caption}</p>`;
+      container.appendChild(div);
     });
-
-  attachLikeHandlers();
-}
-
-function attachLikeHandlers() {
-  const buttons = postsGrid.querySelectorAll(".like-btn");
-  buttons.forEach(btn => {
-    btn.onclick = () => {
-      const postId = btn.getAttribute("data-id");
-      toggleLike(postId);
-    };
-  });
-}
-
-/* LIKE LOGIC: max 3 likes per user across all content */
-function toggleLike(postId) {
-  let likes = getUserLikes();
-  const posts = getUserPosts();
-
-  const postIndex = posts.findIndex(p => p.id === postId);
-  if (postIndex === -1) return;
-
-  const post = posts[postIndex];
-  const alreadyLiked = likes.includes(postId);
-
-  if (alreadyLiked) {
-    likes = likes.filter(id => id !== postId);
-    post.likes = post.likes.filter(u => u !== USER_ID);
-  } else {
-    if (likes.length >= 3) {
-      alert("You can only like up to 3 posts at a time. Remove a like first.");
-      return;
-    }
-    likes.push(postId);
-    if (!post.likes.includes(USER_ID)) post.likes.push(USER_ID);
   }
 
-  setUserLikes(likes);
-  posts[postIndex] = post;
-  setUserPosts(posts);
+  function toggleLike(postId) {
+    let likes = getUserLikes();
+    let allPosts = JSON.parse(localStorage.getItem("rc_user_posts") || "[]");
 
-  renderPosts(currentFilter);
+    const postIndex = allPosts.findIndex(p => p.id === postId);
+    if (postIndex === -1) return;
+
+    const post = allPosts[postIndex];
+    const alreadyLiked = likes.includes(postId);
+
+    if (alreadyLiked) {
+      likes = likes.filter(id => id !== postId);
+      post.likes = post.likes.filter(u => u !== USER_ID);
+    } else {
+      if (likes.length >= 3) {
+        alert("You can only like up to 3 posts at a time. Remove a like first.");
+        return;
+      }
+      likes.push(postId);
+      if (!post.likes.includes(USER_ID)) post.likes.push(USER_ID);
+    }
+
+    setUserLikes(likes);
+    allPosts[postIndex] = post;
+    localStorage.setItem("rc_user_posts", JSON.stringify(allPosts));
+
+    renderPosts();
+    updateStats();
+  }
+
+  function renderCalendar() {
+    const events = JSON.parse(localStorage.getItem("rc_events") || "[]");
+    const spots = JSON.parse(localStorage.getItem("rc_spots") || "[]");
+    const savedEvents = JSON.parse(localStorage.getItem("rc_user_saved_events") || "[]");
+    const savedSpots = JSON.parse(localStorage.getItem("rc_user_saved_spots") || "[]");
+    document.getElementById("calendar-activity").textContent = `${savedEvents.length + savedSpots.length} New activity`;
+  }
+
+  document.getElementById("burger-toggle").addEventListener("click", () => {
+    document.body.classList.toggle("menu-open");
+  });
+
+  renderProfile();
+  renderPosts();
   updateStats();
-}
-
-/* FILTER BUTTONS */
-document.querySelectorAll(".post-filter-btn").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".post-filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    const filter = btn.getAttribute("data-filter");
-    renderPosts(filter);
-  };
+  renderCalendar();
 });
 
-/* STATS */
-const statPosts = document.getElementById("statPosts");
-const statPhotos = document.getElementById("statPhotos");
-const statClips = document.getElementById("statClips");
-const statLikes = document.getElementById("statLikes");
+</script> </head> <body> <aside class="sidebar"> <button id="burger-toggle">☰</button> <nav> <a href="home.html">Home</a> <a href="dashboard.html">Dashboard</a> <a href="profile.html" class="active">Profile</a> <a href="profile-edit.html">Edit Profile</a> <a href="chatroom.html">Chatrooms</a> <a href="events.html">Events</a> <a href="spots.html">Find Spots</a> <a href="marketplace.html">Marketplace</a> <a href="notifications.html">Notifications</a> <a href="calendar.html">Calendar</a> <a href="clips-feed.html">Clips Feed</a> </nav> <footer>Cosmic build • Boardwalk edition</footer> </aside>
 
-function updateStats() {
-  const posts = getUserPosts();
-  const photos = posts.filter(p => p.type === "photo").length;
-  const clips = posts.filter(p => p.type === "clip").length;
-  const totalLikes = posts.reduce((sum,p)=> sum + p.likes.length, 0);
+<main> <section class="profile"> <img id="avatar" class="avatar" /> <h1 id="username"></h1> <p id="handle"></p> <p id="bio"></p> <button onclick="location.href='profile-edit.html'">Edit Profile</button> <img id="clip-preview" class="clip-preview" /> <div class="stats"> <span id="post-count">0</span> Posts <span id="clip-count">0</span> Clips <span id="event-count">0</span> Events </div> </section>
 
-  statPosts.textContent = posts.length;
-  statPhotos.textContent = photos;
-  statClips.textContent = clips;
-  statLikes.textContent = totalLikes;
-}
+<section class="posts">
+  <h2>Posts</h2>
+  <button>PHOTO POST</button>
+  <button>CLIP POST</button>
+  <div id="post-feed"></div>
+</section>
 
-/* CALENDAR (saved events + spots) */
-function loadProfileCalendar() {
-  const events = JSON.parse(localStorage.getItem("rc_events") || "[]");
-  const spots = JSON.parse(localStorage.getItem("rc_spots") || "[]");
+<section class="lessons">
+  <h2>Lessons</h2>
+  <button>Book time with creator</button>
+</section>
 
-  const savedEvents = JSON.parse(localStorage.getItem("rc_user_saved_events") || "[]");
-  const savedSpots = JSON.parse(localStorage.getItem("rc_user_saved_spots") || "[]");
+<section class="calendar">
+  <h2>CALENDAR</h2>
+  <p>Events + Spots from your ecosystem</p>
+  <div class="calendar-grid">
+    <!-- Calendar grid layout here -->
+    <p id="calendar-activity">0 New activity</p>
+    <a href="calendar.html">View all</a>
+  </div>
+</section>
 
-  const list = document.getElementById("calendarList");
-  const empty = document.getElementById("calendarEmpty");
-
-  list.innerHTML = "";
-
-  const combined = [];
-
-  events.forEach(ev => {
-    if (savedEvents.includes(ev.id)) {
-      combined.push({
-        type: "event",
-        id: ev.id,
-        title: ev.title,
-        date: ev.date,
-        location: ev.location,
-        link: `event-details.html?id=${ev.id}`
-      });
-    }
-  });
-
-  spots.forEach(sp => {
-    if (savedSpots.includes(sp.id)) {
-      combined.push({
-        type: "spot",
-        id: sp.id,
-        title: sp.name,
-        distance: sp.distance,
-        link: `spot-details.html?id=${sp.id}`
-      });
-    }
-  });
-
-  if (combined.length === 0) {
-    empty.style.display = "block";
-    return;
-  }
-
-  empty.style.display = "none";
-
-  combined.forEach(item => {
-    const li = document.createElement("li");
-    li.className = "calendar-item";
-
-    li.innerHTML = `
-      <strong>${item.title}</strong><br>
-      ${item.date ? `📅 ${item.date}<br>` : ""}
-      ${item.location ? `📍 ${item.location}<br>` : ""}
-      ${item.distance ? `🛼 ${item.distance} miles away<br>` : ""}
-      <a href="${item.link}">View Details</a>
-    `;
-
-    list.appendChild(li);
-  });
-}
-
-/* INITIAL RENDER */
-renderPosts("all");
-updateStats();
-loadProfileCalendar();
-</script>
-
-</body>
-</html>
-<script async data-explicit-opt-in="true" data-cookie-opt-in="true" data-deployment-id="dpl_DmjTDuiyztaox2N1VyBGsNwVavMy" src="https://vercel.live/_next-live/feedback/feedback.js"></script>
+</main> </body> </html>e
