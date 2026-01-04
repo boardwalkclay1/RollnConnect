@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Find Spots – Roll n Connect</title>
-  <link rel="stylesheet" href="styles/style.css">
 
   <!-- GOOGLE MAPS JS API -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places,marker"></script>
@@ -146,33 +145,19 @@
       background:#fff;
       color:#000;
     }
-    .status-pill {
-      align-self:flex-start;
-      font-size:0.75rem;
-      padding:4px 10px;
-      border-radius:999px;
-      background:rgba(0,0,0,0.7);
-      border:1px solid rgba(255,255,255,0.3);
-      pointer-events:auto;
-    }
 
-    /* BOTTOM DRAWER SHELL */
-    .bottom-drawer {
+    /* DRAWER */
+    .drawer-shell {
       position:fixed;
       left:0;
       right:0;
       bottom:0;
-      z-index:9998;
+      z-index:9999;
       display:flex;
       justify-content:center;
       pointer-events:none;
     }
-    .drawer-shell {
-      position:relative;
-      width:100%;
-      max-width:900px;
-      pointer-events:none;
-    }
+
     .drawer-inner {
       position:absolute;
       left:10px;
@@ -190,13 +175,15 @@
       touch-action:none;
       pointer-events:auto;
     }
+
     .drawer-grab {
-      width:40px;
-      height:4px;
+      width:50px;
+      height:6px;
       border-radius:999px;
-      background:rgba(255,255,255,0.5);
-      margin:4px auto 6px;
+      background:rgba(255,255,255,0.7);
+      margin:6px auto 10px;
     }
+
     .drawer-header-row {
       display:flex;
       justify-content:space-between;
@@ -204,15 +191,7 @@
       font-size:0.8rem;
       margin-bottom:4px;
     }
-    .realtime-toggle {
-      display:flex;
-      align-items:center;
-      gap:6px;
-      font-size:0.75rem;
-    }
-    .rt-label {
-      opacity:0.8;
-    }
+
     .rt-switch {
       width:40px;
       height:20px;
@@ -238,18 +217,10 @@
       transform:translateX(18px);
     }
 
-    .drawer-row {
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-
     .filters-row {
       display:flex;
       flex-wrap:wrap;
       gap:6px;
-      flex:1;
     }
     .filter-btn {
       padding:5px 9px;
@@ -284,20 +255,15 @@
       font-weight:600;
     }
 
-    .drawer-section-title {
-      font-size:0.78rem;
-      opacity:0.85;
-      margin-top:2px;
-    }
-
     .results-list {
-      max-height:120px;
+      max-height:140px;
       overflow-y:auto;
       border-radius:10px;
       background:rgba(255,255,255,0.04);
       padding:4px;
       font-size:0.78rem;
     }
+
     .result-item {
       padding:5px;
       border-radius:8px;
@@ -306,8 +272,6 @@
     .result-item:hover {
       background:rgba(255,255,255,0.12);
     }
-    .result-name { font-weight:600; }
-    .result-address { opacity:0.8; }
 
     .current-spot {
       border-radius:10px;
@@ -315,12 +279,7 @@
       padding:6px;
       font-size:0.78rem;
     }
-    .current-spot-title {
-      font-weight:600;
-      margin-bottom:2px;
-    }
-    .current-spot-meta { opacity:0.9; margin-bottom:4px; }
-    .current-spot-tags { margin-bottom:4px; }
+
     .tag-pill {
       display:inline-block;
       padding:2px 6px;
@@ -330,12 +289,7 @@
       margin-bottom:3px;
       background:rgba(255,255,255,0.12);
     }
-    .current-spot-actions {
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      margin-bottom:4px;
-    }
+
     .btn-small {
       padding:5px 9px;
       border-radius:999px;
@@ -352,26 +306,12 @@
       color:#fff;
     }
 
-    .presence-section,
-    .reviews-section {
-      margin-top:4px;
-      padding-top:4px;
-      border-top:1px solid rgba(255,255,255,0.1);
-      font-size:0.72rem;
-    }
     .presence-list,
     .reviews-list {
       max-height:70px;
       overflow-y:auto;
       margin-top:2px;
     }
-    .presence-user { padding:2px 0; }
-    .presence-user a {
-      color:#fff;
-      text-decoration:underline;
-      font-size:0.72rem;
-    }
-    .review-item { padding:2px 0; }
 
     .review-form textarea {
       width:100%;
@@ -395,75 +335,10 @@
       background:#fff;
       color:#000;
     }
-
-    /* MODAL */
-    .modal-backdrop {
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.7);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      z-index:10000;
-    }
-    .modal {
-      background:rgba(0,0,0,0.9);
-      border-radius:18px;
-      padding:20px;
-      max-width:360px;
-      width:90%;
-      box-shadow:0 0 30px rgba(255,255,255,0.4);
-    }
-    .modal h2 {
-      margin-top:0;
-      margin-bottom:10px;
-      font-size:1.2rem;
-    }
-    .modal label {
-      display:block;
-      font-size:0.8rem;
-      margin:6px 0 3px;
-    }
-    .modal input,
-    .modal textarea,
-    .modal select {
-      width:100%;
-      padding:6px 8px;
-      border-radius:10px;
-      border:none;
-      background:rgba(255,255,255,0.15);
-      color:#fff;
-      font-size:0.8rem;
-    }
-    .modal textarea {
-      resize:vertical;
-      min-height:50px;
-    }
-    .modal-actions {
-      margin-top:10px;
-      display:flex;
-      justify-content:flex-end;
-      gap:8px;
-    }
-    .modal-actions button {
-      padding:6px 10px;
-      border-radius:999px;
-      border:none;
-      cursor:pointer;
-      font-size:0.8rem;
-    }
-    .modal-save { background:#fff; color:#000; }
-    .modal-cancel { background:rgba(255,255,255,0.2); color:#fff; }
-
-    @media (max-width:600px){
-      .top-controls{left:70px;right:10px;}
-      .drawer-inner{left:4px;right:4px;}
-    }
   </style>
 </head>
 
 <body>
-
 <div class="stars1"></div>
 <div class="stars2"></div>
 <div class="stars3"></div>
@@ -504,61 +379,43 @@
   </div>
 </div>
 
-<!-- BOTTOM DRAWER WITH DRAG -->
-<div class="bottom-drawer">
-  <div class="drawer-shell">
-    <div class="drawer-inner" id="drawer">
-      <div class="drawer-grab" id="drawerGrab"></div>
+<!-- BOTTOM DRAWER -->
+<div class="drawer-shell">
+  <div class="drawer-inner" id="drawer">
+    <div class="drawer-grab" id="drawerGrab"></div>
 
-      <div class="drawer-header-row">
-        <div style="font-size:0.8rem;opacity:0.9;">Spots and sessions</div>
-        <div class="realtime-toggle" id="rtToggle">
-          <span class="rt-label">Real time</span>
-          <div class="rt-switch" id="rtSwitch">
-            <div class="rt-knob"></div>
-          </div>
-        </div>
+    <div class="drawer-header-row">
+      <div>Spots</div>
+      <div class="rt-switch" id="rtSwitch">
+        <div class="rt-knob"></div>
+      </div>
+    </div>
+
+    <div class="filters-row" id="filtersRow"></div>
+    <button class="loc-btn" id="locateMe">Location</button>
+
+    <div class="results-list" id="resultsList">
+      <div style="opacity:0.8;">Toggle filters to load spots around your view.</div>
+    </div>
+
+    <div class="current-spot" id="currentSpotCard" style="display:none;">
+      <div id="currentSpotName"></div>
+      <div id="currentSpotAddress"></div>
+      <div id="currentSpotTags"></div>
+
+      <div class="current-spot-actions">
+        <button class="btn-small btn-primary" id="btnSaveToCalendar">Add</button>
+        <button class="btn-small btn-ghost" id="btnShareToChat">Share</button>
+        <button class="btn-small btn-ghost" id="btnMarkHere">Here</button>
+        <button class="btn-small btn-ghost" id="btnOpenMaps">Maps</button>
       </div>
 
-      <!-- FILTERS + LOCATION -->
-      <div class="drawer-row">
-        <div class="filters-row" id="filtersRow"></div>
-        <button class="loc-btn" id="locateMe">Use location</button>
-      </div>
+      <div class="presence-list" id="presenceList"></div>
+      <div class="reviews-list" id="reviewsList"></div>
 
-      <!-- RESULTS -->
-      <div class="drawer-section-title">Nearby spots</div>
-      <div class="results-list" id="resultsList">
-        <div style="opacity:0.8;">Toggle filters to load spots around your view.</div>
-      </div>
-
-      <!-- CURRENT SPOT -->
-      <div class="drawer-section-title">Selected spot</div>
-      <div class="current-spot" id="currentSpotCard" style="display:none;">
-        <div class="current-spot-title" id="currentSpotName"></div>
-        <div class="current-spot-meta" id="currentSpotAddress"></div>
-        <div class="current-spot-tags" id="currentSpotTags"></div>
-
-        <div class="current-spot-actions">
-          <button class="btn-small btn-primary" id="btnSaveToCalendar">Add to calendar</button>
-          <button class="btn-small btn-ghost" id="btnShareToChat">Share to chat</button>
-          <button class="btn-small btn-ghost" id="btnMarkHere">I am here</button>
-          <button class="btn-small btn-ghost" id="btnOpenMaps">Open in maps</button>
-        </div>
-
-        <div class="presence-section" id="presenceSection">
-          <strong>People here now</strong>
-          <div class="presence-list" id="presenceList"></div>
-        </div>
-
-        <div class="reviews-section" id="reviewsSection">
-          <strong>Reviews</strong>
-          <div class="reviews-list" id="reviewsList"></div>
-          <div class="review-form">
-            <textarea id="reviewInput" placeholder="Share something about this spot."></textarea>
-            <button id="reviewSubmit">Post review</button>
-          </div>
-        </div>
+      <div class="review-form">
+        <textarea id="reviewInput" placeholder="Review"></textarea>
+        <button id="reviewSubmit">Post</button>
       </div>
     </div>
   </div>
@@ -571,7 +428,7 @@
     <p style="font-size:0.8rem;opacity:0.9;" id="eventSpotSummary"></p>
 
     <label for="eventTitle">Title or reason</label>
-    <input id="eventTitle" placeholder="Night session, practice run, meetup">
+    <input id="eventTitle">
 
     <label for="eventDate">Date</label>
     <input id="eventDate" type="date">
@@ -580,7 +437,7 @@
     <input id="eventTime" type="time">
 
     <label for="eventNotes">Notes</label>
-    <textarea id="eventNotes" placeholder="What are you planning to do here"></textarea>
+    <textarea id="eventNotes"></textarea>
 
     <label for="eventPrivacy">Privacy</label>
     <select id="eventPrivacy">
@@ -590,16 +447,15 @@
     </select>
 
     <label for="eventGroups">Groups separated by commas</label>
-    <input id="eventGroups" placeholder="Crew, squad, meetup name">
+    <input id="eventGroups">
 
     <div class="modal-actions">
       <button class="modal-cancel" id="cancelEventBtn">Cancel</button>
       <button class="modal-save" id="saveEventBtn">Save event</button>
     </div>
   </div>
-</div>
-
-<script>
+</div>  
+  <script>
 /* BURGER + SIDEBAR */
 const h = document.getElementById("hamburger");
 const s = document.getElementById("sidebar");
@@ -694,21 +550,18 @@ function setSpotReviews(spotId, list) {
   localStorage.setItem("rc_spot_reviews", JSON.stringify(all));
 }
 
-/* REAL TIME TOGGLE AND STUB */
+/* REAL TIME TOGGLE */
 let realtimeEnabled = false;
 const rtSwitch = document.getElementById("rtSwitch");
-const rtToggle = document.getElementById("rtToggle");
-
-function broadcastRealtimeUpdate(payload) {
-  if (!realtimeEnabled) return;
-  // WebSocket or SignalR or other real time layer can hook in here
-  console.log("Realtime update", payload);
-}
-
-rtToggle.addEventListener("click", () => {
+rtSwitch.addEventListener("click", () => {
   realtimeEnabled = !realtimeEnabled;
   rtSwitch.classList.toggle("on", realtimeEnabled);
 });
+
+function broadcastRealtimeUpdate(payload) {
+  if (!realtimeEnabled) return;
+  console.log("Realtime update", payload);
+}
 
 /* CURRENT SPOT UI */
 let currentSpot = null;
@@ -716,33 +569,27 @@ const currentSpotCard = document.getElementById("currentSpotCard");
 const currentSpotName = document.getElementById("currentSpotName");
 const currentSpotAddress = document.getElementById("currentSpotAddress");
 const currentSpotTags = document.getElementById("currentSpotTags");
-const presenceSection = document.getElementById("presenceSection");
 const presenceList = document.getElementById("presenceList");
 const reviewsList = document.getElementById("reviewsList");
 const reviewInput = document.getElementById("reviewInput");
 const reviewSubmit = document.getElementById("reviewSubmit");
-const btnSaveToCalendar = document.getElementById("btnSaveToCalendar");
-const btnShareToChat = document.getElementById("btnShareToChat");
-const btnMarkHere = document.getElementById("btnMarkHere");
-const btnOpenMaps = document.getElementById("btnOpenMaps");
 
 function renderPresence(spotId, show) {
   if (!show) {
-    presenceSection.style.display = "none";
+    presenceList.innerHTML = "";
     return;
   }
-  presenceSection.style.display = "block";
   presenceList.innerHTML = "";
   const presence = getSpotPresence(spotId);
   if (!presence.length) {
-    presenceList.innerHTML = "<div style='opacity:0.7;'>No one has checked in at this spot yet.</div>";
+    presenceList.innerHTML = "<div style='opacity:0.7;'>No one here yet.</div>";
     return;
   }
   presence.forEach(p => {
     const div = document.createElement("div");
     div.className = "presence-user";
     const profileUrl = `profile.html?user=${encodeURIComponent(p.userId)}`;
-    div.innerHTML = `<a href="${profileUrl}">${p.username || "User"}</a> <span style="opacity:0.7;">${new Date(p.timestamp).toLocaleTimeString()}</span>`;
+    div.innerHTML = `<a href="${profileUrl}">${p.username}</a> <span style="opacity:0.7;">${new Date(p.timestamp).toLocaleTimeString()}</span>`;
     presenceList.appendChild(div);
   });
 }
@@ -751,13 +598,13 @@ function renderReviews(spotId) {
   reviewsList.innerHTML = "";
   const reviews = getSpotReviews(spotId);
   if (!reviews.length) {
-    reviewsList.innerHTML = "<div style='opacity:0.7;'>No reviews for this spot yet.</div>";
+    reviewsList.innerHTML = "<div style='opacity:0.7;'>No reviews yet.</div>";
     return;
   }
   reviews.forEach(r => {
     const div = document.createElement("div");
     div.className = "review-item";
-    div.innerHTML = `<strong>${r.username || "User"}:</strong> ${r.text}`;
+    div.innerHTML = `<strong>${r.username}:</strong> ${r.text}`;
     reviewsList.appendChild(div);
   });
 }
@@ -775,12 +622,10 @@ function categoryTagsFromSpot(spot) {
 
 function setCurrentSpot(spot) {
   currentSpot = spot;
-  if (!spot) {
-    currentSpotCard.style.display = "none";
-    return;
-  }
-  currentSpotName.textContent = spot.name || "Custom spot";
-  currentSpotAddress.textContent = spot.address || `${spot.lat.toFixed(5)}, ${spot.lng.toFixed(5)}`;
+  currentSpotCard.style.display = "block";
+  currentSpotName.textContent = spot.name;
+  currentSpotAddress.textContent = spot.address || `${spot.lat}, ${spot.lng}`;
+
   const tags = categoryTagsFromSpot(spot);
   currentSpotTags.innerHTML = "";
   tags.forEach(t => {
@@ -789,7 +634,6 @@ function setCurrentSpot(spot) {
     span.textContent = t;
     currentSpotTags.appendChild(span);
   });
-  currentSpotCard.style.display = "block";
 
   const spotId = spot.id || `${spot.lat},${spot.lng}`;
   const cosmicActive = currentMapType === "cosmic";
@@ -797,7 +641,7 @@ function setCurrentSpot(spot) {
   renderReviews(spotId);
 }
 
-/* MODAL CONTROL */
+/* EVENT MODAL */
 const eventModalBackdrop = document.getElementById("eventModalBackdrop");
 const eventSpotSummary = document.getElementById("eventSpotSummary");
 const eventTitle = document.getElementById("eventTitle");
@@ -810,15 +654,12 @@ const cancelEventBtn = document.getElementById("cancelEventBtn");
 const saveEventBtn = document.getElementById("saveEventBtn");
 
 function openEventModalFromSpot() {
-  if (!currentSpot) {
-    alert("Choose a spot first by using filters or clicking the map.");
-    return;
-  }
+  if (!currentSpot) return;
   eventSpotSummary.textContent =
-    (currentSpot.name || "Custom spot") + " — " +
-    (currentSpot.address || `${currentSpot.lat.toFixed(5)}, ${currentSpot.lng.toFixed(5)}`);
+    currentSpot.name + " — " +
+    (currentSpot.address || `${currentSpot.lat}, ${currentSpot.lng}`);
 
-  eventTitle.value = currentSpot.name || "";
+  eventTitle.value = currentSpot.name;
   eventDate.value = "";
   eventTime.value = "";
   eventNotes.value = "";
@@ -831,26 +672,21 @@ function closeEventModal() {
   eventModalBackdrop.style.display = "none";
 }
 
-btnSaveToCalendar.onclick = openEventModalFromSpot;
+document.getElementById("btnSaveToCalendar").onclick = openEventModalFromSpot;
 cancelEventBtn.onclick = closeEventModal;
 
 saveEventBtn.onclick = () => {
-  if (!currentSpot) {
-    alert("No spot selected.");
-    return;
-  }
-  const title = eventTitle.value.trim() || currentSpot.name || "Spot session";
+  if (!currentSpot) return;
+  const title = eventTitle.value.trim() || currentSpot.name;
   const date = eventDate.value;
   const time = eventTime.value;
-  if (!date || !time) {
-    alert("Set both date and time.");
-    return;
-  }
+  if (!date || !time) return;
+
   const notes = eventNotes.value.trim();
   const privacy = eventPrivacy.value;
   const groupsStr = eventGroups.value.trim();
   const groups = groupsStr ? groupsStr.split(",").map(x => x.trim()).filter(Boolean) : [];
-  const locString = currentSpot.address || `${currentSpot.lat.toFixed(5)}, ${currentSpot.lng.toFixed(5)}`;
+  const locString = currentSpot.address || `${currentSpot.lat},${currentSpot.lng}`;
   const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
 
   addToCalendar({
@@ -867,38 +703,30 @@ saveEventBtn.onclick = () => {
   });
 
   broadcastRealtimeUpdate({ kind:"calendar_event", spotId, title, date, time });
-
-  alert("Event saved to your calendar.");
   closeEventModal();
 };
 
-btnShareToChat.onclick = () => {
-  if (!currentSpot) {
-    alert("Choose a spot first.");
-    return;
-  }
+/* SHARE + HERE + MAPS */
+document.getElementById("btnShareToChat").onclick = () => {
+  if (!currentSpot) return;
   const payload = {
-    name: currentSpot.name || "Custom spot",
-    address: currentSpot.address || `${currentSpot.lat.toFixed(5)}, ${currentSpot.lng.toFixed(5)}`,
+    name: currentSpot.name,
+    address: currentSpot.address || `${currentSpot.lat},${currentSpot.lng}`,
     lat: currentSpot.lat,
     lng: currentSpot.lng
   };
   shareToChat(payload);
   broadcastRealtimeUpdate({ kind:"chat_share", spotId: currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`, payload });
-  alert("Spot shared to chat drafts. Open chatrooms to use it.");
 };
 
-btnMarkHere.onclick = () => {
-  if (!currentSpot) {
-    alert("Choose a spot first.");
-    return;
-  }
+document.getElementById("btnMarkHere").onclick = () => {
+  if (!currentSpot) return;
   const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
   let presence = getSpotPresence(spotId);
   const existingIndex = presence.findIndex(p => p.userId === OWNER_ID);
   const entry = {
     userId: OWNER_ID,
-    username: user.username || "User",
+    username: user.username,
     timestamp: new Date().toISOString()
   };
   if (existingIndex >= 0) presence[existingIndex] = entry;
@@ -908,28 +736,22 @@ btnMarkHere.onclick = () => {
   broadcastRealtimeUpdate({ kind:"presence", spotId, entry });
 };
 
-btnOpenMaps.onclick = () => {
-  if (!currentSpot) {
-    alert("Choose a spot first.");
-    return;
-  }
+document.getElementById("btnOpenMaps").onclick = () => {
+  if (!currentSpot) return;
   const url = `https://www.google.com/maps/search/?api=1&query=${currentSpot.lat},${currentSpot.lng}`;
   window.open(url, "_blank");
 };
 
 /* REVIEW SUBMIT */
 reviewSubmit.onclick = () => {
-  if (!currentSpot) {
-    alert("Choose a spot first.");
-    return;
-  }
+  if (!currentSpot) return;
   const text = reviewInput.value.trim();
   if (!text) return;
   const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
   let reviews = getSpotReviews(spotId);
   const entry = {
     userId: OWNER_ID,
-    username: user.username || "User",
+    username: user.username,
     text,
     timestamp: new Date().toISOString()
   };
@@ -958,66 +780,61 @@ const cosmicStyle = [
 ];
 
 const filterConfig = {
-  skatepark: { label:"Skateparks", color:"#ff4d4d" },
-  park:      { label:"Parks",      color:"#4dff4d" },
-  rink:      { label:"Rinks",      color:"#4dd2ff" },
-  trail:     { label:"Trails",     color:"#ffaa00" },
-  parking:   { label:"Parking",    color:"#cccccc" },
-  plaza:     { label:"Plazas",     color:"#ff66ff" },
-  water:     { label:"Water",      color:"#4d79ff" },
-  food:      { label:"Food",       color:"#ffff66" }
+  skatepark:{label:"Skateparks",color:"#ff4d4d"},
+  park:{label:"Parks",color:"#4dff4d"},
+  rink:{label:"Rinks",color:"#4dd2ff"},
+  trail:{label:"Trails",color:"#ffaa00"},
+  parking:{label:"Parking",color:"#cccccc"},
+  plaza:{label:"Plazas",color:"#ff66ff"},
+  water:{label:"Water",color:"#4d79ff"},
+  food:{label:"Food",color:"#ffff66"}
 };
 
 const activeFilters = {
-  skatepark:false, park:false, rink:false, trail:false,
-  parking:false, plaza:false, water:false, food:false
+  skatepark:false,park:false,rink:false,trail:false,
+  parking:false,plaza:false,water:false,food:false
 };
 
 const markersByFilter = {
-  skatepark:[], park:[], rink:[], trail:[],
-  parking:[], plaza:[], water:[], food:[]
+  skatepark:[],park:[],rink:[],trail:[],
+  parking:[],plaza:[],water:[],food:[]
 };
 
 const resultsList = document.getElementById("resultsList");
 
-function makeColoredMarker(color, title) {
-  const div = document.createElement("div");
-  div.innerHTML = `
+function makeColoredMarker(color) {
+  const div=document.createElement("div");
+  div.innerHTML=`
     <svg width="20" height="20" viewBox="0 0 30 30">
-      <circle cx="15" cy="15" r="7" fill="${color}" stroke="white" stroke-width="2" />
+      <circle cx="15" cy="15" r="7" fill="${color}" stroke="white" stroke-width="2"/>
     </svg>`;
-  div.style.filter = "drop-shadow(0 0 6px rgba(255,255,255,0.6))";
-  div.title = title || "";
+  div.style.filter="drop-shadow(0 0 6px rgba(255,255,255,0.6))";
   return div;
 }
 
-function clearMarkersForFilter(key) {
-  markersByFilter[key].forEach(m => m.setMap(null));
-  markersByFilter[key] = [];
+function clearMarkersForFilter(key){
+  markersByFilter[key].forEach(m=>m.setMap(null));
+  markersByFilter[key]=[];
 }
 
-function renderResultsFromMarkers() {
-  const merged = [];
-  Object.keys(markersByFilter).forEach(key => {
-    markersByFilter[key].forEach(m => {
-      if (m._spot) merged.push(m._spot);
+function renderResultsFromMarkers(){
+  const merged=[];
+  Object.keys(markersByFilter).forEach(key=>{
+    markersByFilter[key].forEach(m=>{
+      if(m._spot) merged.push(m._spot);
     });
   });
-  resultsList.innerHTML = "";
-  if (!merged.length) {
-    resultsList.innerHTML = "<div style='opacity:0.8;'>No spots loaded yet. Toggle filters or move the map.</div>";
+  resultsList.innerHTML="";
+  if(!merged.length){
+    resultsList.innerHTML="<div style='opacity:0.8;'>No spots loaded yet.</div>";
     return;
   }
-  merged.slice(0,80).forEach(spot => {
-    const div = document.createElement("div");
-    div.className = "result-item";
-    div.innerHTML = `
-      <div class="result-name">${spot.name}</div>
-      <div class="result-address">${spot.address || ""}</div>
-    `;
-    div.onclick = () => {
-      if (!map) return;
-      map.panTo({lat:spot.lat, lng:spot.lng});
+  merged.forEach(spot=>{
+    const div=document.createElement("div");
+    div.className="result-item";
+    div.innerHTML=`<div>${spot.name}</div><div>${spot.address||""}</div>`;
+    div.onclick=()=>{
+      map.panTo({lat:spot.lat,lng:spot.lng});
       map.setZoom(15);
       setCurrentSpot(spot);
     };
@@ -1025,81 +842,45 @@ function renderResultsFromMarkers() {
   });
 }
 
-function runCategorySearch(typeKey) {
-  if (!map || !placesService) return;
-  if (!navigator.onLine) {
-    alert("Network is offline. Category search needs a connection.");
-    return;
-  }
-  const center = map.getCenter();
-  const location = { lat:center.lat(), lng:center.lng() };
+function runCategorySearch(typeKey){
+  const center=map.getCenter();
+  const request={location:center,radius:4000};
 
-  const request = {
-    location,
-    radius: 4000
-  };
+  if(typeKey==="skatepark"){request.keyword="skatepark";request.type="park";}
+  if(typeKey==="park"){request.type="park";}
+  if(typeKey==="rink"){request.keyword="roller rink";request.type="establishment";}
+  if(typeKey==="trail"){request.keyword="trail";request.type="park";}
+  if(typeKey==="parking"){request.type="parking";}
+  if(typeKey==="plaza"){request.keyword="plaza";request.type="establishment";}
+  if(typeKey==="water"){request.keyword="lake OR river OR waterfront";request.type="tourist_attraction";}
+  if(typeKey==="food"){request.type="restaurant";}
 
-  switch(typeKey) {
-    case "skatepark":
-      request.keyword = "skatepark";
-      request.type = "park";
-      break;
-    case "park":
-      request.type = "park";
-      break;
-    case "rink":
-      request.keyword = "roller rink";
-      request.type = "establishment";
-      break;
-    case "trail":
-      request.keyword = "trail";
-      request.type = "park";
-      break;
-    case "parking":
-      request.type = "parking";
-      break;
-    case "plaza":
-      request.keyword = "plaza";
-      request.type = "establishment";
-      break;
-    case "water":
-      request.keyword = "lake OR river OR waterfront";
-      request.type = "tourist_attraction";
-      break;
-    case "food":
-      request.type = "restaurant";
-      break;
-    default:
-      request.type = "point_of_interest";
-  }
-
-  placesService.nearbySearch(request, (results, status) => {
-    if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
+  placesService.nearbySearch(request,(results,status)=>{
+    if(status!=="OK"||!results){
       clearMarkersForFilter(typeKey);
       renderResultsFromMarkers();
       return;
     }
     clearMarkersForFilter(typeKey);
-    const color = filterConfig[typeKey].color;
-    results.forEach(r => {
-      const loc = r.geometry.location;
-      const markerContent = makeColoredMarker(color, r.name);
-      const marker = new google.maps.marker.AdvancedMarkerElement({
+    const color=filterConfig[typeKey].color;
+    results.forEach(r=>{
+      const loc=r.geometry.location;
+      const marker=new google.maps.marker.AdvancedMarkerElement({
         map,
-        position: loc,
-        content: markerContent
+        position:loc,
+        content:makeColoredMarker(color)
       });
-      const spot = {
-        id: r.place_id || null,
-        name: r.name,
-        address: r.vicinity || r.formatted_address || "",
-        lat: loc.lat(),
-        lng: loc.lng(),
-        categoryKey: typeKey,
-        types: r.types || []
+      const spot={
+        id:r.place_id||null,
+        name:r.name,
+        address:r.vicinity||"",
+        lat:loc.lat(),
+        lng:loc.lng(),
+        categoryKey:typeKey,
+        types:r.types||[]
       };
-      marker._spot = spot;
-      marker.addListener("click", () => setCurrentSpot(spot));
+      marker._spot=spot;
+      marker.addListener("click",()=>setCurrentSpot(spot));
       markersByFilter[typeKey].push(marker);
     });
     renderResultsFromMarkers();
@@ -1108,21 +889,20 @@ function runCategorySearch(typeKey) {
 
 /* FILTER BUTTONS */
 const filtersRow = document.getElementById("filtersRow");
-Object.keys(filterConfig).forEach(key => {
+Object.keys(filterConfig).forEach(key=>{
   const cfg = filterConfig[key];
   const btn = document.createElement("button");
-  btn.className = "filter-btn";
-  btn.dataset.key = key;
-  btn.innerHTML = `<span class="filter-color-dot" style="background:${cfg.color}"></span>${cfg.label}`;
-  btn.onclick = () => {
-    activeFilters[key] = !activeFilters[key];
-    btn.classList.toggle("active", activeFilters[key]);
-    if (activeFilters[key]) {
-      runCategorySearch(key);
-    } else {
+  btn.className="filter-btn";
+  btn.dataset.key=key;
+  btn.innerHTML=`<span class="filter-color-dot" style="background:${cfg.color}"></span>${cfg.label}`;
+  btn.onclick=()=>{
+    activeFilters[key]=!activeFilters[key];
+    btn.classList.toggle("active",activeFilters[key]);
+    if(activeFilters[key]) runCategorySearch(key);
+    else {
       clearMarkersForFilter(key);
       renderResultsFromMarkers();
-      if (currentSpot && currentSpot.categoryKey === key) {
+      if(currentSpot && currentSpot.categoryKey===key){
         setCurrentSpot(null);
       }
     }
@@ -1136,8 +916,7 @@ function initMap() {
     center:{lat:33.8,lng:-84.3},
     zoom:11,
     mapTypeId:"roadmap",
-    styles: cosmicStyle,
-    disableDefaultUI:false
+    styles: cosmicStyle
   });
 
   placesService = new google.maps.places.PlacesService(map);
@@ -1164,175 +943,4 @@ const btnTypeStreet = document.getElementById("btnTypeStreet");
 const btnTypeSatellite = document.getElementById("btnTypeSatellite");
 
 function updateMapTypeButtons(type) {
-  [btnTypeCosmic, btnTypeStreet, btnTypeSatellite].forEach(b => b.classList.remove("active"));
-  if (type === "cosmic") btnTypeCosmic.classList.add("active");
-  if (type === "street") btnTypeStreet.classList.add("active");
-  if (type === "satellite") btnTypeSatellite.classList.add("active");
-}
-
-function setMapType(type) {
-  if (!map) return;
-  currentMapType = type;
-  updateMapTypeButtons(type);
-  if (type === "cosmic") {
-    map.setMapTypeId("roadmap");
-    map.setOptions({styles: cosmicStyle});
-    if (currentSpot) {
-      const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
-      renderPresence(spotId, true);
-      renderReviews(spotId);
-    }
-  } else if (type === "street") {
-    map.setMapTypeId("roadmap");
-    map.setOptions({styles: null});
-    if (currentSpot) {
-      renderPresence("", false);
-      renderReviews(currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`);
-    }
-  } else if (type === "satellite") {
-    map.setMapTypeId("satellite");
-    map.setOptions({styles: null});
-    if (currentSpot) {
-      renderPresence("", false);
-      renderReviews(currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`);
-    }
-  }
-}
-
-btnTypeCosmic.onclick = () => setMapType("cosmic");
-btnTypeStreet.onclick = () => setMapType("street");
-btnTypeSatellite.onclick = () => setMapType("satellite");
-
-/* USE MY LOCATION */
-document.getElementById("locateMe").onclick = () => {
-  if (!navigator.geolocation) {
-    alert("Location access is not available.");
-    return;
-  }
-  navigator.geolocation.getCurrentPosition(pos => {
-    const {latitude, longitude} = pos.coords;
-    if (map) {
-      map.panTo({lat:latitude, lng:longitude});
-      map.setZoom(14);
-      const spot = {
-        id: "user:" + OWNER_ID,
-        name: "Current location",
-        address: null,
-        lat: latitude,
-        lng: longitude,
-        categoryKey:null,
-        types:[]
-      };
-      setCurrentSpot(spot);
-    }
-  }, () => {
-    alert("Unable to read your location.");
-  });
-};
-
-/* DRAG ONLY DRAWER */
-const drawer = document.getElementById("drawer");
-const drawerGrab = document.getElementById("drawerGrab");
-
-let drawerStartY = 0;
-let drawerCurrentY = 0;
-let drawerBaseY = 0;
-let draggingDrawer = false;
-
-function getDrawerHeights() {
-  const vh = window.innerHeight;
-  return {
-    collapsed: 40,
-    mid: vh * 0.32,
-    expanded: vh * 0.65
-  };
-}
-let drawerState = "collapsed";
-
-function setDrawerToState(state, animate=true) {
-  const heights = getDrawerHeights();
-  let target = heights.collapsed;
-  if (state === "mid") target = heights.mid;
-  if (state === "expanded") target = heights.expanded;
-  drawerState = state;
-  drawerBaseY = target;
-  if (animate) drawer.style.transition = "transform 0.2s ease-out";
-  else drawer.style.transition = "none";
-  const maxY = heights.expanded;
-  const offset = maxY - target;
-  drawer.style.transform = `translateY(${offset}px)`;
-}
-
-function handleDrawerStart(clientY) {
-  draggingDrawer = true;
-  drawerStartY = clientY;
-  const heights = getDrawerHeights();
-  const maxY = heights.expanded;
-  const style = getComputedStyle(drawer);
-  const matrix = new WebKitCSSMatrix(style.transform);
-  const currentOffset = matrix.m42;
-  drawerBaseY = maxY - currentOffset;
-  drawer.style.transition = "none";
-}
-
-function handleDrawerMove(clientY) {
-  if (!draggingDrawer) return;
-  const dy = clientY - drawerStartY;
-  const heights = getDrawerHeights();
-  const maxY = heights.expanded;
-  let newY = drawerBaseY - dy;
-  if (newY < heights.collapsed) newY = heights.collapsed;
-  if (newY > heights.expanded) newY = heights.expanded;
-  drawerCurrentY = newY;
-  const offset = maxY - newY;
-  drawer.style.transform = `translateY(${offset}px)`;
-}
-
-function handleDrawerEnd() {
-  if (!draggingDrawer) return;
-  draggingDrawer = false;
-  const heights = getDrawerHeights();
-  const y = drawerCurrentY || drawerBaseY;
-  const distances = [
-    { state:"collapsed", value:Math.abs(y - heights.collapsed) },
-    { state:"mid", value:Math.abs(y - heights.mid) },
-    { state:"expanded", value:Math.abs(y - heights.expanded) }
-  ];
-  distances.sort((a,b)=>a.value-b.value);
-  setDrawerToState(distances[0].state, true);
-}
-
-drawerGrab.addEventListener("mousedown", e => {
-  e.preventDefault();
-  handleDrawerStart(e.clientY);
-  window.addEventListener("mousemove", onDrawerMouseMove);
-  window.addEventListener("mouseup", onDrawerMouseUp);
-});
-function onDrawerMouseMove(e){ handleDrawerMove(e.clientY); }
-function onDrawerMouseUp(e){
-  handleDrawerEnd();
-  window.removeEventListener("mousemove", onDrawerMouseMove);
-  window.removeEventListener("mouseup", onDrawerMouseUp);
-}
-
-drawerGrab.addEventListener("touchstart", e => {
-  const t = e.touches[0];
-  handleDrawerStart(t.clientY);
-}, {passive:true});
-drawerGrab.addEventListener("touchmove", e => {
-  const t = e.touches[0];
-  handleDrawerMove(t.clientY);
-}, {passive:true});
-drawerGrab.addEventListener("touchend", () => {
-  handleDrawerEnd();
-});
-
-/* INIT */
-window.onload = () => {
-  initMap();
-  setDrawerToState("collapsed", false);
-};
-</script>
-
-</body>
-</html>
+  [btnTypeCosmic
