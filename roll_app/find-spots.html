@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Find Spots – Roll ’n Connect</title>
 
-  <!-- GOOGLE MAPS (REPLACE API_KEY LOCALLY) -->
+  <!-- GOOGLE MAPS (REPLACE API_KEY) -->
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places&callback=initMap"
     async
@@ -15,7 +15,7 @@
     body {
       margin:0;
       font-family:system-ui, sans-serif;
-      background:#0b0e16;
+      background:#05050a;
       color:#fff;
     }
 
@@ -70,7 +70,6 @@
       height:10px;
       border-radius:50%;
     }
-
     .dot.skatepark { background:#38bdf8; }
     .dot.rink      { background:#a855f7; }
     .dot.water     { background:#0ea5e9; }
@@ -265,7 +264,9 @@ let markers = [];
 let userMarker = null;
 let liveWatch = null;
 let activeSpot = null;
+let openInfoWindow = null;
 
+/* INIT MAP – called by script callback */
 function initMap(){
   map = new google.maps.Map(document.getElementById("map"), {
     center:{lat:33.8,lng:-84.3},
@@ -278,6 +279,7 @@ function initMap(){
   runSearch();
 }
 
+/* FILTERS */
 function setupFilters(){
   document.querySelectorAll(".filter-btn").forEach(btn=>{
     btn.onclick = () => {
@@ -297,6 +299,7 @@ function setupFilters(){
   });
 }
 
+/* BUTTONS */
 function setupButtons(){
   document.getElementById("locateBtn").onclick = () => {
     if(!navigator.geolocation) return;
@@ -348,6 +351,7 @@ function setupButtons(){
   };
 }
 
+/* SEARCH */
 function runSearch(){
   if(!places) return;
 
@@ -367,6 +371,7 @@ function runSearch(){
   );
 }
 
+/* LIST */
 function renderPage(){
   const list = document.getElementById("spotList");
   list.innerHTML = "";
@@ -388,6 +393,7 @@ function renderPage(){
     spots.length > slice.length ? "block" : "none";
 }
 
+/* COLORS */
 function getMarkerColor(){
   const first = activeFilters[0] || "skatepark";
   const mapColors = {
@@ -401,6 +407,7 @@ function getMarkerColor(){
   return mapColors[first] || "#ffffff";
 }
 
+/* MARKERS */
 function clearMarkers(){
   markers.forEach(m => m.setMap(null));
   markers = [];
@@ -414,6 +421,56 @@ function renderMarkers(){
 
   spots.forEach(spot => {
     const loc = spot.geometry.location;
+    const popupId = `cosmic-${spot.place_id}`;
+
+    const infoContent = `
+      <div id="${popupId}" style="
+        color:white;
+        font-size:15px;
+        padding:18px;
+        border-radius:16px;
+        background: radial-gradient(circle at top, #1a1a2e, #0f0f1a 70%);
+        box-shadow: 0 0 22px rgba(90,120,255,0.8), 0 0 40px rgba(60,80,255,0.4);
+        font-family:system-ui;
+        line-height:1.5;
+        width:260px;
+        border:1px solid rgba(120,140,255,0.4);
+        position:relative;
+      ">
+        <div style="font-weight:700;font-size:17px;margin-bottom:8px;">
+          ${spot.name}
+        </div>
+
+        <div style="opacity:0.8;margin-bottom:10px;">
+          ${spot.formatted_address || ""}
+        </div>
+
+        <div style="margin-bottom:10px;">
+          ${spot.rating ? `⭐ ${spot.rating.toFixed(1)} Google` : "No Google rating"}
+        </div>
+
+        <div id="popupCommunity_${spot.place_id}" style="margin-bottom:14px;opacity:0.9;">
+          Loading community ratings…
+        </div>
+
+        <a href="https://www.google.com/maps/dir/?api=1&destination=${loc.lat()},${loc.lng()}"
+           target="_blank"
+           style="
+             display:inline-block;
+             padding:8px 12px;
+             background:#4a4aff;
+             color:white;
+             border-radius:8px;
+             font-weight:600;
+             text-decoration:none;
+             box-shadow:0 0 12px #4a4aff;
+           ">
+          Get Directions →
+        </a>
+      </div>
+    `;
+
+    const info = new google.maps.InfoWindow({ content: infoContent });
 
     const marker = new google.maps.Marker({
       map,
@@ -428,63 +485,43 @@ function renderMarkers(){
       }
     });
 
-    const info = new google.maps.InfoWindow({
-      content: `
-        <div style="
-          color:black;
-          font-size:14px;
-          padding:16px;
-          border-radius:16px;
-          background:white;
-          box-shadow:0 0 28px rgba(255,255,255,0.8);
-          font-family:system-ui;
-          line-height:1.45;
-        ">
-          <div style="font-weight:700;font-size:16px;margin-bottom:8px;">
-            ${spot.name}
-          </div>
-
-          <div style="opacity:0.75;margin-bottom:8px;">
-            ${spot.formatted_address || ""}
-          </div>
-
-          <div style="margin-bottom:8px;">
-            ${spot.rating ? `⭐ ${spot.rating.toFixed(1)} Google` : "No Google rating"}
-          </div>
-
-          <div id="popupCommunity_${spot.place_id}" style="margin-bottom:12px;opacity:0.85;">
-            Loading community ratings…
-          </div>
-
-          <a href="https://www.google.com/maps/dir/?api=1&destination=${loc.lat()},${loc.lng()}"
-             target="_blank"
-             style="
-               display:inline-block;
-               padding:6px 10px;
-               background:#2563eb;
-               color:white;
-               border-radius:6px;
-               font-weight:600;
-               text-decoration:none;
-             ">
-            Get Directions
-          </a>
-        </div>
-      `
-    });
-
     marker.addListener("mouseover", () => {
+      if (openInfoWindow) openInfoWindow.close();
       info.open(map, marker);
+      openInfoWindow = info;
+
       injectCommunityRatings(spot.place_id);
+
+      setTimeout(() => {
+        const popup = document.getElementById(popupId);
+        if (!popup) return;
+
+        popup.addEventListener("mouseenter", () => {
+          if (openInfoWindow) openInfoWindow.__keepOpen = true;
+        });
+
+        popup.addEventListener("mouseleave", () => {
+          if (openInfoWindow) {
+            openInfoWindow.__keepOpen = false;
+            openInfoWindow.close();
+          }
+        });
+      }, 50);
     });
 
-    marker.addListener("mouseout", () => info.close());
+    marker.addListener("mouseout", () => {
+      if (openInfoWindow && !openInfoWindow.__keepOpen) {
+        openInfoWindow.close();
+      }
+    });
+
     marker.addListener("click", () => openDetails(spot));
 
     markers.push(marker);
   });
 }
 
+/* COMMUNITY RATINGS FOR POPUP */
 function injectCommunityRatings(placeId){
   const reviews = loadReviews(placeId);
   const el = document.getElementById("popupCommunity_" + placeId);
@@ -507,6 +544,7 @@ function injectCommunityRatings(placeId){
   `;
 }
 
+/* DETAILS PANEL */
 function openDetails(spot){
   activeSpot = spot;
   document.getElementById("details").style.display = "block";
@@ -525,6 +563,7 @@ function openDetails(spot){
   renderReviews(spot.place_id);
 }
 
+/* REVIEWS */
 function loadReviews(id){
   return JSON.parse(localStorage.getItem("rc_reviews_" + id) || "[]");
 }
@@ -566,6 +605,7 @@ function renderReviews(id){
   });
 }
 
+/* USER MARKER */
 function placeUserMarker(loc){
   const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
   const avatar  = profile.avatarUrl || "styles/default-avatar.png";
