@@ -6,12 +6,22 @@
   <title>Marketplace Settings – Roll ’n Connect</title>
 
   <style>
+    :root {
+      --mp-bg: #000000;
+      --mp-panel: #0f0f0f;
+      --mp-text: #e6e6e6;
+      --mp-muted: rgba(230, 230, 230, 0.7);
+      --mp-border: rgba(255, 255, 255, 0.18);
+      --mp-soft-glow: 0 0 16px rgba(255, 255, 255, 0.4);
+      --mp-soft-glow-strong: 0 0 22px rgba(255, 255, 255, 0.7);
+    }
+
     body {
       margin: 0;
       padding: 0;
       font-family: system-ui, sans-serif;
-      background: #05050a;
-      color: white;
+      background: var(--mp-bg);
+      color: var(--mp-text);
       overflow-x: hidden;
     }
 
@@ -31,9 +41,9 @@
 
     .hamburger div {
       height: 6px;
-      background: #4a4aff;
+      background: #ffffff;
       border-radius: 4px;
-      box-shadow: 0 0 12px #4a4aff;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
       transition: 0.3s;
     }
 
@@ -44,9 +54,9 @@
       left: -260px;
       width: 260px;
       height: 100vh;
-      background: #0d0d16;
+      background: #050505;
       padding: 40px 20px;
-      box-shadow: 0 0 20px #4a4aff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
       transition: 0.35s ease;
       z-index: 999;
       overflow-y: auto;
@@ -58,93 +68,155 @@
 
     .side-menu a {
       display: block;
-      padding: 14px;
-      margin-bottom: 14px;
-      background: #14141c;
+      padding: 12px;
+      margin-bottom: 12px;
+      background: #101010;
       border-radius: 10px;
       text-decoration: none;
-      color: white;
-      font-size: 18px;
-      box-shadow: 0 0 10px #4a4aff;
-      transition: 0.25s;
+      color: var(--mp-text);
+      font-size: 16px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      transition: 0.2s;
     }
 
     .side-menu a:hover {
-      background: #1f1f29;
-      box-shadow: 0 0 16px #4a4aff;
+      background: #181818;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
+    }
+
+    .side-menu a.current {
+      background: #ffffff;
+      color: #000000;
+      box-shadow: var(--mp-soft-glow-strong);
+      font-weight: 700;
     }
 
     /* PAGE CONTENT */
     .page-container {
       max-width: 900px;
       margin: 0 auto;
-      padding: 80px 20px;
+      padding: 70px 20px 40px;
     }
 
     h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
+      font-size: 30px;
+      margin-bottom: 6px;
       font-weight: 700;
-      text-shadow: 0 0 12px #4a4aff;
+      text-shadow: 0 0 14px rgba(255, 255, 255, 0.7);
     }
 
     .subtitle {
       opacity: 0.7;
-      margin-bottom: 24px;
+      margin-bottom: 18px;
+      font-size: 14px;
     }
 
     .section {
-      background: #0f0f18;
+      background: var(--mp-panel);
       border-radius: 14px;
       padding: 16px;
-      box-shadow: 0 0 16px rgba(74, 74, 255, 0.35);
-      margin-bottom: 20px;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.16);
+      border: 1px solid var(--mp-border);
+      margin-bottom: 18px;
     }
 
     .section-title {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .section-text {
-      font-size: 14px;
+      font-size: 13px;
       opacity: 0.8;
       margin-bottom: 10px;
     }
 
     .small {
       font-size: 12px;
-      opacity: 0.75;
-      margin-top: 6px;
+      opacity: 0.7;
+      margin-top: 4px;
     }
 
-    .btn-danger, .btn-outline {
+    .stack-md > div {
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      opacity: 0.85;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+      margin-right: 6px;
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      font-size: 14px;
+    }
+
+    .toggle-row span {
+      max-width: 70%;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      accent-color: #ffffff;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .btn-danger,
+    .btn-outline {
       padding: 10px 14px;
       border-radius: 10px;
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.5);
       cursor: pointer;
       font-weight: 600;
       font-size: 14px;
-      transition: 0.25s;
+      transition: 0.2s;
       margin-top: 10px;
+      width: 100%;
+      text-align: center;
     }
 
     .btn-danger {
-      background: #ff4a6a;
-      color: white;
-      box-shadow: 0 0 16px rgba(255, 74, 106, 0.8);
+      background: #1b0000;
+      color: #ffffff;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.45);
+    }
+
+    .btn-danger:hover {
+      background: #2b0000;
+      box-shadow: 0 0 22px rgba(255, 255, 255, 0.8);
     }
 
     .btn-outline {
       background: transparent;
-      border: 1px solid #4a4aff;
-      color: #4a4aff;
+      color: #f5f5f5;
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.3);
     }
 
     .btn-outline:hover {
-      background: #14141c;
-      box-shadow: 0 0 14px #4a4aff;
+      background: #111111;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.6);
     }
 
     .confirm-text {
@@ -154,59 +226,29 @@
       opacity: 0.85;
     }
 
-    input[type="checkbox"] {
-      margin-right: 6px;
-    }
-
     code {
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Courier New", monospace;
-      font-size: 12px;
-      background: #14141c;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      background: #101010;
       padding: 2px 4px;
       border-radius: 4px;
+      opacity: 0.9;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      opacity: 0.75;
+      margin-top: 6px;
+    }
+
+    .meta-row strong {
+      font-size: 13px;
+      opacity: 0.95;
     }
   </style>
-
-  <script>
-    function toggleMenu() {
-      document.querySelector('.side-menu').classList.toggle('open');
-    }
-
-    function loadMarketplaceSettings() {
-      const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
-      const items = JSON.parse(localStorage.getItem("rc_market_items") || "[]");
-
-      document.getElementById("currentUser").textContent =
-        profile.username || "Not set";
-      document.getElementById("itemCount").textContent = items.length;
-    }
-
-    function clearMarketplaceItems() {
-      const box = document.getElementById("confirmMarket");
-      if (!box.checked) {
-        alert("Check the confirmation box first.");
-        return;
-      }
-      localStorage.removeItem("rc_market_items");
-      alert("Marketplace items cleared.");
-      box.checked = false;
-      loadMarketplaceSettings();
-    }
-
-    function clearAllMarketplaceData() {
-      const box = document.getElementById("confirmAll");
-      if (!box.checked) {
-        alert("Check the confirmation box first.");
-        return;
-      }
-      localStorage.removeItem("rc_market_items");
-      alert("Marketplace data cleared.");
-      box.checked = false;
-      loadMarketplaceSettings();
-    }
-
-    document.addEventListener("DOMContentLoaded", loadMarketplaceSettings);
-  </script>
 </head>
 
 <body>
@@ -216,9 +258,8 @@
     <div></div><div></div><div></div>
   </div>
 
-  <!-- FIXED MARKETPLACE‑ONLY SIDEBAR -->
+  <!-- MARKETPLACE SIDEBAR -->
   <div class="side-menu">
-
     <!-- Marketplace Core -->
     <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
     <a href="marketplace.html">Marketplace</a>
@@ -234,56 +275,365 @@
 
     <!-- Marketplace User -->
     <a href="marketplace-profile.html">Marketplace Profile</a>
-    <a href="marketplace-settings.html">Marketplace Settings</a>
-
+    <a href="marketplace-settings.html" class="current">Marketplace Settings</a>
   </div>
 
   <div class="page-container">
     <h1>Marketplace Settings</h1>
     <div class="subtitle">
-      Manage marketplace data stored locally in this browser.
+      Control how the marketplace behaves on this device. Visual only, powered by your global app config.
     </div>
 
+    <!-- PROFILE SUMMARY -->
     <div class="section">
-      <div class="section-title">Profile Used for Marketplace</div>
+      <div class="section-title">Profile used for marketplace</div>
       <div class="section-text">
-        Marketplace uses your main app profile stored under <code>rc_profile</code>.
+        Marketplace uses your main profile plus any local overrides from <code>rc_app_config.profile</code>.
       </div>
-      <div class="section-text">
-        Current username: <strong id="currentUser">...</strong>
+
+      <div class="meta-row">
+        <span>Base username:</span>
+        <strong id="mp-base-username">…</strong>
+      </div>
+      <div class="meta-row">
+        <span>Display override:</span>
+        <strong id="mp-display-override">None</strong>
+      </div>
+      <div class="meta-row">
+        <span>City override:</span>
+        <strong id="mp-city-override">None</strong>
+      </div>
+
+      <div class="small">
+        Edit your core profile in
+        <a href="profile.html" style="color:#ffffff;text-decoration:underline;">Main Profile</a>
+        or adjust overrides from the Main Settings control center.
       </div>
     </div>
 
+    <!-- MARKETPLACE VIEW / APPEARANCE -->
     <div class="section">
-      <div class="section-title">Marketplace Items Storage</div>
+      <div class="section-title">Marketplace appearance</div>
       <div class="section-text">
-        Items stored locally under <code>rc_market_items</code>.
-        <br />
-        Current stored items: <strong id="itemCount">0</strong>
+        Local appearance tweaks layered on top of the global app theme.
       </div>
+
+      <div class="toggle-row">
+        <span>Use compact marketplace layout</span>
+        <input type="checkbox" id="mp-compact" />
+      </div>
+      <div class="toggle-row">
+        <span>Use black &amp; white glow in marketplace</span>
+        <input type="checkbox" id="mp-bwglow" />
+      </div>
+      <div class="toggle-row">
+        <span>Reduce motion in marketplace views</span>
+        <input type="checkbox" id="mp-reduce-motion" />
+      </div>
+      <div class="toggle-row">
+        <span>Highlight active deals with extra glow</span>
+        <input type="checkbox" id="mp-highlight-deals" />
+      </div>
+
+      <div class="small">
+        Pages like <code>marketplace.html</code>, <code>your-listings.html</code>, and
+        <code>marketplace-dashboard.html</code> can read these flags from
+        <code>rc_app_config.marketplace.appearance</code>.
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="section">
+      <div class="section-title">Marketplace notifications</div>
+      <div class="section-text">
+        These settings control marketplace‑specific notifications layered on top of your global notification preferences.
+      </div>
+
+      <div class="toggle-row">
+        <span>New offers on my items</span>
+        <input type="checkbox" id="mp-notif-offers" />
+      </div>
+      <div class="toggle-row">
+        <span>New messages about my listings</span>
+        <input type="checkbox" id="mp-notif-messages" />
+      </div>
+      <div class="toggle-row">
+        <span>Price drop alerts on watched items</span>
+        <input type="checkbox" id="mp-notif-price-drops" />
+      </div>
+      <div class="toggle-row">
+        <span>Giveaway reminders &amp; results</span>
+        <input type="checkbox" id="mp-notif-giveaways" />
+      </div>
+
+      <div class="small">
+        Stored under <code>rc_app_config.marketplace.notifications</code>.
+      </div>
+    </div>
+
+    <!-- PRIVACY / PRESENCE -->
+    <div class="section">
+      <div class="section-title">Marketplace presence</div>
+      <div class="section-text">
+        Control how you appear and how reachable you are inside the marketplace.
+      </div>
+
+      <div class="toggle-row">
+        <span>Show seller status on listings</span>
+        <input type="checkbox" id="mp-privacy-show-status" />
+      </div>
+      <div class="toggle-row">
+        <span>Allow offers from non‑friends</span>
+        <input type="checkbox" id="mp-privacy-nonfriends-offers" />
+      </div>
+      <div class="toggle-row">
+        <span>Allow messages from non‑buyers</span>
+        <input type="checkbox" id="mp-privacy-open-messages" />
+      </div>
+      <div class="toggle-row">
+        <span>Hide city in marketplace views</span>
+        <input type="checkbox" id="mp-privacy-hide-city" />
+      </div>
+
+      <div class="small">
+        Stored under <code>rc_app_config.marketplace.privacy</code>.
+      </div>
+    </div>
+
+    <!-- DATA / RESET -->
+    <div class="section">
+      <div class="section-title">Marketplace data on this device</div>
+      <div class="section-text">
+        These actions only affect this browser. They do not touch server data.
+      </div>
+
+      <div class="meta-row">
+        <span>Local marketplace items (rc_market_items):</span>
+        <strong id="mp-item-count">0</strong>
+      </div>
+
       <label class="confirm-text">
-        <input type="checkbox" id="confirmMarket" />
-        I understand this removes all marketplace items.
+        <input type="checkbox" id="mp-confirm-clear-items" />
+        I understand this removes all locally stored marketplace items from this browser.
       </label>
-      <button class="btn-danger" onclick="clearMarketplaceItems()">
-        Clear Marketplace Items
+      <button class="btn-danger" type="button" onclick="clearLocalMarketplaceItems()">
+        Clear Local Marketplace Items
+      </button>
+
+      <label class="confirm-text">
+        <input type="checkbox" id="mp-confirm-reset-config" />
+        I understand this resets marketplace config in <code>rc_app_config.marketplace</code>.
+      </label>
+      <button class="btn-outline" type="button" onclick="resetMarketplaceConfig()">
+        Reset Marketplace Config
       </button>
     </div>
 
-    <div class="section">
-      <div class="section-title">Reset Marketplace Data</div>
-      <div class="section-text">
-        Clears all marketplace item data but keeps your main profile.
-      </div>
-      <label class="confirm-text">
-        <input type="checkbox" id="confirmAll" />
-        I understand this will clear all marketplace data.
-      </label>
-      <button class="btn-outline" onclick="clearAllMarketplaceData()">
-        Reset Marketplace Data
-      </button>
-    </div>
-
+    <!-- SAVE -->
+    <button class="btn-outline" type="button" onclick="saveMarketplaceSettingsFromUI()">
+      Save Marketplace Settings
+    </button>
   </div>
+
+  <script src="rc_app_config.js"></script>
+  <script>
+    function toggleMenu() {
+      document.querySelector(".side-menu").classList.toggle("open");
+    }
+
+    function getSafeAppConfig() {
+      if (typeof getAppConfig === "function") {
+        return getAppConfig();
+      }
+      return {};
+    }
+
+    function setSafeAppConfig(cfg) {
+      if (typeof setAppConfig === "function") {
+        setAppConfig(cfg);
+      }
+    }
+
+    function ensureMarketplaceConfig(cfg) {
+      if (!cfg.marketplace) {
+        cfg.marketplace = {
+          appearance: {
+            compact: false,
+            bwGlow: true,
+            reduceMotion: false,
+            highlightDeals: true
+          },
+          notifications: {
+            offers: true,
+            messages: true,
+            priceDrops: true,
+            giveaways: true
+          },
+          privacy: {
+            showStatus: true,
+            nonFriendsOffers: true,
+            openMessages: false,
+            hideCity: false
+          }
+        };
+      } else {
+        cfg.marketplace.appearance = Object.assign(
+          {
+            compact: false,
+            bwGlow: true,
+            reduceMotion: false,
+            highlightDeals: true
+          },
+          cfg.marketplace.appearance || {}
+        );
+        cfg.marketplace.notifications = Object.assign(
+          {
+            offers: true,
+            messages: true,
+            priceDrops: true,
+            giveaways: true
+          },
+          cfg.marketplace.notifications || {}
+        );
+        cfg.marketplace.privacy = Object.assign(
+          {
+            showStatus: true,
+            nonFriendsOffers: true,
+            openMessages: false,
+            hideCity: false
+          },
+          cfg.marketplace.privacy || {}
+        );
+      }
+      return cfg;
+    }
+
+    function loadMarketplaceSettingsUI() {
+      const cfg = ensureMarketplaceConfig(getSafeAppConfig());
+      setSafeAppConfig(cfg);
+
+      // Profile display
+      const profileRaw = localStorage.getItem("rc_profile");
+      let profile = {};
+      try { profile = profileRaw ? JSON.parse(profileRaw) : {}; } catch (_) {}
+      const baseUsername = profile.username || profile.name || "Not set";
+
+      const displayOverride = cfg.profile && cfg.profile.displayNameOverride || "";
+      const cityOverride = cfg.profile && cfg.profile.cityOverride || "";
+
+      document.getElementById("mp-base-username").textContent = baseUsername;
+      document.getElementById("mp-display-override").textContent =
+        displayOverride || "None";
+      document.getElementById("mp-city-override").textContent =
+        cityOverride || "None";
+
+      // Marketplace appearance
+      document.getElementById("mp-compact").checked =
+        !!cfg.marketplace.appearance.compact;
+      document.getElementById("mp-bwglow").checked =
+        !!cfg.marketplace.appearance.bwGlow;
+      document.getElementById("mp-reduce-motion").checked =
+        !!cfg.marketplace.appearance.reduceMotion;
+      document.getElementById("mp-highlight-deals").checked =
+        !!cfg.marketplace.appearance.highlightDeals;
+
+      // Notifications
+      document.getElementById("mp-notif-offers").checked =
+        !!cfg.marketplace.notifications.offers;
+      document.getElementById("mp-notif-messages").checked =
+        !!cfg.marketplace.notifications.messages;
+      document.getElementById("mp-notif-price-drops").checked =
+        !!cfg.marketplace.notifications.priceDrops;
+      document.getElementById("mp-notif-giveaways").checked =
+        !!cfg.marketplace.notifications.giveaways;
+
+      // Privacy
+      document.getElementById("mp-privacy-show-status").checked =
+        !!cfg.marketplace.privacy.showStatus;
+      document.getElementById("mp-privacy-nonfriends-offers").checked =
+        !!cfg.marketplace.privacy.nonFriendsOffers;
+      document.getElementById("mp-privacy-open-messages").checked =
+        !!cfg.marketplace.privacy.openMessages;
+      document.getElementById("mp-privacy-hide-city").checked =
+        !!cfg.marketplace.privacy.hideCity;
+
+      // Item count
+      const itemsRaw = localStorage.getItem("rc_market_items") || "[]";
+      let items = [];
+      try { items = JSON.parse(itemsRaw); } catch (_) {}
+      document.getElementById("mp-item-count").textContent = items.length;
+    }
+
+    function saveMarketplaceSettingsFromUI() {
+      let cfg = ensureMarketplaceConfig(getSafeAppConfig());
+
+      cfg.marketplace.appearance.compact =
+        document.getElementById("mp-compact").checked;
+      cfg.marketplace.appearance.bwGlow =
+        document.getElementById("mp-bwglow").checked;
+      cfg.marketplace.appearance.reduceMotion =
+        document.getElementById("mp-reduce-motion").checked;
+      cfg.marketplace.appearance.highlightDeals =
+        document.getElementById("mp-highlight-deals").checked;
+
+      cfg.marketplace.notifications.offers =
+        document.getElementById("mp-notif-offers").checked;
+      cfg.marketplace.notifications.messages =
+        document.getElementById("mp-notif-messages").checked;
+      cfg.marketplace.notifications.priceDrops =
+        document.getElementById("mp-notif-price-drops").checked;
+      cfg.marketplace.notifications.giveaways =
+        document.getElementById("mp-notif-giveaways").checked;
+
+      cfg.marketplace.privacy.showStatus =
+        document.getElementById("mp-privacy-show-status").checked;
+      cfg.marketplace.privacy.nonFriendsOffers =
+        document.getElementById("mp-privacy-nonfriends-offers").checked;
+      cfg.marketplace.privacy.openMessages =
+        document.getElementById("mp-privacy-open-messages").checked;
+      cfg.marketplace.privacy.hideCity =
+        document.getElementById("mp-privacy-hide-city").checked;
+
+      setSafeAppConfig(cfg);
+      if (typeof applyAppConfigToDOM === "function") {
+        applyAppConfigToDOM(cfg);
+      }
+      alert("Marketplace settings saved.");
+    }
+
+    function clearLocalMarketplaceItems() {
+      const box = document.getElementById("mp-confirm-clear-items");
+      if (!box.checked) {
+        alert("Check the confirmation box first.");
+        return;
+      }
+      localStorage.removeItem("rc_market_items");
+      box.checked = false;
+      loadMarketplaceSettingsUI();
+      alert("Local marketplace items cleared for this browser.");
+    }
+
+    function resetMarketplaceConfig() {
+      const box = document.getElementById("mp-confirm-reset-config");
+      if (!box.checked) {
+        alert("Check the confirmation box first.");
+        return;
+      }
+      let cfg = getSafeAppConfig();
+      delete cfg.marketplace;
+      cfg = ensureMarketplaceConfig(cfg);
+      setSafeAppConfig(cfg);
+      if (typeof applyAppConfigToDOM === "function") {
+        applyAppConfigToDOM(cfg);
+      }
+      box.checked = false;
+      loadMarketplaceSettingsUI();
+      alert("Marketplace config reset for this device.");
+    }
+
+    document.addEventListener("DOMContentLoaded", loadMarketplaceSettingsUI);
+  </script>
+
+  <script src="rc_app_config.js"></script>
 </body>
 </html>
