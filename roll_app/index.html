@@ -248,26 +248,16 @@ body {
     <div class="nav-title">Roll ’n Connect</div>
   </div>
 
-  <ul class="nav-links">
-    <li><a href="index.html">🏠 Home</a></li>
-    <li><a href="dashboard.html">📊 Dashboard</a></li>
-    <li><a href="marketplace.html">🛒 Marketplace</a></li>
-    <li><a href="notifications.html">🔔 Notifications <span id="notifDot"></span></a></li>
-    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
-    <li><a href="find-spots.html">📍 Find Spots</a></li>
-    <li><a href="events.html">📅 Events</a></li>
-    <li><a href="profile.html">👤 Your Profile</a></li>
-    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+  <ul class="nav-links" id="sidebarLinks">
+    <!-- Filled dynamically -->
   </ul>
 </nav>
 
 <div class="main-wrapper">
 
   <!-- HERO -->
-  <div class="title-wrapper">
-    <div class="main-title">ROLL ’N CONNECT</div>
-    <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
-    <div class="signature">by Boardwalk Clay</div>
+  <div class="title-wrapper" id="heroSection">
+    <!-- Filled dynamically -->
   </div>
 
   <!-- MARKETPLACE PREVIEW -->
@@ -292,13 +282,65 @@ body {
 <a href="marketplace.html" class="bubble" id="b5">Marketplace</a>
 <a href="notifications.html" class="bubble" id="b6">Notifications</a>
 
+<script src="auth.js"></script>
 <script>
 /* BURGER */
 const hb=document.getElementById("hamburger");
 const sb=document.getElementById("sidebar");
 hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
 
-/* DATA HELPERS */
+/* SIDEBAR + HERO RENDERING */
+function renderUserUI() {
+  const user = RollAuth.getCurrentUser();
+
+  const sidebar = document.getElementById("sidebarLinks");
+  const hero = document.getElementById("heroSection");
+
+  if (!user) {
+    sidebar.innerHTML = `
+      <li><a href="index.html">🏠 Home</a></li>
+      <li><a href="login.html">🔑 Login</a></li>
+      <li><a href="signup.html">✨ Sign Up</a></li>
+      <li><a href="marketplace.html">🛒 Marketplace</a></li>
+      <li><a href="find-spots.html">📍 Find Spots</a></li>
+      <li><a href="events.html">📅 Events</a></li>
+    `;
+
+    hero.innerHTML = `
+      <div class="main-title">ROLL ’N CONNECT</div>
+      <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
+      <div class="signature">by Boardwalk Clay</div>
+
+      <div style="margin-top:40px;">
+        <a href="login.html" class="item-btn" style="font-size:1.2rem;">Login</a>
+        <a href="signup.html" class="item-btn" style="font-size:1.2rem; margin-left:10px;">Sign Up</a>
+      </div>
+    `;
+    return;
+  }
+
+  sidebar.innerHTML = `
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="#" onclick="RollAuth.logout(); location.reload();">🚪 Logout</a></li>
+  `;
+
+  hero.innerHTML = `
+    <div class="main-title">Welcome back, ${user.profile.name || user.username}!</div>
+    <div class="subtitle">${user.profile.bio || "Your cosmic skating journey continues."}</div>
+    <div class="signature">Roll ’n Connect — by Boardwalk Clay</div>
+  `;
+}
+
+renderUserUI();
+
+/* MARKETPLACE + GIVEAWAY PREVIEW */
 function getItems(){
   try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}
   catch(e){return [];}
@@ -308,16 +350,13 @@ function getNotifications(){
   catch(e){return [];}
 }
 
-/* NOTIF DOT */
 function renderNotifDot(){
   const dotEl=document.getElementById("notifDot");
   const notifs=getNotifications();
   const hasPending=notifs.some(n=>n.status==="pending");
   dotEl.innerHTML = hasPending ? "<span class='notif-dot'></span>" : "";
 }
-renderNotifDot();
 
-/* MARKETPLACE + GIVEAWAY PREVIEW */
 function renderIndexMarketplace(){
   const items = getItems();
   const marketWrap = document.getElementById("marketplaceItems");
@@ -355,9 +394,10 @@ function makeCard(item,isGiveaway){
   return div;
 }
 
+renderNotifDot();
 renderIndexMarketplace();
 
-/* FLOATING BUBBLES — CSP SAFE */
+/* FLOATING BUBBLES — ORIGINAL PHYSICS */
 const bubbles = [
   { el: document.getElementById("b1"), x:320, y:120, vx:1.8, vy:1.2 },
   { el: document.getElementById("b2"), x:720, y:220, vx:-2.1, vy:1.9 },
