@@ -2,10 +2,191 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Settings – Roll ’n Connect</title>
+  <title>Main Settings – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="rollnconnect.css" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #000000;
+      color: #e6e6e6;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #000000;
+    }
+
+    .page {
+      padding: 16px 16px 80px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin: 8px 0 4px;
+      text-shadow: 0 0 14px rgba(255, 255, 255, 0.65);
+    }
+
+    .subtitle {
+      opacity: 0.75;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+
+    .section {
+      background: #0f0f0f;
+      padding: 16px;
+      border-radius: 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+
+    .stack-md > div {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+      opacity: 0.85;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: #050505;
+      color: #f5f5f5;
+      font-size: 14px;
+      outline: none;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.12);
+    }
+
+    input[type="email"]::placeholder,
+    input[type="password"]::placeholder,
+    input[type="text"]::placeholder {
+      color: rgba(200, 200, 200, 0.65);
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 14px;
+    }
+
+    .toggle-row span {
+      max-width: 70%;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      accent-color: #ffffff;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 11px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      background: #f5f5f5;
+      color: #000000;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.55);
+      margin-top: 4px;
+      transition: 0.2s;
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.45);
+      background: transparent;
+      color: #f5f5f5;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+      margin-top: 8px;
+      transition: 0.2s;
+    }
+
+    .btn-outline:hover {
+      background: #111111;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.45);
+    }
+
+    .btn-danger {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: #1b0000;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.5);
+      margin-top: 8px;
+      transition: 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: #2b0000;
+      box-shadow: 0 0 22px rgba(255, 255, 255, 0.8);
+    }
+
+    .footer-row {
+      text-align: center;
+      opacity: 0.5;
+      margin-top: 18px;
+      font-size: 13px;
+    }
+
+    .keyline {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+  </style>
 </head>
+
 <body>
 <div class="app-shell">
 
@@ -17,10 +198,17 @@
   </header>
 
   <main class="page">
-    <h1>Settings</h1>
+    <h1>Main Settings</h1>
+    <div class="subtitle">
+      Adjust your entire Roll ’n Connect experience from one place.
+    </div>
 
-    <div class="card max-w-narrow">
-      <form class="stack-md">
+    <!-- ACCOUNT -->
+    <div class="section">
+      <div class="section-title">Account</div>
+      <div class="section-desc">Basic account information stored on this device for now.</div>
+
+      <div class="stack-md">
         <div>
           <label for="settings-email">Email</label>
           <input id="settings-email" type="email" placeholder="you@example.com" />
@@ -28,30 +216,174 @@
 
         <div>
           <label for="settings-password">New password</label>
-          <input id="settings-password" type="password" placeholder="Update password" />
+          <input id="settings-password" type="password" placeholder="Update password (visual only)" />
         </div>
+      </div>
+    </div>
 
+    <!-- APPEARANCE -->
+    <div class="section">
+      <div class="section-title">Appearance</div>
+      <div class="section-desc">Theme and motion across the entire app.</div>
+
+      <div class="toggle-row">
+        <span>Dark Mode</span>
+        <input type="checkbox" id="app-theme-dark" />
+      </div>
+      <div class="toggle-row">
+        <span>Light Mode</span>
+        <input type="checkbox" id="app-theme-light" />
+      </div>
+      <div class="toggle-row">
+        <span>Black &amp; White Glow Mode</span>
+        <input type="checkbox" id="app-theme-bwglow" />
+      </div>
+      <div class="toggle-row">
+        <span>Compact Layout</span>
+        <input type="checkbox" id="app-compact" />
+      </div>
+      <div class="toggle-row">
+        <span>Reduce Motion</span>
+        <input type="checkbox" id="app-reduce-motion" />
+      </div>
+      <div class="toggle-row">
+        <span>High Contrast</span>
+        <input type="checkbox" id="app-high-contrast" />
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="section">
+      <div class="section-title">Notifications</div>
+      <div class="section-desc">High‑level notification preferences used across dashboards, marketplace, chat, and events.</div>
+
+      <div class="toggle-row">
+        <span>Enable App Notifications</span>
+        <input type="checkbox" id="notif-app" />
+      </div>
+      <div class="toggle-row">
+        <span>Mentions &amp; DMs Only</span>
+        <input type="checkbox" id="notif-mentions" />
+      </div>
+      <div class="toggle-row">
+        <span>Marketplace Alerts</span>
+        <input type="checkbox" id="notif-market" />
+      </div>
+      <div class="toggle-row">
+        <span>Chat Alerts</span>
+        <input type="checkbox" id="notif-chat" />
+      </div>
+      <div class="toggle-row">
+        <span>Event Reminders</span>
+        <input type="checkbox" id="notif-events" />
+      </div>
+    </div>
+
+    <!-- PRIVACY -->
+    <div class="section">
+      <div class="section-title">Privacy</div>
+      <div class="section-desc">Controls visibility and social reach inside the app.</div>
+
+      <div class="toggle-row">
+        <span>Show Online Status</span>
+        <input type="checkbox" id="privacy-online" />
+      </div>
+      <div class="toggle-row">
+        <span>Allow Friend Requests</span>
+        <input type="checkbox" id="privacy-friends" />
+      </div>
+      <div class="toggle-row">
+        <span>Allow Messages From Non‑friends</span>
+        <input type="checkbox" id="privacy-strangers" />
+      </div>
+      <div class="toggle-row">
+        <span>Hide Profile From Search</span>
+        <input type="checkbox" id="privacy-hide-search" />
+      </div>
+      <div class="toggle-row">
+        <span>Private Mode</span>
+        <input type="checkbox" id="privacy-private" />
+      </div>
+    </div>
+
+    <!-- SOUND -->
+    <div class="section">
+      <div class="section-title">Sound</div>
+      <div class="section-desc">Sound feedback used across chat, marketplace, and notifications.</div>
+
+      <div class="toggle-row">
+        <span>UI Sounds</span>
+        <input type="checkbox" id="sound-ui" />
+      </div>
+      <div class="toggle-row">
+        <span>Message Sounds</span>
+        <input type="checkbox" id="sound-messages" />
+      </div>
+      <div class="toggle-row">
+        <span>Marketplace Offer Sounds</span>
+        <input type="checkbox" id="sound-market" />
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="section">
+      <div class="section-title">Navigation</div>
+      <div class="section-desc">Controls how the bottom navigation and other chrome behave.</div>
+
+      <div class="toggle-row">
+        <span>Compact Bottom Nav</span>
+        <input type="checkbox" id="nav-compact" />
+      </div>
+      <div class="toggle-row">
+        <span>Large Icons</span>
+        <input type="checkbox" id="nav-large-icons" />
+      </div>
+      <div class="toggle-row">
+        <span>Soft White Glow</span>
+        <input type="checkbox" id="nav-soft-glow" />
+      </div>
+    </div>
+
+    <!-- PROFILE OVERRIDES -->
+    <div class="section">
+      <div class="section-title">Profile Overrides</div>
+      <div class="section-desc">Local display‑only tweaks layered over your main profile data.</div>
+
+      <div class="stack-md">
         <div>
-          <label for="settings-notify">Notifications</label>
-          <select id="settings-notify">
-            <option>All activity</option>
-            <option>Only mentions & DMs</option>
-            <option>No notifications</option>
-          </select>
+          <label for="profile-display-name">Display name override</label>
+          <input id="profile-display-name" type="text" placeholder="Use different display name on this device" />
         </div>
+        <div>
+          <label for="profile-city">City override</label>
+          <input id="profile-city" type="text" placeholder="Local city override" />
+        </div>
+        <div>
+          <label for="profile-bio">Short bio override</label>
+          <input id="profile-bio" type="text" placeholder="Local bio override" />
+        </div>
+      </div>
+      <div class="keyline">Stored in <code>rc_app_config.profile</code> and can be read by any page.</div>
+    </div>
 
-        <button type="button" class="btn btn-primary" style="width: 100%;">
-          Save changes
-        </button>
-      </form>
+    <!-- APP CONTROL / EXPORT / RESET -->
+    <div class="section">
+      <div class="section-title">App Control</div>
+      <div class="section-desc">Export, import, and reset app‑wide config stored in <code>rc_app_config</code>.</div>
+
+      <button class="btn-outline" type="button" onclick="exportAppConfig()">Export App Config</button>
+      <button class="btn-outline" type="button" onclick="importAppConfig()">Import App Config</button>
+      <button class="btn-danger" type="button" onclick="resetAppConfig()">Reset App Config</button>
+    </div>
+
+    <button class="btn-primary" type="button" onclick="saveSettingsFromUI()">
+      Save Changes
+    </button>
+
+    <div class="footer-row">
+      © <span id="year"></span> Roll ’n Connect.
     </div>
   </main>
-
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-    </div>
-  </footer>
 
   <nav class="bottom-nav">
     <a href="index.html" class="bottom-nav-link">
@@ -77,8 +409,10 @@
   </nav>
 </div>
 
+<script src="rc_app_config.js"></script>
 <script>
   document.getElementById("year").textContent = new Date().getFullYear();
+  document.addEventListener("DOMContentLoaded", loadSettingsIntoUI);
 </script>
 </body>
 </html>
