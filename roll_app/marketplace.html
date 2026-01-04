@@ -37,7 +37,7 @@
       transition: 0.3s;
     }
 
-    /* SIDE MENU */
+    /* SIDE MENU (SCROLLABLE + FIXED) */
     .side-menu {
       position: fixed;
       top: 0;
@@ -49,6 +49,17 @@
       box-shadow: 0 0 20px #4a4aff;
       transition: 0.35s ease;
       z-index: 999;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .side-menu::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .side-menu::-webkit-scrollbar-thumb {
+      background: #4a4aff;
+      border-radius: 10px;
     }
 
     .side-menu.open {
@@ -251,14 +262,11 @@
     <div></div><div></div><div></div>
   </div>
 
-  <!-- FIXED SIDEBAR (FULLY CONNECTED) -->
+  <!-- UNIVERSAL SCROLLABLE SIDEBAR -->
   <div class="side-menu">
-
-    <a href="dashboard.html">Dashboard</a>
 
     <!-- MARKETPLACE CORE -->
     <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
-    <a href="marketplace.html">Marketplace</a>
     <a href="sell-item.html">Sell Item</a>
     <a href="your-listings.html">Your Listings</a>
     <a href="giveaways.html">Giveaways</a>
