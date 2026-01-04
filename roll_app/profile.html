@@ -1,120 +1,180 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <title>Boardwalk Profile</title> <link rel="stylesheet" href="styles/style.css" /> <script> document.addEventListener("DOMContentLoaded", () => { const USER_ID = "boardwalk";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boardwalk Profile</title>
+  <link rel="stylesheet" href="styles/style.css" />
 
-  function getUserData() {
-    return JSON.parse(localStorage.getItem("rc_users") || "[]").find(u => u.id === USER_ID) || {};
-  }
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const USER_ID = "boardwalk";
 
-  function getUserPosts() {
-    return (JSON.parse(localStorage.getItem("rc_user_posts") || "[]")).filter(p => p.user === USER_ID);
-  }
-
-  function getUserLikes() {
-    return JSON.parse(localStorage.getItem("rc_user_likes") || "[]");
-  }
-
-  function setUserLikes(likes) {
-    localStorage.setItem("rc_user_likes", JSON.stringify(likes));
-  }
-
-  function updateStats() {
-    document.getElementById("post-count").textContent = getUserPosts().length;
-    document.getElementById("clip-count").textContent = getUserData().clips?.length || 0;
-    document.getElementById("event-count").textContent = getUserData().events?.length || 0;
-  }
-
-  function renderProfile() {
-    const user = getUserData();
-    document.getElementById("username").textContent = user.name || "Boardwalk Clay";
-    document.getElementById("handle").textContent = "@" + USER_ID;
-    document.getElementById("bio").textContent = user.bio || "Cosmic longboard dancer • builder • protector of creators";
-    document.getElementById("avatar").src = user.avatar || "assets/default-avatar.png";
-    document.getElementById("clip-preview").src = user.clip || "assets/default-clip.png";
-  }
-
-  function renderPosts(filter = "all") {
-    const posts = getUserPosts();
-    const container = document.getElementById("post-feed");
-    container.innerHTML = "";
-    posts.forEach(post => {
-      const div = document.createElement("div");
-      div.className = "post";
-      div.innerHTML = `<img src="${post.image}" alt="Post" /><p>${post.caption}</p>`;
-      container.appendChild(div);
-    });
-  }
-
-  function toggleLike(postId) {
-    let likes = getUserLikes();
-    let allPosts = JSON.parse(localStorage.getItem("rc_user_posts") || "[]");
-
-    const postIndex = allPosts.findIndex(p => p.id === postId);
-    if (postIndex === -1) return;
-
-    const post = allPosts[postIndex];
-    const alreadyLiked = likes.includes(postId);
-
-    if (alreadyLiked) {
-      likes = likes.filter(id => id !== postId);
-      post.likes = post.likes.filter(u => u !== USER_ID);
-    } else {
-      if (likes.length >= 3) {
-        alert("You can only like up to 3 posts at a time. Remove a like first.");
-        return;
+      function getUserData() {
+        return JSON.parse(localStorage.getItem("rc_users") || "[]")
+          .find(u => u.id === USER_ID) || {};
       }
-      likes.push(postId);
-      if (!post.likes.includes(USER_ID)) post.likes.push(USER_ID);
-    }
 
-    setUserLikes(likes);
-    allPosts[postIndex] = post;
-    localStorage.setItem("rc_user_posts", JSON.stringify(allPosts));
+      function getUserPosts() {
+        return (JSON.parse(localStorage.getItem("rc_user_posts") || "[]"))
+          .filter(p => p.user === USER_ID);
+      }
 
-    renderPosts();
-    updateStats();
-  }
+      function getUserLikes() {
+        return JSON.parse(localStorage.getItem("rc_user_likes") || "[]");
+      }
 
-  function renderCalendar() {
-    const events = JSON.parse(localStorage.getItem("rc_events") || "[]");
-    const spots = JSON.parse(localStorage.getItem("rc_spots") || "[]");
-    const savedEvents = JSON.parse(localStorage.getItem("rc_user_saved_events") || "[]");
-    const savedSpots = JSON.parse(localStorage.getItem("rc_user_saved_spots") || "[]");
-    document.getElementById("calendar-activity").textContent = `${savedEvents.length + savedSpots.length} New activity`;
-  }
+      function setUserLikes(likes) {
+        localStorage.setItem("rc_user_likes", JSON.stringify(likes));
+      }
 
-  document.getElementById("burger-toggle").addEventListener("click", () => {
-    document.body.classList.toggle("menu-open");
-  });
+      function updateStats() {
+        document.getElementById("post-count").textContent = getUserPosts().length;
+        document.getElementById("clip-count").textContent = getUserData().clips?.length || 0;
+        document.getElementById("event-count").textContent = getUserData().events?.length || 0;
+      }
 
-  renderProfile();
-  renderPosts();
-  updateStats();
-  renderCalendar();
-});
+      function renderProfile() {
+        const user = getUserData();
+        document.getElementById("username").textContent = user.name || "Boardwalk Clay";
+        document.getElementById("handle").textContent = "@" + USER_ID;
+        document.getElementById("bio").textContent =
+          user.bio || "Cosmic longboard dancer • builder • protector of creators";
+        document.getElementById("avatar").src = user.avatar || "assets/default-avatar.png";
+        document.getElementById("clip-preview").src = user.clip || "assets/default-clip.png";
+      }
 
-</script> </head> <body> <aside class="sidebar"> <button id="burger-toggle">☰</button> <nav> <a href="home.html">Home</a> <a href="dashboard.html">Dashboard</a> <a href="profile.html" class="active">Profile</a> <a href="profile-edit.html">Edit Profile</a> <a href="chatroom.html">Chatrooms</a> <a href="events.html">Events</a> <a href="spots.html">Find Spots</a> <a href="marketplace.html">Marketplace</a> <a href="notifications.html">Notifications</a> <a href="calendar.html">Calendar</a> <a href="clips-feed.html">Clips Feed</a> </nav> <footer>Cosmic build • Boardwalk edition</footer> </aside>
+      function renderPosts(filter = "all") {
+        const posts = getUserPosts();
+        const container = document.getElementById("post-feed");
+        container.innerHTML = "";
+        posts.forEach(post => {
+          const div = document.createElement("div");
+          div.className = "post";
+          div.innerHTML = `
+            <img src="${post.image}" alt="Post" />
+            <p>${post.caption}</p>
+          `;
+          container.appendChild(div);
+        });
+      }
 
-<main> <section class="profile"> <img id="avatar" class="avatar" /> <h1 id="username"></h1> <p id="handle"></p> <p id="bio"></p> <button onclick="location.href='profile-edit.html'">Edit Profile</button> <img id="clip-preview" class="clip-preview" /> <div class="stats"> <span id="post-count">0</span> Posts <span id="clip-count">0</span> Clips <span id="event-count">0</span> Events </div> </section>
+      function toggleLike(postId) {
+        let likes = getUserLikes();
+        let allPosts = JSON.parse(localStorage.getItem("rc_user_posts") || "[]");
 
-<section class="posts">
-  <h2>Posts</h2>
-  <button>PHOTO POST</button>
-  <button>CLIP POST</button>
-  <div id="post-feed"></div>
-</section>
+        const postIndex = allPosts.findIndex(p => p.id === postId);
+        if (postIndex === -1) return;
 
-<section class="lessons">
-  <h2>Lessons</h2>
-  <button>Book time with creator</button>
-</section>
+        const post = allPosts[postIndex];
+        const alreadyLiked = likes.includes(postId);
 
-<section class="calendar">
-  <h2>CALENDAR</h2>
-  <p>Events + Spots from your ecosystem</p>
-  <div class="calendar-grid">
-    <!-- Calendar grid layout here -->
-    <p id="calendar-activity">0 New activity</p>
-    <a href="calendar.html">View all</a>
-  </div>
-</section>
+        if (alreadyLiked) {
+          likes = likes.filter(id => id !== postId);
+          post.likes = post.likes.filter(u => u !== USER_ID);
+        } else {
+          if (likes.length >= 3) {
+            alert("You can only like up to 3 posts at a time. Remove a like first.");
+            return;
+          }
+          likes.push(postId);
+          if (!post.likes.includes(USER_ID)) post.likes.push(USER_ID);
+        }
 
-</main> </body> </html>e
+        setUserLikes(likes);
+        allPosts[postIndex] = post;
+        localStorage.setItem("rc_user_posts", JSON.stringify(allPosts));
+
+        renderPosts();
+        updateStats();
+      }
+
+      function renderCalendar() {
+        const events = JSON.parse(localStorage.getItem("rc_events") || "[]");
+        const spots = JSON.parse(localStorage.getItem("rc_spots") || "[]");
+        const savedEvents = JSON.parse(localStorage.getItem("rc_user_saved_events") || "[]");
+        const savedSpots = JSON.parse(localStorage.getItem("rc_user_saved_spots") || "[]");
+
+        document.getElementById("calendar-activity").textContent =
+          `${savedEvents.length + savedSpots.length} New activity`;
+      }
+
+      document.getElementById("burger-toggle").addEventListener("click", () => {
+        document.body.classList.toggle("menu-open");
+      });
+
+      renderProfile();
+      renderPosts();
+      updateStats();
+      renderCalendar();
+    });
+  </script>
+</head>
+
+<body>
+
+  <aside class="sidebar">
+    <button id="burger-toggle">☰</button>
+
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="profile.html" class="active">Profile</a>
+      <a href="profile-edit.html">Edit Profile</a>
+      <a href="chatroom.html">Chatrooms</a>
+      <a href="events.html">Events</a>
+      <a href="spots.html">Find Spots</a>
+      <a href="marketplace.html">Marketplace</a>
+      <a href="notifications.html">Notifications</a>
+      <a href="calendar.html">Calendar</a>
+      <a href="clips-feed.html">Clips Feed</a>
+    </nav>
+
+    <footer>Cosmic build • Boardwalk edition</footer>
+  </aside>
+
+  <main>
+
+    <section class="profile">
+      <img id="avatar" class="avatar" />
+      <h1 id="username"></h1>
+      <p id="handle"></p>
+      <p id="bio"></p>
+
+      <button onclick="location.href='profile-edit.html'">Edit Profile</button>
+
+      <img id="clip-preview" class="clip-preview" />
+
+      <div class="stats">
+        <span id="post-count">0</span> Posts
+        <span id="clip-count">0</span> Clips
+        <span id="event-count">0</span> Events
+      </div>
+    </section>
+
+    <section class="posts">
+      <h2>Posts</h2>
+      <button>PHOTO POST</button>
+      <button>CLIP POST</button>
+      <div id="post-feed"></div>
+    </section>
+
+    <section class="lessons">
+      <h2>Lessons</h2>
+      <button>Book time with creator</button>
+    </section>
+
+    <section class="calendar">
+      <h2>CALENDAR</h2>
+      <p>Events + Spots from your ecosystem</p>
+
+      <div class="calendar-grid">
+        <p id="calendar-activity">0 New activity</p>
+        <a href="calendar.html">View all</a>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
