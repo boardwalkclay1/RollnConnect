@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Marketplace Settings – Roll ’n Connect</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #05050a;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 40px;
+      height: 32px;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger div {
+      height: 6px;
+      background: #4a4aff;
+      border-radius: 4px;
+      box-shadow: 0 0 12px #4a4aff;
+      transition: 0.3s;
+    }
+
+    /* SIDE MENU */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100vh;
+      background: #0d0d16;
+      padding: 40px 20px;
+      box-shadow: 0 0 20px #4a4aff;
+      transition: 0.35s ease;
+      z-index: 999;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .side-menu a {
+      display: block;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #14141c;
+      border-radius: 10px;
+      text-decoration: none;
+      color: white;
+      font-size: 18px;
+      box-shadow: 0 0 10px #4a4aff;
+      transition: 0.25s;
+    }
+
+    .side-menu a:hover {
+      background: #1f1f29;
+      box-shadow: 0 0 16px #4a4aff;
+    }
+
+    /* PAGE CONTENT */
+    .page-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+      font-weight: 700;
+      text-shadow: 0 0 12px #4a4aff;
+    }
+
+    .subtitle {
+      opacity: 0.7;
+      margin-bottom: 24px;
+    }
+
+    .section {
+      background: #0f0f18;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 0 16px rgba(74, 74, 255, 0.35);
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .section-text {
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 10px;
+    }
+
+    .small {
+      font-size: 12px;
+      opacity: 0.75;
+      margin-top: 6px;
+    }
+
+    .btn-danger, .btn-outline {
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: 0.25s;
+      margin-top: 10px;
+    }
+
+    .btn-danger {
+      background: #ff4a6a;
+      color: white;
+      box-shadow: 0 0 16px rgba(255, 74, 106, 0.8);
+    }
+
+    .btn-danger:hover {
+      box-shadow: 0 0 20px rgba(255, 110, 140, 1);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #4a4aff;
+      color: #4a4aff;
+    }
+
+    .btn-outline:hover {
+      background: #14141c;
+      box-shadow: 0 0 14px #4a4aff;
+    }
+
+    .confirm-text {
+      display: block;
+      margin-top: 8px;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 6px;
+    }
+
+    code {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      background: #14141c;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+  </style>
+
+  <script>
+    function toggleMenu() {
+      document.querySelector('.side-menu').classList.toggle('open');
+    }
+
+    function loadMarketplaceSettings() {
+      const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+      const items = JSON.parse(localStorage.getItem("rc_market_items") || "[]");
+
+      document.getElementById("currentUser").textContent =
+        profile.username || "Not set";
+      document.getElementById("itemCount").textContent = items.length;
+    }
+
+    function clearMarketplaceItems() {
+      const box = document.getElementById("confirmMarket");
+      if (!box.checked) {
+        alert("Check the confirmation box first.");
+        return;
+      }
+      localStorage.removeItem("rc_market_items");
+      alert("Marketplace items cleared from this browser.");
+      box.checked = false;
+      loadMarketplaceSettings();
+    }
+
+    function clearAllMarketplaceData() {
+      const box = document.getElementById("confirmAll");
+      if (!box.checked) {
+        alert("Check the confirmation box first.");
+        return;
+      }
+      localStorage.removeItem("rc_market_items");
+      // rc_profile stays, because main app uses it too – unified profile
+      alert("Marketplace item data cleared. Profile is preserved.");
+      box.checked = false;
+      loadMarketplaceSettings();
+    }
+
+    document.addEventListener("DOMContentLoaded", loadMarketplaceSettings);
+  </script>
+</head>
+
+<body>
+
+  <!-- HAMBURGER -->
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <!-- SIDE MENU -->
+  <div class="side-menu">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="sell-item.html">Sell Item</a>
+    <a href="marketplace-profile.html">Marketplace Profile</a>
+    <a href="marketplace-settings.html">Marketplace Settings</a>
+    <a href="profile.html">Main Profile</a>
+    <a href="settings.html">Main Settings</a>
+  </div>
+
+  <div class="page-container">
+    <h1>Marketplace Settings</h1>
+    <div class="subtitle">
+      Control marketplace data stored locally in this browser while keeping your main Roll ’n Connect profile unified.
+    </div>
+
+    <div class="section">
+      <div class="section-title">Profile Used for Marketplace</div>
+      <div class="section-text">
+        Marketplace uses your main app profile stored under <code>rc_profile</code>.
+      </div>
+      <div class="section-text">
+        Current username: <strong id="currentUser">...</strong>
+      </div>
+      <div class="small">
+        To change your name, handle, or city, edit your main profile:
+        <a href="profile.html" style="color:#aaaaff;">Open Main Profile</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Marketplace Items Storage</div>
+      <div class="section-text">
+        All marketplace items are stored locally under <code>rc_market_items</code>.
+        <br />
+        Current stored items: <strong id="itemCount">0</strong>
+      </div>
+      <label class="confirm-text">
+        <input type="checkbox" id="confirmMarket" />
+        I understand this removes all marketplace items from this browser.
+      </label>
+      <button class="btn-danger" onclick="clearMarketplaceItems()">
+        Clear Marketplace Items
+      </button>
+      <div class="small">
+        This doesn’t touch your main profile. It only resets marketplace listings in this browser.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Reset Marketplace Data Only</div>
+      <div class="section-text">
+        Use this if you want to wipe all marketplace item data but keep your unified app profile untouched.
+      </div>
+      <label class="confirm-text">
+        <input type="checkbox" id="confirmAll" />
+        I understand this will clear all marketplace item data from this browser.
+      </label>
+      <button class="btn-outline" onclick="clearAllMarketplaceData()">
+        Reset Marketplace Data
+      </button>
+    </div>
+  </div>
+</body>
+</html>
