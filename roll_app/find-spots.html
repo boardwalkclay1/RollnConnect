@@ -5,7 +5,7 @@
   <title>Find Spots – Roll ’n Connect</title>
 
   <!-- GOOGLE MAPS (REPLACE API_KEY LOCALLY) -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places"></script>
 
   <style>
     body {
@@ -35,7 +35,7 @@
 
     #map {
       width:100%;
-      height:300px;
+      height:320px;
     }
 
     .filters {
@@ -204,12 +204,12 @@
 <div id="map"></div>
 
 <div class="filters">
-  <button class="filter-btn" data-q="skatepark"><div class="dot skatepark"></div>Skateparks</button>
-  <button class="filter-btn" data-q="roller rink"><div class="dot rink"></div>Rinks</button>
-  <button class="filter-btn" data-q="water fountain"><div class="dot water"></div>Water</button>
-  <button class="filter-btn" data-q="food"><div class="dot food"></div>Food</button>
-  <button class="filter-btn" data-q="parking lot"><div class="dot parking"></div>Parking</button>
-  <button class="filter-btn" data-q="restroom"><div class="dot restroom"></div>Restrooms</button>
+  <button class="filter-btn" data-q="skatepark" data-color="#38bdf8"><div class="dot skatepark"></div>Skateparks</button>
+  <button class="filter-btn" data-q="roller rink" data-color="#a855f7"><div class="dot rink"></div>Rinks</button>
+  <button class="filter-btn" data-q="water fountain" data-color="#0ea5e9"><div class="dot water"></div>Water</button>
+  <button class="filter-btn" data-q="food" data-color="#f97316"><div class="dot food"></div>Food</button>
+  <button class="filter-btn" data-q="parking lot" data-color="#e5e7eb"><div class="dot parking"></div>Parking</button>
+  <button class="filter-btn" data-q="restroom" data-color="#22c55e"><div class="dot restroom"></div>Restrooms</button>
 </div>
 
 <div class="content">
@@ -265,6 +265,7 @@
 <script>
 let map, places, spots=[], pageIndex=0, pageSize=5;
 let activeFilters=[];
+let markers=[];
 let userMarker=null;
 let liveWatch=null;
 
@@ -277,6 +278,12 @@ function initMap(){
   places=new google.maps.places.PlacesService(map);
 }
 window.onload=initMap;
+
+/* CLEAR MARKERS */
+function clearMarkers(){
+  markers.forEach(m=>m.setMap(null));
+  markers=[];
+}
 
 /* FILTERS — up to 3 */
 document.querySelectorAll(".filter-btn").forEach(btn=>{
@@ -307,6 +314,7 @@ function runSearch(){
     spots=results;
     pageIndex=0;
     renderPage();
+    renderMarkers();
   });
 }
 
@@ -336,6 +344,59 @@ document.getElementById("loadMore").onclick=()=>{
   pageIndex++;
   renderPage();
 };
+
+/* COLOR-CODED MARKERS */
+function getColorForSpot(spot){
+  const name=spot.name.toLowerCase();
+  if(name.includes("skate")) return "#38bdf8";
+  if(name.includes("rink")) return "#a855f7";
+  if(name.includes("water") || name.includes("fountain")) return "#0ea5e9";
+  if(name.includes("food") || name.includes("restaurant")) return "#f97316";
+  if(name.includes("parking")) return "#e5e7eb";
+  if(name.includes("restroom") || name.includes("bathroom")) return "#22c55e";
+  return "#ffffff";
+}
+
+/* MARKERS ON MAP */
+function renderMarkers(){
+  clearMarkers();
+
+  spots.forEach(spot=>{
+    const loc=spot.geometry.location;
+    const color=getColorForSpot(spot);
+
+    const marker=new google.maps.Marker({
+      map,
+      position:loc,
+      icon:{
+        path:google.maps.SymbolPath.CIRCLE,
+        scale:10,
+        fillColor:color,
+        fillOpacity:1,
+        strokeWeight:1,
+        strokeColor:"#000"
+      }
+    });
+
+    const info=new google.maps.InfoWindow({
+      content:`
+        <div style="color:black;font-size:14px;">
+          <strong>${spot.name}</strong><br>
+          ${spot.formatted_address||""}<br>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${loc.lat()},${loc.lng()}" target="_blank">
+            Get Directions
+          </a>
+        </div>
+      `
+    });
+
+    marker.addListener("mouseover",()=>info.open(map,marker));
+    marker.addListener("mouseout",()=>info.close());
+    marker.addListener("click",()=>openDetails(spot));
+
+    markers.push(marker);
+  });
+}
 
 /* DETAILS */
 function openDetails(spot){
