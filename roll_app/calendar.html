@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>My Calendar – Roll ’n Connect</title>
+<title>My Cosmic Calendar – Roll ’n Connect</title>
 
 <style>
 /* GLOBAL */
@@ -101,86 +101,316 @@ body {
 
 /* MAIN WRAPPER */
 .cosmic-wrapper {
-  padding:140px 20px 80px;
-  max-width:900px;
+  padding:120px 20px 80px;
+  max-width:1200px;
   margin:0 auto;
 }
 
-/* GLASS PANEL */
-.glass {
-  background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(20px);
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 0 40px rgba(255,255,255,0.25);
-  margin-bottom:40px;
+/* GLASS SHELL */
+.calendar-shell {
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(25px);
+  border-radius:26px;
+  box-shadow:0 0 60px rgba(255,255,255,0.3);
+  padding:28px;
+  position:relative;
+  z-index:20;
 }
 
+/* HEADER */
 .section-title {
-  font-size:3rem;
+  font-size:3.4rem;
   text-align:center;
   text-shadow:0 0 40px #fff;
+  margin-bottom:8px;
+}
+.section-subtitle {
+  text-align:center;
+  opacity:0.85;
+  margin-bottom:22px;
 }
 
-/* CALENDAR LIST */
-.calendar-list {
-  list-style:none;
-  padding:0;
-  margin:0;
+/* LAYOUT */
+.calendar-layout {
+  display:grid;
+  grid-template-columns:1.8fr 1.2fr;
+  gap:24px;
+}
+@media (max-width:950px) {
+  .calendar-layout {
+    grid-template-columns:1fr;
+  }
 }
 
+/* MONTH VIEW */
+.month-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+.month-name {
+  font-size:1.4rem;
+  font-weight:600;
+}
+.month-nav button {
+  background:rgba(255,255,255,0.15);
+  border:none;
+  color:#fff;
+  padding:6px 10px;
+  border-radius:999px;
+  cursor:pointer;
+  margin-left:6px;
+}
+.month-nav button:hover {
+  background:#fff;
+  color:#000;
+}
+
+.weekdays,
+.calendar-grid {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+}
+.weekday {
+  text-align:center;
+  font-size:0.8rem;
+  opacity:0.7;
+  padding-bottom:3px;
+}
+.day-cell {
+  min-height:72px;
+  background:rgba(255,255,255,0.06);
+  border-radius:12px;
+  padding:6px;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+  border:1px solid transparent;
+}
+.day-cell.other-month {
+  opacity:0.35;
+}
+.day-cell.today {
+  border-color:rgba(255,255,255,0.9);
+  box-shadow:0 0 18px rgba(255,255,255,0.9);
+}
+.day-number {
+  font-size:0.95rem;
+  font-weight:600;
+}
+.day-dot {
+  position:absolute;
+  bottom:6px;
+  right:8px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 0 12px rgba(255,255,255,1);
+}
+.day-dot.public { background:#4fff81; box-shadow:0 0 12px #4fff81; }
+.day-dot.private { background:#ff4f81; box-shadow:0 0 12px #ff4f81; }
+.day-dot.groups { background:#4fc3ff; box-shadow:0 0 12px #4fc3ff; }
+
+/* RIGHT PANEL */
+.right-panel {
+  background:rgba(0,0,0,0.45);
+  border-radius:20px;
+  padding:18px 18px 22px;
+  box-shadow:0 0 35px rgba(0,0,0,0.8);
+}
+.right-heading {
+  font-size:1.2rem;
+  margin-bottom:4px;
+}
+.right-date-label {
+  font-size:0.9rem;
+  opacity:0.8;
+  margin-bottom:12px;
+}
+
+/* FILTERS + ACTIONS */
+.filters-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:10px;
+}
+.filter-pill {
+  padding:4px 9px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.35);
+  background:rgba(0,0,0,0.3);
+  font-size:0.75rem;
+  cursor:pointer;
+  opacity:0.75;
+}
+.filter-pill.active {
+  background:#fff;
+  color:#000;
+  box-shadow:0 0 14px rgba(255,255,255,0.9);
+  opacity:1;
+}
+.add-btn {
+  margin-left:auto;
+  padding:6px 11px;
+  border-radius:999px;
+  border:none;
+  background:#fff;
+  color:#000;
+  font-size:0.8rem;
+  cursor:pointer;
+}
+.add-btn:hover {
+  box-shadow:0 0 16px rgba(255,255,255,0.9);
+}
+
+/* DAY LIST */
+.day-list {
+  max-height:260px;
+  overflow-y:auto;
+  margin-bottom:10px;
+}
+.day-empty {
+  opacity:0.7;
+  font-size:0.9rem;
+  padding:8px 4px;
+}
 .calendar-item {
-  padding:18px;
-  margin-bottom:16px;
-  border-radius:14px;
-  background:rgba(255,255,255,0.12);
-  box-shadow:0 0 30px rgba(255,255,255,0.25);
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.10);
+  box-shadow:0 0 18px rgba(0,0,0,0.7);
+  font-size:0.85rem;
 }
-
+.calendar-item-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:4px;
+}
+.calendar-item-type {
+  font-size:0.75rem;
+  opacity:0.75;
+}
+.calendar-item-privacy {
+  font-size:0.7rem;
+  padding:2px 7px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.4);
+}
 .calendar-item a {
   color:#fff;
   text-decoration:underline;
 }
 
-/* EDITOR */
+/* EDIT/DELETE */
+.item-actions {
+  margin-top:6px;
+}
+.item-actions button {
+  padding:4px 9px;
+  border-radius:999px;
+  border:none;
+  cursor:pointer;
+  font-size:0.7rem;
+  margin-right:6px;
+}
+.item-actions .edit-btn { background:#fff; color:#000; }
+.item-actions .delete-btn { background:rgba(255,80,80,0.20); color:#ff9a9a; }
+
+/* INLINE EDITOR */
 .editor {
-  margin-top:12px;
-  padding:12px;
-  border-radius:12px;
-  background:rgba(255,255,255,0.08);
+  margin-top:8px;
+  padding:8px;
+  border-radius:10px;
+  background:rgba(0,0,0,0.5);
+}
+.editor-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
 }
 .editor input,
 .editor select {
-  width:100%;
-  margin-bottom:10px;
-  padding:8px;
-  border-radius:8px;
-  border:none;
+  flex:1 1 100%;
   background:rgba(255,255,255,0.15);
-  color:#fff;
-}
-.editor button {
-  padding:8px 14px;
+  border:none;
   border-radius:8px;
+  padding:6px 8px;
+  color:#fff;
+  font-size:0.8rem;
+}
+.editor input::placeholder {
+  color:rgba(255,255,255,0.6);
+}
+.editor-actions {
+  margin-top:6px;
+}
+.editor-actions button {
+  padding:5px 10px;
+  border-radius:999px;
   border:none;
   cursor:pointer;
-  margin-right:8px;
+  font-size:0.75rem;
+  margin-right:6px;
 }
 .editor .save-btn { background:#fff; color:#000; }
 .editor .cancel-btn { background:rgba(255,255,255,0.2); color:#fff; }
 
-.item-actions {
+/* SHARE PANEL */
+.share-panel {
   margin-top:10px;
+  border-top:1px dashed rgba(255,255,255,0.3);
+  padding-top:8px;
+  font-size:0.8rem;
 }
-.item-actions button {
-  padding:6px 12px;
-  border-radius:8px;
+.share-panel input {
+  width:100%;
+  margin-top:4px;
+  background:rgba(255,255,255,0.15);
   border:none;
-  cursor:pointer;
-  margin-right:8px;
+  border-radius:8px;
+  padding:6px 8px;
+  color:#fff;
 }
-.item-actions .edit-btn { background:#fff; color:#000; }
-.item-actions .delete-btn { background:rgba(255,80,80,0.2); color:#ff8080; }
+.share-panel button {
+  margin-top:6px;
+  padding:5px 10px;
+  border-radius:999px;
+  border:none;
+  background:#fff;
+  color:#000;
+  font-size:0.75rem;
+  cursor:pointer;
+}
+
+/* FLOATING BUBBLES (BEHIND SHELL BUT CLICKABLE ON EDGES) */
+.bubble {
+  position:fixed;
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.10);
+  backdrop-filter:blur(18px);
+  box-shadow:0 0 40px rgba(255,255,255,0.40);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#fff;
+  text-decoration:none;
+  font-size:0.9rem;
+  padding:10px;
+  z-index:10; /* below .calendar-shell (20), above stars */
+  transition:transform 0.2s;
+}
+.bubble:hover {
+  transform:scale(1.08);
+}
 </style>
 </head>
 
@@ -208,24 +438,89 @@ body {
   <a href="calendar.html">My Calendar</a>
 </div>
 
+<!-- FLOATING COSMIC BUBBLES -->
+<a href="chatrooms.html" class="bubble" id="bubbleChat">Chatrooms</a>
+<a href="profile.html" class="bubble" id="bubbleProfile">Profile</a>
+<a href="find-spots.html" class="bubble" id="bubbleSpots">Find Spots</a>
+<a href="dashboard.html" class="bubble" id="bubbleDashboard">Dashboard</a>
+
 <!-- MAIN CONTENT -->
 <div class="cosmic-wrapper">
+  <div class="calendar-shell">
+    <h1 class="section-title">My Cosmic Calendar</h1>
+    <p class="section-subtitle">
+      Big visual calendar, floating bubbles, sharable with groups, lessons, events, and friends.
+    </p>
 
-  <div class="glass">
-    <h1 class="section-title">My Calendar</h1>
+    <div class="calendar-layout">
+      <!-- LEFT: MONTH VIEW -->
+      <div>
+        <div class="month-header">
+          <div class="month-name" id="monthName"></div>
+          <div class="month-nav">
+            <button id="prevMonthBtn">⟵ Prev</button>
+            <button id="nextMonthBtn">Next ⟶</button>
+          </div>
+        </div>
+
+        <div class="weekdays">
+          <div class="weekday">Sun</div>
+          <div class="weekday">Mon</div>
+          <div class="weekday">Tue</div>
+          <div class="weekday">Wed</div>
+          <div class="weekday">Thu</div>
+          <div class="weekday">Fri</div>
+          <div class="weekday">Sat</div>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+
+      <!-- RIGHT: DAY DETAILS + CONTROLS -->
+      <div class="right-panel">
+        <div class="right-heading">Day Details</div>
+        <div class="right-date-label" id="selectedDateLabel"></div>
+
+        <div class="filters-row">
+          <button class="filter-pill active" data-filter-type="all">All</button>
+          <button class="filter-pill" data-filter-type="event">Events</button>
+          <button class="filter-pill" data-filter-type="lesson">Lessons</button>
+          <button class="filter-pill" data-filter-type="spot">Spots</button>
+          <button class="filter-pill" data-filter-type="custom">Custom</button>
+          <button id="addItemBtn" class="add-btn">+ Add</button>
+        </div>
+
+        <div class="filters-row">
+          <button class="filter-pill active" data-filter-privacy="all">All visibility</button>
+          <button class="filter-pill" data-filter-privacy="public">Public</button>
+          <button class="filter-pill" data-filter-privacy="private">Private</button>
+          <button class="filter-pill" data-filter-privacy="groups">Groups</button>
+        </div>
+
+        <div class="day-list" id="dayList"></div>
+        <div class="day-empty" id="dayEmpty" style="display:none;">Nothing on this day yet.</div>
+
+        <div class="share-panel">
+          <div>Share your calendar with another user (username or ID):</div>
+          <input id="shareTargetInput" placeholder="Enter username or user ID">
+          <button id="shareCalendarBtn">Share Calendar</button>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="glass">
-    <ul id="calendarFullList" class="calendar-list"></ul>
-    <p id="calendarEmpty" style="display:none; opacity:0.7;">Nothing saved yet.</p>
-  </div>
-
 </div>
 
 <script>
-/* AUTH CHECK */
-const user = JSON.parse(localStorage.getItem("rc_user"));
-if (!user) window.location.href = "index.html";
+/* AUTH CHECK (ROBUST) */
+let user = null;
+try {
+  user = JSON.parse(localStorage.getItem("rc_user"));
+} catch(e) {
+  user = null;
+}
+if (!user || (!user.id && !user.username)) {
+  window.location.href = "index.html";
+}
+const OWNER_ID = user.id || user.username || "anonymous";
 
 /* BURGER */
 document.getElementById("hamburger").onclick = () => {
@@ -233,84 +528,291 @@ document.getElementById("hamburger").onclick = () => {
   document.getElementById("sidebar").classList.toggle("open");
 };
 
-/* CALENDAR STORAGE */
-function getCalendar() {
-  return JSON.parse(localStorage.getItem("rc_calendar_items") || "[]");
+/* STORAGE HELPERS */
+function getCalendarItems() {
+  try {
+    return JSON.parse(localStorage.getItem("rc_calendar_items") || "[]");
+  } catch(e) {
+    return [];
+  }
 }
-function saveCalendar(items) {
+function saveCalendarItems(items) {
   localStorage.setItem("rc_calendar_items", JSON.stringify(items));
 }
 
-/* SEED FROM EVENTS + SPOTS */
-function seedCalendar() {
-  const items = getCalendar();
+/* SHARING STORE */
+function getCalendarShares() {
+  try {
+    return JSON.parse(localStorage.getItem("rc_calendar_shares") || "[]");
+  } catch(e) {
+    return [];
+  }
+}
+function saveCalendarShares shares => {
+  localStorage.setItem("rc_calendar_shares", JSON.stringify(shares));
+}
+
+/* SEED FROM EVENTS, SPOTS, LESSONS */
+function seedCalendarFromSources() {
+  const items = getCalendarItems();
+  const existingRefs = new Set(items.map(i => (i.type || "") + "::" + (i.refId || "")));
+
   const events = JSON.parse(localStorage.getItem("rc_events") || "[]");
   const spots = JSON.parse(localStorage.getItem("rc_spots") || "[]");
+  const lessons = JSON.parse(localStorage.getItem("rc_lessons") || "[]");
+
   const savedEvents = JSON.parse(localStorage.getItem("rc_user_saved_events") || "[]");
   const savedSpots = JSON.parse(localStorage.getItem("rc_user_saved_spots") || "[]");
+  const savedLessons = JSON.parse(localStorage.getItem("rc_user_saved_lessons") || "[]");
 
-  const owner = user.id || user.username;
-
+  // events
   events.forEach(ev => {
     if (!savedEvents.includes(ev.id)) return;
-    if (items.some(i => i.refId === ev.id)) return;
-
+    const key = "event::" + ev.id;
+    if (existingRefs.has(key)) return;
     items.push({
-      id: "cal_" + crypto.randomUUID(),
+      id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
+      ownerId: OWNER_ID,
       type: "event",
       refId: ev.id,
-      title: ev.title,
-      date: ev.date,
-      location: ev.location,
+      title: ev.title || "Untitled Event",
+      date: ev.date || null,
+      time: ev.time || "",
+      location: ev.location || null,
       distance: null,
       link: `event-details.html?id=${ev.id}`,
       privacy: "public",
       groups: [],
-      ownerId: owner
+      source: "event"
     });
   });
 
+  // spots
   spots.forEach(sp => {
     if (!savedSpots.includes(sp.id)) return;
-    if (items.some(i => i.refId === sp.id)) return;
-
+    const key = "spot::" + sp.id;
+    if (existingRefs.has(key)) return;
     items.push({
-      id: "cal_" + crypto.randomUUID(),
+      id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
+      ownerId: OWNER_ID,
       type: "spot",
       refId: sp.id,
-      title: sp.name,
+      title: sp.name || "Untitled Spot",
       date: null,
-      location: sp.location,
-      distance: sp.distance,
+      time: "",
+      location: sp.location || null,
+      distance: sp.distance || null,
       link: `spot-details.html?id=${sp.id}`,
       privacy: "public",
       groups: [],
-      ownerId: owner
+      source: "spot"
     });
   });
 
-  saveCalendar(items);
+  // lessons
+  lessons.forEach(ls => {
+    if (!savedLessons.includes(ls.id)) return;
+    const key = "lesson::" + ls.id;
+    if (existingRefs.has(key)) return;
+    items.push({
+      id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
+      ownerId: OWNER_ID,
+      type: "lesson",
+      refId: ls.id,
+      title: ls.title || "Lesson",
+      date: ls.date || null,
+      time: ls.time || "",
+      location: ls.location || null,
+      distance: null,
+      link: ls.link || "",
+      privacy: "public",
+      groups: [],
+      source: "lesson"
+    });
+  });
+
+  saveCalendarItems(items);
 }
 
-/* RENDER */
-function renderCalendar() {
-  const list = document.getElementById("calendarFullList");
-  const empty = document.getElementById("calendarEmpty");
-  list.innerHTML = "";
+/* GLOBAL ADD-TO-CALENDAR ENTRY POINTS (for events.html etc.) */
+window.addToCalendarFromEvent = function(ev, privacy="public") {
+  const items = getCalendarItems();
+  items.push({
+    id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
+    ownerId: OWNER_ID,
+    type: "event",
+    refId: ev.id || null,
+    title: ev.title || "Untitled Event",
+    date: ev.date || null,
+    time: ev.time || "",
+    location: ev.location || null,
+    distance: null,
+    link: ev.id ? `event-details.html?id=${ev.id}` : "",
+    privacy,
+    groups: [],
+    source:"event"
+  });
+  saveCalendarItems(items);
+};
 
-  const owner = user.id || user.username;
-  const items = getCalendar().filter(i => i.ownerId === owner);
+window.addToCalendarFromLesson = function(ls, privacy="public") {
+  const items = getCalendarItems();
+  items.push({
+    id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
+    ownerId: OWNER_ID,
+    type: "lesson",
+    refId: ls.id || null,
+    title: ls.title || "Lesson",
+    date: ls.date || null,
+    time: ls.time || "",
+    location: ls.location || null,
+    distance: null,
+    link: ls.link || "",
+    privacy,
+    groups: [],
+    source:"lesson"
+  });
+  saveCalendarItems(items);
+};
 
-  if (!items.length) {
-    empty.style.display = "block";
+/* CALENDAR STATE */
+let currentYear, currentMonth; // month is 0-based
+let selectedDate = null; // string "YYYY-MM-DD"
+let currentTypeFilter = "all";
+let currentPrivacyFilter = "all";
+
+/* DATE HELPERS */
+function toISODate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function formatPrettyDate(iso) {
+  if (!iso) return "";
+  const [y,m,d] = iso.split("-");
+  const date = new Date(+y, +m-1, +d);
+  return date.toLocaleDateString(undefined,{weekday:"long", month:"long", day:"numeric", year:"numeric"});
+}
+
+/* RENDER MONTH GRID */
+function renderMonth() {
+  const monthNameEl = document.getElementById("monthName");
+  const grid = document.getElementById("calendarGrid");
+  grid.innerHTML = "";
+
+  const monthDate = new Date(currentYear, currentMonth, 1);
+  const monthName = monthDate.toLocaleString(undefined,{month:"long", year:"numeric"});
+  monthNameEl.textContent = monthName;
+
+  const firstDayIndex = monthDate.getDay();
+  const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
+  const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+  const todayISO = toISODate(new Date());
+  const items = getCalendarItems().filter(i => i.ownerId === OWNER_ID);
+
+  const cells = [];
+  for (let i=0; i<firstDayIndex; i++) {
+    const day = daysInPrevMonth - firstDayIndex + 1 + i;
+    const d = new Date(currentYear, currentMonth-1, day);
+    cells.push({date:d, other:true});
+  }
+  for (let d=1; d<=daysInMonth; d++) {
+    cells.push({date:new Date(currentYear, currentMonth, d), other:false});
+  }
+  while (cells.length % 7 !== 0) {
+    const day = cells.length - firstDayIndex - daysInMonth + 1;
+    const d = new Date(currentYear, currentMonth+1, day);
+    cells.push({date:d, other:true});
+  }
+
+  cells.forEach(cell => {
+    const iso = toISODate(cell.date);
+    const cellItems = items.filter(i => i.date === iso);
+    const cellDiv = document.createElement("div");
+    cellDiv.className = "day-cell" + (cell.other ? " other-month" : "");
+    if (iso === todayISO) cellDiv.classList.add("today");
+    cellDiv.dataset.date = iso;
+
+    const numDiv = document.createElement("div");
+    numDiv.className = "day-number";
+    numDiv.textContent = cell.date.getDate();
+    cellDiv.appendChild(numDiv);
+
+    if (cellItems.length) {
+      const privacy = cellItems.some(i => i.privacy === "private") ? "private"
+                     : cellItems.some(i => i.privacy === "groups") ? "groups"
+                     : "public";
+      const dot = document.createElement("div");
+      dot.className = "day-dot " + privacy;
+      cellDiv.appendChild(dot);
+    }
+
+    cellDiv.onclick = () => {
+      selectedDate = iso;
+      renderSelectedDay();
+      highlightSelectedDay();
+    };
+
+    grid.appendChild(cellDiv);
+  });
+
+  highlightSelectedDay();
+}
+
+/* HIGHLIGHT SELECTED DAY */
+function highlightSelectedDay() {
+  if (!selectedDate) return;
+  document.querySelectorAll(".day-cell").forEach(cell => {
+    if (cell.dataset.date === selectedDate) {
+      cell.style.borderColor = "rgba(255,255,255,0.9)";
+      cell.style.boxShadow = "0 0 18px rgba(255,255,255,0.9)";
+    } else if (!cell.classList.contains("today")) {
+      cell.style.borderColor = "transparent";
+      cell.style.boxShadow = "none";
+    }
+  });
+}
+
+/* RENDER SELECTED DAY LIST */
+function renderSelectedDay() {
+  const labelEl = document.getElementById("selectedDateLabel");
+  const listEl = document.getElementById("dayList");
+  const emptyEl = document.getElementById("dayEmpty");
+
+  if (!selectedDate) {
+    const today = toISODate(new Date());
+    selectedDate = today;
+  }
+
+  labelEl.textContent = formatPrettyDate(selectedDate);
+  listEl.innerHTML = "";
+
+  const allItems = getCalendarItems().filter(i => i.ownerId === OWNER_ID && i.date === selectedDate);
+
+  const filtered = allItems.filter(item => {
+    if (currentTypeFilter !== "all" && item.type !== currentTypeFilter) return false;
+    if (currentPrivacyFilter !== "all" && item.privacy !== currentPrivacyFilter) return false;
+    return true;
+  });
+
+  if (!filtered.length) {
+    emptyEl.style.display = "block";
     return;
   }
-  empty.style.display = "none";
+  emptyEl.style.display = "none";
 
-  items.forEach(item => {
-    const li = document.createElement("li");
+  filtered.forEach(item => {
+    const li = document.createElement("div");
     li.className = "calendar-item";
     li.dataset.id = item.id;
+
+    const typeLabel =
+      item.type === "event" ? "📅 Event" :
+      item.type === "lesson" ? "🎓 Lesson" :
+      item.type === "spot" ? "📍 Spot" :
+      "⭐ Custom";
 
     const privacyLabel =
       item.privacy === "public" ? "🌐 Public" :
@@ -318,97 +820,246 @@ function renderCalendar() {
       "👥 Groups";
 
     const groupsText =
-      item.privacy === "groups" && item.groups.length
+      item.privacy === "groups" && item.groups && item.groups.length
         ? `<br>Groups: ${item.groups.join(", ")}`
         : "";
 
     li.innerHTML = `
-      <strong>${item.title}</strong><br>
-      ${item.date ? `📅 ${item.date}<br>` : ""}
-      ${item.location ? `📍 ${item.location}<br>` : ""}
-      ${item.distance ? `🛼 ${item.distance} miles away<br>` : ""}
-      ${item.link ? `<a href="${item.link}">View Details</a><br>` : ""}
-      ${privacyLabel}${groupsText}
+      <div class="calendar-item-header">
+        <div>
+          <strong>${item.title}</strong>
+          <div class="calendar-item-type">${typeLabel}</div>
+        </div>
+        <div class="calendar-item-privacy">${privacyLabel}</div>
+      </div>
+      <div>
+        ${item.time ? `⏰ ${item.time}<br>` : ""}
+        ${item.location ? `📍 ${item.location}<br>` : ""}
+        ${item.distance ? `🛼 ${item.distance} miles away<br>` : ""}
+        ${item.link ? `<a href="${item.link}">View details</a><br>` : ""}
+        ${groupsText}
+      </div>
       <div class="item-actions">
         <button class="edit-btn">Edit</button>
         <button class="delete-btn">Delete</button>
       </div>
     `;
 
-    list.appendChild(li);
+    listEl.appendChild(li);
   });
 }
 
-/* EDITOR */
-function openEditor(id) {
-  const items = getCalendar();
-  const item = items.find(i => i.id === id);
+/* INLINE EDITOR */
+function openEditorFor(id) {
+  const items = getCalendarItems();
+  const item = items.find(i => i.id === id && i.ownerId === OWNER_ID);
   if (!item) return;
 
-  const li = document.querySelector(`[data-id="${id}"]`);
-  if (!li) return;
+  const listEl = document.getElementById("dayList");
+  const card = listEl.querySelector(`.calendar-item[data-id="${id}"]`);
+  if (!card) return;
 
-  const editor = document.createElement("div");
-  editor.className = "editor";
+  let existing = card.querySelector(".editor");
+  if (existing) existing.remove();
 
-  editor.innerHTML = `
-    <input data-field="title" value="${item.title}">
-    <input data-field="date" type="date" value="${item.date || ""}">
-    <input data-field="location" placeholder="Location" value="${item.location || ""}">
-    <input data-field="distance" placeholder="Distance" value="${item.distance || ""}">
-    <select data-field="privacy">
-      <option value="public" ${item.privacy === "public" ? "selected" : ""}>Public</option>
-      <option value="private" ${item.privacy === "private" ? "selected" : ""}>Private</option>
-      <option value="groups" ${item.privacy === "groups" ? "selected" : ""}>Groups</option>
-    </select>
-    <input data-field="groups" placeholder="Groups (comma separated)" value="${item.groups.join(", ")}">
-    <button class="save-btn">Save</button>
-    <button class="cancel-btn">Cancel</button>
+  const ed = document.createElement("div");
+  ed.className = "editor";
+  const groupStr = (item.groups || []).join(", ");
+
+  ed.innerHTML = `
+    <div class="editor-row">
+      <input data-field="title" placeholder="Title" value="${item.title || ""}">
+      <input data-field="time" placeholder="Time (e.g. 7:00 PM)" value="${item.time || ""}">
+      <input data-field="location" placeholder="Location" value="${item.location || ""}">
+      <input data-field="distance" placeholder="Distance (miles)" value="${item.distance || ""}">
+    </div>
+    <div class="editor-row" style="margin-top:4px;">
+      <select data-field="privacy">
+        <option value="public" ${item.privacy === "public" ? "selected" : ""}>Public</option>
+        <option value="private" ${item.privacy === "private" ? "selected" : ""}>Private</option>
+        <option value="groups" ${item.privacy === "groups" ? "selected" : ""}>Groups</option>
+      </select>
+      <input data-field="groups" placeholder="Groups (comma separated)" value="${groupStr}">
+    </div>
+    <div class="editor-actions">
+      <button class="save-btn">Save</button>
+      <button class="cancel-btn">Cancel</button>
+    </div>
   `;
 
-  li.appendChild(editor);
+  card.appendChild(ed);
 
-  editor.querySelector(".save-btn").onclick = () => {
-    editor.querySelectorAll("[data-field]").forEach(el => {
+  ed.querySelector(".save-btn").onclick = () => {
+    ed.querySelectorAll("[data-field]").forEach(el => {
       const field = el.dataset.field;
+      const value = el.value.trim();
       if (field === "groups") {
-        item.groups = el.value.split(",").map(g => g.trim()).filter(Boolean);
+        item.groups = value ? value.split(",").map(v => v.trim()).filter(Boolean) : [];
+      } else if (field === "distance") {
+        item.distance = value || null;
       } else {
-        item[field] = el.value || null;
+        item[field] = value || null;
       }
     });
-    saveCalendar(items);
-    renderCalendar();
+    saveCalendarItems(items);
+    renderSelectedDay();
   };
-
-  editor.querySelector(".cancel-btn").onclick = () => editor.remove();
+  ed.querySelector(".cancel-btn").onclick = () => ed.remove();
 }
 
-/* DELETE */
+/* DELETE ITEM */
 function deleteItem(id) {
-  const items = getCalendar().filter(i => i.id !== id);
-  saveCalendar(items);
-  renderCalendar();
+  let items = getCalendarItems();
+  items = items.filter(i => i.id !== id || i.ownerId !== OWNER_ID);
+  saveCalendarItems(items);
+  renderSelectedDay();
+  renderMonth();
 }
 
-/* CLICK HANDLERS */
-document.getElementById("calendarFullList").onclick = e => {
-  const li = e.target.closest(".calendar-item");
-  if (!li) return;
+/* ADD CUSTOM ITEM FOR SELECTED DATE */
+function addCustomForSelectedDay() {
+  if (!selectedDate) selectedDate = toISODate(new Date());
+  const items = getCalendarItems();
+  const id = "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2);
+  items.push({
+    id,
+    ownerId: OWNER_ID,
+    type: "custom",
+    refId: null,
+    title: "New custom item",
+    date: selectedDate,
+    time: "",
+    location: "",
+    distance: null,
+    link: "",
+    privacy: "private",
+    groups: [],
+    source:"custom"
+  });
+  saveCalendarItems(items);
+  renderSelectedDay();
+  renderMonth();
+  openEditorFor(id);
+}
 
-  const id = li.dataset.id;
-
+/* CLICK HANDLERS FOR DAY LIST */
+document.getElementById("dayList").addEventListener("click", e => {
+  const card = e.target.closest(".calendar-item");
+  if (!card) return;
+  const id = card.dataset.id;
   if (e.target.classList.contains("edit-btn")) {
-    openEditor(id);
-  }
-  if (e.target.classList.contains("delete-btn")) {
+    openEditorFor(id);
+  } else if (e.target.classList.contains("delete-btn")) {
     deleteItem(id);
   }
+});
+
+/* FILTER HANDLERS */
+document.querySelectorAll("[data-filter-type]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    currentTypeFilter = btn.dataset.filterType;
+    document.querySelectorAll("[data-filter-type]").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderSelectedDay();
+  });
+});
+document.querySelectorAll("[data-filter-privacy]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    currentPrivacyFilter = btn.dataset.filterPrivacy;
+    document.querySelectorAll("[data-filter-privacy]").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderSelectedDay();
+  });
+});
+
+document.getElementById("addItemBtn").onclick = addCustomForSelectedDay;
+
+/* MONTH NAV */
+document.getElementById("prevMonthBtn").onclick = () => {
+  currentMonth--;
+  if (currentMonth < 0) {
+    currentMonth = 11;
+    currentYear--;
+  }
+  renderMonth();
+  renderSelectedDay();
+};
+document.getElementById("nextMonthBtn").onclick = () => {
+  currentMonth++;
+  if (currentMonth > 11) {
+    currentMonth = 0;
+    currentYear++;
+  }
+  renderMonth();
+  renderSelectedDay();
 };
 
+/* SHARE CALENDAR */
+document.getElementById("shareCalendarBtn").onclick = () => {
+  const input = document.getElementById("shareTargetInput");
+  const target = input.value.trim();
+  if (!target) return;
+  let shares = getCalendarShares();
+  shares.push({
+    ownerId: OWNER_ID,
+    targetId: target,
+    mode:"view"
+  });
+  saveCalendarShares(shares);
+  input.value = "";
+  alert("Your calendar is now shared with: " + target);
+};
+
+/* FLOATING BUBBLES ANIMATION (PONG STYLE) */
+const bubbles = [
+  {el:document.getElementById("bubbleChat"), x:60,  y:120, vx:1.6, vy:1.2},
+  {el:document.getElementById("bubbleProfile"), x:window.innerWidth-220, y:80, vx:-1.4, vy:1.5},
+  {el:document.getElementById("bubbleSpots"), x:80, y:window.innerHeight-220, vx:1.8, vy:-1.3},
+  {el:document.getElementById("bubbleDashboard"), x:window.innerWidth-220, y:window.innerHeight-220, vx:-1.7, vy:-1.6}
+];
+
+function animateBubbles() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+
+  bubbles.forEach(b => {
+    b.x += b.vx;
+    b.y += b.vy;
+
+    if (b.x <= 0 || b.x + 160 >= w) b.vx *= -1;
+    if (b.y <= 0 || b.y + 160 >= h) b.vy *= -1;
+
+    // simple separation
+    bubbles.forEach(o => {
+      if (o === b) return;
+      const dx = (b.x+80) - (o.x+80);
+      const dy = (b.y+80) - (o.y+80);
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 160) {
+        b.vx *= -1;
+        b.vy *= -1;
+      }
+    });
+
+    b.el.style.left = b.x + "px";
+    b.el.style.top = b.y + "px";
+  });
+
+  requestAnimationFrame(animateBubbles);
+}
+
 /* INIT */
-seedCalendar();
-renderCalendar();
+(function init() {
+  const now = new Date();
+  currentYear = now.getFullYear();
+  currentMonth = now.getMonth();
+  selectedDate = toISODate(now);
+
+  seedCalendarFromSources();
+  renderMonth();
+  renderSelectedDay();
+  animateBubbles();
+})();
 </script>
 
 </body>
