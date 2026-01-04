@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tricks – Virtual Skate Park Room</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #000000;
+      --panel: #0f0f0f;
+      --panel-soft: #101010;
+      --border: rgba(255, 255, 255, 0.18);
+      --text: #e6e6e6;
+      --muted: rgba(230, 230, 230, 0.7);
+      --glow-soft: 0 0 14px rgba(255, 255, 255, 0.45);
+      --glow-strong: 0 0 22px rgba(255, 255, 255, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      position: fixed;
+      top: 14px;
+      left: 16px;
+      width: 38px;
+      height: 28px;
+      cursor: pointer;
+      z-index: 1001;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger div {
+      height: 5px;
+      background: #ffffff;
+      border-radius: 4px;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.85);
+      transition: 0.3s;
+    }
+
+    /* SIDE MENU */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100vh;
+      background: #050505;
+      padding: 48px 18px 18px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+      transition: 0.35s ease;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .side-menu-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      opacity: 0.85;
+    }
+
+    .side-menu a {
+      display: block;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      background: #101010;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+      border: 1px solid var(--border);
+      transition: 0.2s;
+    }
+
+    .side-menu a:hover {
+      background: #181818;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
+    }
+
+    .side-menu a.current {
+      background: #ffffff;
+      color: #000000;
+      box-shadow: var(--glow-strong);
+      font-weight: 700;
+    }
+
+    /* APP SHELL */
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .app-header {
+      padding: 10px 16px 8px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.95);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.35);
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #050505;
+      color: var(--text);
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+    }
+
+    .room-name {
+      font-size: 18px;
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggle-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #050505;
+      padding: 4px;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .toggle-pill button {
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .toggle-pill button.active {
+      background: #ffffff;
+      color: #000000;
+      box-shadow: var(--glow-soft);
+      font-weight: 700;
+    }
+
+    .start-group-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #101010;
+      color: var(--text);
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.5);
+    }
+
+    .start-group-btn:hover {
+      background: #181818;
+      box-shadow: var(--glow-strong);
+    }
+
+    /* MAIN LAYOUT */
+    .main {
+      flex: 1;
+      display: flex;
+      height: calc(100vh - 60px);
+      padding: 8px 8px 8px 60px;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .column {
+      background: var(--panel);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.18);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .chat-column {
+      flex: 2;
+      min-width: 0;
+    }
+
+    .side-column {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .column-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    .column-header-title {
+      font-weight: 600;
+    }
+
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .scroll-area::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .scroll-area::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 999px;
+    }
+
+    /* CHAT MESSAGES */
+    .message {
+      padding: 6px 8px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      background: var(--panel-soft);
+      border: 1px solid var(--border);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+      font-size: 13px;
+    }
+
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+      gap: 6px;
+    }
+
+    .message-user {
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .message-meta {
+      font-size: 11px;
+      opacity: 0.65;
+    }
+
+    .message-body {
+      font-size: 13px;
+      opacity: 0.95;
+    }
+
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 10px;
+      margin-left: 6px;
+      opacity: 0.85;
+      white-space: nowrap;
+    }
+
+    /* PROFILE HOVER CARD */
+    .profile-card {
+      position: absolute;
+      top: 16px;
+      left: 0;
+      background: #050505;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
+      padding: 8px 10px;
+      width: 220px;
+      font-size: 12px;
+      z-index: 20;
+      display: none;
+    }
+
+    .message-user:hover .profile-card {
+      display: block;
+    }
+
+    .profile-card-row {
+      margin-bottom: 4px;
+    }
+
+    .profile-card-actions a {
+      font-size: 12px;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    /* INPUT AREA */
+    .input-bar {
+      margin-top: 8px;
+      border-radius: 12px;
+      padding: 8px;
+      background: #050505;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .input-row input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #050505;
+      color: var(--text);
+      font-size: 13px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+    }
+
+    .control-btn,
+    .primary-btn {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #101010;
+      color: var(--text);
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+      white-space: nowrap;
+    }
+
+    .primary-btn {
+      background: #ffffff;
+      color: #000000;
+      font-weight: 700;
+      box-shadow: var(--glow-soft);
+    }
+
+    .control-btn:hover,
+    .primary-btn:hover {
+      box-shadow: var(--glow-strong);
+      background: #181818;
+      color: #ffffff;
+    }
+
+    .primary-btn:hover {
+      background: #f0f0f0;
+      color: #000000;
+    }
+
+    select {
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #050505;
+      color: var(--text);
+      font-size: 12px;
+      padding: 4px 6px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+    }
+
+    .mini-label {
+      font-size: 11px;
+      opacity: 0.75;
+    }
+
+    .inline-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+
+    /* SIDE COLUMN CONTENT */
+    .section-block {
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 10px;
+      background: #050505;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+      font-size: 12px;
+    }
+
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .user-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .user-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+    }
+
+    .user-pill {
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .user-pill:hover {
+      text-decoration: underline;
+    }
+
+    .small-link {
+      font-size: 11px;
+      opacity: 0.75;
+    }
+
+    @media (max-width: 900px) {
+      .main {
+        flex-direction: column;
+        padding: 8px;
+      }
+
+      .chat-column,
+      .side-column {
+        flex: none;
+        height: 50%;
+      }
+
+      body {
+        overflow: hidden;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HAMBURGER -->
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+  <!-- SIDE MENU -->
+  <div class="side-menu" id="sideMenu">
+    <div class="side-menu-title">Room Navigation</div>
+    <a href="chatrooms.html" class="current">Chatrooms</a>
+    <a href="find-spots.html">Find Spots</a>
+    <a href="events.html">Events</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
+  </div>
+
+  <div class="app-shell">
+    <!-- HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <button class="back-btn" onclick="goBack()">← Back</button>
+        <div class="room-name">room-tricks-vsp</div>
+      </div>
+      <div class="header-right">
+        <div class="toggle-pill" id="privacyToggle">
+          <button id="publicBtn" class="active" onclick="setRoomPrivacy('public')">Public</button>
+          <button id="privateBtn" onclick="setRoomPrivacy('private')">Private</button>
+        </div>
+        <button class="start-group-btn" onclick="startPrivateGroup()">Start Own Group</button>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- CHAT COLUMN -->
+      <section class="column chat-column">
+        <div class="column-header">
+          <div class="column-header-title">Room Chat</div>
+          <div class="column-header-meta mini-label" id="roomModeLabel">Mode: Public room</div>
+        </div>
+
+        <div class="scroll-area" id="chatMessages">
+          <!-- Messages injected here -->
+        </div>
+
+        <!-- INPUT BAR -->
+        <div class="input-bar">
+          <div class="input-row">
+            <input type="text" id="chatInput" placeholder="Share your trick, progress, or question..." />
+            <button class="control-btn" onclick="sendVoiceMessage()">🎙 Voice</button>
+            <button class="primary-btn" onclick="sendTextMessage()">Send</button>
+          </div>
+
+          <div class="input-row">
+            <div class="inline-group">
+              <span class="mini-label">Emoji →</span>
+              <select id="emojiSelect">
+                <option value="">Choose emoji</option>
+                <option value="😀">😀 Smile</option>
+                <option value="😂">😂 Laugh</option>
+                <option value="❤️">❤️ Heart</option>
+                <option value="🔥">🔥 Fire</option>
+                <option value="🤝">🤝 Respect</option>
+              </select>
+
+              <span class="mini-label">Gift →</span>
+              <select id="giftSelect">
+                <option value="">Choose gift</option>
+                <option value="💋">💋 Kiss</option>
+                <option value="🤗">🤗 Hug</option>
+                <option value="🌹">🌹 Rose</option>
+              </select>
+
+              <span class="mini-label">To:</span>
+              <select id="targetUserSelect">
+                <!-- Filled from active users list -->
+              </select>
+
+              <button class="control-btn" onclick="sendEmojiGift()">Send</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SIDE COLUMN -->
+      <aside class="column side-column">
+        <div class="column-header">
+          <div class="column-header-title">People & Actions</div>
+        </div>
+
+        <div class="scroll-area">
+          <!-- ACTIVE USERS -->
+          <div class="section-block">
+            <div class="section-title">Active users</div>
+            <ul class="user-list" id="userList">
+              <!-- Users injected here -->
+            </ul>
+            <div class="small-link">Hover names in chat to see profile summary and visit profile.</div>
+          </div>
+
+          <!-- PRIVATE CHAT / GROUP -->
+          <div class="section-block">
+            <div class="section-title">Private connections</div>
+            <div class="mini-label">Request private chat:</div>
+            <div class="inline-group" style="margin-top:4px;">
+              <select id="privateChatUserSelect"></select>
+              <button class="control-btn" onclick="requestPrivateChat()">Request</button>
+            </div>
+
+            <div class="mini-label" style="margin-top:8px;">Current private group:</div>
+            <div id="groupStatus" class="small-link">No private group started on this device yet.</div>
+
+            <div class="mini-label" style="margin-top:8px;">Live voice group (concept):</div>
+            <div class="small-link">
+              When you start a group, this room supports live voice (like a group phone call) and text.
+            </div>
+          </div>
+
+          <!-- EVENTS & SPOTS -->
+          <div class="section-block">
+            <div class="section-title">Share events & spots</div>
+
+            <div class="mini-label">From Events page:</div>
+            <select id="eventSelect">
+              <option value="">Choose event</option>
+              <option value="Trick Jam @ Virtual Park|2.1 miles away|events.html">
+                Trick Jam @ Virtual Park (2.1 mi)
+              </option>
+              <option value="Night Progress Session|4.6 miles away|events.html">
+                Night Progress Session (4.6 mi)
+              </option>
+            </select>
+            <button class="control-btn" style="margin-top:4px;" onclick="shareEventToChat()">Add event to chat</button>
+
+            <div class="mini-label" style="margin-top:8px;">From Spots page:</div>
+            <select id="spotSelect">
+              <option value="">Choose spot</option>
+              <option value="Practice Ledge Zone|1.3 miles away|find-spots.html">
+                Practice Ledge Zone (1.3 mi)
+              </option>
+              <option value="Smooth Progress Line|0.8 miles away|find-spots.html">
+                Smooth Progress Line (0.8 mi)
+              </option>
+            </select>
+            <button class="control-btn" style="margin-top:4px;" onclick="shareSpotToChat()">Add spot to chat</button>
+
+            <div class="small-link" style="margin-top:6px;">
+              Events open in <a href="events.html">Events</a> and spots open in
+              <a href="find-spots.html">Find Spots</a> for directions.
+            </div>
+          </div>
+
+          <!-- DIRECT LINKS -->
+          <div class="section-block">
+            <div class="section-title">Quick navigation</div>
+            <div><a href="chatrooms.html">← Back to all chatrooms</a></div>
+            <div><a href="find-spots.html">→ Open Find Spots</a></div>
+            <div><a href="events.html">→ Open Events</a></div>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="rc_app_config.js"></script>
+  <script>
+    // --- BASIC LOCAL STATE (concept only) ---
+    const CURRENT_USER = {
+      id: "you",
+      name: "You",
+      city: "Your City",
+      style: "Tricks / Progress",
+      board: "Longboard"
+    };
+
+    const ACTIVE_USERS = [
+      CURRENT_USER,
+      { id: "user1", name: "Rhea", city: "Midtown", style: "Freestyle", board: "Longboard" },
+      { id: "user2", name: "Kai", city: "Downtown", style: "Street / Tech", board: "Skateboard" },
+      { id: "user3", name: "Nova", city: "Eastside", style: "Dance / Flow", board: "Longboard" }
+    ];
+
+    function toggleMenu() {
+      document.getElementById("sideMenu").classList.toggle("open");
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    // Public / Private toggle
+    function setRoomPrivacy(mode) {
+      const publicBtn = document.getElementById("publicBtn");
+      const privateBtn = document.getElementById("privateBtn");
+      const label = document.getElementById("roomModeLabel");
+
+      if (mode === "public") {
+        publicBtn.classList.add("active");
+        privateBtn.classList.remove("active");
+        label.textContent = "Mode: Public room";
+      } else {
+        privateBtn.classList.add("active");
+        publicBtn.classList.remove("active");
+        label.textContent = "Mode: Private room";
+      }
+    }
+
+    function startPrivateGroup() {
+      const status = document.getElementById("groupStatus");
+      status.textContent = "Private group started (local). Live voice + text concept active for this group.";
+      alert("Private group created. Conceptually, everyone here can now join live voice (like a call) and text.");
+    }
+
+    // Active user list and target user selects
+    function initUsers() {
+      const userList = document.getElementById("userList");
+      const targetSelect = document.getElementById("targetUserSelect");
+      const privateSelect = document.getElementById("privateChatUserSelect");
+
+      ACTIVE_USERS.forEach(user => {
+        // Side list
+        const li = document.createElement("li");
+        const span = document.createElement("span");
+        span.className = "user-pill";
+        span.textContent = user.name;
+        span.onclick = () => scrollToUserMessages(user.name);
+        li.appendChild(span);
+
+        const link = document.createElement("a");
+        link.href = "profile.html";
+        link.className = "small-link";
+        link.textContent = "Profile";
+        li.appendChild(link);
+
+        userList.appendChild(li);
+
+        // Target selects (skip self)
+        if (user.id !== CURRENT_USER.id) {
+          const opt1 = document.createElement("option");
+          opt1.value = user.id;
+          opt1.textContent = user.name;
+          targetSelect.appendChild(opt1);
+
+          const opt2 = document.createElement("option");
+          opt2.value = user.id;
+          opt2.textContent = user.name;
+          privateSelect.appendChild(opt2);
+        }
+      });
+    }
+
+    // Chat message helpers
+    function createMessageElement(fromUser, body, meta, tag) {
+      const msg = document.createElement("div");
+      msg.className = "message";
+
+      const header = document.createElement("div");
+      header.className = "message-header";
+
+      const userSpan = document.createElement("span");
+      userSpan.className = "message-user";
+      userSpan.textContent = fromUser.name;
+
+      // Hover profile card
+      const profileCard = document.createElement("div");
+      profileCard.className = "profile-card";
+      profileCard.innerHTML = `
+        <div class="profile-card-row"><strong>${fromUser.name}</strong></div>
+        <div class="profile-card-row">City: ${fromUser.city || "Unknown"}</div>
+        <div class="profile-card-row">Style: ${fromUser.style || "Rider"}</div>
+        <div class="profile-card-row">Board: ${fromUser.board || "Board"}</div>
+        <div class="profile-card-actions" style="margin-top:4px;">
+          <a href="profile.html">View profile</a>
+          <a href="javascript:void(0)" onclick="requestPrivateChatWith('${fromUser.id}')">Request private chat</a>
+        </div>
+      `;
+      userSpan.appendChild(profileCard);
+
+      const metaSpan = document.createElement("span");
+      metaSpan.className = "message-meta";
+      metaSpan.textContent = meta;
+
+      header.appendChild(userSpan);
+      header.appendChild(metaSpan);
+
+      if (tag) {
+        const tagSpan = document.createElement("span");
+        tagSpan.className = "tag-pill";
+        tagSpan.textContent = tag;
+        header.appendChild(tagSpan);
+      }
+
+      const bodyDiv = document.createElement("div");
+      bodyDiv.className = "message-body";
+      bodyDiv.innerHTML = body;
+
+      msg.appendChild(header);
+      msg.appendChild(bodyDiv);
+      return msg;
+    }
+
+    function appendMessage(msgElem) {
+      const container = document.getElementById("chatMessages");
+      container.appendChild(msgElem);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function sendTextMessage() {
+      const input = document.getElementById("chatInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      const msgElem = createMessageElement(
+        CURRENT_USER,
+        text,
+        "just now",
+        "message"
+      );
+      appendMessage(msgElem);
+      input.value = "";
+    }
+
+    function sendVoiceMessage() {
+      const msgElem = createMessageElement(
+        CURRENT_USER,
+        "🎙 <em>Voice message (concept)</em>",
+        "just now",
+        "voice"
+      );
+      appendMessage(msgElem);
+      alert("In a real build, this would start recording and send a voice clip.");
+    }
+
+    function sendEmojiGift() {
+      const emoji = document.getElementById("emojiSelect").value;
+      const gift = document.getElementById("giftSelect").value;
+      const targetId = document.getElementById("targetUserSelect").value;
+
+      if (!emoji && !gift) {
+        alert("Choose an emoji or gift first.");
+        return;
+      }
+      if (!targetId) {
+        alert("Choose who to send it to.");
+        return;
+      }
+
+      const targetUser = ACTIVE_USERS.find(u => u.id === targetId);
+      if (!targetUser) return;
+
+      const payload = [emoji, gift].filter(Boolean).join(" ");
+      const body = `${payload} <span class="mini-label">(to ${targetUser.name})</span>`;
+
+      const msgElem = createMessageElement(
+        CURRENT_USER,
+        body,
+        "just now",
+        "emoji / gift"
+      );
+      appendMessage(msgElem);
+
+      // Reset selects
+      document.getElementById("emojiSelect").value = "";
+      document.getElementById("giftSelect").value = "";
+    }
+
+    function shareEventToChat() {
+      const select = document.getElementById("eventSelect");
+      const value = select.value;
+      if (!value) {
+        alert("Choose an event first.");
+        return;
+      }
+      const [name, distance, link] = value.split("|");
+      const body = `
+        📅 <strong>${name}</strong><br/>
+        <span class="mini-label">${distance}</span><br/>
+        <a href="${link}">View event details</a>
+      `;
+      const msgElem = createMessageElement(
+        CURRENT_USER,
+        body,
+        "just now",
+        "event"
+      );
+      appendMessage(msgElem);
+      select.value = "";
+    }
+
+    function shareSpotToChat() {
+      const select = document.getElementById("spotSelect");
+      const value = select.value;
+      if (!value) {
+        alert("Choose a spot first.");
+        return;
+      }
+      const [name, distance, link] = value.split("|");
+      const body = `
+        📍 <strong>${name}</strong><br/>
+        <span class="mini-label">${distance}</span><br/>
+        <a href="${link}">Open in Find Spots for directions</a>
+      `;
+      const msgElem = createMessageElement(
+        CURRENT_USER,
+        body,
+        "just now",
+        "spot"
+      );
+      appendMessage(msgElem);
+      select.value = "";
+    }
+
+    function scrollToUserMessages(name) {
+      const container = document.getElementById("chatMessages");
+      const messages = Array.from(container.getElementsByClassName("message"));
+      const target = messages.find(m => m.querySelector(".message-user")?.firstChild?.nodeValue === name);
+      if (target) {
+        container.scrollTop = target.offsetTop - 20;
+      }
+    }
+
+    function requestPrivateChat() {
+      const select = document.getElementById("privateChatUserSelect");
+      const userId = select.value;
+      if (!userId) {
+        alert("Choose someone to request a private chat with.");
+        return;
+      }
+      const user = ACTIVE_USERS.find(u => u.id === userId);
+      if (!user) return;
+      alert(`Private chat request sent to ${user.name} (concept).`);
+    }
+
+    function requestPrivateChatWith(userId) {
+      const user = ACTIVE_USERS.find(u => u.id === userId);
+      if (!user) return;
+      alert(`Private chat request sent to ${user.name} (concept).`);
+    }
+
+    function seedWelcomeMessages() {
+      const intro = createMessageElement(
+        ACTIVE_USERS[1],
+        "Welcome to room-tricks-vsp. Share progress, new tricks, and what you’re working on.",
+        "2 min ago",
+        "host"
+      );
+      const note = createMessageElement(
+        ACTIVE_USERS[2],
+        "Drop clips, ask questions, and link spots or events for trick sessions.",
+        "1 min ago",
+        "info"
+      );
+      appendMessage(intro);
+      appendMessage(note);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      try {
+        if (typeof applyAppConfigToDOM === "function" && typeof getAppConfig === "function") {
+          applyAppConfigToDOM(getAppConfig());
+        }
+      } catch (e) {}
+      initUsers();
+      seedWelcomeMessages();
+    });
+  </script>
+</body>
+</html>
