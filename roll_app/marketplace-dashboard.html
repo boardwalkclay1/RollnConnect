@@ -37,7 +37,7 @@
       transition: 0.3s;
     }
 
-    /* SIDE MENU */
+    /* SCROLLABLE SIDE MENU */
     .side-menu {
       position: fixed;
       top: 0;
@@ -49,6 +49,17 @@
       box-shadow: 0 0 20px #4a4aff;
       transition: 0.35s ease;
       z-index: 999;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+
+    .side-menu::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .side-menu::-webkit-scrollbar-thumb {
+      background: #4a4aff;
+      border-radius: 10px;
     }
 
     .side-menu.open {
@@ -173,24 +184,14 @@
 
       const username = profile.username || "Unknown";
 
-      // Stats
-      const totalItems = items.length;
-      const giveawayItems = items.filter(i => i.price === 0).length;
-      const yourItems = items.filter(i => i.seller === username).length;
+      document.getElementById("statTotal").textContent = items.length;
+      document.getElementById("statGiveaway").textContent = items.filter(i => i.price === 0).length;
+      document.getElementById("statYours").textContent = items.filter(i => i.seller === username).length;
 
-      const yourMessages = messages.filter(m => m.to === username || m.from === username).length;
-      const yourOffers = offers.filter(o => o.to === username || o.from === username).length;
-      const yourFavorites = favorites.length;
-      const yourNotifications = notifications.filter(n => n.to === username).length;
-
-      // Inject
-      document.getElementById("statTotal").textContent = totalItems;
-      document.getElementById("statGiveaway").textContent = giveawayItems;
-      document.getElementById("statYours").textContent = yourItems;
-      document.getElementById("statMessages").textContent = yourMessages;
-      document.getElementById("statOffers").textContent = yourOffers;
-      document.getElementById("statFavorites").textContent = yourFavorites;
-      document.getElementById("statNotifications").textContent = yourNotifications;
+      document.getElementById("statMessages").textContent = messages.filter(m => m.to === username || m.from === username).length;
+      document.getElementById("statOffers").textContent = offers.filter(o => o.to === username || o.from === username).length;
+      document.getElementById("statFavorites").textContent = favorites.length;
+      document.getElementById("statNotifications").textContent = notifications.filter(n => n.to === username).length;
 
       document.getElementById("welcomeName").textContent =
         profile.displayName || profile.username || "Roller";
@@ -207,9 +208,8 @@
     <div></div><div></div><div></div>
   </div>
 
-  <!-- SIDE MENU -->
+  <!-- UPDATED UNIVERSAL MARKETPLACE SIDEBAR -->
   <div class="side-menu">
-    <a href="dashboard.html">Dashboard</a>
 
     <!-- Marketplace Core -->
     <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
@@ -224,9 +224,10 @@
     <a href="marketplace-favorites.html">Favorites</a>
     <a href="marketplace-notifications.html">Notifications</a>
 
-    <!-- User -->
-    <a href="profile.html">Main Profile</a>
-    <a href="settings.html">Main Settings</a>
+    <!-- Marketplace User -->
+    <a href="marketplace-profile.html">Marketplace Profile</a>
+    <a href="marketplace-settings.html">Marketplace Settings</a>
+
   </div>
 
   <div class="page-container">
