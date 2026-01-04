@@ -102,11 +102,11 @@ body {
 /* MAIN WRAPPER */
 .cosmic-wrapper {
   padding:120px 20px 80px;
-  max-width:1200px;
+  max-width:1400px;
   margin:0 auto;
 }
 
-/* GLASS SHELL */
+/* GIANT CALENDAR SHELL */
 .calendar-shell {
   background:rgba(255,255,255,0.08);
   backdrop-filter:blur(25px);
@@ -127,19 +127,14 @@ body {
 .section-subtitle {
   text-align:center;
   opacity:0.85;
-  margin-bottom:22px;
+  margin-bottom:24px;
 }
 
-/* LAYOUT */
+/* GIANT CALENDAR LAYOUT: GRID + DETAILS STACKED */
 .calendar-layout {
-  display:grid;
-  grid-template-columns:1.8fr 1.2fr;
-  gap:24px;
-}
-@media (max-width:950px) {
-  .calendar-layout {
-    grid-template-columns:1fr;
-  }
+  display:flex;
+  flex-direction:column;
+  gap:20px;
 }
 
 /* MONTH VIEW */
@@ -150,44 +145,45 @@ body {
   margin-bottom:14px;
 }
 .month-name {
-  font-size:1.4rem;
+  font-size:1.6rem;
   font-weight:600;
 }
 .month-nav button {
   background:rgba(255,255,255,0.15);
   border:none;
   color:#fff;
-  padding:6px 10px;
+  padding:8px 12px;
   border-radius:999px;
   cursor:pointer;
-  margin-left:6px;
+  margin-left:8px;
 }
 .month-nav button:hover {
   background:#fff;
   color:#000;
 }
 
+/* BIG GRID */
 .weekdays,
 .calendar-grid {
   display:grid;
   grid-template-columns:repeat(7,1fr);
-  gap:6px;
+  gap:8px;
 }
 .weekday {
   text-align:center;
-  font-size:0.8rem;
+  font-size:0.9rem;
   opacity:0.7;
-  padding-bottom:3px;
+  padding-bottom:4px;
 }
 .day-cell {
-  min-height:72px;
-  background:rgba(255,255,255,0.06);
-  border-radius:12px;
-  padding:6px;
+  min-height:110px;
+  background:rgba(0,0,0,0.55);
+  border-radius:14px;
+  padding:8px;
   cursor:pointer;
   position:relative;
   overflow:hidden;
-  border:1px solid transparent;
+  border:1px solid rgba(255,255,255,0.12);
 }
 .day-cell.other-month {
   opacity:0.35;
@@ -196,39 +192,48 @@ body {
   border-color:rgba(255,255,255,0.9);
   box-shadow:0 0 18px rgba(255,255,255,0.9);
 }
+.day-cell.selected {
+  border-color:#4fc3ff;
+  box-shadow:0 0 18px rgba(79,195,255,0.9);
+}
 .day-number {
-  font-size:0.95rem;
+  font-size:1rem;
   font-weight:600;
 }
-.day-dot {
-  position:absolute;
-  bottom:6px;
-  right:8px;
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#fff;
-  box-shadow:0 0 12px rgba(255,255,255,1);
-}
-.day-dot.public { background:#4fff81; box-shadow:0 0 12px #4fff81; }
-.day-dot.private { background:#ff4f81; box-shadow:0 0 12px #ff4f81; }
-.day-dot.groups { background:#4fc3ff; box-shadow:0 0 12px #4fc3ff; }
 
-/* RIGHT PANEL */
-.right-panel {
-  background:rgba(0,0,0,0.45);
+/* small tags inside day cells */
+.day-tags {
+  margin-top:6px;
+  font-size:0.75rem;
+  line-height:1.2;
+}
+.day-tag-pill {
+  display:inline-block;
+  margin:0 4px 2px 0;
+  padding:2px 6px;
+  border-radius:999px;
+  font-size:0.7rem;
+  background:rgba(255,255,255,0.16);
+}
+.day-tag-pill.public { border:1px solid #4fff81; }
+.day-tag-pill.private { border:1px solid #ff4f81; }
+.day-tag-pill.groups { border:1px solid #4fc3ff; }
+
+/* RIGHT / BELOW PANEL */
+.details-panel {
+  background:rgba(0,0,0,0.70);
   border-radius:20px;
   padding:18px 18px 22px;
-  box-shadow:0 0 35px rgba(0,0,0,0.8);
+  box-shadow:0 0 35px rgba(0,0,0,0.9);
 }
 .right-heading {
   font-size:1.2rem;
   margin-bottom:4px;
 }
 .right-date-label {
-  font-size:0.9rem;
-  opacity:0.8;
-  margin-bottom:12px;
+  font-size:0.95rem;
+  opacity:0.88;
+  margin-bottom:10px;
 }
 
 /* FILTERS + ACTIONS */
@@ -239,7 +244,7 @@ body {
   margin-bottom:10px;
 }
 .filter-pill {
-  padding:4px 9px;
+  padding:5px 10px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,0.35);
   background:rgba(0,0,0,0.3);
@@ -255,7 +260,7 @@ body {
 }
 .add-btn {
   margin-left:auto;
-  padding:6px 11px;
+  padding:7px 13px;
   border-radius:999px;
   border:none;
   background:#fff;
@@ -388,7 +393,7 @@ body {
   cursor:pointer;
 }
 
-/* FLOATING BUBBLES (BEHIND SHELL BUT CLICKABLE ON EDGES) */
+/* FLOATING BUBBLES */
 .bubble {
   position:fixed;
   width:160px;
@@ -405,7 +410,7 @@ body {
   text-decoration:none;
   font-size:0.9rem;
   padding:10px;
-  z-index:10; /* below .calendar-shell (20), above stars */
+  z-index:10; /* behind giant calendar shell (20), above stars */
   transition:transform 0.2s;
 }
 .bubble:hover {
@@ -438,22 +443,23 @@ body {
   <a href="calendar.html">My Calendar</a>
 </div>
 
-<!-- FLOATING COSMIC BUBBLES -->
+<!-- FLOATING COSMIC BUBBLES (CHAT, PROFILE, SPOTS, DASHBOARD) -->
 <a href="chatrooms.html" class="bubble" id="bubbleChat">Chatrooms</a>
 <a href="profile.html" class="bubble" id="bubbleProfile">Profile</a>
 <a href="find-spots.html" class="bubble" id="bubbleSpots">Find Spots</a>
 <a href="dashboard.html" class="bubble" id="bubbleDashboard">Dashboard</a>
 
-<!-- MAIN CONTENT -->
+<!-- MAIN CONTENT: ONE GIANT CALENDAR -->
 <div class="cosmic-wrapper">
   <div class="calendar-shell">
     <h1 class="section-title">My Cosmic Calendar</h1>
     <p class="section-subtitle">
-      Big visual calendar, floating bubbles, sharable with groups, lessons, events, and friends.
+      One giant, editable calendar with events, lessons, spots, groups, and sharing.
     </p>
 
     <div class="calendar-layout">
-      <!-- LEFT: MONTH VIEW -->
+
+      <!-- BIG MONTH GRID -->
       <div>
         <div class="month-header">
           <div class="month-name" id="monthName"></div>
@@ -475,13 +481,13 @@ body {
         <div class="calendar-grid" id="calendarGrid"></div>
       </div>
 
-      <!-- RIGHT: DAY DETAILS + CONTROLS -->
-      <div class="right-panel">
+      <!-- DAY DETAILS + EDITING + SHARING BELOW -->
+      <div class="details-panel">
         <div class="right-heading">Day Details</div>
         <div class="right-date-label" id="selectedDateLabel"></div>
 
         <div class="filters-row">
-          <button class="filter-pill active" data-filter-type="all">All</button>
+          <button class="filter-pill active" data-filter-type="all">All types</button>
           <button class="filter-pill" data-filter-type="event">Events</button>
           <button class="filter-pill" data-filter-type="lesson">Lessons</button>
           <button class="filter-pill" data-filter-type="spot">Spots</button>
@@ -497,7 +503,7 @@ body {
         </div>
 
         <div class="day-list" id="dayList"></div>
-        <div class="day-empty" id="dayEmpty" style="display:none;">Nothing on this day yet.</div>
+        <div class="day-empty" id="dayEmpty" style="display:none;">Nothing on this day yet. Click “+ Add” or add from events/lessons.</div>
 
         <div class="share-panel">
           <div>Share your calendar with another user (username or ID):</div>
@@ -505,6 +511,7 @@ body {
           <button id="shareCalendarBtn">Share Calendar</button>
         </div>
       </div>
+
     </div>
   </div>
 </div>
@@ -540,7 +547,6 @@ function saveCalendarItems(items) {
   localStorage.setItem("rc_calendar_items", JSON.stringify(items));
 }
 
-/* SHARING STORE */
 function getCalendarShares() {
   try {
     return JSON.parse(localStorage.getItem("rc_calendar_shares") || "[]");
@@ -548,14 +554,14 @@ function getCalendarShares() {
     return [];
   }
 }
-function saveCalendarShares shares => {
+function saveCalendarShares(shares) {
   localStorage.setItem("rc_calendar_shares", JSON.stringify(shares));
 }
 
-/* SEED FROM EVENTS, SPOTS, LESSONS */
+/* SEED FROM EVENTS, SPOTS, LESSONS (LESSONS = rc_lessons) */
 function seedCalendarFromSources() {
   const items = getCalendarItems();
-  const existingRefs = new Set(items.map(i => (i.type || "") + "::" + (i.refId || "")));
+  const existingRefs = new Set(items.map(i => (i.type || "") + "::" + (i.refId || "") + "::" + (i.ownerId || "")));
 
   const events = JSON.parse(localStorage.getItem("rc_events") || "[]");
   const spots = JSON.parse(localStorage.getItem("rc_spots") || "[]");
@@ -568,7 +574,7 @@ function seedCalendarFromSources() {
   // events
   events.forEach(ev => {
     if (!savedEvents.includes(ev.id)) return;
-    const key = "event::" + ev.id;
+    const key = "event::" + ev.id + "::" + OWNER_ID;
     if (existingRefs.has(key)) return;
     items.push({
       id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
@@ -580,7 +586,7 @@ function seedCalendarFromSources() {
       time: ev.time || "",
       location: ev.location || null,
       distance: null,
-      link: `event-details.html?id=${ev.id}`,
+      link: ev.id ? `event-details.html?id=${ev.id}` : "",
       privacy: "public",
       groups: [],
       source: "event"
@@ -590,7 +596,7 @@ function seedCalendarFromSources() {
   // spots
   spots.forEach(sp => {
     if (!savedSpots.includes(sp.id)) return;
-    const key = "spot::" + sp.id;
+    const key = "spot::" + sp.id + "::" + OWNER_ID;
     if (existingRefs.has(key)) return;
     items.push({
       id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
@@ -602,7 +608,7 @@ function seedCalendarFromSources() {
       time: "",
       location: sp.location || null,
       distance: sp.distance || null,
-      link: `spot-details.html?id=${sp.id}`,
+      link: sp.id ? `spot-details.html?id=${sp.id}` : "",
       privacy: "public",
       groups: [],
       source: "spot"
@@ -612,7 +618,7 @@ function seedCalendarFromSources() {
   // lessons
   lessons.forEach(ls => {
     if (!savedLessons.includes(ls.id)) return;
-    const key = "lesson::" + ls.id;
+    const key = "lesson::" + ls.id + "::" + OWNER_ID;
     if (existingRefs.has(key)) return;
     items.push({
       id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
@@ -634,8 +640,8 @@ function seedCalendarFromSources() {
   saveCalendarItems(items);
 }
 
-/* GLOBAL ADD-TO-CALENDAR ENTRY POINTS (for events.html etc.) */
-window.addToCalendarFromEvent = function(ev, privacy="public") {
+/* GLOBAL ENTRY POINTS FROM OTHER PAGES (events.html, lessons, groups, etc.) */
+window.addToCalendarFromEvent = function(ev, privacy="public", groups=[]) {
   const items = getCalendarItems();
   items.push({
     id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
@@ -649,13 +655,13 @@ window.addToCalendarFromEvent = function(ev, privacy="public") {
     distance: null,
     link: ev.id ? `event-details.html?id=${ev.id}` : "",
     privacy,
-    groups: [],
+    groups: groups || [],
     source:"event"
   });
   saveCalendarItems(items);
 };
 
-window.addToCalendarFromLesson = function(ls, privacy="public") {
+window.addToCalendarFromLesson = function(ls, privacy="public", groups=[]) {
   const items = getCalendarItems();
   items.push({
     id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
@@ -669,15 +675,35 @@ window.addToCalendarFromLesson = function(ls, privacy="public") {
     distance: null,
     link: ls.link || "",
     privacy,
-    groups: [],
+    groups: groups || [],
     source:"lesson"
   });
   saveCalendarItems(items);
 };
 
+window.addToCalendarFromSpot = function(sp, privacy="public", groups=[]) {
+  const items = getCalendarItems();
+  items.push({
+    id: "cal_" + Date.now() + "_" + Math.random().toString(16).slice(2),
+    ownerId: OWNER_ID,
+    type: "spot",
+    refId: sp.id || null,
+    title: sp.name || "Untitled Spot",
+    date: sp.date || null,
+    time: "",
+    location: sp.location || null,
+    distance: sp.distance || null,
+    link: sp.id ? `spot-details.html?id=${sp.id}` : "",
+    privacy,
+    groups: groups || [],
+    source:"spot"
+  });
+  saveCalendarItems(items);
+};
+
 /* CALENDAR STATE */
-let currentYear, currentMonth; // month is 0-based
-let selectedDate = null; // string "YYYY-MM-DD"
+let currentYear, currentMonth; // month = 0-11
+let selectedDate = null;       // "YYYY-MM-DD"
 let currentTypeFilter = "all";
 let currentPrivacyFilter = "all";
 
@@ -733,6 +759,7 @@ function renderMonth() {
     const cellDiv = document.createElement("div");
     cellDiv.className = "day-cell" + (cell.other ? " other-month" : "");
     if (iso === todayISO) cellDiv.classList.add("today");
+    if (iso === selectedDate) cellDiv.classList.add("selected");
     cellDiv.dataset.date = iso;
 
     const numDiv = document.createElement("div");
@@ -740,38 +767,52 @@ function renderMonth() {
     numDiv.textContent = cell.date.getDate();
     cellDiv.appendChild(numDiv);
 
+    // small tags to show presence of items + visibility
     if (cellItems.length) {
-      const privacy = cellItems.some(i => i.privacy === "private") ? "private"
-                     : cellItems.some(i => i.privacy === "groups") ? "groups"
-                     : "public";
-      const dot = document.createElement("div");
-      dot.className = "day-dot " + privacy;
-      cellDiv.appendChild(dot);
+      const tagsDiv = document.createElement("div");
+      tagsDiv.className = "day-tags";
+
+      const hasEvent = cellItems.some(i => i.type === "event");
+      const hasLesson = cellItems.some(i => i.type === "lesson");
+      const hasSpot = cellItems.some(i => i.type === "spot");
+      const hasCustom = cellItems.some(i => i.type === "custom");
+
+      if (hasEvent) {
+        const t = document.createElement("span");
+        t.className = "day-tag-pill public";
+        t.textContent = "Event";
+        tagsDiv.appendChild(t);
+      }
+      if (hasLesson) {
+        const t = document.createElement("span");
+        t.className = "day-tag-pill public";
+        t.textContent = "Lesson";
+        tagsDiv.appendChild(t);
+      }
+      if (hasSpot) {
+        const t = document.createElement("span");
+        t.className = "day-tag-pill public";
+        t.textContent = "Spot";
+        tagsDiv.appendChild(t);
+      }
+      if (hasCustom) {
+        const t = document.createElement("span");
+        t.className = "day-tag-pill private";
+        t.textContent = "Custom";
+        tagsDiv.appendChild(t);
+      }
+
+      cellDiv.appendChild(tagsDiv);
     }
 
+    // click or double-click to focus this day
     cellDiv.onclick = () => {
       selectedDate = iso;
+      renderMonth();
       renderSelectedDay();
-      highlightSelectedDay();
     };
 
     grid.appendChild(cellDiv);
-  });
-
-  highlightSelectedDay();
-}
-
-/* HIGHLIGHT SELECTED DAY */
-function highlightSelectedDay() {
-  if (!selectedDate) return;
-  document.querySelectorAll(".day-cell").forEach(cell => {
-    if (cell.dataset.date === selectedDate) {
-      cell.style.borderColor = "rgba(255,255,255,0.9)";
-      cell.style.boxShadow = "0 0 18px rgba(255,255,255,0.9)";
-    } else if (!cell.classList.contains("today")) {
-      cell.style.borderColor = "transparent";
-      cell.style.boxShadow = "none";
-    }
   });
 }
 
@@ -791,19 +832,19 @@ function renderSelectedDay() {
 
   const allItems = getCalendarItems().filter(i => i.ownerId === OWNER_ID && i.date === selectedDate);
 
-  const filtered = allItems.filter(item => {
+  const visibleItems = allItems.filter(item => {
     if (currentTypeFilter !== "all" && item.type !== currentTypeFilter) return false;
     if (currentPrivacyFilter !== "all" && item.privacy !== currentPrivacyFilter) return false;
     return true;
   });
 
-  if (!filtered.length) {
+  if (!visibleItems.length) {
     emptyEl.style.display = "block";
     return;
   }
   emptyEl.style.display = "none";
 
-  filtered.forEach(item => {
+  visibleItems.forEach(item => {
     const li = document.createElement("div");
     li.className = "calendar-item";
     li.dataset.id = item.id;
@@ -903,6 +944,7 @@ function openEditorFor(id) {
     });
     saveCalendarItems(items);
     renderSelectedDay();
+    renderMonth();
   };
   ed.querySelector(".cancel-btn").onclick = () => ed.remove();
 }
@@ -910,13 +952,13 @@ function openEditorFor(id) {
 /* DELETE ITEM */
 function deleteItem(id) {
   let items = getCalendarItems();
-  items = items.filter(i => i.id !== id || i.ownerId !== OWNER_ID);
+  items = items.filter(i => !(i.id === id && i.ownerId === OWNER_ID));
   saveCalendarItems(items);
   renderSelectedDay();
   renderMonth();
 }
 
-/* ADD CUSTOM ITEM FOR SELECTED DATE */
+/* ADD CUSTOM ITEM */
 function addCustomForSelectedDay() {
   if (!selectedDate) selectedDate = toISODate(new Date());
   const items = getCalendarItems();
@@ -942,7 +984,7 @@ function addCustomForSelectedDay() {
   openEditorFor(id);
 }
 
-/* CLICK HANDLERS FOR DAY LIST */
+/* LIST CLICK HANDLERS */
 document.getElementById("dayList").addEventListener("click", e => {
   const card = e.target.closest(".calendar-item");
   if (!card) return;
@@ -994,16 +1036,16 @@ document.getElementById("nextMonthBtn").onclick = () => {
   renderSelectedDay();
 };
 
-/* SHARE CALENDAR */
+/* SHARE CALENDAR (OWNER -> TARGET) */
 document.getElementById("shareCalendarBtn").onclick = () => {
   const input = document.getElementById("shareTargetInput");
   const target = input.value.trim();
   if (!target) return;
-  let shares = getCalendarShares();
+  const shares = getCalendarShares();
   shares.push({
     ownerId: OWNER_ID,
     targetId: target,
-    mode:"view"
+    mode: "view" // could extend later: "edit"
   });
   saveCalendarShares(shares);
   input.value = "";
@@ -1012,30 +1054,38 @@ document.getElementById("shareCalendarBtn").onclick = () => {
 
 /* FLOATING BUBBLES ANIMATION (PONG STYLE) */
 const bubbles = [
-  {el:document.getElementById("bubbleChat"), x:60,  y:120, vx:1.6, vy:1.2},
-  {el:document.getElementById("bubbleProfile"), x:window.innerWidth-220, y:80, vx:-1.4, vy:1.5},
-  {el:document.getElementById("bubbleSpots"), x:80, y:window.innerHeight-220, vx:1.8, vy:-1.3},
-  {el:document.getElementById("bubbleDashboard"), x:window.innerWidth-220, y:window.innerHeight-220, vx:-1.7, vy:-1.6}
+  {el:document.getElementById("bubbleChat"), x:60,  y:120, vx:1.4, vy:1.1},
+  {el:document.getElementById("bubbleProfile"), x:window.innerWidth-240, y:80, vx:-1.2, vy:1.5},
+  {el:document.getElementById("bubbleSpots"), x:80, y:window.innerHeight-240, vx:1.6, vy:-1.3},
+  {el:document.getElementById("bubbleDashboard"), x:window.innerWidth-240, y:window.innerHeight-240, vx:-1.5, vy:-1.4}
 ];
+
+function positionBubblesInitial() {
+  bubbles.forEach(b => {
+    b.el.style.left = b.x + "px";
+    b.el.style.top = b.y + "px";
+  });
+}
 
 function animateBubbles() {
   const w = window.innerWidth;
   const h = window.innerHeight;
+  const size = 160;
 
   bubbles.forEach(b => {
     b.x += b.vx;
     b.y += b.vy;
 
-    if (b.x <= 0 || b.x + 160 >= w) b.vx *= -1;
-    if (b.y <= 0 || b.y + 160 >= h) b.vy *= -1;
+    if (b.x <= 0 || b.x + size >= w) b.vx *= -1;
+    if (b.y <= 0 || b.y + size >= h) b.vy *= -1;
 
     // simple separation
     bubbles.forEach(o => {
       if (o === b) return;
-      const dx = (b.x+80) - (o.x+80);
-      const dy = (b.y+80) - (o.y+80);
+      const dx = (b.x+size/2) - (o.x+size/2);
+      const dy = (b.y+size/2) - (o.y+size/2);
       const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < 160) {
+      if (dist < size) {
         b.vx *= -1;
         b.vy *= -1;
       }
@@ -1058,6 +1108,7 @@ function animateBubbles() {
   seedCalendarFromSources();
   renderMonth();
   renderSelectedDay();
+  positionBubblesInitial();
   animateBubbles();
 })();
 </script>
