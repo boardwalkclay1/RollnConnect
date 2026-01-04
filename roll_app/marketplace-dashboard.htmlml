@@ -37,7 +37,7 @@
       transition: 0.3s;
     }
 
-    /* SIDE MENU – replace this block with your full app menu if needed */
+    /* SIDE MENU */
     .side-menu {
       position: fixed;
       top: 0;
@@ -166,13 +166,32 @@
       const items = JSON.parse(localStorage.getItem("rc_market_items") || "[]");
       const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
 
+      const messages = JSON.parse(localStorage.getItem("rc_market_messages") || "[]");
+      const offers = JSON.parse(localStorage.getItem("rc_market_offers") || "[]");
+      const favorites = JSON.parse(localStorage.getItem("rc_market_favorites") || "[]");
+      const notifications = JSON.parse(localStorage.getItem("rc_market_notifications") || "[]");
+
+      const username = profile.username || "Unknown";
+
+      // Stats
       const totalItems = items.length;
       const giveawayItems = items.filter(i => i.price === 0).length;
-      const yourItems = items.filter(i => i.seller === profile.username).length;
+      const yourItems = items.filter(i => i.seller === username).length;
 
+      const yourMessages = messages.filter(m => m.to === username || m.from === username).length;
+      const yourOffers = offers.filter(o => o.to === username || o.from === username).length;
+      const yourFavorites = favorites.length;
+      const yourNotifications = notifications.filter(n => n.to === username).length;
+
+      // Inject
       document.getElementById("statTotal").textContent = totalItems;
       document.getElementById("statGiveaway").textContent = giveawayItems;
       document.getElementById("statYours").textContent = yourItems;
+      document.getElementById("statMessages").textContent = yourMessages;
+      document.getElementById("statOffers").textContent = yourOffers;
+      document.getElementById("statFavorites").textContent = yourFavorites;
+      document.getElementById("statNotifications").textContent = yourNotifications;
+
       document.getElementById("welcomeName").textContent =
         profile.displayName || profile.username || "Roller";
     }
@@ -185,19 +204,27 @@
 
   <!-- HAMBURGER -->
   <div class="hamburger" onclick="toggleMenu()">
-    <div></div>
-    <div></div>
-    <div></div>
+    <div></div><div></div><div></div>
   </div>
 
   <!-- SIDE MENU -->
   <div class="side-menu">
     <a href="dashboard.html">Dashboard</a>
+
+    <!-- Marketplace Core -->
     <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
     <a href="marketplace.html">Marketplace</a>
     <a href="sell-item.html">Sell Item</a>
-    <a href="marketplace-profile.html">Marketplace Profile</a>
-    <a href="marketplace-settings.html">Marketplace Settings</a>
+    <a href="your-listings.html">Your Listings</a>
+    <a href="giveaways.html">Giveaways</a>
+
+    <!-- Marketplace Expanded -->
+    <a href="marketplace-messages.html">Messages</a>
+    <a href="marketplace-offers.html">Offers</a>
+    <a href="marketplace-favorites.html">Favorites</a>
+    <a href="marketplace-notifications.html">Notifications</a>
+
+    <!-- User -->
     <a href="profile.html">Main Profile</a>
     <a href="settings.html">Main Settings</a>
   </div>
@@ -209,35 +236,64 @@
     </div>
 
     <div class="grid">
+
+      <!-- TOTAL ITEMS -->
       <div class="card">
         <div class="card-title">Total Marketplace Items</div>
         <div id="statTotal" class="card-value">0</div>
-        <div class="card-meta">All listings currently visible in the marketplace.</div>
-        <button class="btn btn-primary" onclick="location.href='marketplace.html'">
-          Open Marketplace
-        </button>
+        <div class="card-meta">All listings currently visible.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace.html'">Open Marketplace</button>
       </div>
 
+      <!-- YOUR LISTINGS -->
       <div class="card">
         <div class="card-title">Your Listings</div>
         <div id="statYours" class="card-value">0</div>
-        <div class="card-meta">Items listed under your main profile.</div>
-        <button class="btn btn-primary" onclick="location.href='sell-item.html'">
-          List a New Item
-        </button>
-        <button class="btn btn-outline" onclick="location.href='marketplace-profile.html'">
-          View Marketplace Profile
-        </button>
+        <div class="card-meta">Items you have listed.</div>
+        <button class="btn btn-primary" onclick="location.href='sell-item.html'">List New Item</button>
+        <button class="btn btn-outline" onclick="location.href='your-listings.html'">View Listings</button>
       </div>
 
+      <!-- GIVEAWAYS -->
       <div class="card">
         <div class="card-title">Giveaway Items</div>
         <div id="statGiveaway" class="card-value">0</div>
-        <div class="card-meta">Listings set to FREE for the community.</div>
-        <button class="btn btn-primary" onclick="location.href='marketplace.html'">
-          Explore Giveaways
-        </button>
+        <div class="card-meta">Items listed as FREE.</div>
+        <button class="btn btn-primary" onclick="location.href='giveaways.html'">Explore Giveaways</button>
       </div>
+
+      <!-- MESSAGES -->
+      <div class="card">
+        <div class="card-title">Messages</div>
+        <div id="statMessages" class="card-value">0</div>
+        <div class="card-meta">Conversations about your items.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace-messages.html'">Open Messages</button>
+      </div>
+
+      <!-- OFFERS -->
+      <div class="card">
+        <div class="card-title">Offers</div>
+        <div id="statOffers" class="card-value">0</div>
+        <div class="card-meta">Incoming and outgoing offers.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace-offers.html'">View Offers</button>
+      </div>
+
+      <!-- FAVORITES -->
+      <div class="card">
+        <div class="card-title">Favorites</div>
+        <div id="statFavorites" class="card-value">0</div>
+        <div class="card-meta">Items you saved.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace-favorites.html'">View Favorites</button>
+      </div>
+
+      <!-- NOTIFICATIONS -->
+      <div class="card">
+        <div class="card-title">Notifications</div>
+        <div id="statNotifications" class="card-value">0</div>
+        <div class="card-meta">Unread marketplace alerts.</div>
+        <button class="btn btn-primary" onclick="location.href='marketplace-notifications.html'">Open Notifications</button>
+      </div>
+
     </div>
   </div>
 </body>
