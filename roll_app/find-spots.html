@@ -6,7 +6,7 @@
 
   <link rel="stylesheet" href="styles/style.css">
 
-  <!-- GOOGLE MAPS (REPLACE API_KEY LOCALLY) -->
+  <!-- GOOGLE MAPS (REPLACE API KEY LOCALLY) -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places,marker"></script>
 
   <style>
@@ -199,74 +199,156 @@
       opacity:0.85;
     }
 
-    .spot-details {
-      position:fixed;
-      bottom:0;
-      left:50%;
-      transform:translateX(-50%);
-      width:90%;
-      max-width:480px;
-      background:rgba(0,0,0,0.82);
-      backdrop-filter:blur(20px);
-      padding:18px 18px 14px;
-      border-radius:20px 20px 0 0;
-      box-shadow:0 0 30px rgba(255,255,255,0.3);
-      z-index:9999;
-      display:none;
-      max-height:55vh;
-      overflow-y:auto;
+    /* bottom sheet */
+    .bottom-sheet {
+      position: fixed;
+      bottom: -70vh;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: 70vh;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(20px);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 0 30px rgba(255,255,255,0.3);
+      transition: bottom 0.35s ease;
+      z-index: 99999;
+      overflow-y: auto;
     }
-
-    .spot-header {
+    .bottom-sheet.open {
+      bottom: 0;
+    }
+    .sheet-handle {
+      width: 60px;
+      height: 6px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 3px;
+      margin: 10px auto;
+    }
+    .sheet-content {
+      padding: 15px 20px 30px;
+      font-size:0.9rem;
+    }
+    .bs-header-row {
       display:flex;
       justify-content:space-between;
       align-items:flex-start;
       gap:10px;
-      margin-bottom:8px;
+      margin-bottom:6px;
     }
-    .spot-header h2 {
+    .bs-name {
+      font-size:1.2rem;
       margin:0;
-      font-size:1.3rem;
     }
-    .spot-rating {
-      font-size:0.85rem;
+    .bs-google-rating {
       text-align:right;
+      font-size:0.8rem;
       opacity:0.9;
     }
-    .spot-address {
-      font-size:0.85rem;
-      opacity:0.9;
-      margin-bottom:8px;
+    .bs-address {
+      opacity: 0.8;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
     }
-
-    .spot-actions {
-      margin:8px 0 12px;
+    .bs-rating-row {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:4px;
+      font-size:0.8rem;
     }
-    .spot-actions button {
-      width:100%;
-      padding:10px;
-      background:#fff;
-      color:#000;
-      border:none;
-      border-radius:10px;
+    .bs-rating-label {
+      opacity:0.85;
+    }
+    .bs-rating-value {
       font-weight:600;
-      cursor:pointer;
-      margin-bottom:8px;
     }
-
-    .reviews-section {
-      border-top:1px solid rgba(255,255,255,0.15);
-      padding-top:8px;
-      margin-top:8px;
+    .bs-btn {
+      width: 100%;
+      padding: 10px;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      margin: 10px 0 12px;
+      cursor: pointer;
+      font-size:0.9rem;
     }
-    .reviews-section h3 {
-      font-size:1rem;
-      margin:0 0 6px;
+    .bs-subtitle {
+      margin-top: 10px;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      font-weight:600;
     }
-    .reviews-list {
-      max-height:120px;
-      overflow-y:auto;
-      margin-bottom:8px;
+    .bs-reviews {
+      max-height: 150px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+    .bs-review-form input,
+    .bs-review-form textarea,
+    .bs-review-form select {
+      width: 100%;
+      background: rgba(255,255,255,0.12);
+      border: none;
+      border-radius: 10px;
+      padding: 6px 8px;
+      margin-bottom: 6px;
+      color: #fff;
+      font-size:0.8rem;
+    }
+    .bs-review-form select {
+      padding-right:24px;
+    }
+    .bs-review-grid {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:6px 10px;
+      margin-bottom:6px;
+    }
+    .bs-review-grid label {
+      font-size:0.8rem;
+      display:block;
+    }
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 12px 0;
+      font-size: 0.9rem;
+    }
+    .switch {
+      position: relative;
+      width: 50px;
+      height: 28px;
+    }
+    .switch input { display: none; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #555;
+      border-radius: 28px;
+      transition: 0.3s;
+    }
+    .slider:before {
+      content: "";
+      position: absolute;
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    input:checked + .slider {
+      background: #4cd964;
+    }
+    input:checked + .slider:before {
+      transform: translateX(22px);
     }
     .review-item {
       padding:6px 8px;
@@ -280,28 +362,10 @@
       margin-bottom:2px;
       font-size:0.78rem;
     }
-
-    .review-form input,
-    .review-form textarea {
-      width:100%;
-      border-radius:8px;
-      border:none;
-      padding:6px 8px;
-      margin-bottom:6px;
-      font-size:0.8rem;
-      background:rgba(255,255,255,0.12);
-      color:#fff;
-    }
-    .review-form button {
-      width:100%;
-      padding:8px;
-      border:none;
-      border-radius:8px;
-      font-size:0.85rem;
-      font-weight:600;
-      cursor:pointer;
-      background:#fff;
-      color:#000;
+    .review-ratings {
+      font-size:0.75rem;
+      opacity:0.85;
+      margin-top:3px;
     }
   </style>
 </head>
@@ -349,24 +413,118 @@
 
 <div id="map"></div>
 
-<div id="spotDetails" class="spot-details">
-  <div class="spot-header">
-    <h2 id="spotName"></h2>
-    <div class="spot-rating" id="spotRating"></div>
-  </div>
-  <div class="spot-address" id="spotAddress"></div>
+<!-- bottom sheet -->
+<div id="bottomSheet" class="bottom-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-content">
+    <div class="bs-header-row">
+      <h2 id="bsName" class="bs-name"></h2>
+      <div id="bsGoogleRating" class="bs-google-rating"></div>
+    </div>
+    <p id="bsAddress" class="bs-address"></p>
 
-  <div class="spot-actions">
-    <button id="addToCalendar">Add to My Calendar</button>
-  </div>
+    <div class="toggle-row">
+      <span>Live Location</span>
+      <label class="switch">
+        <input type="checkbox" id="liveToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
 
-  <div class="reviews-section">
-    <h3>Session Reviews</h3>
-    <div class="reviews-list" id="reviewsList"></div>
-    <div class="review-form">
-      <input id="reviewName" placeholder="Your name or handle">
-      <textarea id="reviewText" rows="2" placeholder="How was the surface, vibe, safety?"></textarea>
-      <button id="submitReview">Post Review</button>
+    <button id="bsCalendarBtn" class="bs-btn">Add to My Calendar</button>
+
+    <div id="bsAvgRatingsBlock">
+      <div class="bs-subtitle">Community Ratings</div>
+      <div class="bs-rating-row"><span class="bs-rating-label">Smoothness</span><span id="avgSmooth" class="bs-rating-value">–</span></div>
+      <div class="bs-rating-row"><span class="bs-rating-label">Safety</span><span id="avgSafety" class="bs-rating-value">–</span></div>
+      <div class="bs-rating-row"><span class="bs-rating-label">Vibe</span><span id="avgVibe" class="bs-rating-value">–</span></div>
+      <div class="bs-rating-row"><span class="bs-rating-label">Beginner‑friendly</span><span id="avgBeginner" class="bs-rating-value">–</span></div>
+      <div class="bs-rating-row"><span class="bs-rating-label">Speed</span><span id="avgSpeed" class="bs-rating-value">–</span></div>
+      <div class="bs-rating-row"><span class="bs-rating-label">Lighting</span><span id="avgLighting" class="bs-rating-value">–</span></div>
+      <div class="bs-rating-row"><span class="bs-rating-label">Crowds</span><span id="avgCrowds" class="bs-rating-value">–</span></div>
+    </div>
+
+    <h3 class="bs-subtitle">Session Reviews</h3>
+    <div id="bsReviews" class="bs-reviews"></div>
+
+    <div class="bs-review-form">
+      <input id="bsReviewName" placeholder="Your name or handle">
+      <textarea id="bsReviewText" rows="2" placeholder="How was it? Surface, vibe, safety..."></textarea>
+
+      <div class="bs-review-grid">
+        <label>Smoothness
+          <select id="rateSmooth">
+            <option value="">–</option>
+            <option value="1">⭐ 1</option>
+            <option value="2">⭐ 2</option>
+            <option value="3">⭐ 3</option>
+            <option value="4">⭐ 4</option>
+            <option value="5">⭐ 5</option>
+          </select>
+        </label>
+        <label>Safety
+          <select id="rateSafety">
+            <option value="">–</option>
+            <option value="1">⭐ 1</option>
+            <option value="2">⭐ 2</option>
+            <option value="3">⭐ 3</option>
+            <option value="4">⭐ 4</option>
+            <option value="5">⭐ 5</option>
+          </select>
+        </label>
+        <label>Vibe
+          <select id="rateVibe">
+            <option value="">–</option>
+            <option value="1">⭐ 1</option>
+            <option value="2">⭐ 2</option>
+            <option value="3">⭐ 3</option>
+            <option value="4">⭐ 4</option>
+            <option value="5">⭐ 5</option>
+          </select>
+        </label>
+        <label>Beginner‑friendly
+          <select id="rateBeginner">
+            <option value="">–</option>
+            <option value="1">⭐ 1</option>
+            <option value="2">⭐ 2</option>
+            <option value="3">⭐ 3</option>
+            <option value="4">⭐ 4</option>
+            <option value="5">⭐ 5</option>
+          </select>
+        </label>
+        <label>Speed
+          <select id="rateSpeed">
+            <option value="">–</option>
+            <option value="1">⭐ 1</option>
+            <option value="2">⭐ 2</option>
+            <option value="3">⭐ 3</option>
+            <option value="4">⭐ 4</option>
+            <option value="5">⭐ 5</option>
+          </select>
+        </label>
+        <label>Lighting
+          <select id="rateLighting">
+            <option value="">–</option>
+            <option value="1">⭐ 1</option>
+            <option value="2">⭐ 2</option>
+            <option value="3">⭐ 3</option>
+            <option value="4">⭐ 4</option>
+            <option value="5">⭐ 5</option>
+          </select>
+        </label>
+        <label>Crowds
+          <select id="rateCrowds">
+            <option value="">–</option>
+            <option value="1">😴 Empty</option>
+            <option value="2">🙂 Chill</option>
+            <option value="3">😎 Active</option>
+            <option value="4">🔥 Packed</option>
+            <option value="5">🚨 Slammed</option>
+          </select>
+        </label>
+      </div>
+
+      <button id="bsSubmitReview" class="bs-btn">Post Review</button>
     </div>
   </div>
 </div>
@@ -483,81 +641,203 @@ function renderResultsList(spots){
   });
 }
 
-/* SPOT DETAILS PANEL */
-const details=document.getElementById("spotDetails");
-const nameEl=document.getElementById("spotName");
-const addrEl=document.getElementById("spotAddress");
-const ratingEl=document.getElementById("spotRating");
-const reviewsList=document.getElementById("reviewsList");
-const reviewName=document.getElementById("reviewName");
-const reviewText=document.getElementById("reviewText");
+/* BOTTOM SHEET / DETAILS */
+const bottomSheet=document.getElementById("bottomSheet");
+const bsName=document.getElementById("bsName");
+const bsAddress=document.getElementById("bsAddress");
+const bsGoogleRating=document.getElementById("bsGoogleRating");
+const bsReviews=document.getElementById("bsReviews");
+const bsReviewName=document.getElementById("bsReviewName");
+const bsReviewText=document.getElementById("bsReviewText");
+const bsSubmitReview=document.getElementById("bsSubmitReview");
+const bsCalendarBtn=document.getElementById("bsCalendarBtn");
+const liveToggle=document.getElementById("liveToggle");
 
-function loadReviews(placeId){
-  const key="rc_reviews_"+placeId;
-  return JSON.parse(localStorage.getItem(key)||"[]");
+const avgSmooth=document.getElementById("avgSmooth");
+const avgSafety=document.getElementById("avgSafety");
+const avgVibe=document.getElementById("avgVibe");
+const avgBeginner=document.getElementById("avgBeginner");
+const avgSpeed=document.getElementById("avgSpeed");
+const avgLighting=document.getElementById("avgLighting");
+const avgCrowds=document.getElementById("avgCrowds");
+
+const rateSmooth=document.getElementById("rateSmooth");
+const rateSafety=document.getElementById("rateSafety");
+const rateVibe=document.getElementById("rateVibe");
+const rateBeginner=document.getElementById("rateBeginner");
+const rateSpeed=document.getElementById("rateSpeed");
+const rateLighting=document.getElementById("rateLighting");
+const rateCrowds=document.getElementById("rateCrowds");
+
+let liveWatcher=null;
+let activeSpotBS=null;
+
+function openBottomSheet(spot){
+  activeSpotBS=spot;
+
+  bsName.textContent=spot.name;
+  bsAddress.textContent=spot.address;
+
+  if(spot.rating){
+    bsGoogleRating.textContent=`⭐ ${spot.rating.toFixed(1)} (${spot.userRatings} Google ratings)`;
+  }else{
+    bsGoogleRating.textContent="No Google rating data";
+  }
+
+  bsReviewName.value="";
+  bsReviewText.value="";
+  rateSmooth.value="";
+  rateSafety.value="";
+  rateVibe.value="";
+  rateBeginner.value="";
+  rateSpeed.value="";
+  rateLighting.value="";
+  rateCrowds.value="";
+
+  renderBSReviews(spot.placeId);
+  updateAverageRatings(spot.placeId);
+
+  bottomSheet.classList.add("open");
 }
 
-function saveReviews(placeId,reviews){
-  const key="rc_reviews_"+placeId;
-  localStorage.setItem(key,JSON.stringify(reviews));
+function closeBottomSheet(){
+  bottomSheet.classList.remove("open");
 }
 
-function renderReviews(placeId){
-  const reviews=loadReviews(placeId);
-  reviewsList.innerHTML="";
+/* simple tap handle to close on double click */
+bottomSheet.querySelector(".sheet-handle").onclick=()=>{
+  if(bottomSheet.classList.contains("open")) closeBottomSheet();
+};
+
+/* REVIEWS STORAGE */
+function loadBSReviews(id){
+  return JSON.parse(localStorage.getItem("rc_reviews_"+id)||"[]");
+}
+function saveBSReviews(id,reviews){
+  localStorage.setItem("rc_reviews_"+id,JSON.stringify(reviews));
+}
+
+function renderBSReviews(id){
+  const reviews=loadBSReviews(id);
+  bsReviews.innerHTML="";
   if(!reviews.length){
-    const empty=document.createElement("div");
-    empty.style.fontSize="0.8rem";
-    empty.style.opacity="0.7";
-    empty.textContent="No reviews yet. Be the first to log this spot.";
-    reviewsList.appendChild(empty);
+    bsReviews.innerHTML=`<div style="opacity:0.7;font-size:0.85rem;">No reviews yet. Be the first to log this spot.</div>`;
     return;
   }
   reviews.forEach(r=>{
-    const item=document.createElement("div");
-    item.className="review-item";
+    const div=document.createElement("div");
+    div.className="review-item";
+    const ratingsLine=[
+      r.smoothness?`Smoothness: ${r.smoothness}/5`:"",
+      r.safety?`Safety: ${r.safety}/5`:"",
+      r.vibe?`Vibe: ${r.vibe}/5`:"",
+      r.beginner?`Beginner: ${r.beginner}/5`:"",
+      r.speed?`Speed: ${r.speed}/5`:"",
+      r.lighting?`Lighting: ${r.lighting}/5`:"",
+      r.crowds?`Crowds: ${r.crowds}/5`:""
+    ].filter(Boolean).join(" · ");
 
-    const meta=document.createElement("div");
-    meta.className="review-meta";
-    meta.textContent=`${r.name||"Anonymous"} · ${new Date(r.time).toLocaleDateString()}`;
-
-    const body=document.createElement("div");
-    body.textContent=r.text;
-
-    item.appendChild(meta);
-    item.appendChild(body);
-    reviewsList.appendChild(item);
+    div.innerHTML=`
+      <div class="review-meta">${r.name||"Anonymous"} · ${new Date(r.time).toLocaleDateString()}</div>
+      <div>${r.text}</div>
+      ${ratingsLine ? `<div class="review-ratings">${ratingsLine}</div>` : ""}
+    `;
+    bsReviews.appendChild(div);
   });
 }
 
-function showSpotDetails(spot){
-  activeSpot={
-    placeId:spot.place_id,
-    name:spot.name,
-    address:spot.formatted_address||"",
-    lat:spot.geometry.location.lat(),
-    lng:spot.geometry.location.lng(),
-    rating:spot.rating||null,
-    userRatings:spot.user_ratings_total||0
-  };
-
-  nameEl.textContent=activeSpot.name;
-  addrEl.textContent=activeSpot.address;
-
-  if(activeSpot.rating){
-    ratingEl.textContent=`⭐ ${activeSpot.rating.toFixed(1)} (${activeSpot.userRatings} Google ratings)`;
-  }else{
-    ratingEl.textContent="No rating data";
-  }
-
-  reviewName.value="";
-  reviewText.value="";
-  renderReviews(activeSpot.placeId);
-
-  details.style.display="block";
+function computeAverage(reviews,key){
+  const vals=reviews.map(r=>Number(r[key])).filter(v=>!isNaN(v));
+  if(!vals.length) return null;
+  const sum=vals.reduce((a,b)=>a+b,0);
+  return (sum/vals.length).toFixed(1);
 }
 
-/* FOCUS SPOT FROM LIST */
+function updateAverageRatings(id){
+  const reviews=loadBSReviews(id);
+  const smooth=computeAverage(reviews,"smoothness");
+  const safety=computeAverage(reviews,"safety");
+  const vibe=computeAverage(reviews,"vibe");
+  const beginner=computeAverage(reviews,"beginner");
+  const speed=computeAverage(reviews,"speed");
+  const lighting=computeAverage(reviews,"lighting");
+  const crowds=computeAverage(reviews,"crowds");
+
+  avgSmooth.textContent=smooth?`${smooth}/5`:"–";
+  avgSafety.textContent=safety?`${safety}/5`:"–";
+  avgVibe.textContent=vibe?`${vibe}/5`:"–";
+  avgBeginner.textContent=beginner?`${beginner}/5`:"–";
+  avgSpeed.textContent=speed?`${speed}/5`:"–";
+  avgLighting.textContent=lighting?`${lighting}/5`:"–";
+  avgCrowds.textContent=crowds?`${crowds}/5`:"–";
+}
+
+/* REVIEW SUBMIT */
+bsSubmitReview.onclick=()=>{
+  if(!activeSpotBS) return;
+  const name=(bsReviewName.value||"Anonymous").trim();
+  const text=(bsReviewText.value||"").trim();
+  if(!text) return;
+
+  const review={
+    name,
+    text,
+    time:Date.now(),
+    smoothness:rateSmooth.value?Number(rateSmooth.value):null,
+    safety:rateSafety.value?Number(rateSafety.value):null,
+    vibe:rateVibe.value?Number(rateVibe.value):null,
+    beginner:rateBeginner.value?Number(rateBeginner.value):null,
+    speed:rateSpeed.value?Number(rateSpeed.value):null,
+    lighting:rateLighting.value?Number(rateLighting.value):null,
+    crowds:rateCrowds.value?Number(rateCrowds.value):null
+  };
+
+  const reviews=loadBSReviews(activeSpotBS.placeId);
+  reviews.push(review);
+  saveBSReviews(activeSpotBS.placeId,reviews);
+  bsReviewText.value="";
+  rateSmooth.value="";
+  rateSafety.value="";
+  rateVibe.value="";
+  rateBeginner.value="";
+  rateSpeed.value="";
+  rateLighting.value="";
+  rateCrowds.value="";
+  renderBSReviews(activeSpotBS.placeId);
+  updateAverageRatings(activeSpotBS.placeId);
+};
+
+/* ADD TO CALENDAR */
+bsCalendarBtn.onclick=()=>{
+  if(!activeSpotBS) return;
+  const events=JSON.parse(localStorage.getItem("rc_calendar")||"[]");
+  events.push({
+    title:activeSpotBS.name,
+    location:activeSpotBS.address,
+    lat:activeSpotBS.lat,
+    lng:activeSpotBS.lng,
+    timestamp:Date.now()
+  });
+  localStorage.setItem("rc_calendar",JSON.stringify(events));
+  closeBottomSheet();
+};
+
+/* LIVE LOCATION TOGGLE */
+liveToggle.onchange=()=>{
+  if(liveToggle.checked){
+    if(!navigator.geolocation) return;
+    liveWatcher=navigator.geolocation.watchPosition(pos=>{
+      map.panTo({lat:pos.coords.latitude,lng:pos.coords.longitude});
+    });
+  }else{
+    if(liveWatcher!==null){
+      navigator.geolocation.clearWatch(liveWatcher);
+      liveWatcher=null;
+    }
+  }
+};
+
+/* FOCUS SPOT */
 function focusSpot(index){
   const spot=currentSpots[index];
   if(!spot) return;
@@ -566,43 +846,18 @@ function focusSpot(index){
   map.panTo(loc);
   map.setZoom(15);
 
-  showSpotDetails(spot);
+  openBottomSheet({
+    placeId:spot.place_id,
+    name:spot.name,
+    address:spot.formatted_address||"",
+    lat:loc.lat(),
+    lng:loc.lng(),
+    rating:spot.rating||null,
+    userRatings:spot.user_ratings_total||0
+  });
 }
 
-/* ADD TO CALENDAR (IN‑APP) */
-document.getElementById("addToCalendar").onclick=()=>{
-  if(!activeSpot) return;
-  const events=JSON.parse(localStorage.getItem("rc_calendar")||"[]");
-  events.push({
-    title:activeSpot.name,
-    location:activeSpot.address,
-    lat:activeSpot.lat,
-    lng:activeSpot.lng,
-    timestamp:Date.now()
-  });
-  localStorage.setItem("rc_calendar",JSON.stringify(events));
-  details.style.display="none";
-};
-
-/* SUBMIT REVIEW */
-document.getElementById("submitReview").onclick=()=>{
-  if(!activeSpot) return;
-  const name=(reviewName.value||"Anonymous").trim();
-  const text=(reviewText.value||"").trim();
-  if(!text) return;
-
-  const reviews=loadReviews(activeSpot.placeId);
-  reviews.push({
-    name,
-    text,
-    time:Date.now()
-  });
-  saveReviews(activeSpot.placeId,reviews);
-  renderReviews(activeSpot.placeId);
-  reviewText.value="";
-};
-
-/* SEARCH (MULTI‑RESULT, REAL DATA) */
+/* SEARCH (REAL DATA) */
 function runSearch(q){
   if(!q||!map||!placesService) return;
 
@@ -625,9 +880,7 @@ function runSearch(q){
         position:loc,
         title:spot.name
       });
-      marker.addListener("click",()=>{
-        focusSpot(idx);
-      });
+      marker.addListener("click",()=>focusSpot(idx));
       markers.push(marker);
     });
 
@@ -635,7 +888,8 @@ function runSearch(q){
 
     map.panTo(results[0].geometry.location);
     map.setZoom(14);
-    showSpotDetails(results[0]);
+
+    focusSpot(0);
   });
 }
 
