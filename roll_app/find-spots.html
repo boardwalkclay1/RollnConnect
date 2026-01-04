@@ -1,925 +1,555 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Maps and Places Autocomplete</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/@googlemaps/extended-component-library/0.6.11/index.min.js">
-    </script>
-    <link rel="stylesheet" href="./style.css"/>
-  </head>
-  <body>
-    <gmpx-api-loader key="AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc" solution-channel="GMP_GE_mapsandplacesautocomplete_v2">
-    </gmpx-api-loader>
-    <gmp-map center="40.749933,-73.98633" zoom="13" map-id="8b6161d8db2002e235c16dc6">
-      <div slot="control-block-start-inline-start" class="place-picker-container">
-        <gmpx-place-picker placeholder="Enter an address"></gmpx-place-picker>
-      </div>
-      <gmp-advanced-marker></gmp-advanced-marker>
-    </gmp-map>
-    <script src="./index.js"></script>
-  </body>
-</html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Find Spots – Roll ’n Connect</title>
 
+  <!-- GLOBAL STYLES -->
   <link rel="stylesheet" href="styles/style.css">
 
-  <!-- GOOGLE MAPS (REPLACE API KEY LOCALLY) -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places,marker"></script>
+  <!-- GOOGLE MAPS (REPLACE API_KEY LOCALLY) -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places"></script>
 
   <style>
     body {
-      background:#000;
+      margin:0;
+      font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:#02040a;
       color:#fff;
-      margin:0;
-      padding:0;
-      font-family:'Inter',sans-serif;
-      overflow:hidden;
     }
 
-    .stars1,.stars2,.stars3 {
-      position:fixed; inset:0;
-      background:url('styles/stars-white.png') repeat;
-      z-index:-3;
-    }
-    .stars1{opacity:.55;animation:drift1 140s linear infinite;}
-    .stars2{opacity:.35;animation:drift2 200s linear infinite;}
-    .stars3{opacity:.2; animation:drift3 260s linear infinite;}
-
-    @keyframes drift1{from{background-position:0 0;}to{background-position:0 -5000px;}}
-    @keyframes drift2{from{background-position:0 0;}to{background-position:-4000px -2000px;}}
-    @keyframes drift3{from{background-position:0 0;}to{background-position:3000px 4000px;}}
-
-    .sidebar {
-      position:fixed;
-      top:50%;
-      left:-260px;
-      transform:translateY(-50%);
-      width:260px;
-      background:rgba(255,255,255,0.08);
-      backdrop-filter:blur(25px);
-      border-right:1px solid rgba(255,255,255,0.25);
-      padding:30px 20px;
-      border-radius:0 20px 20px 0;
-      box-shadow:10px 0 40px rgba(255,255,255,0.25);
-      transition:0.35s ease;
-      z-index:9998;
-    }
-    .sidebar.open { left:0; }
-
-    .hamburger {
-      position:fixed;
-      top:25px;
-      left:25px;
-      width:40px;
-      height:30px;
+    .page {
+      min-height:100vh;
       display:flex;
       flex-direction:column;
+    }
+
+    header {
+      padding:12px 16px;
+      display:flex;
+      align-items:center;
       justify-content:space-between;
-      cursor:pointer;
-      z-index:9999;
+      background:radial-gradient(circle at top,#1d2340,#050712 55%,#02040a);
+      position:sticky;
+      top:0;
+      z-index:10;
     }
-    .hamburger span {
-      height:4px;
-      width:100%;
-      background:#fff;
-      border-radius:4px;
-      box-shadow:0 0 12px rgba(255,255,255,0.9);
-      transition:0.3s;
-    }
-    .hamburger.active span:nth-child(1){transform:translateY(13px) rotate(45deg);}
-    .hamburger.active span:nth-child(2){opacity:0;}
-    .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
 
-    .nav-header{text-align:center;margin-bottom:30px;}
-    .logo-orb{font-size:3rem;margin-bottom:10px;text-shadow:0 0 20px #fff;}
-    .nav-title{font-size:1.4rem;font-weight:600;text-shadow:0 0 10px #fff;}
-
-    .nav-links {
-      list-style:none;
-      padding:0;
-      margin:0;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
+    .app-title {
+      font-weight:600;
+      font-size:1rem;
     }
-    .nav-links a {
+
+    nav a {
       color:#fff;
       text-decoration:none;
-      font-size:1.15rem;
-      padding:10px 14px;
-      border-radius:12px;
-      transition:0.25s;
-      display:block;
-      background:rgba(255,255,255,0.05);
-      box-shadow:0 0 12px rgba(255,255,255,0.15);
+      font-size:0.85rem;
+      margin-left:10px;
+      opacity:0.85;
     }
-    .nav-links a:hover {
-      background:rgba(255,255,255,0.2);
-      transform:translateX(8px);
-      box-shadow:0 0 20px rgba(255,255,255,0.4);
+    nav a:hover { opacity:1; }
+
+    .map-wrap {
+      position:relative;
+      height:320px;
+      width:100%;
     }
 
     #map {
-      position:absolute;
-      top:0;
-      left:0;
       width:100%;
-      height:100vh;
-      z-index:1;
+      height:100%;
     }
 
-    .search-panel {
-      position:fixed;
-      top:25px;
-      right:25px;
-      background:rgba(0,0,0,0.55);
-      backdrop-filter:blur(20px);
-      padding:20px;
-      border-radius:20px;
-      box-shadow:0 0 30px rgba(255,255,255,0.3);
-      z-index:9999;
-      width:320px;
-    }
-
-    .search-panel input {
-      width:100%;
-      padding:10px 14px;
-      border-radius:12px;
-      border:none;
-      background:rgba(255,255,255,0.15);
-      color:#fff;
-      margin-bottom:12px;
-    }
-
-    .category-buttons {
+    .filters-bar {
+      padding:10px 12px;
       display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:10px;
+      gap:8px;
+      overflow-x:auto;
+      background:#050815;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+    }
+
+    .filter-btn {
+      padding:6px 10px;
+      font-size:0.8rem;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.2);
+      background:rgba(255,255,255,0.05);
+      color:#fff;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .filter-btn.active {
+      background:#fff;
+      color:#000;
+      border-color:#fff;
+    }
+
+    .content {
+      padding:12px 16px 40px;
+    }
+
+    .search-row {
+      display:flex;
+      gap:8px;
       margin-bottom:10px;
     }
-
-    .cat-btn {
-      padding:8px 14px;
-      background:rgba(255,255,255,0.15);
-      border-radius:12px;
-      cursor:pointer;
-      font-size:0.9rem;
-      transition:0.25s;
-    }
-    .cat-btn:hover {
-      background:#fff;
-      color:#000;
-      transform:scale(1.1);
-    }
-
-    .loc-btn {
-      margin-top:6px;
-      width:100%;
-      padding:10px;
-      background:#fff;
-      color:#000;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:600;
-      transition:0.25s;
-      border:none;
-    }
-    .loc-btn:hover {
-      transform:scale(1.05);
-      box-shadow:0 0 20px rgba(255,255,255,0.8);
-    }
-
-    .results-list {
-      max-height:180px;
-      margin-top:10px;
-      overflow-y:auto;
-      padding-right:4px;
-    }
-    .result-item {
+    .search-row input {
+      flex:1;
       padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.25);
+      background:rgba(0,0,0,0.4);
+      color:#fff;
+      font-size:0.85rem;
+    }
+    .search-row button {
+      padding:8px 12px;
+      border-radius:999px;
+      border:none;
+      font-size:0.8rem;
+      font-weight:600;
+      cursor:pointer;
+      background:#fff;
+      color:#000;
+    }
+
+    .spot-list {
+      margin-top:8px;
+    }
+    .spot-card {
       border-radius:10px;
-      background:rgba(255,255,255,0.05);
-      margin-bottom:6px;
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.08);
+      padding:10px;
+      margin-bottom:8px;
       cursor:pointer;
       font-size:0.85rem;
     }
-    .result-item:hover {
-      background:rgba(255,255,255,0.2);
+    .spot-card:hover {
+      background:rgba(255,255,255,0.07);
     }
-    .result-item-title {
+    .spot-card-title {
       font-weight:600;
       margin-bottom:2px;
     }
-    .result-item-meta {
-      font-size:0.75rem;
-      opacity:0.85;
+    .spot-card-meta {
+      font-size:0.78rem;
+      opacity:0.8;
     }
 
-    /* bottom sheet */
-    .bottom-sheet {
-      position: fixed;
-      bottom: -70vh;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 480px;
-      height: 70vh;
-      background: rgba(0,0,0,0.9);
-      backdrop-filter: blur(20px);
-      border-radius: 20px 20px 0 0;
-      box-shadow: 0 0 30px rgba(255,255,255,0.3);
-      transition: bottom 0.35s ease;
-      z-index: 99999;
-      overflow-y: auto;
+    .section-title {
+      font-size:0.95rem;
+      font-weight:600;
+      margin:14px 0 6px;
     }
-    .bottom-sheet.open {
-      bottom: 0;
-    }
-    .sheet-handle {
-      width: 60px;
-      height: 6px;
-      background: rgba(255,255,255,0.4);
-      border-radius: 3px;
-      margin: 10px auto;
-    }
-    .sheet-content {
-      padding: 15px 20px 30px;
-      font-size:0.9rem;
-    }
-    .bs-header-row {
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      margin-bottom:6px;
-    }
-    .bs-name {
-      font-size:1.2rem;
-      margin:0;
-    }
-    .bs-google-rating {
-      text-align:right;
-      font-size:0.8rem;
-      opacity:0.9;
-    }
-    .bs-address {
-      opacity: 0.8;
-      font-size: 0.85rem;
-      margin-bottom: 10px;
-    }
-    .bs-rating-row {
+
+    .rating-row {
       display:flex;
       justify-content:space-between;
       align-items:center;
-      margin-bottom:4px;
       font-size:0.8rem;
+      margin-bottom:3px;
     }
-    .bs-rating-label {
-      opacity:0.85;
-    }
-    .bs-rating-value {
+    .rating-value {
       font-weight:600;
     }
-    .bs-btn {
-      width: 100%;
-      padding: 10px;
-      background: #fff;
-      color: #000;
-      border: none;
-      border-radius: 12px;
-      font-weight: 600;
-      margin: 10px 0 12px;
-      cursor: pointer;
-      font-size:0.9rem;
-    }
-    .bs-subtitle {
-      margin-top: 10px;
-      margin-bottom: 6px;
-      font-size: 0.95rem;
-      font-weight:600;
-    }
-    .bs-reviews {
-      max-height: 150px;
-      overflow-y: auto;
-      margin-bottom: 10px;
-    }
-    .bs-review-form input,
-    .bs-review-form textarea,
-    .bs-review-form select {
-      width: 100%;
-      background: rgba(255,255,255,0.12);
-      border: none;
-      border-radius: 10px;
-      padding: 6px 8px;
-      margin-bottom: 6px;
-      color: #fff;
+
+    .review-form input,
+    .review-form textarea,
+    .review-form select {
+      width:100%;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.18);
+      background:rgba(0,0,0,0.5);
+      color:#fff;
+      padding:6px 8px;
       font-size:0.8rem;
+      margin-bottom:6px;
     }
-    .bs-review-form select {
-      padding-right:24px;
-    }
-    .bs-review-grid {
+    .review-grid {
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:6px 10px;
-      margin-bottom:6px;
+      font-size:0.78rem;
     }
-    .bs-review-grid label {
-      font-size:0.8rem;
+    .review-grid label {
       display:block;
     }
-    .toggle-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 12px 0;
-      font-size: 0.9rem;
-    }
-    .switch {
-      position: relative;
-      width: 50px;
-      height: 28px;
-    }
-    .switch input { display: none; }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background: #555;
-      border-radius: 28px;
-      transition: 0.3s;
-    }
-    .slider:before {
-      content: "";
-      position: absolute;
-      height: 22px;
-      width: 22px;
-      left: 3px;
-      bottom: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: 0.3s;
-    }
-    input:checked + .slider {
-      background: #4cd964;
-    }
-    input:checked + .slider:before {
-      transform: translateX(22px);
+
+    .review-list {
+      margin-top:4px;
     }
     .review-item {
-      padding:6px 8px;
       border-radius:8px;
-      background:rgba(255,255,255,0.06);
+      background:rgba(255,255,255,0.04);
+      padding:6px 8px;
       margin-bottom:4px;
       font-size:0.8rem;
     }
     .review-meta {
       font-weight:600;
+      font-size:0.76rem;
       margin-bottom:2px;
-      font-size:0.78rem;
+      opacity:0.9;
     }
     .review-ratings {
-      font-size:0.75rem;
+      font-size:0.74rem;
+      opacity:0.8;
+      margin-top:2px;
+    }
+
+    .primary-btn {
+      width:100%;
+      margin-top:4px;
+      padding:8px;
+      border-radius:999px;
+      border:none;
+      background:#fff;
+      color:#000;
+      font-size:0.85rem;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .link-row {
+      margin-top:10px;
+      font-size:0.8rem;
       opacity:0.85;
-      margin-top:3px;
+    }
+    .link-row a {
+      color:#8bd5ff;
+      text-decoration:none;
+    }
+    .link-row a:hover {
+      text-decoration:underline;
     }
   </style>
 </head>
 
 <body>
+<div class="page">
+  <header>
+    <div class="app-title">Find Spots</div>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="events.html">Events</a>
+      <a href="calendar.html">Calendar</a>
+    </nav>
+  </header>
 
-<div class="stars1"></div>
-<div class="stars2"></div>
-<div class="stars3"></div>
-
-<div id="hamburger" class="hamburger"><span></span><span></span><span></span></div>
-
-<nav id="sidebar" class="sidebar">
-  <div class="nav-header">
-    <div class="logo-orb">📍</div>
-    <div class="nav-title">Find Spots</div>
+  <div class="map-wrap">
+    <div id="map"></div>
   </div>
 
-  <ul class="nav-links">
-    <li><a href="dashboard.html">📊 Dashboard</a></li>
-    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
-    <li><a href="events.html">📅 Events</a></li>
-    <li><a href="calendar.html">🗓️ Calendar</a></li>
-    <li><a href="profile.html">👤 Your Profile</a></li>
-    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
-    <li><a href="settings.html">⚙️ Settings</a></li>
-  </ul>
-</nav>
-
-<div class="search-panel">
-  <input id="searchInput" placeholder="Search: skatepark, rink, trail...">
-
-  <div class="category-buttons">
-    <div class="cat-btn" data-q="skatepark">Skateparks</div>
-    <div class="cat-btn" data-q="roller rink">Rinks</div>
-    <div class="cat-btn" data-q="trail">Trails</div>
-    <div class="cat-btn" data-q="parking lot">Parking Lots</div>
-    <div class="cat-btn" data-q="plaza">Plazas</div>
+  <div class="filters-bar">
+    <button class="filter-btn active" data-type="">All</button>
+    <button class="filter-btn" data-type="skatepark">Skateparks</button>
+    <button class="filter-btn" data-type="rink">Rinks</button>
+    <button class="filter-btn" data-type="water">Water</button>
+    <button class="filter-btn" data-type="food">Food</button>
+    <button class="filter-btn" data-type="parking">Parking Lots</button>
+    <button class="filter-btn" data-type="restroom">Restrooms</button>
   </div>
 
-  <button class="loc-btn" id="locateMe">Use My Location</button>
-
-  <div class="results-list" id="resultsList"></div>
-</div>
-
-<div id="map"></div>
-
-<!-- bottom sheet -->
-<div id="bottomSheet" class="bottom-sheet">
-  <div class="sheet-handle"></div>
-  <div class="sheet-content">
-    <div class="bs-header-row">
-      <h2 id="bsName" class="bs-name"></h2>
-      <div id="bsGoogleRating" class="bs-google-rating"></div>
-    </div>
-    <p id="bsAddress" class="bs-address"></p>
-
-    <div class="toggle-row">
-      <span>Live Location</span>
-      <label class="switch">
-        <input type="checkbox" id="liveToggle">
-        <span class="slider"></span>
-      </label>
+  <main class="content">
+    <div class="search-row">
+      <input id="searchInput" placeholder="Search a place or address">
+      <button id="searchBtn">Search</button>
     </div>
 
-    <button id="bsCalendarBtn" class="bs-btn">Add to My Calendar</button>
+    <div class="spot-list" id="spotList"></div>
 
-    <div id="bsAvgRatingsBlock">
-      <div class="bs-subtitle">Community Ratings</div>
-      <div class="bs-rating-row"><span class="bs-rating-label">Smoothness</span><span id="avgSmooth" class="bs-rating-value">–</span></div>
-      <div class="bs-rating-row"><span class="bs-rating-label">Safety</span><span id="avgSafety" class="bs-rating-value">–</span></div>
-      <div class="bs-rating-row"><span class="bs-rating-label">Vibe</span><span id="avgVibe" class="bs-rating-value">–</span></div>
-      <div class="bs-rating-row"><span class="bs-rating-label">Beginner‑friendly</span><span id="avgBeginner" class="bs-rating-value">–</span></div>
-      <div class="bs-rating-row"><span class="bs-rating-label">Speed</span><span id="avgSpeed" class="bs-rating-value">–</span></div>
-      <div class="bs-rating-row"><span class="bs-rating-label">Lighting</span><span id="avgLighting" class="bs-rating-value">–</span></div>
-      <div class="bs-rating-row"><span class="bs-rating-label">Crowds</span><span id="avgCrowds" class="bs-rating-value">–</span></div>
-    </div>
+    <section id="spotDetailsSection" style="display:none;">
+      <h2 class="section-title" id="spotTitle"></h2>
+      <div id="spotAddress" style="font-size:0.85rem;opacity:0.9;margin-bottom:4px;"></div>
+      <div id="spotGoogleRating" style="font-size:0.8rem;opacity:0.85;margin-bottom:8px;"></div>
 
-    <h3 class="bs-subtitle">Session Reviews</h3>
-    <div id="bsReviews" class="bs-reviews"></div>
+      <div class="section-title">Community ratings</div>
+      <div class="rating-row"><span>Smoothness</span><span id="avgSmooth" class="rating-value">–</span></div>
+      <div class="rating-row"><span>Difficulty</span><span id="avgDifficulty" class="rating-value">–</span></div>
 
-    <div class="bs-review-form">
-      <input id="bsReviewName" placeholder="Your name or handle">
-      <textarea id="bsReviewText" rows="2" placeholder="How was it? Surface, vibe, safety..."></textarea>
+      <button id="addToCalendarBtn" class="primary-btn">Add this spot to my calendar</button>
 
-      <div class="bs-review-grid">
-        <label>Smoothness
-          <select id="rateSmooth">
-            <option value="">–</option>
-            <option value="1">⭐ 1</option>
-            <option value="2">⭐ 2</option>
-            <option value="3">⭐ 3</option>
-            <option value="4">⭐ 4</option>
-            <option value="5">⭐ 5</option>
-          </select>
-        </label>
-        <label>Safety
-          <select id="rateSafety">
-            <option value="">–</option>
-            <option value="1">⭐ 1</option>
-            <option value="2">⭐ 2</option>
-            <option value="3">⭐ 3</option>
-            <option value="4">⭐ 4</option>
-            <option value="5">⭐ 5</option>
-          </select>
-        </label>
-        <label>Vibe
-          <select id="rateVibe">
-            <option value="">–</option>
-            <option value="1">⭐ 1</option>
-            <option value="2">⭐ 2</option>
-            <option value="3">⭐ 3</option>
-            <option value="4">⭐ 4</option>
-            <option value="5">⭐ 5</option>
-          </select>
-        </label>
-        <label>Beginner‑friendly
-          <select id="rateBeginner">
-            <option value="">–</option>
-            <option value="1">⭐ 1</option>
-            <option value="2">⭐ 2</option>
-            <option value="3">⭐ 3</option>
-            <option value="4">⭐ 4</option>
-            <option value="5">⭐ 5</option>
-          </select>
-        </label>
-        <label>Speed
-          <select id="rateSpeed">
-            <option value="">–</option>
-            <option value="1">⭐ 1</option>
-            <option value="2">⭐ 2</option>
-            <option value="3">⭐ 3</option>
-            <option value="4">⭐ 4</option>
-            <option value="5">⭐ 5</option>
-          </select>
-        </label>
-        <label>Lighting
-          <select id="rateLighting">
-            <option value="">–</option>
-            <option value="1">⭐ 1</option>
-            <option value="2">⭐ 2</option>
-            <option value="3">⭐ 3</option>
-            <option value="4">⭐ 4</option>
-            <option value="5">⭐ 5</option>
-          </select>
-        </label>
-        <label>Crowds
-          <select id="rateCrowds">
-            <option value="">–</option>
-            <option value="1">😴 Empty</option>
-            <option value="2">🙂 Chill</option>
-            <option value="3">😎 Active</option>
-            <option value="4">🔥 Packed</option>
-            <option value="5">🚨 Slammed</option>
-          </select>
-        </label>
+      <div class="section-title">Leave a review</div>
+      <div class="review-form">
+        <input id="reviewName" placeholder="Your name or handle">
+        <textarea id="reviewText" rows="2" placeholder="Share how it felt to skate here"></textarea>
+
+        <div class="review-grid">
+          <label>Smoothness
+            <select id="rateSmooth">
+              <option value="">–</option>
+              <option value="1">⭐ 1 (rough)</option>
+              <option value="2">⭐ 2</option>
+              <option value="3">⭐ 3</option>
+              <option value="4">⭐ 4</option>
+              <option value="5">⭐ 5 (glass)</option>
+            </select>
+          </label>
+          <label>Difficulty
+            <select id="rateDifficulty">
+              <option value="">–</option>
+              <option value="1">1 – very easy</option>
+              <option value="2">2 – easy</option>
+              <option value="3">3 – medium</option>
+              <option value="4">4 – hard</option>
+              <option value="5">5 – expert</option>
+            </select>
+          </label>
+        </div>
+
+        <button id="submitReview" class="primary-btn">Post review</button>
       </div>
 
-      <button id="bsSubmitReview" class="bs-btn">Post Review</button>
-    </div>
-  </div>
+      <div class="section-title">Reviews</div>
+      <div id="reviewList" class="review-list"></div>
+
+      <div class="link-row">
+        Events using this spot will appear in your <a href="events.html">Events</a> and <a href="calendar.html">Calendar</a> pages through shared storage.
+      </div>
+    </section>
+  </main>
 </div>
 
 <script>
-/* SIDEBAR */
-const h=document.getElementById("hamburger"),s=document.getElementById("sidebar");
-h.onclick=()=>{h.classList.toggle("active");s.classList.toggle("open");};
-
-/* MAP + PLACES */
 let map;
 let placesService;
 let markers=[];
-let currentSpots=[];
+let spots=[];
 let activeSpot=null;
 
-const resultsList=document.getElementById("resultsList");
+const spotListEl=document.getElementById("spotList");
+const spotDetailsSection=document.getElementById("spotDetailsSection");
+const spotTitleEl=document.getElementById("spotTitle");
+const spotAddressEl=document.getElementById("spotAddress");
+const spotGoogleRatingEl=document.getElementById("spotGoogleRating");
+const avgSmoothEl=document.getElementById("avgSmooth");
+const avgDifficultyEl=document.getElementById("avgDifficulty");
+const reviewListEl=document.getElementById("reviewList");
 
-const cosmicStyle=[
-  {elementType:"geometry",stylers:[{color:"#0a0a0a"}]},
-  {elementType:"labels.text.fill",stylers:[{color:"#fff"}]},
-  {elementType:"labels.text.stroke",stylers:[{color:"#000"}]},
-  {featureType:"poi",stylers:[{visibility:"off"}]},
-  {featureType:"road",stylers:[{color:"#222"}]},
-  {featureType:"water",stylers:[{color:"#111"}]}
-];
+const reviewNameEl=document.getElementById("reviewName");
+const reviewTextEl=document.getElementById("reviewText");
+const rateSmoothEl=document.getElementById("rateSmooth");
+const rateDifficultyEl=document.getElementById("rateDifficulty");
 
 function initMap(){
   map=new google.maps.Map(document.getElementById("map"),{
     center:{lat:33.8,lng:-84.3},
     zoom:11,
-    styles:cosmicStyle,
-    disableDefaultUI:true,
+    disableDefaultUI:false
   });
-
   placesService=new google.maps.places.PlacesService(map);
-
-  map.addListener("click",e=>{
-    const marker=new google.maps.marker.AdvancedMarkerElement({
-      map,
-      position:e.latLng,
-      title:"Custom Spot",
-    });
-
-    const infowindow=new google.maps.InfoWindow({
-      content:`<strong>Custom Spot</strong><br>${e.latLng.lat().toFixed(5)}, ${e.latLng.lng().toFixed(5)}`
-    });
-
-    marker.addListener("click",()=>infowindow.open({anchor:marker,map}));
-  });
 }
-
 window.onload=initMap;
 
-/* USER AVATAR MARKER */
-function placeUserMarker(lat,lng){
-  const profile=JSON.parse(localStorage.getItem("rc_profile")||"{}");
-  const avatar=profile.avatarUrl||"styles/default-avatar.png";
-
-  const el=document.createElement("img");
-  el.src=avatar;
-  el.style.width="50px";
-  el.style.height="50px";
-  el.style.borderRadius="50%";
-  el.style.boxShadow="0 0 15px rgba(255,255,255,0.9)";
-
-  new google.maps.marker.AdvancedMarkerElement({
-    map,
-    position:{lat,lng},
-    content:el
-  });
-}
-
-/* USE MY LOCATION */
-document.getElementById("locateMe").onclick=()=>{
-  if(!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const {latitude,longitude}=pos.coords;
-    map.panTo({lat:latitude,lng:longitude});
-    map.setZoom(14);
-    placeUserMarker(latitude,longitude);
-  });
-};
-
-/* CLEAR MARKERS */
 function clearMarkers(){
-  markers.forEach(m=>m.map=null);
+  markers.forEach(m=>m.setMap(null));
   markers=[];
 }
 
-/* RESULTS LIST RENDER */
-function renderResultsList(spots){
-  resultsList.innerHTML="";
-  spots.forEach((spot,idx)=>{
+function renderSpotList(){
+  spotListEl.innerHTML="";
+  spots.forEach((spot,index)=>{
     const div=document.createElement("div");
-    div.className="result-item";
-    div.dataset.index=idx;
+    div.className="spot-card";
+    div.dataset.index=index;
 
     const title=document.createElement("div");
-    title.className="result-item-title";
+    title.className="spot-card-title";
     title.textContent=spot.name;
 
     const meta=document.createElement("div");
-    meta.className="result-item-meta";
-    const ratingPart=spot.rating?`⭐ ${spot.rating.toFixed(1)} · `:"";
-    meta.textContent=`${ratingPart}${spot.formatted_address||""}`;
+    meta.className="spot-card-meta";
+    const ratingText=spot.rating?`⭐ ${spot.rating.toFixed(1)} (${spot.user_ratings_total||0}) • `:"";
+    meta.textContent=`${ratingText}${spot.formatted_address||""}`;
 
     div.appendChild(title);
     div.appendChild(meta);
 
-    div.onclick=()=>focusSpot(idx);
+    div.onclick=()=>focusSpot(index);
 
-    resultsList.appendChild(div);
+    spotListEl.appendChild(div);
   });
 }
 
-/* BOTTOM SHEET / DETAILS */
-const bottomSheet=document.getElementById("bottomSheet");
-const bsName=document.getElementById("bsName");
-const bsAddress=document.getElementById("bsAddress");
-const bsGoogleRating=document.getElementById("bsGoogleRating");
-const bsReviews=document.getElementById("bsReviews");
-const bsReviewName=document.getElementById("bsReviewName");
-const bsReviewText=document.getElementById("bsReviewText");
-const bsSubmitReview=document.getElementById("bsSubmitReview");
-const bsCalendarBtn=document.getElementById("bsCalendarBtn");
-const liveToggle=document.getElementById("liveToggle");
-
-const avgSmooth=document.getElementById("avgSmooth");
-const avgSafety=document.getElementById("avgSafety");
-const avgVibe=document.getElementById("avgVibe");
-const avgBeginner=document.getElementById("avgBeginner");
-const avgSpeed=document.getElementById("avgSpeed");
-const avgLighting=document.getElementById("avgLighting");
-const avgCrowds=document.getElementById("avgCrowds");
-
-const rateSmooth=document.getElementById("rateSmooth");
-const rateSafety=document.getElementById("rateSafety");
-const rateVibe=document.getElementById("rateVibe");
-const rateBeginner=document.getElementById("rateBeginner");
-const rateSpeed=document.getElementById("rateSpeed");
-const rateLighting=document.getElementById("rateLighting");
-const rateCrowds=document.getElementById("rateCrowds");
-
-let liveWatcher=null;
-let activeSpotBS=null;
-
-function openBottomSheet(spot){
-  activeSpotBS=spot;
-
-  bsName.textContent=spot.name;
-  bsAddress.textContent=spot.address;
-
-  if(spot.rating){
-    bsGoogleRating.textContent=`⭐ ${spot.rating.toFixed(1)} (${spot.userRatings} Google ratings)`;
-  }else{
-    bsGoogleRating.textContent="No Google rating data";
-  }
-
-  bsReviewName.value="";
-  bsReviewText.value="";
-  rateSmooth.value="";
-  rateSafety.value="";
-  rateVibe.value="";
-  rateBeginner.value="";
-  rateSpeed.value="";
-  rateLighting.value="";
-  rateCrowds.value="";
-
-  renderBSReviews(spot.placeId);
-  updateAverageRatings(spot.placeId);
-
-  bottomSheet.classList.add("open");
+function loadReviews(placeId){
+  return JSON.parse(localStorage.getItem("rc_reviews_simple_"+placeId)||"[]");
+}
+function saveReviews(placeId,reviews){
+  localStorage.setItem("rc_reviews_simple_"+placeId,JSON.stringify(reviews));
+}
+function computeAverage(reviews,key){
+  const vals=reviews.map(r=>Number(r[key])).filter(v=>!isNaN(v));
+  if(!vals.length) return null;
+  return (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
 }
 
-function closeBottomSheet(){
-  bottomSheet.classList.remove("open");
-}
-
-/* simple tap handle to close on double click */
-bottomSheet.querySelector(".sheet-handle").onclick=()=>{
-  if(bottomSheet.classList.contains("open")) closeBottomSheet();
-};
-
-/* REVIEWS STORAGE */
-function loadBSReviews(id){
-  return JSON.parse(localStorage.getItem("rc_reviews_"+id)||"[]");
-}
-function saveBSReviews(id,reviews){
-  localStorage.setItem("rc_reviews_"+id,JSON.stringify(reviews));
-}
-
-function renderBSReviews(id){
-  const reviews=loadBSReviews(id);
-  bsReviews.innerHTML="";
+function renderReviews(placeId){
+  const reviews=loadReviews(placeId);
+  reviewListEl.innerHTML="";
   if(!reviews.length){
-    bsReviews.innerHTML=`<div style="opacity:0.7;font-size:0.85rem;">No reviews yet. Be the first to log this spot.</div>`;
+    reviewListEl.innerHTML='<div style="opacity:0.75;font-size:0.8rem;">No reviews yet. Be the first to log a session.</div>';
+    avgSmoothEl.textContent="–";
+    avgDifficultyEl.textContent="–";
     return;
   }
+
+  const avgSmooth=computeAverage(reviews,"smoothness");
+  const avgDiff=computeAverage(reviews,"difficulty");
+  avgSmoothEl.textContent=avgSmooth?`${avgSmooth}/5`:"–";
+  avgDifficultyEl.textContent=avgDiff?`${avgDiff}/5`:"–";
+
   reviews.forEach(r=>{
     const div=document.createElement("div");
     div.className="review-item";
     const ratingsLine=[
       r.smoothness?`Smoothness: ${r.smoothness}/5`:"",
-      r.safety?`Safety: ${r.safety}/5`:"",
-      r.vibe?`Vibe: ${r.vibe}/5`:"",
-      r.beginner?`Beginner: ${r.beginner}/5`:"",
-      r.speed?`Speed: ${r.speed}/5`:"",
-      r.lighting?`Lighting: ${r.lighting}/5`:"",
-      r.crowds?`Crowds: ${r.crowds}/5`:""
-    ].filter(Boolean).join(" · ");
+      r.difficulty?`Difficulty: ${r.difficulty}/5`:""
+    ].filter(Boolean).join(" • ");
 
     div.innerHTML=`
       <div class="review-meta">${r.name||"Anonymous"} · ${new Date(r.time).toLocaleDateString()}</div>
       <div>${r.text}</div>
-      ${ratingsLine ? `<div class="review-ratings">${ratingsLine}</div>` : ""}
+      ${ratingsLine?`<div class="review-ratings">${ratingsLine}</div>`:""}
     `;
-    bsReviews.appendChild(div);
+    reviewListEl.appendChild(div);
   });
 }
 
-function computeAverage(reviews,key){
-  const vals=reviews.map(r=>Number(r[key])).filter(v=>!isNaN(v));
-  if(!vals.length) return null;
-  const sum=vals.reduce((a,b)=>a+b,0);
-  return (sum/vals.length).toFixed(1);
+function focusSpot(index){
+  const spot=spots[index];
+  if(!spot) return;
+  activeSpot=spot;
+
+  const loc=spot.geometry.location;
+  map.panTo(loc);
+  map.setZoom(15);
+
+  spotTitleEl.textContent=spot.name;
+  spotAddressEl.textContent=spot.formatted_address||"";
+  if(spot.rating){
+    spotGoogleRatingEl.textContent=`Google: ⭐ ${spot.rating.toFixed(1)} (${spot.user_ratings_total||0} ratings)`;
+  }else{
+    spotGoogleRatingEl.textContent="No Google rating data";
+  }
+
+  reviewNameEl.value="";
+  reviewTextEl.value="";
+  rateSmoothEl.value="";
+  rateDifficultyEl.value="";
+
+  renderReviews(spot.place_id);
+  spotDetailsSection.style.display="block";
 }
 
-function updateAverageRatings(id){
-  const reviews=loadBSReviews(id);
-  const smooth=computeAverage(reviews,"smoothness");
-  const safety=computeAverage(reviews,"safety");
-  const vibe=computeAverage(reviews,"vibe");
-  const beginner=computeAverage(reviews,"beginner");
-  const speed=computeAverage(reviews,"speed");
-  const lighting=computeAverage(reviews,"lighting");
-  const crowds=computeAverage(reviews,"crowds");
+function runSearch(query){
+  if(!query||!placesService) return;
 
-  avgSmooth.textContent=smooth?`${smooth}/5`:"–";
-  avgSafety.textContent=safety?`${safety}/5`:"–";
-  avgVibe.textContent=vibe?`${vibe}/5`:"–";
-  avgBeginner.textContent=beginner?`${beginner}/5`:"–";
-  avgSpeed.textContent=speed?`${speed}/5`:"–";
-  avgLighting.textContent=lighting?`${lighting}/5`:"–";
-  avgCrowds.textContent=crowds?`${crowds}/5`:"–";
+  const request={
+    query:query,
+    location:map.getCenter(),
+    radius:20000
+  };
+
+  placesService.textSearch(request,(results,status)=>{
+    if(status!==google.maps.places.PlacesServiceStatus.OK||!results||!results.length) return;
+    spots=results;
+    clearMarkers();
+
+    results.forEach((spot,index)=>{
+      const marker=new google.maps.Marker({
+        map,
+        position:spot.geometry.location,
+        title:spot.name
+      });
+      marker.addListener("click",()=>focusSpot(index));
+      markers.push(marker);
+    });
+
+    renderSpotList();
+    focusSpot(0);
+  });
 }
 
-/* REVIEW SUBMIT */
-bsSubmitReview.onclick=()=>{
-  if(!activeSpotBS) return;
-  const name=(bsReviewName.value||"Anonymous").trim();
-  const text=(bsReviewText.value||"").trim();
+document.getElementById("searchBtn").onclick=()=>{
+  const v=document.getElementById("searchInput").value.trim();
+  runSearch(v);
+};
+document.getElementById("searchInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    runSearch(e.target.value.trim());
+  }
+});
+
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const type=btn.dataset.type;
+    let query="skate spot";
+
+    if(type==="skatepark") query="skatepark";
+    else if(type==="rink") query="roller rink OR ice rink";
+    else if(type==="water") query="water fountain OR hydration station";
+    else if(type==="food") query="food near skating";
+    else if(type==="parking") query="parking lot";
+    else if(type==="restroom") query="public restroom near park";
+
+    runSearch(query);
+  });
+});
+
+document.getElementById("submitReview").onclick=()=>{
+  if(!activeSpot) return;
+  const name=(reviewNameEl.value||"Anonymous").trim();
+  const text=(reviewTextEl.value||"").trim();
   if(!text) return;
 
   const review={
     name,
     text,
     time:Date.now(),
-    smoothness:rateSmooth.value?Number(rateSmooth.value):null,
-    safety:rateSafety.value?Number(rateSafety.value):null,
-    vibe:rateVibe.value?Number(rateVibe.value):null,
-    beginner:rateBeginner.value?Number(rateBeginner.value):null,
-    speed:rateSpeed.value?Number(rateSpeed.value):null,
-    lighting:rateLighting.value?Number(rateLighting.value):null,
-    crowds:rateCrowds.value?Number(rateCrowds.value):null
+    smoothness:rateSmoothEl.value?Number(rateSmoothEl.value):null,
+    difficulty:rateDifficultyEl.value?Number(rateDifficultyEl.value):null
   };
 
-  const reviews=loadBSReviews(activeSpotBS.placeId);
+  const reviews=loadReviews(activeSpot.place_id);
   reviews.push(review);
-  saveBSReviews(activeSpotBS.placeId,reviews);
-  bsReviewText.value="";
-  rateSmooth.value="";
-  rateSafety.value="";
-  rateVibe.value="";
-  rateBeginner.value="";
-  rateSpeed.value="";
-  rateLighting.value="";
-  rateCrowds.value="";
-  renderBSReviews(activeSpotBS.placeId);
-  updateAverageRatings(activeSpotBS.placeId);
+  saveReviews(activeSpot.place_id,reviews);
+  renderReviews(activeSpot.place_id);
+
+  reviewTextEl.value="";
+  rateSmoothEl.value="";
+  rateDifficultyEl.value="";
 };
 
-/* ADD TO CALENDAR */
-bsCalendarBtn.onclick=()=>{
-  if(!activeSpotBS) return;
+document.getElementById("addToCalendarBtn").onclick=()=>{
+  if(!activeSpot) return;
   const events=JSON.parse(localStorage.getItem("rc_calendar")||"[]");
+
   events.push({
-    title:activeSpotBS.name,
-    location:activeSpotBS.address,
-    lat:activeSpotBS.lat,
-    lng:activeSpotBS.lng,
-    timestamp:Date.now()
+    title:activeSpot.name,
+    location:activeSpot.formatted_address||"",
+    lat:activeSpot.geometry.location.lat(),
+    lng:activeSpot.geometry.location.lng(),
+    createdAt:Date.now(),
+    type:"spot-session"
   });
+
   localStorage.setItem("rc_calendar",JSON.stringify(events));
-  closeBottomSheet();
-};
 
-/* LIVE LOCATION TOGGLE */
-liveToggle.onchange=()=>{
-  if(liveToggle.checked){
-    if(!navigator.geolocation) return;
-    liveWatcher=navigator.geolocation.watchPosition(pos=>{
-      map.panTo({lat:pos.coords.latitude,lng:pos.coords.longitude});
-    });
-  }else{
-    if(liveWatcher!==null){
-      navigator.geolocation.clearWatch(liveWatcher);
-      liveWatcher=null;
-    }
-  }
-};
-
-/* FOCUS SPOT */
-function focusSpot(index){
-  const spot=currentSpots[index];
-  if(!spot) return;
-
-  const loc=spot.geometry.location;
-  map.panTo(loc);
-  map.setZoom(15);
-
-  openBottomSheet({
-    placeId:spot.place_id,
-    name:spot.name,
-    address:spot.formatted_address||"",
-    lat:loc.lat(),
-    lng:loc.lng(),
-    rating:spot.rating||null,
-    userRatings:spot.user_ratings_total||0
+  const allEvents=JSON.parse(localStorage.getItem("rc_events")||"[]");
+  allEvents.push({
+    title:"Session at "+activeSpot.name,
+    location:activeSpot.formatted_address||"",
+    lat:activeSpot.geometry.location.lat(),
+    lng:activeSpot.geometry.location.lng(),
+    createdAt:Date.now(),
+    source:"find-spots"
   });
-}
-
-/* SEARCH (REAL DATA) */
-function runSearch(q){
-  if(!q||!map||!placesService) return;
-
-  const request={
-    query:q,
-    location:map.getCenter(),
-    radius:15000
-  };
-
-  placesService.textSearch(request,(results,status)=>{
-    if(status!==google.maps.places.PlacesServiceStatus.OK||!results||!results.length) return;
-
-    currentSpots=results;
-    clearMarkers();
-
-    results.forEach((spot,idx)=>{
-      const loc=spot.geometry.location;
-      const marker=new google.maps.marker.AdvancedMarkerElement({
-        map,
-        position:loc,
-        title:spot.name
-      });
-      marker.addListener("click",()=>focusSpot(idx));
-      markers.push(marker);
-    });
-
-    renderResultsList(results);
-
-    map.panTo(results[0].geometry.location);
-    map.setZoom(14);
-
-    focusSpot(0);
-  });
-}
-
-document.getElementById("searchInput").addEventListener("keydown",e=>{
-  if(e.key==="Enter") runSearch(e.target.value);
-});
-
-document.querySelectorAll(".cat-btn").forEach(btn=>{
-  btn.onclick=()=>runSearch(btn.dataset.q);
-});
+  localStorage.setItem("rc_events",JSON.stringify(allEvents));
+};
 </script>
-
 </body>
 </html>
