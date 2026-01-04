@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications – Roll ’n Connect</title>
+
+  <style>
+    body { margin:0; padding:0; font-family:system-ui; background:#05050a; color:white; }
+    .hamburger { position:fixed; top:20px; left:20px; width:40px; height:32px; cursor:pointer; z-index:1000; display:flex; flex-direction:column; justify-content:space-between; }
+    .hamburger div { height:6px; background:#4a4aff; border-radius:4px; box-shadow:0 0 12px #4a4aff; }
+    .side-menu { position:fixed; top:0; left:-260px; width:260px; height:100vh; background:#0d0d16; padding:40px 20px; box-shadow:0 0 20px #4a4aff; transition:0.35s; z-index:999; }
+    .side-menu.open { left:0; }
+    .side-menu a { display:block; padding:14px; margin-bottom:14px; background:#14141c; border-radius:10px; text-decoration:none; color:white; font-size:18px; box-shadow:0 0 10px #4a4aff; }
+    .page-container { max-width:900px; margin:0 auto; padding:80px 20px; }
+    h1 { text-shadow:0 0 12px #4a4aff; margin-bottom:14px; }
+    .notif-card { background:#0f0f18; border-radius:14px; padding:14px; margin-bottom:10px; box-shadow:0 0 14px rgba(74,74,255,0.25); }
+    .notif-meta { font-size:13px; opacity:0.7; margin-top:4px; }
+    .empty-state { opacity:0.6; margin-top:10px; }
+  </style>
+
+  <script>
+    function toggleMenu(){ document.querySelector('.side-menu').classList.toggle('open'); }
+    function rcGet(key, fallback){ return JSON.parse(localStorage.getItem(key) || fallback); }
+    function rcSet(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const profile = rcGet("rc_profile", "{}");
+      const username = profile.username || "Unknown";
+
+      const all = rcGet("rc_market_notifications", "[]");
+      const mine = all.filter(n => n.to === username);
+
+      const box = document.getElementById("notifList");
+      box.innerHTML = mine.length
+        ? mine.sort((a,b)=>b.timestamp-a.timestamp).map(notifHTML).join("")
+        : `<div class="empty-state">No notifications yet.</div>`;
+
+      // mark as read
+      mine.forEach(n => n.read = true);
+      rcSet("rc_market_notifications", all);
+    });
+
+    function notifHTML(n){
+      let label = "";
+      if (n.type === "message") {
+        label = `New message from ${n.from} about "${n.itemTitle}"`;
+      } else if (n.type === "offer") {
+        label = `New offer from ${n.from} on "${n.itemTitle}" for $${n.amount}`;
+      } else {
+        label = n.text || "Notification";
+      }
+
+      return `
+        <div class="notif-card">
+          <div>${label}</div>
+          <div class="notif-meta">${new Date(n.timestamp).toLocaleString()}</div>
+        </div>
+      `;
+    }
+  </script>
+</head>
+
+<body>
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+  </div>
+
+  <div class="side-menu">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="sell-item.html">Sell Item</a>
+    <a href="your-listings.html">Your Listings</a>
+    <a href="giveaways.html">Giveaways</a>
+    <a href="marketplace-messages.html">Messages</a>
+    <a href="marketplace-offers.html">Offers</a>
+    <a href="marketplace-favorites.html">Favorites</a>
+    <a href="marketplace-notifications.html">Notifications</a>
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
+  </div>
+
+  <div class="page-container">
+    <h1>Notifications</h1>
+    <div id="notifList"></div>
+  </div>
+</body>
+</html>
