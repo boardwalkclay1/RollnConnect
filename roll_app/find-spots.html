@@ -345,16 +345,18 @@ document.getElementById("loadMore").onclick=()=>{
   renderPage();
 };
 
-/* COLOR-CODED MARKERS */
-function getColorForSpot(spot){
-  const name=spot.name.toLowerCase();
-  if(name.includes("skate")) return "#38bdf8";
-  if(name.includes("rink")) return "#a855f7";
-  if(name.includes("water") || name.includes("fountain")) return "#0ea5e9";
-  if(name.includes("food") || name.includes("restaurant")) return "#f97316";
-  if(name.includes("parking")) return "#e5e7eb";
-  if(name.includes("restroom") || name.includes("bathroom")) return "#22c55e";
-  return "#ffffff";
+/* STRICT COLOR MAPPING */
+function getColorForSpot(){
+  const first = activeFilters[0] || "skatepark";
+  const map = {
+    "skatepark": "#38bdf8",
+    "roller rink": "#a855f7",
+    "water fountain": "#0ea5e9",
+    "food": "#f97316",
+    "parking lot": "#e5e7eb",
+    "restroom": "#22c55e"
+  };
+  return map[first] || "#ffffff";
 }
 
 /* MARKERS ON MAP */
@@ -363,7 +365,7 @@ function renderMarkers(){
 
   spots.forEach(spot=>{
     const loc=spot.geometry.location;
-    const color=getColorForSpot(spot);
+    const color=getColorForSpot();
 
     const marker=new google.maps.Marker({
       map,
@@ -380,22 +382,74 @@ function renderMarkers(){
 
     const info=new google.maps.InfoWindow({
       content:`
-        <div style="color:black;font-size:14px;">
-          <strong>${spot.name}</strong><br>
-          ${spot.formatted_address||""}<br>
-          <a href="https://www.google.com/maps/dir/?api=1&destination=${loc.lat()},${loc.lng()}" target="_blank">
-            Get Directions
+        <div style="
+          color:black;
+          font-size:14px;
+          padding:14px;
+          border-radius:14px;
+          background:white;
+          box-shadow:0 0 22px rgba(255,255,255,0.7);
+          font-family:system-ui;
+          line-height:1.45;
+        ">
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">
+            ${spot.name}
+          </div>
+
+          <div style="opacity:0.75;margin-bottom:6px;">
+            ${spot.formatted_address || ""}
+          </div>
+
+          <div style="margin-bottom:6px;">
+            ${spot.rating ? `⭐ ${spot.rating.toFixed(1)} Google` : "No Google rating"}
+          </div>
+
+          <div id="popupCommunity_${spot.place_id}" style="margin-bottom:10px;opacity:0.85;">
+            Loading community ratings…
+          </div>
+
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${loc.lat()},${loc.lng()}"
+             target="_blank"
+             style="color:#2563eb;font-weight:600;text-decoration:none;">
+            Get Directions →
           </a>
         </div>
       `
     });
 
-    marker.addListener("mouseover",()=>info.open(map,marker));
+    marker.addListener("mouseover",()=>{
+      info.open(map,marker);
+      injectCommunityRatings(spot.place_id);
+    });
+
     marker.addListener("mouseout",()=>info.close());
     marker.addListener("click",()=>openDetails(spot));
 
     markers.push(marker);
   });
+}
+
+/* COMMUNITY RATINGS IN POPUP */
+function injectCommunityRatings(placeId){
+  const reviews = loadReviews(placeId);
+  const el = document.getElementById("popupCommunity_" + placeId);
+
+  if(!el) return;
+
+  if(!reviews.length){
+    el.innerHTML = "⭐ No community reviews yet";
+    return;
+  }
+
+  const avg = key => {
+    const vals = reviews.map(r => r[key]).filter(v => v);
+    return vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : "–";
+  };
+
+  el.innerHTML = `
+    ⭐ Smoothness: ${avg("smoothness")}<br>
+    ⭐ Difficulty: ${avg("difficulty")}
+  `;
 }
 
 /* DETAILS */
@@ -524,28 +578,4 @@ document.getElementById("liveBtn").onclick=()=>{
 };
 
 /* NEARBY SKATERS */
-function checkNearby(loc){
-  const others=JSON.parse(localStorage.getItem("rc_live_skaters")||"[]");
-  let found=false;
-
-  others.forEach(o=>{
-    const d=distance(loc.lat,loc.lng,o.lat,o.lng);
-    if(d<=5) found=true;
-  });
-
-  document.getElementById("nearbyNotice").style.display = found ? "block" : "none";
-}
-
-function distance(lat1,lon1,lat2,lon2){
-  const R=3958.8;
-  const dLat=(lat2-lat1)*Math.PI/180;
-  const dLon=(lon2-lon1)*Math.PI/180;
-  const a=Math.sin(dLat/2)**2 +
-          Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) *
-          Math.sin(dLon/2)**2;
-  return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
-}
-</script>
-
-</body>
-</html>
+function checkNearby
