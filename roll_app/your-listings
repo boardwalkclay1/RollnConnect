@@ -6,20 +6,190 @@
   <title>Your Listings – Roll ’n Connect</title>
 
   <style>
-    body { margin: 0; padding: 0; font-family: system-ui; background: #05050a; color: white; }
-    .hamburger { position: fixed; top: 20px; left: 20px; width: 40px; height: 32px; cursor: pointer; z-index: 1000; display: flex; flex-direction: column; justify-content: space-between; }
-    .hamburger div { height: 6px; background: #4a4aff; border-radius: 4px; box-shadow: 0 0 12px #4a4aff; }
-    .side-menu { position: fixed; top: 0; left: -260px; width: 260px; height: 100vh; background: #0d0d16; padding: 40px 20px; box-shadow: 0 0 20px #4a4aff; transition: 0.35s; z-index: 999; }
-    .side-menu.open { left: 0; }
-    .side-menu a { display: block; padding: 14px; margin-bottom: 14px; background: #14141c; border-radius: 10px; text-decoration: none; color: white; font-size: 18px; box-shadow: 0 0 10px #4a4aff; }
-    .page-container { max-width: 900px; margin: 0 auto; padding: 80px 20px; text-align: center; }
-    .item-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
-    .item-card { background: #0f0f18; border-radius: 14px; padding: 16px; text-align: left; box-shadow: 0 0 14px rgba(74,74,255,0.25); cursor: pointer; }
-    .item-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
-    .item-price { font-size: 16px; color: #4a4aff; font-weight: 600; margin-bottom: 10px; }
-    .item-meta { font-size: 13px; opacity: 0.7; }
-    .empty-state { opacity: 0.6; margin-top: 20px; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #05050a;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* HAMBURGER */
+    .hamburger {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      width: 40px;
+      height: 32px;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger div {
+      height: 6px;
+      background: #4a4aff;
+      border-radius: 4px;
+      box-shadow: 0 0 12px #4a4aff;
+    }
+
+    /* SIDE MENU */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -260px;
+      width: 260px;
+      height: 100vh;
+      background: #0d0d16;
+      padding: 40px 20px;
+      box-shadow: 0 0 20px #4a4aff;
+      transition: 0.35s ease;
+      z-index: 999;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .side-menu a {
+      display: block;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #14141c;
+      border-radius: 10px;
+      text-decoration: none;
+      color: white;
+      font-size: 18px;
+      box-shadow: 0 0 10px #4a4aff;
+      transition: 0.25s;
+    }
+
+    .side-menu a:hover {
+      background: #1f1f29;
+      box-shadow: 0 0 16px #4a4aff;
+    }
+
+    /* PAGE CONTENT */
+    .page-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 34px;
+      margin-bottom: 8px;
+      font-weight: 700;
+      text-shadow: 0 0 12px #4a4aff;
+    }
+
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .item-card {
+      background: #0f0f18;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: left;
+      box-shadow: 0 0 14px rgba(74, 74, 255, 0.25);
+      transition: 0.25s;
+      cursor: pointer;
+    }
+
+    .item-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 22px rgba(74, 74, 255, 0.45);
+    }
+
+    .item-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .item-price {
+      font-size: 16px;
+      color: #4a4aff;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .item-meta {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    .empty-state {
+      opacity: 0.6;
+      margin-top: 20px;
+      font-size: 15px;
+    }
   </style>
 
   <script>
     function toggleMenu() {
+      document.querySelector('.side-menu').classList.toggle('open');
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const grid = document.getElementById("yourGrid");
+
+      let items = JSON.parse(localStorage.getItem("rc_market_items") || "[]");
+      let profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+
+      const yours = items.filter(i => i.seller === profile.username);
+
+      grid.innerHTML = yours.length
+        ? yours.map(cardHTML).join("")
+        : `<div class="empty-state">You haven’t listed anything yet.</div>`;
+    });
+
+    function cardHTML(item) {
+      return `
+        <div class="item-card" onclick="location.href='item-view.html?id=${item.id}'">
+          <div class="item-title">${item.title}</div>
+          <div class="item-price">${item.price === 0 ? "FREE" : "$" + item.price}</div>
+          <div class="item-meta">${item.category.toUpperCase()} • ${item.condition}</div>
+        </div>
+      `;
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- HAMBURGER -->
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+  </div>
+
+  <!-- SIDE MENU -->
+  <div class="side-menu">
+    <a href="dashboard.html">Dashboard</a>
+
+    <a href="marketplace.html">Marketplace</a>
+    <a href="sell-item.html">Sell Item</a>
+    <a href="your-listings.html">Your Listings</a>
+
+    <a href="item-view.html">View Item</a>
+    <a href="edit-item.html">Edit Item</a>
+
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
+  </div>
+
+  <div class="page-container">
+    <h1>Your Listings</h1>
+    <div id="yourGrid" class="item-grid"></div>
+  </div>
+
+</body>
+</html>
