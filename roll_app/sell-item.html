@@ -78,7 +78,6 @@
       max-width: 700px;
       margin: 0 auto;
       padding: 80px 20px;
-      text-align: center;
     }
 
     h1 {
@@ -86,68 +85,76 @@
       margin-bottom: 8px;
       font-weight: 700;
       text-shadow: 0 0 12px #4a4aff;
+      text-align: center;
     }
 
-    .subtitle {
-      opacity: 0.7;
-      margin-bottom: 32px;
+    .form-group {
+      margin-bottom: 20px;
     }
 
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 22px;
-      margin-top: 20px;
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+      opacity: 0.8;
     }
 
-    input, select, textarea {
+    input, select {
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       border-radius: 10px;
       border: none;
       background: #14141c;
       color: white;
       font-size: 16px;
-      box-shadow: 0 0 12px #4a4aff;
-      transition: 0.25s;
-      position: relative;
-      top: 0;
-    }
-
-    input:hover, select:hover, textarea:hover {
-      top: -3px;
-      box-shadow: 0 0 18px #6a6aff;
-    }
-
-    textarea {
-      height: 130px;
-      resize: none;
+      box-shadow: 0 0 10px #4a4aff55;
     }
 
     button {
+      width: 100%;
       padding: 14px;
-      border-radius: 10px;
-      border: none;
       background: #4a4aff;
-      color: white;
+      color: black;
+      border: none;
+      border-radius: 12px;
       font-size: 18px;
+      font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 0 16px #4a4aff;
       transition: 0.25s;
-      box-shadow: 0 0 12px #4a4aff;
-      position: relative;
-      top: 0;
+      margin-top: 20px;
     }
 
     button:hover {
-      top: -3px;
-      background: #6a6aff;
-      box-shadow: 0 0 20px #6a6aff;
+      box-shadow: 0 0 22px #6a6aff;
+      transform: translateY(-2px);
     }
   </style>
 
   <script>
     function toggleMenu() {
       document.querySelector('.side-menu').classList.toggle('open');
+    }
+
+    function saveItem(e) {
+      e.preventDefault();
+
+      let items = JSON.parse(localStorage.getItem("rc_market_items") || "[]");
+      let profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
+
+      const newItem = {
+        id: Date.now(),
+        title: document.getElementById("title").value,
+        price: Number(document.getElementById("price").value),
+        category: document.getElementById("category").value,
+        condition: document.getElementById("condition").value,
+        seller: profile.username || "Unknown"
+      };
+
+      items.push(newItem);
+      localStorage.setItem("rc_market_items", JSON.stringify(items));
+
+      location.href = "marketplace.html";
     }
   </script>
 </head>
@@ -171,33 +178,43 @@
   </div>
 
   <div class="page-container">
-
     <h1>Sell an Item</h1>
-    <div class="subtitle">List your gear and connect with local skaters.</div>
 
-    <form>
+    <form onsubmit="saveItem(event)">
+      <div class="form-group">
+        <label>Item Title</label>
+        <input id="title" required />
+      </div>
 
-      <input type="text" placeholder="Item Name" required />
+      <div class="form-group">
+        <label>Price (0 = FREE)</label>
+        <input id="price" type="number" required />
+      </div>
 
-      <select required>
-        <option value="">Select Category</option>
-        <option>Quads</option>
-        <option>Blades</option>
-        <option>Longboard</option>
-        <option>Skateboard</option>
-        <option>Other</option>
-      </select>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="category">
+          <option value="quads">Quads</option>
+          <option value="blades">Blades</option>
+          <option value="longboard">Longboard</option>
+          <option value="skateboard">Skateboard</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
 
-      <input type="number" placeholder="Price (USD)" required />
+      <div class="form-group">
+        <label>Condition</label>
+        <select id="condition">
+          <option>New</option>
+          <option>Like New</option>
+          <option>Used</option>
+          <option>Heavily Used</option>
+        </select>
+      </div>
 
-      <textarea placeholder="Description"></textarea>
-
-      <input type="file" accept="image/*" />
-
-      <button type="submit">Publish Listing</button>
-
+      <button type="submit">List Item</button>
     </form>
-
   </div>
+
 </body>
 </html>
