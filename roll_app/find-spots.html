@@ -4,838 +4,463 @@
   <meta charset="UTF-8">
   <title>Find Spots – Roll ’n Connect</title>
 
-  <!-- GLOBAL STYLES -->
-  <link rel="stylesheet" href="styles/style.css">
-
   <!-- GOOGLE MAPS (REPLACE API_KEY LOCALLY) -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc&libraries=places"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places"></script>
 
   <style>
     body {
       margin:0;
-      font-family:system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:#02040a;
+      font-family:system-ui, sans-serif;
+      background:#0b0e16;
       color:#fff;
-    }
-
-    .page {
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
+      overflow-x:hidden;
     }
 
     header {
-      padding:10px 12px;
+      padding:12px 16px;
+      background:#111827;
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      background:radial-gradient(circle at top,#1d2340,#050712 55%,#02040a);
+      align-items:center;
       position:sticky;
       top:0;
       z-index:20;
     }
 
-    .app-title {
-      font-weight:600;
-      font-size:1rem;
-    }
-
-    nav a {
-      color:#fff;
+    header a {
+      color:#9ca3af;
       text-decoration:none;
+      margin-left:12px;
       font-size:0.85rem;
-      margin-left:10px;
-      opacity:0.85;
-    }
-    nav a:hover { opacity:1; }
-
-    .nearby-notice {
-      position:sticky;
-      top:44px;
-      z-index:19;
-      padding:6px 12px;
-      background:rgba(110,231,183,0.16);
-      border-bottom:1px solid rgba(110,231,183,0.7);
-      font-size:0.8rem;
-      display:none;
-    }
-    .nearby-notice strong {
-      color:#6ee7b7;
-    }
-
-    .map-wrap {
-      position:relative;
-      height:300px;
-      width:100%;
     }
 
     #map {
       width:100%;
-      height:100%;
+      height:300px;
     }
 
-    .filters-bar {
-      padding:8px 10px;
+    .filters {
       display:flex;
       gap:8px;
       overflow-x:auto;
-      background:#050815;
-      border-bottom:1px solid rgba(255,255,255,0.08);
+      padding:10px;
+      background:#1f2937;
+      border-bottom:1px solid #374151;
     }
 
     .filter-btn {
-      padding:6px 10px;
-      font-size:0.8rem;
+      padding:6px 12px;
       border-radius:999px;
-      border:1px solid transparent;
-      background:rgba(255,255,255,0.05);
+      border:1px solid #4b5563;
+      background:#111827;
       color:#fff;
       cursor:pointer;
       white-space:nowrap;
-      display:flex;
-      align-items:center;
-      gap:6px;
+      font-size:0.8rem;
     }
-    .filter-dot {
-      width:10px;
-      height:10px;
-      border-radius:999px;
-      background:#fff;
-    }
-    .filter-btn[data-type="skatepark"] .filter-dot { background:#38bdf8; }
-    .filter-btn[data-type="rink"] .filter-dot { background:#a855f7; }
-    .filter-btn[data-type="water"] .filter-dot { background:#0ea5e9; }
-    .filter-btn[data-type="food"] .filter-dot { background:#f97316; }
-    .filter-btn[data-type="parking"] .filter-dot { background:#e5e7eb; }
-    .filter-btn[data-type="restroom"] .filter-dot { background:#22c55e; }
-    .filter-btn[data-type=""] .filter-dot { background:#facc15; }
 
-    .filter-btn.active[data-type="skatepark"] {
-      background:rgba(56,189,248,0.2);
-      border-color:#38bdf8;
-    }
-    .filter-btn.active[data-type="rink"] {
-      background:rgba(168,85,247,0.2);
-      border-color:#a855f7;
-    }
-    .filter-btn.active[data-type="water"] {
-      background:rgba(14,165,233,0.2);
-      border-color:#0ea5e9;
-    }
-    .filter-btn.active[data-type="food"] {
-      background:rgba(249,115,22,0.2);
-      border-color:#f97316;
-    }
-    .filter-btn.active[data-type="parking"] {
-      background:rgba(229,231,235,0.12);
-      border-color:#e5e7eb;
-    }
-    .filter-btn.active[data-type="restroom"] {
-      background:rgba(34,197,94,0.2);
-      border-color:#22c55e;
-    }
-    .filter-btn.active[data-type=""] {
-      background:rgba(250,204,21,0.18);
-      border-color:#facc15;
+    .filter-btn.active {
+      background:#fff;
+      color:#000;
+      border-color:#fff;
     }
 
     .content {
-      padding:12px 16px 40px;
+      padding:16px;
     }
 
-    .search-row {
-      display:flex;
-      gap:8px;
-      margin-bottom:10px;
-      flex-wrap:wrap;
-    }
-    .search-row input {
-      flex:1;
-      min-width:140px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,0.25);
-      background:rgba(0,0,0,0.4);
-      color:#fff;
-      font-size:0.85rem;
-    }
-    .search-row button {
-      padding:8px 12px;
-      border-radius:999px;
-      border:none;
-      font-size:0.8rem;
-      font-weight:600;
-      cursor:pointer;
-      background:#fff;
-      color:#000;
-    }
-    .secondary-btn {
-      background:rgba(255,255,255,0.08);
-      color:#fff;
-      border:1px solid rgba(255,255,255,0.3);
-    }
-
-    .spot-list {
-      margin-top:8px;
-    }
     .spot-card {
+      background:#111827;
+      border:1px solid #374151;
       border-radius:10px;
-      background:rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.08);
-      padding:10px;
-      margin-bottom:8px;
+      padding:12px;
+      margin-bottom:10px;
       cursor:pointer;
-      font-size:0.85rem;
     }
-    .spot-card:hover {
-      background:rgba(255,255,255,0.07);
-    }
+
     .spot-card-title {
       font-weight:600;
-      margin-bottom:2px;
+      margin-bottom:4px;
     }
+
     .spot-card-meta {
-      font-size:0.78rem;
+      font-size:0.8rem;
       opacity:0.8;
     }
 
-    .section-title {
-      font-size:0.95rem;
-      font-weight:600;
-      margin:14px 0 6px;
+    .load-more {
+      padding:10px;
+      text-align:center;
+      cursor:pointer;
+      background:#1f2937;
+      border-radius:8px;
+      margin-top:10px;
+    }
+
+    .details {
+      margin-top:20px;
+      padding:16px;
+      background:#111827;
+      border-radius:12px;
+      border:1px solid #374151;
+      display:none;
     }
 
     .rating-row {
       display:flex;
       justify-content:space-between;
-      align-items:center;
-      font-size:0.8rem;
-      margin-bottom:3px;
-    }
-    .rating-value {
-      font-weight:600;
+      margin-bottom:4px;
+      font-size:0.85rem;
     }
 
     .review-form input,
     .review-form textarea,
     .review-form select {
       width:100%;
+      margin-bottom:8px;
+      padding:8px;
       border-radius:8px;
-      border:1px solid rgba(255,255,255,0.18);
-      background:rgba(0,0,0,0.5);
+      border:1px solid #374151;
+      background:#1f2937;
       color:#fff;
-      padding:6px 8px;
-      font-size:0.8rem;
-      margin-bottom:6px;
-    }
-    .review-grid {
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:6px 10px;
-      font-size:0.78rem;
-    }
-    .review-grid label {
-      display:block;
-    }
-
-    .review-list {
-      margin-top:4px;
-    }
-    .review-item {
-      border-radius:8px;
-      background:rgba(255,255,255,0.04);
-      padding:6px 8px;
-      margin-bottom:4px;
-      font-size:0.8rem;
-    }
-    .review-meta {
-      font-weight:600;
-      font-size:0.76rem;
-      margin-bottom:2px;
-      opacity:0.9;
-    }
-    .review-ratings {
-      font-size:0.74rem;
-      opacity:0.8;
-      margin-top:2px;
     }
 
     .primary-btn {
       width:100%;
-      margin-top:4px;
-      padding:8px;
-      border-radius:999px;
+      padding:10px;
       border:none;
+      border-radius:8px;
       background:#fff;
       color:#000;
-      font-size:0.85rem;
       font-weight:600;
       cursor:pointer;
+      margin-top:8px;
     }
 
-    .link-row {
-      margin-top:10px;
-      font-size:0.8rem;
-      opacity:0.85;
-    }
-    .link-row a {
-      color:#8bd5ff;
-      text-decoration:none;
-    }
-    .link-row a:hover {
-      text-decoration:underline;
+    .review-item {
+      background:#1f2937;
+      padding:8px;
+      border-radius:8px;
+      margin-bottom:6px;
+      font-size:0.85rem;
     }
 
-    .user-summary {
+    .review-meta {
+      font-weight:600;
+      margin-bottom:2px;
+    }
+
+    .user-live {
       display:flex;
       align-items:center;
-      gap:8px;
-      font-size:0.8rem;
-      margin-top:8px;
-      padding:6px 8px;
+      gap:10px;
+      padding:10px;
+      background:#1f2937;
       border-radius:10px;
-      background:rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.08);
+      margin-top:10px;
+      border:1px solid #374151;
     }
-    .user-avatar {
-      width:26px;
-      height:26px;
-      border-radius:999px;
-      overflow:hidden;
-      flex-shrink:0;
-    }
-    .user-avatar img {
-      width:100%;
-      height:100%;
+
+    .user-live img {
+      width:36px;
+      height:36px;
+      border-radius:50%;
       object-fit:cover;
-      display:block;
     }
-    .user-summary button {
-      border:none;
-      background:transparent;
-      color:#8bd5ff;
-      font-size:0.78rem;
-      cursor:pointer;
-      padding:0;
+
+    #nearbyNotice {
+      display:none;
+      padding:8px;
+      background:#065f46;
+      color:#d1fae5;
+      text-align:center;
+      font-size:0.85rem;
     }
   </style>
 </head>
 
 <body>
-<div class="page">
-  <header>
-    <div class="app-title">Find Spots</div>
-    <nav>
-      <a href="dashboard.html">Dashboard</a>
-      <a href="events.html">Events</a>
-      <a href="calendar.html">Calendar</a>
-    </nav>
-  </header>
 
-  <div id="nearbyNotice" class="nearby-notice">
-    <strong>Nearby skaters:</strong> Someone is rolling within 5 miles of you.
+<header>
+  <div>Find Spots</div>
+  <div>
+    <a href="events.html">Events</a>
+    <a href="calendar.html">Calendar</a>
+    <a href="profile.html">Profile</a>
   </div>
+</header>
 
-  <div class="map-wrap">
-    <div id="map"></div>
-  </div>
+<div id="nearbyNotice">A skater is within 5 miles of you.</div>
 
-  <div class="filters-bar">
-    <button class="filter-btn active" data-type="">
-      <span class="filter-dot"></span>All
-    </button>
-    <button class="filter-btn" data-type="skatepark">
-      <span class="filter-dot"></span>Skateparks
-    </button>
-    <button class="filter-btn" data-type="rink">
-      <span class="filter-dot"></span>Rinks
-    </button>
-    <button class="filter-btn" data-type="water">
-      <span class="filter-dot"></span>Water
-    </button>
-    <button class="filter-btn" data-type="food">
-      <span class="filter-dot"></span>Food
-    </button>
-    <button class="filter-btn" data-type="parking">
-      <span class="filter-dot"></span>Parking
-    </button>
-    <button class="filter-btn" data-type="restroom">
-      <span class="filter-dot"></span>Restrooms
-    </button>
-  </div>
+<div id="map"></div>
 
-  <main class="content">
-    <div class="search-row">
-      <input id="searchInput" placeholder="Search a place or address">
-      <button id="searchBtn">Search</button>
-      <button id="locateBtn" class="secondary-btn">My location</button>
-      <button id="liveBtn" class="secondary-btn">Live on</button>
+<div class="filters">
+  <button class="filter-btn" data-q="skatepark">Skateparks</button>
+  <button class="filter-btn" data-q="roller rink">Rinks</button>
+  <button class="filter-btn" data-q="water fountain">Water</button>
+  <button class="filter-btn" data-q="food">Food</button>
+  <button class="filter-btn" data-q="parking lot">Parking</button>
+  <button class="filter-btn" data-q="restroom">Restrooms</button>
+</div>
+
+<div class="content">
+  <div id="spotList"></div>
+  <div id="loadMore" class="load-more" style="display:none;">Load more</div>
+
+  <div id="details" class="details">
+    <h2 id="dName"></h2>
+    <div id="dAddress" style="opacity:0.8;margin-bottom:6px;"></div>
+    <div id="dRating" style="opacity:0.8;margin-bottom:10px;"></div>
+
+    <button id="directionsBtn" class="primary-btn">Get Directions</button>
+
+    <h3 style="margin-top:16px;">Community Ratings</h3>
+    <div class="rating-row"><span>Smoothness</span><span id="avgSmooth">–</span></div>
+    <div class="rating-row"><span>Difficulty</span><span id="avgDifficulty">–</span></div>
+
+    <h3 style="margin-top:16px;">Leave a Review</h3>
+    <div class="review-form">
+      <input id="rName" placeholder="Your name">
+      <textarea id="rText" rows="2" placeholder="Your experience"></textarea>
+
+      <select id="rSmooth">
+        <option value="">Smoothness –</option>
+        <option value="1">1 Rough</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5 Glass</option>
+      </select>
+
+      <select id="rDifficulty">
+        <option value="">Difficulty –</option>
+        <option value="1">1 Easy</option>
+        <option value="2">2</option>
+        <option value="3">3 Medium</option>
+        <option value="4">4</option>
+        <option value="5">5 Hard</option>
+      </select>
+
+      <button id="submitReview" class="primary-btn">Post Review</button>
     </div>
 
-    <div id="userSummary" class="user-summary" style="display:none;">
-      <div class="user-avatar"><img id="userAvatarImg" src="" alt=""></div>
-      <div style="flex:1;">
-        <div id="userSummaryText">You are live on the map.</div>
-        <button id="profileBtn">View profile</button>
-      </div>
-    </div>
+    <h3 style="margin-top:16px;">Reviews</h3>
+    <div id="reviewList"></div>
+  </div>
 
-    <div class="spot-list" id="spotList"></div>
+  <div id="userLive" class="user-live" style="display:none;">
+    <img id="userAvatar">
+    <div id="userLiveText">Live location active</div>
+  </div>
 
-    <section id="spotDetailsSection" style="display:none;">
-      <h2 class="section-title" id="spotTitle"></h2>
-      <div id="spotAddress" style="font-size:0.85rem;opacity:0.9;margin-bottom:4px;"></div>
-      <div id="spotGoogleRating" style="font-size:0.8rem;opacity:0.85;margin-bottom:8px;"></div>
-
-      <div class="section-title">Community ratings</div>
-      <div class="rating-row"><span>Smoothness</span><span id="avgSmooth" class="rating-value">–</span></div>
-      <div class="rating-row"><span>Difficulty</span><span id="avgDifficulty" class="rating-value">–</span></div>
-
-      <button id="addToCalendarBtn" class="primary-btn">Add this spot to my calendar</button>
-
-      <div class="section-title">Leave a review</div>
-      <div class="review-form">
-        <input id="reviewName" placeholder="Your name or handle">
-        <textarea id="reviewText" rows="2" placeholder="Share how it felt to skate here"></textarea>
-
-        <div class="review-grid">
-          <label>Smoothness
-            <select id="rateSmooth">
-              <option value="">–</option>
-              <option value="1">⭐ 1 (rough)</option>
-              <option value="2">⭐ 2</option>
-              <option value="3">⭐ 3</option>
-              <option value="4">⭐ 4</option>
-              <option value="5">⭐ 5 (glass)</option>
-            </select>
-          </label>
-          <label>Difficulty
-            <select id="rateDifficulty">
-              <option value="">–</option>
-              <option value="1">1 – very easy</option>
-              <option value="2">2 – easy</option>
-              <option value="3">3 – medium</option>
-              <option value="4">4 – hard</option>
-              <option value="5">5 – expert</option>
-            </select>
-          </label>
-        </div>
-
-        <button id="submitReview" class="primary-btn">Post review</button>
-      </div>
-
-      <div class="section-title">Reviews</div>
-      <div id="reviewList" class="review-list"></div>
-
-      <div class="link-row">
-        Events using this spot will appear in your <a href="events.html">Events</a> and <a href="calendar.html">Calendar</a> pages through shared storage.
-      </div>
-    </section>
-  </main>
+  <button id="liveBtn" class="primary-btn">Toggle Live Location</button>
 </div>
 
 <script>
-let map;
-let placesService;
-let markers=[];
-let spots=[];
-let activeSpot=null;
+let map, places, markers=[], spots=[], activeSpot=null;
+let pageIndex=0;
+const pageSize=5;
+let activeFilters=[];
 
-const spotListEl=document.getElementById("spotList");
-const spotDetailsSection=document.getElementById("spotDetailsSection");
-const spotTitleEl=document.getElementById("spotTitle");
-const spotAddressEl=document.getElementById("spotAddress");
-const spotGoogleRatingEl=document.getElementById("spotGoogleRating");
-const avgSmoothEl=document.getElementById("avgSmooth");
-const avgDifficultyEl=document.getElementById("avgDifficulty");
-const reviewListEl=document.getElementById("reviewList");
-
-const reviewNameEl=document.getElementById("reviewName");
-const reviewTextEl=document.getElementById("reviewText");
-const rateSmoothEl=document.getElementById("rateSmooth");
-const rateDifficultyEl=document.getElementById("rateDifficulty");
-
-const nearbyNotice=document.getElementById("nearbyNotice");
-
-/* user + live location */
-let userMarker=null;
-let liveWatchId=null;
-const userSummary=document.getElementById("userSummary");
-const userAvatarImg=document.getElementById("userAvatarImg");
-const userSummaryText=document.getElementById("userSummaryText");
-
-/* other skaters placeholder (expects shared storage: rc_live_skaters) */
-let otherSkaterMarkers=[];
-
+/* INIT MAP */
 function initMap(){
   map=new google.maps.Map(document.getElementById("map"),{
     center:{lat:33.8,lng:-84.3},
-    zoom:11,
-    disableDefaultUI:false
+    zoom:11
   });
-  placesService=new google.maps.places.PlacesService(map);
-
-  loadUserProfile();
-  renderOtherSkaters();
+  places=new google.maps.places.PlacesService(map);
 }
 window.onload=initMap;
 
-function clearMarkers(){
-  markers.forEach(m=>m.setMap(null));
-  markers=[];
-}
+/* FILTERS — allow up to 3 active */
+document.querySelectorAll(".filter-btn").forEach(btn=>{
+  btn.onclick=()=>{
+    const q=btn.dataset.q;
 
-/* list + reviews */
-function renderSpotList(){
-  spotListEl.innerHTML="";
-  spots.forEach((spot,index)=>{
-    const div=document.createElement("div");
-    div.className="spot-card";
-    div.dataset.index=index;
+    if(btn.classList.contains("active")){
+      btn.classList.remove("active");
+      activeFilters=activeFilters.filter(f=>f!==q);
+    } else {
+      if(activeFilters.length>=3) return;
+      btn.classList.add("active");
+      activeFilters.push(q);
+    }
 
-    const title=document.createElement("div");
-    title.className="spot-card-title";
-    title.textContent=spot.name;
+    runSearch();
+  };
+});
 
-    const meta=document.createElement("div");
-    meta.className="spot-card-meta";
-    const ratingText=spot.rating?`⭐ ${spot.rating.toFixed(1)} (${spot.user_ratings_total||0}) • `:"";
-    meta.textContent=`${ratingText}${spot.formatted_address||""}`;
+/* SEARCH */
+function runSearch(){
+  const query = activeFilters.length ? activeFilters.join(" OR ") : "skate spot";
 
-    div.appendChild(title);
-    div.appendChild(meta);
-
-    div.onclick=()=>focusSpot(index);
-
-    spotListEl.appendChild(div);
+  places.textSearch({query, location:map.getCenter(), radius:20000}, (results,status)=>{
+    if(status!=="OK") return;
+    spots=results;
+    pageIndex=0;
+    renderPage();
   });
 }
 
-function loadReviews(placeId){
-  return JSON.parse(localStorage.getItem("rc_reviews_simple_"+placeId)||"[]");
-}
-function saveReviews(placeId,reviews){
-  localStorage.setItem("rc_reviews_simple_"+placeId,JSON.stringify(reviews));
-}
-function computeAverage(reviews,key){
-  const vals=reviews.map(r=>Number(r[key])).filter(v=>!isNaN(v));
-  if(!vals.length) return null;
-  return (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
+/* PAGINATION — show 5 at a time */
+function renderPage(){
+  const list=document.getElementById("spotList");
+  list.innerHTML="";
+
+  const slice=spots.slice(0,(pageIndex+1)*pageSize);
+
+  slice.forEach((spot,i)=>{
+    const div=document.createElement("div");
+    div.className="spot-card";
+    div.innerHTML=`
+      <div class="spot-card-title">${spot.name}</div>
+      <div class="spot-card-meta">${spot.formatted_address||""}</div>
+    `;
+    div.onclick=()=>openDetails(spot);
+    list.appendChild(div);
+  });
+
+  document.getElementById("loadMore").style.display =
+    spots.length > slice.length ? "block" : "none";
 }
 
-function renderReviews(placeId){
-  const reviews=loadReviews(placeId);
-  reviewListEl.innerHTML="";
+document.getElementById("loadMore").onclick=()=>{
+  pageIndex++;
+  renderPage();
+};
+
+/* DETAILS */
+function openDetails(spot){
+  activeSpot=spot;
+  document.getElementById("details").style.display="block";
+
+  document.getElementById("dName").textContent=spot.name;
+  document.getElementById("dAddress").textContent=spot.formatted_address||"";
+  document.getElementById("dRating").textContent=
+    spot.rating ? `⭐ ${spot.rating.toFixed(1)} (${spot.user_ratings_total||0})` : "No rating";
+
+  renderReviews(spot.place_id);
+
+  document.getElementById("directionsBtn").onclick=()=>{
+    const lat=spot.geometry.location.lat();
+    const lng=spot.geometry.location.lng();
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`);
+  };
+}
+
+/* REVIEWS */
+function loadReviews(id){
+  return JSON.parse(localStorage.getItem("rc_reviews_"+id)||"[]");
+}
+function saveReviews(id,data){
+  localStorage.setItem("rc_reviews_"+id,JSON.stringify(data));
+}
+
+function renderReviews(id){
+  const list=document.getElementById("reviewList");
+  const reviews=loadReviews(id);
+  list.innerHTML="";
+
   if(!reviews.length){
-    reviewListEl.innerHTML='<div style="opacity:0.75;font-size:0.8rem;">No reviews yet. Be the first to log a session.</div>';
-    avgSmoothEl.textContent="–";
-    avgDifficultyEl.textContent="–";
+    list.innerHTML="<div>No reviews yet.</div>";
+    document.getElementById("avgSmooth").textContent="–";
+    document.getElementById("avgDifficulty").textContent="–";
     return;
   }
 
-  const avgSmooth=computeAverage(reviews,"smoothness");
-  const avgDiff=computeAverage(reviews,"difficulty");
-  avgSmoothEl.textContent=avgSmooth?`${avgSmooth}/5`:"–";
-  avgDifficultyEl.textContent=avgDiff?`${avgDiff}/5`:"–";
+  const avg=(key)=> {
+    const vals=reviews.map(r=>r[key]).filter(v=>v);
+    return vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : "–";
+  };
+
+  document.getElementById("avgSmooth").textContent=avg("smoothness");
+  document.getElementById("avgDifficulty").textContent=avg("difficulty");
 
   reviews.forEach(r=>{
     const div=document.createElement("div");
     div.className="review-item";
-    const ratingsLine=[
-      r.smoothness?`Smoothness: ${r.smoothness}/5`:"",
-      r.difficulty?`Difficulty: ${r.difficulty}/5`:""
-    ].filter(Boolean).join(" • ");
-
     div.innerHTML=`
-      <div class="review-meta">${r.name||"Anonymous"} · ${new Date(r.time).toLocaleDateString()}</div>
+      <div class="review-meta">${r.name}</div>
       <div>${r.text}</div>
-      ${ratingsLine?`<div class="review-ratings">${ratingsLine}</div>`:""}
+      <div style="opacity:0.8;font-size:0.75rem;">
+        Smoothness: ${r.smoothness||"–"} • Difficulty: ${r.difficulty||"–"}
+      </div>
     `;
-    reviewListEl.appendChild(div);
+    list.appendChild(div);
   });
 }
 
-function focusSpot(index){
-  const spot=spots[index];
-  if(!spot) return;
-  activeSpot=spot;
-
-  const loc=spot.geometry.location;
-  map.panTo(loc);
-  map.setZoom(15);
-
-  spotTitleEl.textContent=spot.name;
-  spotAddressEl.textContent=spot.formatted_address||"";
-  if(spot.rating){
-    spotGoogleRatingEl.textContent=`Google: ⭐ ${spot.rating.toFixed(1)} (${spot.user_ratings_total||0} ratings)`;
-  }else{
-    spotGoogleRatingEl.textContent="No Google rating data";
-  }
-
-  reviewNameEl.value="";
-  reviewTextEl.value="";
-  rateSmoothEl.value="";
-  rateDifficultyEl.value="";
-
-  renderReviews(spot.place_id);
-  spotDetailsSection.style.display="block";
-}
-
-/* search + filters */
-function runSearch(query){
-  if(!query||!placesService) return;
-
-  const request={
-    query:query,
-    location:map.getCenter(),
-    radius:20000
-  };
-
-  placesService.textSearch(request,(results,status)=>{
-    if(status!==google.maps.places.PlacesServiceStatus.OK||!results||!results.length) return;
-    spots=results;
-    clearMarkers();
-
-    results.forEach((spot,index)=>{
-      const marker=new google.maps.Marker({
-        map,
-        position:spot.geometry.location,
-        title:spot.name
-      });
-      marker.addListener("click",()=>focusSpot(index));
-      markers.push(marker);
-    });
-
-    renderSpotList();
-    focusSpot(0);
-  });
-}
-
-document.getElementById("searchBtn").onclick=()=>{
-  const v=document.getElementById("searchInput").value.trim();
-  runSearch(v);
-};
-document.getElementById("searchInput").addEventListener("keydown",e=>{
-  if(e.key==="Enter"){
-    runSearch(e.target.value.trim());
-  }
-});
-
-document.querySelectorAll(".filter-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    const type=btn.dataset.type;
-    let query="skate spot";
-
-    if(type==="skatepark") query="skatepark";
-    else if(type==="rink") query="roller rink OR ice rink";
-    else if(type==="water") query="water fountain OR hydration station";
-    else if(type==="food") query="food near skating";
-    else if(type==="parking") query="parking lot";
-    else if(type==="restroom") query="public restroom near park";
-
-    runSearch(query);
-  });
-});
-
-/* reviews submit */
 document.getElementById("submitReview").onclick=()=>{
   if(!activeSpot) return;
-  const name=(reviewNameEl.value||"Anonymous").trim();
-  const text=(reviewTextEl.value||"").trim();
-  if(!text) return;
 
-  const review={
-    name,
-    text,
-    time:Date.now(),
-    smoothness:rateSmoothEl.value?Number(rateSmoothEl.value):null,
-    difficulty:rateDifficultyEl.value?Number(rateDifficultyEl.value):null
-  };
+  const name=document.getElementById("rName").value||"Anonymous";
+  const text=document.getElementById("rText").value;
+  const smooth=document.getElementById("rSmooth").value;
+  const diff=document.getElementById("rDifficulty").value;
 
   const reviews=loadReviews(activeSpot.place_id);
-  reviews.push(review);
+  reviews.push({
+    name,
+    text,
+    smoothness:Number(smooth)||null,
+    difficulty:Number(diff)||null
+  });
+
   saveReviews(activeSpot.place_id,reviews);
   renderReviews(activeSpot.place_id);
-
-  reviewTextEl.value="";
-  rateSmoothEl.value="";
-  rateDifficultyEl.value="";
 };
 
-/* calendar + events linkage */
-document.getElementById("addToCalendarBtn").onclick=()=>{
-  if(!activeSpot) return;
-  const events=JSON.parse(localStorage.getItem("rc_calendar")||"[]");
+/* LIVE LOCATION */
+let liveWatch=null;
+const userLive=document.getElementById("userLive");
+const userAvatar=document.getElementById("userAvatar");
 
-  events.push({
-    title:activeSpot.name,
-    location:activeSpot.formatted_address||"",
-    lat:activeSpot.geometry.location.lat(),
-    lng:activeSpot.geometry.location.lng(),
-    createdAt:Date.now(),
-    type:"spot-session"
-  });
-
-  localStorage.setItem("rc_calendar",JSON.stringify(events));
-
-  const allEvents=JSON.parse(localStorage.getItem("rc_events")||"[]");
-  allEvents.push({
-    title:"Session at "+activeSpot.name,
-    location:activeSpot.formatted_address||"",
-    lat:activeSpot.geometry.location.lat(),
-    lng:activeSpot.geometry.location.lng(),
-    createdAt:Date.now(),
-    source:"find-spots"
-  });
-  localStorage.setItem("rc_events",JSON.stringify(allEvents));
-};
-
-/* simple location + live mode */
-function locateOnce(){
-  if(!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const {latitude,longitude}=pos.coords;
-    const loc={lat:latitude,lng:longitude};
-    map.panTo(loc);
-    map.setZoom(14);
-    placeOrMoveUserMarker(loc);
-    checkNearbySkaters(loc);
-  });
-}
-
-document.getElementById("locateBtn").onclick=locateOnce;
-
-function placeOrMoveUserMarker(loc){
-  const profile=JSON.parse(localStorage.getItem("rc_profile")||"{}");
-  const avatar=profile.avatarUrl||"styles/default-avatar.png";
-
-  if(!userMarker){
-    const icon={
-      url:avatar,
-      scaledSize:new google.maps.Size(40,40),
-      origin:new google.maps.Point(0,0),
-      anchor:new google.maps.Point(20,20)
-    };
-    userMarker=new google.maps.Marker({
-      map,
-      position:loc,
-      icon,
-      title:profile.displayName||"You"
-    });
-    userMarker.addListener("click",()=>{
-      window.location.href="profile.html";
-    });
-  }else{
-    userMarker.setPosition(loc);
-  }
-
-  userAvatarImg.src=avatar;
-  userSummaryText.textContent="Your live location is visible on this device.";
-  userSummary.style.display="flex";
-
-  // set own live data for shared storage
-  const me={
-    id:"me",
-    name:profile.displayName||"You",
-    lat:loc.lat,
-    lng:loc.lng,
-    avatarUrl:avatar,
-    updatedAt:Date.now()
-  };
-  localStorage.setItem("rc_live_me",JSON.stringify(me));
-}
-
-/* live tracking toggle */
 document.getElementById("liveBtn").onclick=()=>{
-  const btn=document.getElementById("liveBtn");
-  if(liveWatchId!==null){
-    navigator.geolocation.clearWatch(liveWatchId);
-    liveWatchId=null;
-    btn.textContent="Live on";
-    userSummaryText.textContent="Live location is off.";
-    nearbyNotice.style.display="none";
+  if(liveWatch){
+    navigator.geolocation.clearWatch(liveWatch);
+    liveWatch=null;
+    userLive.style.display="none";
     return;
   }
-  if(!navigator.geolocation) return;
-  liveWatchId=navigator.geolocation.watchPosition(pos=>{
-    const loc={lat:pos.coords.latitude,lng:pos.coords.longitude};
-    placeOrMoveUserMarker(loc);
-    checkNearbySkaters(loc);
+
+  liveWatch=navigator.geolocation.watchPosition(pos=>{
+    const {latitude,longitude}=pos.coords;
+    userLive.style.display="flex";
+
+    const profile=JSON.parse(localStorage.getItem("rc_profile")||"{}");
+    userAvatar.src=profile.avatarUrl||"styles/default-avatar.png";
+
+    localStorage.setItem("rc_live_me",JSON.stringify({
+      lat:latitude, lng:longitude, avatar:userAvatar.src, updated:Date.now()
+    }));
+
+    checkNearby(latitude,longitude);
   });
-  btn.textContent="Live off";
 };
 
-/* profile navigation */
-document.getElementById("profileBtn").onclick=()=>{
-  window.location.href="profile.html";
-};
-
-/* other skaters + notification logic
-   expects localStorage rc_live_skaters = [ { id,name,lat,lng,avatarUrl,updatedAt }, ... ]
-*/
-function renderOtherSkaters(){
-  otherSkaterMarkers.forEach(m=>m.setMap(null));
-  otherSkaterMarkers=[];
-
-  const arr=JSON.parse(localStorage.getItem("rc_live_skaters")||"[]");
-  arr.forEach(s=>{
-    const icon={
-      url:s.avatarUrl||"styles/default-avatar.png",
-      scaledSize:new google.maps.Size(34,34),
-      origin:new google.maps.Point(0,0),
-      anchor:new google.maps.Point(17,17)
-    };
-    const marker=new google.maps.Marker({
-      map,
-      position:{lat:s.lat,lng:s.lng},
-      icon,
-      title:s.name||"Skater"
-    });
-    otherSkaterMarkers.push(marker);
-  });
-}
-
-function milesBetween(lat1,lng1,lat2,lng2){
-  const toRad=x=>x*Math.PI/180;
-  const R=3958.8;
-  const dLat=toRad(lat2-lat1);
-  const dLng=toRad(lng2-lng1);
-  const a=Math.sin(dLat/2)**2+
-          Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLng/2)**2;
-  const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-  return R*c;
-}
-
-function checkNearbySkaters(loc){
-  const arr=JSON.parse(localStorage.getItem("rc_live_skaters")||"[]");
+/* NEARBY SKATERS */
+function checkNearby(lat,lng){
+  const others=JSON.parse(localStorage.getItem("rc_live_skaters")||"[]");
   let found=false;
-  arr.forEach(s=>{
-    const d=milesBetween(loc.lat,loc.lng,s.lat,s.lng);
+
+  others.forEach(o=>{
+    const d=distance(lat,lng,o.lat,o.lng);
     if(d<=5) found=true;
   });
-  nearbyNotice.style.display=found?"block":"none";
+
+  document.getElementById("nearbyNotice").style.display = found ? "block" : "none";
 }
 
-/* periodically refresh other skaters from shared storage */
-setInterval(()=>{
-  renderOtherSkaters();
-  if(userMarker){
-    const pos=userMarker.getPosition();
-    if(pos) checkNearbySkaters({lat:pos.lat(),lng:pos.lng()});
-  }
-},8000);
-
-/* load profile summary on start (even before live) */
-function loadUserProfile(){
-  const profile=JSON.parse(localStorage.getItem("rc_profile")||"{}");
-  if(!profile || Object.keys(profile).length===0) return;
-  const avatar=profile.avatarUrl||"styles/default-avatar.png";
-  userAvatarImg.src=avatar;
-  userSummaryText.textContent="Set live to share your current location.";
-  userSummary.style.display="flex";
+function distance(lat1,lon1,lat2,lon2){
+  const R=3958.8;
+  const dLat=(lat2-lat1)*Math.PI/180;
+  const dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2 +
+          Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180) *
+          Math.sin(dLon/2)**2;
+  return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
 }
 </script>
+
 </body>
 </html>
