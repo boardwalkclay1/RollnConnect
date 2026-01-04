@@ -104,6 +104,16 @@ body {
   box-shadow:0 0 18px rgba(255,255,255,0.4);
 }
 
+.notif-dot {
+  display:inline-block;
+  width:10px;
+  height:10px;
+  background:#ff3b3b;
+  border-radius:50%;
+  margin-left:6px;
+  box-shadow:0 0 10px #ff3b3b;
+}
+
 /* MAIN CONTENT */
 .main-wrapper{padding:40px 20px 80px;}
 
@@ -237,29 +247,40 @@ body {
     <div class="logo-orb">🛼</div>
     <div class="nav-title">Roll ’n Connect</div>
   </div>
-  <ul class="nav-links" id="navLinks"></ul>
+
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 Home</a></li>
+    <li><a href="dashboard.html">📊 Dashboard</a></li>
+    <li><a href="marketplace.html">🛒 Marketplace</a></li>
+    <li><a href="notifications.html">🔔 Notifications <span id="notifDot"></span></a></li>
+    <li><a href="chatrooms.html">💬 Chatrooms</a></li>
+    <li><a href="find-spots.html">📍 Find Spots</a></li>
+    <li><a href="events.html">📅 Events</a></li>
+    <li><a href="profile.html">👤 Your Profile</a></li>
+    <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
+  </ul>
 </nav>
 
 <div class="main-wrapper">
 
-<!-- HERO -->
-<div class="title-wrapper" id="heroBlock">
-  <div class="main-title">ROLL ’N CONNECT</div>
-  <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
-  <div class="signature">by Boardwalk Clay</div>
-</div>
+  <!-- HERO -->
+  <div class="title-wrapper">
+    <div class="main-title">ROLL ’N CONNECT</div>
+    <div class="subtitle">The cosmic skating universe — floating, glowing, alive.</div>
+    <div class="signature">by Boardwalk Clay</div>
+  </div>
 
-<!-- MARKETPLACE PREVIEW -->
-<div class="panel">
-  <div class="panel-title">Marketplace</div>
-  <div class="items-grid" id="marketplaceItems"></div>
-</div>
+  <!-- MARKETPLACE PREVIEW -->
+  <div class="panel">
+    <div class="panel-title">Marketplace</div>
+    <div class="items-grid" id="marketplaceItems"></div>
+  </div>
 
-<!-- GIVEAWAY PREVIEW -->
-<div class="panel">
-  <div class="panel-title">Giveaway Items</div>
-  <div class="items-grid" id="giveawayItems"></div>
-</div>
+  <!-- GIVEAWAY PREVIEW -->
+  <div class="panel">
+    <div class="panel-title">Giveaway Items</div>
+    <div class="items-grid" id="giveawayItems"></div>
+  </div>
 
 </div>
 
@@ -271,62 +292,32 @@ body {
 <a href="marketplace.html" class="bubble" id="b5">Marketplace</a>
 <a href="notifications.html" class="bubble" id="b6">Notifications</a>
 
-<script src="auth.js"></script>
-
 <script>
-/* FORCE LOGIN */
-if (!RollAuth.getCurrentUser()) {
-  window.location.href = "login.html";
-}
-
 /* BURGER */
 const hb=document.getElementById("hamburger");
 const sb=document.getElementById("sidebar");
 hb.onclick=()=>{hb.classList.toggle("active");sb.classList.toggle("open");};
 
-/* SIDEBAR */
-function renderSidebar() {
-  const user = RollAuth.getCurrentUser();
-  const nav = document.getElementById("navLinks");
-
-  if (!user) {
-    nav.innerHTML = `
-      <li><a href="login.html">🔑 Login</a></li>
-      <li><a href="signup.html">✨ Sign Up</a></li>
-    `;
-  } else {
-    nav.innerHTML = `
-      <li><a href="dashboard.html">📊 Dashboard</a></li>
-      <li><a href="profile.html">👤 Your Profile</a></li>
-      <li><a href="profile-edit.html">✏️ Edit Profile</a></li>
-      <li><a href="marketplace.html">🛒 Marketplace</a></li>
-      <li><a href="chatrooms.html">💬 Chatrooms</a></li>
-      <li><a href="find-spots.html">📍 Find Spots</a></li>
-      <li><a href="events.html">📅 Events</a></li>
-      <li><a href="#" onclick="RollAuth.logout(); location.reload();">🚪 Logout</a></li>
-    `;
-  }
+/* DATA HELPERS */
+function getItems(){
+  try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}
+  catch(e){return [];}
 }
-renderSidebar();
-
-/* HERO */
-function renderHero() {
-  const user = RollAuth.getCurrentUser();
-  if (!user) return;
-
-  const hero = document.getElementById("heroBlock");
-  hero.innerHTML = `
-    <div class="main-title">Welcome back, ${user.profile.name || user.username}!</div>
-    <div class="subtitle">${user.profile.bio || "Your cosmic skating journey continues."}</div>
-    <div class="signature">Roll ’n Connect — by Boardwalk Clay</div>
-  `;
+function getNotifications(){
+  try{return JSON.parse(localStorage.getItem("rc_notifications")||"[]");}
+  catch(e){return [];}
 }
-renderHero();
 
-/* MARKETPLACE */
-function getItems(){try{return JSON.parse(localStorage.getItem("rc_marketplace_items")||"[]");}catch(e){return [];}}
-function getNotifications(){try{return JSON.parse(localStorage.getItem("rc_notifications")||"[]");}catch(e){return [];}}
+/* NOTIF DOT */
+function renderNotifDot(){
+  const dotEl=document.getElementById("notifDot");
+  const notifs=getNotifications();
+  const hasPending=notifs.some(n=>n.status==="pending");
+  dotEl.innerHTML = hasPending ? "<span class='notif-dot'></span>" : "";
+}
+renderNotifDot();
 
+/* MARKETPLACE + GIVEAWAY PREVIEW */
 function renderIndexMarketplace(){
   const items = getItems();
   const marketWrap = document.getElementById("marketplaceItems");
@@ -366,61 +357,47 @@ function makeCard(item,isGiveaway){
 
 renderIndexMarketplace();
 
-/* FLOATING BUBBLES */
-window.onload = () => {
-  const bubbles = [
-    { el: document.getElementById("b1"), x:320, y:120, vx:1.8, vy:1.2 },
-    { el: document.getElementById("b2"), x:720, y:220, vx:-2.1, vy:1.9 },
-    { el: document.getElementById("b3"), x:520, y:420, vx:2.2, vy:-1.7 },
-    { el: document.getElementById("b4"), x:260, y:520, vx:-1.9, vy:-1.4 },
-    { el: document.getElementById("b5"), x:860, y:120, vx:2.0, vy:2.1 },
-    { el: document.getElementById("b6"), x:640, y:360, vx:-2.3, vy:1.6 },
-  ];
+/* FLOATING BUBBLES — CSP SAFE */
+const bubbles = [
+  { el: document.getElementById("b1"), x:320, y:120, vx:1.8, vy:1.2 },
+  { el: document.getElementById("b2"), x:720, y:220, vx:-2.1, vy:1.9 },
+  { el: document.getElementById("b3"), x:520, y:420, vx:2.2, vy:-1.7 },
+  { el: document.getElementById("b4"), x:260, y:520, vx:-1.9, vy:-1.4 },
+  { el: document.getElementById("b5"), x:860, y:120, vx:2.0, vy:2.1 },
+  { el: document.getElementById("b6"), x:640, y:360, vx:-2.3, vy:1.6 },
+];
+
+function animateBubbles() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
 
   for (let b of bubbles) {
-    if (b.el) {
-      b.el.style.left = b.x + "px";
-      b.el.style.top = b.y + "px";
-    }
-  }
+    b.x += b.vx;
+    b.y += b.vy;
 
-  function animateBubbles() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    if (b.x <= 0 || b.x + 200 >= w) b.vx *= -1;
+    if (b.y <= 0 || b.y + 200 >= h) b.vy *= -1;
 
-    for (let b of bubbles) {
-      if (!b.el) continue;
-
-      b.x += b.vx;
-      b.y += b.vy;
-
-      if (b.x <= 0 || b.x + 200 >= w) b.vx *= -1;
-      if (b.y <= 0 || b.y + 200 >= h) b.vy *= -1;
-
-      for (let other of bubbles) {
-        if (other === b || !other.el) continue;
-
-        const dx = (b.x + 100) - (other.x + 100);
-        const dy = (b.y + 100) - (other.y + 100);
-        const dist = Math.sqrt(dx*dx + dy*dy);
-
-        if (dist < 200) {
-          b.vx *= -1;
-          b.vy *= -1;
-          other.vx *= -1;
-          other.vy *= -1;
-        }
+    for (let other of bubbles) {
+      if (other === b) continue;
+      const dx = (b.x + 100) - (other.x + 100);
+      const dy = (b.y + 100) - (other.y + 100);
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 200) {
+        b.vx *= -1;
+        b.vy *= -1;
+        other.vx *= -1;
+        other.vy *= -1;
       }
-
-      b.el.style.left = b.x + "px";
-      b.el.style.top = b.y + "px";
     }
 
-    requestAnimationFrame(animateBubbles);
+    b.el.style.left = b.x + "px";
+    b.el.style.top = b.y + "px";
   }
 
-  animateBubbles();
-};
+  requestAnimationFrame(animateBubbles);
+}
+animateBubbles();
 </script>
 
 </body>
