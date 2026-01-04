@@ -36,7 +36,7 @@
       box-shadow: 0 0 12px #4a4aff;
     }
 
-    /* SCROLLABLE SIDE MENU */
+    /* SCROLLABLE SIDEBAR */
     .side-menu {
       position: fixed;
       top: 0;
@@ -182,27 +182,23 @@
     <div></div><div></div><div></div>
   </div>
 
-  <!-- UPDATED UNIVERSAL MARKETPLACE SIDEBAR -->
+  <!-- UNIVERSAL MARKETPLACE SIDEBAR -->
   <div class="side-menu">
 
-    <!-- MARKETPLACE CORE -->
+    <!-- Marketplace Core -->
     <a href="marketplace-dashboard.html">Marketplace Dashboard</a>
     <a href="marketplace.html">Marketplace</a>
     <a href="sell-item.html">Sell Item</a>
     <a href="your-listings.html">Your Listings</a>
     <a href="giveaways.html">Giveaways</a>
 
-    <!-- MARKETPLACE EXPANDED -->
+    <!-- Marketplace Expanded -->
     <a href="marketplace-messages.html">Messages</a>
     <a href="marketplace-offers.html">Offers</a>
     <a href="marketplace-favorites.html">Favorites</a>
     <a href="marketplace-notifications.html">Notifications</a>
 
-    <!-- ITEM UTILITIES -->
-    <a href="item-view.html">View Item</a>
-    <a href="edit-item.html">Edit Item</a>
-
-    <!-- MARKETPLACE USER -->
+    <!-- Marketplace User -->
     <a href="marketplace-profile.html">Marketplace Profile</a>
     <a href="marketplace-settings.html">Marketplace Settings</a>
 
