@@ -14,19 +14,85 @@
 <div class="cosmic-wrapper">
 
   <div class="glass" style="max-width:400px; margin:120px auto; padding:40px;">
-    <h1 class="section-title" style="font-size:1.8rem;">Login</h1>
+    <h1 class="section-title" style="font-size:1.8rem; text-align:center;">Login</h1>
 
-    <input class="chat-input" placeholder="Email" style="margin-bottom:12px;" />
-    <input class="chat-input" placeholder="Password" type="password" style="margin-bottom:20px;" />
+    <!-- IDENTIFIER -->
+    <input id="identifierInput" class="chat-input" placeholder="Email or Username" style="margin-bottom:12px;" />
 
-    <button class="btn-primary" onclick="window.location.href='dashboard.html'">Login</button>
+    <!-- PASSWORD -->
+    <input id="passwordInput" class="chat-input" placeholder="Password" type="password" style="margin-bottom:12px;" />
 
-    <p style="margin-top:20px; opacity:0.7;">
-      No account? <a href="signup.html" style="color:white;">Sign up</a>
+    <!-- PIN -->
+    <input id="pinInput" class="chat-input" placeholder="PIN (optional)" type="password" maxlength="6" style="margin-bottom:20px;" />
+
+    <!-- LOGIN BUTTONS -->
+    <button id="loginPasswordBtn" class="btn-primary" style="width:100%; margin-bottom:10px;">
+      Login with Password
+    </button>
+
+    <button id="loginPinBtn" class="btn-primary" style="width:100%; background:rgba(255,255,255,0.15);">
+      Login with PIN
+    </button>
+
+    <!-- ERROR BOX -->
+    <p id="errorBox" style="margin-top:15px; color:#ff6b6b; min-height:20px; text-align:center;"></p>
+
+    <p style="margin-top:20px; opacity:0.7; text-align:center;">
+      No account?
+      <a href="signup.html" style="color:white;">Sign up</a>
     </p>
   </div>
 
 </div>
+
+<script src="auth.js"></script>
+<script>
+  const idInput  = document.getElementById("identifierInput");
+  const pwInput  = document.getElementById("passwordInput");
+  const pinInput = document.getElementById("pinInput");
+  const errBox   = document.getElementById("errorBox");
+
+  function showError(msg){
+    errBox.textContent = msg || "";
+  }
+
+  // PASSWORD LOGIN
+  document.getElementById("loginPasswordBtn").onclick = () => {
+    showError("");
+    const ident = idInput.value.trim();
+    const pw    = pwInput.value.trim();
+
+    if(!ident || !pw){
+      showError("Enter email/username and password.");
+      return;
+    }
+
+    try {
+      RollAuth.loginWithPassword(ident, pw);
+      window.location.href = "index.html";
+    } catch (e) {
+      showError(e.message || "Login failed.");
+    }
+  };
+
+  // PIN LOGIN
+  document.getElementById("loginPinBtn").onclick = () => {
+    showError("");
+    const pin = pinInput.value.trim();
+
+    if(!pin){
+      showError("Enter your PIN.");
+      return;
+    }
+
+    try {
+      RollAuth.loginWithPin(pin);
+      window.location.href = "index.html";
+    } catch (e) {
+      showError(e.message || "PIN login failed.");
+    }
+  };
+</script>
 
 </body>
 </html>
