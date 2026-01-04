@@ -141,6 +141,46 @@ body {
   color:#fff;
   text-decoration:underline;
 }
+
+/* EDITOR */
+.editor {
+  margin-top:12px;
+  padding:12px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.08);
+}
+.editor input,
+.editor select {
+  width:100%;
+  margin-bottom:10px;
+  padding:8px;
+  border-radius:8px;
+  border:none;
+  background:rgba(255,255,255,0.15);
+  color:#fff;
+}
+.editor button {
+  padding:8px 14px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  margin-right:8px;
+}
+.editor .save-btn { background:#fff; color:#000; }
+.editor .cancel-btn { background:rgba(255,255,255,0.2); color:#fff; }
+
+.item-actions {
+  margin-top:10px;
+}
+.item-actions button {
+  padding:6px 12px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  margin-right:8px;
+}
+.item-actions .edit-btn { background:#fff; color:#000; }
+.item-actions .delete-btn { background:rgba(255,80,80,0.2); color:#ff8080; }
 </style>
 </head>
 
@@ -165,6 +205,7 @@ body {
   <a href="chatrooms.html">Chatrooms</a>
   <a href="events.html">Events</a>
   <a href="find-spots.html">Find Spots</a>
+  <a href="calendar.html">My Calendar</a>
 </div>
 
 <!-- MAIN CONTENT -->
@@ -182,84 +223,192 @@ body {
 </div>
 
 <script>
-/* AUTH CHECK — ONLY ALLOW LOGGED-IN USERS */
+/* AUTH CHECK */
 const user = JSON.parse(localStorage.getItem("rc_user"));
-if (!user) {
-  window.location.href = "index.html";
-}
+if (!user) window.location.href = "index.html";
 
 /* BURGER */
-const h = document.getElementById("hamburger");
-const s = document.getElementById("sidebar");
-h.onclick = () => {
-  h.classList.toggle("active");
-  s.classList.toggle("open");
+document.getElementById("hamburger").onclick = () => {
+  document.getElementById("hamburger").classList.toggle("active");
+  document.getElementById("sidebar").classList.toggle("open");
 };
 
-/* LOAD CALENDAR ITEMS */
-function loadCalendarItems() {
+/* CALENDAR STORAGE */
+function getCalendar() {
+  return JSON.parse(localStorage.getItem("rc_calendar_items") || "[]");
+}
+function saveCalendar(items) {
+  localStorage.setItem("rc_calendar_items", JSON.stringify(items));
+}
+
+/* SEED FROM EVENTS + SPOTS */
+function seedCalendar() {
+  const items = getCalendar();
   const events = JSON.parse(localStorage.getItem("rc_events") || "[]");
   const spots = JSON.parse(localStorage.getItem("rc_spots") || "[]");
-
   const savedEvents = JSON.parse(localStorage.getItem("rc_user_saved_events") || "[]");
   const savedSpots = JSON.parse(localStorage.getItem("rc_user_saved_spots") || "[]");
 
+  const owner = user.id || user.username;
+
+  events.forEach(ev => {
+    if (!savedEvents.includes(ev.id)) return;
+    if (items.some(i => i.refId === ev.id)) return;
+
+    items.push({
+      id: "cal_" + crypto.randomUUID(),
+      type: "event",
+      refId: ev.id,
+      title: ev.title,
+      date: ev.date,
+      location: ev.location,
+      distance: null,
+      link: `event-details.html?id=${ev.id}`,
+      privacy: "public",
+      groups: [],
+      ownerId: owner
+    });
+  });
+
+  spots.forEach(sp => {
+    if (!savedSpots.includes(sp.id)) return;
+    if (items.some(i => i.refId === sp.id)) return;
+
+    items.push({
+      id: "cal_" + crypto.randomUUID(),
+      type: "spot",
+      refId: sp.id,
+      title: sp.name,
+      date: null,
+      location: sp.location,
+      distance: sp.distance,
+      link: `spot-details.html?id=${sp.id}`,
+      privacy: "public",
+      groups: [],
+      ownerId: owner
+    });
+  });
+
+  saveCalendar(items);
+}
+
+/* RENDER */
+function renderCalendar() {
   const list = document.getElementById("calendarFullList");
   const empty = document.getElementById("calendarEmpty");
-
   list.innerHTML = "";
 
-  const combined = [];
+  const owner = user.id || user.username;
+  const items = getCalendar().filter(i => i.ownerId === owner);
 
-  // Saved events
-  events.forEach(ev => {
-    if (savedEvents.includes(ev.id)) {
-      combined.push({
-        type: "event",
-        title: ev.title,
-        date: ev.date,
-        location: ev.location,
-        link: `event-details.html?id=${ev.id}`
-      });
-    }
-  });
-
-  // Saved spots
-  spots.forEach(sp => {
-    if (savedSpots.includes(sp.id)) {
-      combined.push({
-        type: "spot",
-        title: sp.name,
-        distance: sp.distance,
-        link: `spot-details.html?id=${sp.id}`
-      });
-    }
-  });
-
-  if (combined.length === 0) {
+  if (!items.length) {
     empty.style.display = "block";
     return;
   }
-
   empty.style.display = "none";
 
-  combined.forEach(item => {
+  items.forEach(item => {
     const li = document.createElement("li");
     li.className = "calendar-item";
+    li.dataset.id = item.id;
+
+    const privacyLabel =
+      item.privacy === "public" ? "🌐 Public" :
+      item.privacy === "private" ? "🔒 Private" :
+      "👥 Groups";
+
+    const groupsText =
+      item.privacy === "groups" && item.groups.length
+        ? `<br>Groups: ${item.groups.join(", ")}`
+        : "";
 
     li.innerHTML = `
       <strong>${item.title}</strong><br>
       ${item.date ? `📅 ${item.date}<br>` : ""}
       ${item.location ? `📍 ${item.location}<br>` : ""}
       ${item.distance ? `🛼 ${item.distance} miles away<br>` : ""}
-      <a href="${item.link}">View Details</a>
+      ${item.link ? `<a href="${item.link}">View Details</a><br>` : ""}
+      ${privacyLabel}${groupsText}
+      <div class="item-actions">
+        <button class="edit-btn">Edit</button>
+        <button class="delete-btn">Delete</button>
+      </div>
     `;
 
     list.appendChild(li);
   });
 }
 
-loadCalendarItems();
+/* EDITOR */
+function openEditor(id) {
+  const items = getCalendar();
+  const item = items.find(i => i.id === id);
+  if (!item) return;
+
+  const li = document.querySelector(`[data-id="${id}"]`);
+  if (!li) return;
+
+  const editor = document.createElement("div");
+  editor.className = "editor";
+
+  editor.innerHTML = `
+    <input data-field="title" value="${item.title}">
+    <input data-field="date" type="date" value="${item.date || ""}">
+    <input data-field="location" placeholder="Location" value="${item.location || ""}">
+    <input data-field="distance" placeholder="Distance" value="${item.distance || ""}">
+    <select data-field="privacy">
+      <option value="public" ${item.privacy === "public" ? "selected" : ""}>Public</option>
+      <option value="private" ${item.privacy === "private" ? "selected" : ""}>Private</option>
+      <option value="groups" ${item.privacy === "groups" ? "selected" : ""}>Groups</option>
+    </select>
+    <input data-field="groups" placeholder="Groups (comma separated)" value="${item.groups.join(", ")}">
+    <button class="save-btn">Save</button>
+    <button class="cancel-btn">Cancel</button>
+  `;
+
+  li.appendChild(editor);
+
+  editor.querySelector(".save-btn").onclick = () => {
+    editor.querySelectorAll("[data-field]").forEach(el => {
+      const field = el.dataset.field;
+      if (field === "groups") {
+        item.groups = el.value.split(",").map(g => g.trim()).filter(Boolean);
+      } else {
+        item[field] = el.value || null;
+      }
+    });
+    saveCalendar(items);
+    renderCalendar();
+  };
+
+  editor.querySelector(".cancel-btn").onclick = () => editor.remove();
+}
+
+/* DELETE */
+function deleteItem(id) {
+  const items = getCalendar().filter(i => i.id !== id);
+  saveCalendar(items);
+  renderCalendar();
+}
+
+/* CLICK HANDLERS */
+document.getElementById("calendarFullList").onclick = e => {
+  const li = e.target.closest(".calendar-item");
+  if (!li) return;
+
+  const id = li.dataset.id;
+
+  if (e.target.classList.contains("edit-btn")) {
+    openEditor(id);
+  }
+  if (e.target.classList.contains("delete-btn")) {
+    deleteItem(id);
+  }
+};
+
+/* INIT */
+seedCalendar();
+renderCalendar();
 </script>
 
 </body>
