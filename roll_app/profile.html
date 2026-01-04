@@ -1542,5 +1542,35 @@
       initStorageSync();
     });
   </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const LS_LESSONS = "rc_user_lessons";
+
+  function safeParse(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return fallback;
+      return JSON.parse(raw);
+    } catch {
+      return fallback;
+    }
+  }
+
+  const lessons = safeParse(LS_LESSONS, []);
+  const container = document.getElementById("lessons-section");
+
+  if (container) {
+    container.innerHTML = lessons.length
+      ? lessons.map(ls => `
+          <div class="item">
+            <strong>${ls.title}</strong><br>
+            ${ls.price ? "$" + ls.price : "Free"} • ${ls.duration} min<br>
+            <span>${ls.description || ""}</span>
+          </div>
+        `).join("")
+      : "<p>No lessons yet.</p>";
+  }
+});
+</script>
 </body>
 </html>
