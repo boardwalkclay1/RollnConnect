@@ -105,28 +105,6 @@
     .hamburger.active span:nth-child(2){opacity:0;}
     .hamburger.active span:nth-child(3){transform:translateY(-13px) rotate(-45deg);}
 
-    /* FLOATING BUBBLES */
-    .bubble {
-      position:fixed;
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      background:rgba(255,255,255,0.12);
-      backdrop-filter:blur(16px);
-      box-shadow:0 0 40px rgba(255,255,255,0.4);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      text-decoration:none;
-      font-size:0.9rem;
-      text-align:center;
-      padding:10px;
-      z-index:5;
-      transition:transform 0.2s;
-    }
-    .bubble:hover { transform:scale(1.08); }
-
     /* MAP CONTAINER */
     .map-wrapper {
       position:absolute;
@@ -138,63 +116,77 @@
       height:100%;
     }
 
-    /* SEARCH PANEL */
+    /* SEARCH / CONTROL PANEL */
     .search-panel {
       position:fixed;
       top:25px;
       right:25px;
-      background:rgba(0,0,0,0.70);
+      background:rgba(0,0,0,0.80);
       backdrop-filter:blur(20px);
-      padding:20px;
+      padding:18px;
       border-radius:20px;
       box-shadow:0 0 30px rgba(255,255,255,0.3);
       z-index:9999;
-      width:320px;
+      width:340px;
+      max-height:90vh;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
 
-    .search-panel-header {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:8px;
-    }
     .panel-title {
       font-size:1rem;
       font-weight:600;
+      margin-bottom:4px;
     }
-    .theme-toggle {
-      font-size:0.8rem;
-      cursor:pointer;
-      padding:4px 8px;
+
+    .map-type-row {
+      display:flex;
+      gap:6px;
+      margin-bottom:4px;
+      flex-wrap:wrap;
+    }
+
+    .map-type-btn {
+      flex:1;
+      padding:6px 8px;
       border-radius:999px;
+      border:none;
+      cursor:pointer;
+      font-size:0.8rem;
       background:rgba(255,255,255,0.15);
+      color:#fff;
+    }
+    .map-type-btn.active {
+      background:#fff;
+      color:#000;
     }
 
     .category-buttons {
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
-      margin-top:10px;
+      gap:6px;
+      margin-top:4px;
     }
 
     .cat-btn {
-      padding:7px 12px;
+      padding:6px 10px;
       background:rgba(255,255,255,0.15);
       border-radius:12px;
       cursor:pointer;
-      font-size:0.85rem;
+      font-size:0.8rem;
       transition:0.25s;
     }
     .cat-btn:hover {
       background:#fff;
       color:#000;
-      transform:scale(1.1);
+      transform:scale(1.05);
     }
 
     .loc-btn {
-      margin-top:12px;
+      margin-top:4px;
       width:100%;
-      padding:10px;
+      padding:8px;
       background:#fff;
       color:#000;
       border-radius:12px;
@@ -202,42 +194,68 @@
       font-weight:600;
       transition:0.25s;
       border:none;
+      font-size:0.9rem;
     }
     .loc-btn:hover {
-      transform:scale(1.05);
+      transform:scale(1.03);
       box-shadow:0 0 20px rgba(255,255,255,0.8);
     }
 
     .status-text {
-      margin-top:10px;
-      font-size:0.8rem;
+      margin-top:4px;
+      font-size:0.75rem;
       opacity:0.85;
     }
 
+    /* RESULTS LIST */
+    .results-list {
+      margin-top:4px;
+      padding:6px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.05);
+      max-height:140px;
+      overflow-y:auto;
+      font-size:0.8rem;
+    }
+    .result-item {
+      padding:6px;
+      border-radius:8px;
+      cursor:pointer;
+    }
+    .result-item:hover {
+      background:rgba(255,255,255,0.15);
+    }
+    .result-name { font-weight:600; }
+    .result-address { opacity:0.8; }
+
     /* CURRENT SPOT CARD */
     .current-spot {
-      margin-top:14px;
+      margin-top:6px;
       padding:10px;
       border-radius:12px;
       background:rgba(255,255,255,0.08);
-      font-size:0.85rem;
+      font-size:0.8rem;
     }
     .current-spot-title {
       font-weight:600;
+      margin-bottom:2px;
+    }
+    .current-spot-meta {
+      opacity:0.9;
       margin-bottom:4px;
     }
     .current-spot-actions {
-      margin-top:8px;
+      margin-top:6px;
       display:flex;
-      gap:6px;
       flex-wrap:wrap;
+      gap:6px;
     }
     .btn-small {
       padding:6px 10px;
       border-radius:999px;
       border:none;
       cursor:pointer;
-      font-size:0.8rem;
+      font-size:0.75rem;
     }
     .btn-primary {
       background:#fff;
@@ -246,6 +264,55 @@
     .btn-ghost {
       background:rgba(255,255,255,0.15);
       color:#fff;
+    }
+
+    /* PRESENCE + REVIEWS */
+    .presence-section,
+    .reviews-section {
+      margin-top:8px;
+      padding-top:6px;
+      border-top:1px solid rgba(255,255,255,0.1);
+      font-size:0.75rem;
+    }
+    .presence-list,
+    .reviews-list {
+      max-height:80px;
+      overflow-y:auto;
+      margin-top:4px;
+    }
+    .presence-user {
+      padding:3px 0;
+    }
+    .presence-user a {
+      color:#fff;
+      text-decoration:underline;
+      font-size:0.75rem;
+    }
+    .review-item {
+      padding:3px 0;
+    }
+
+    .review-form textarea {
+      width:100%;
+      padding:6px;
+      border-radius:8px;
+      border:none;
+      background:rgba(255,255,255,0.15);
+      color:#fff;
+      font-size:0.75rem;
+      resize:vertical;
+      min-height:40px;
+      margin-top:4px;
+    }
+    .review-form button {
+      margin-top:4px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:none;
+      cursor:pointer;
+      font-size:0.75rem;
+      background:#fff;
+      color:#000;
     }
 
     /* MODAL */
@@ -306,37 +373,10 @@
     }
     .modal-save { background:#fff; color:#000; }
     .modal-cancel { background:rgba(255,255,255,0.2); color:#fff; }
-
-    /* THEME LIGHT OVERRIDE */
-    body.light-mode {
-      background:#f5f5f5;
-      color:#000;
-    }
-    body.light-mode .search-panel {
-      background:rgba(255,255,255,0.95);
-      color:#000;
-    }
-    body.light-mode .sidebar {
-      background:rgba(255,255,255,0.95);
-      color:#000;
-    }
-    body.light-mode .nav-links a {
-      background:rgba(0,0,0,0.05);
-      color:#000;
-    }
-    body.light-mode .current-spot {
-      background:rgba(0,0,0,0.06);
-      color:#000;
-    }
-    body.light-mode .bubble {
-      background:rgba(0,0,0,0.1);
-      color:#000;
-      box-shadow:0 0 40px rgba(0,0,0,0.2);
-    }
   </style>
 </head>
 
-<body class="cosmic-mode">
+<body>
 
 <div class="stars1"></div>
 <div class="stars2"></div>
@@ -363,16 +403,10 @@
   </ul>
 </nav>
 
-<!-- FLOATING BUBBLES -->
-<a href="chatrooms.html" class="bubble" id="bubbleChat">Chatrooms</a>
-<a href="calendar.html" class="bubble" id="bubbleCalendar">Calendar</a>
-<a href="dashboard.html" class="bubble" id="bubbleDashboard">Dashboard</a>
-<a href="profile.html" class="bubble" id="bubbleProfile">Profile</a>
-
 <!-- MAP + COMPONENTS -->
 <gmpx-api-loader
   key="AIzaSyB02c_eleXuhHWdSMJzqk9mESbXn_PT2zc"
-  solution-channel="ROLLNCONNECT_FINDSPOTS">
+  solution-channel="ROLLNCONNECT_FINDSPOTS_V2">
 </gmpx-api-loader>
 
 <div class="map-wrapper">
@@ -383,39 +417,65 @@
     <div slot="control-block-start-inline-start" class="place-picker-container">
       <gmpx-place-picker id="placePicker" placeholder="Search for a spot"></gmpx-place-picker>
     </div>
-    <!-- Advanced marker for selected place -->
     <gmp-advanced-marker id="selectedMarker"></gmp-advanced-marker>
   </gmp-map>
 </div>
 
-<!-- SEARCH PANEL -->
+<!-- CONTROL PANEL -->
 <div class="search-panel">
-  <div class="search-panel-header">
-    <div class="panel-title">Find Spots</div>
-    <div class="theme-toggle" id="themeToggle">Cosmic</div>
+  <div class="panel-title">Find Spots</div>
+
+  <div class="map-type-row">
+    <button class="map-type-btn active" id="btnTypeStreet">Street</button>
+    <button class="map-type-btn" id="btnTypeSatellite">Satellite</button>
+    <button class="map-type-btn" id="btnTypeTrail">Trail</button>
   </div>
 
   <div class="category-buttons">
-    <div class="cat-btn" data-q="skatepark near me">Skateparks</div>
-    <div class="cat-btn" data-q="roller rink near me">Rinks</div>
-    <div class="cat-btn" data-q="trail near me">Trails</div>
-    <div class="cat-btn" data-q="parking lot smooth near me">Parking Lots</div>
-    <div class="cat-btn" data-q="plaza near me">Plazas</div>
+    <div class="cat-btn" data-type="skatepark">Skateparks</div>
+    <div class="cat-btn" data-type="park">Parks</div>
+    <div class="cat-btn" data-type="rink">Rinks</div>
+    <div class="cat-btn" data-type="trail">Trails</div>
+    <div class="cat-btn" data-type="parking">Parking Lots</div>
+    <div class="cat-btn" data-type="plaza">Plazas</div>
+    <div class="cat-btn" data-type="water">Water</div>
+    <div class="cat-btn" data-type="food">Food</div>
   </div>
 
   <button class="loc-btn" id="locateMe">Use My Location</button>
 
   <div class="status-text" id="statusText">
-    Online: Places search + map active. Offline: you can still click the map and create calendar events.
+    Online: live places around your view. Offline: you can still click the map and create calendar events.
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-list" id="resultsList">
+    <div style="opacity:0.8;">Use filters or search to see nearby spots.</div>
   </div>
 
   <!-- CURRENT SPOT CARD -->
   <div class="current-spot" id="currentSpotCard" style="display:none;">
     <div class="current-spot-title" id="currentSpotName"></div>
-    <div id="currentSpotAddress"></div>
+    <div class="current-spot-meta" id="currentSpotAddress"></div>
+
     <div class="current-spot-actions">
-      <button class="btn-small btn-primary" id="btnSaveToCalendar">Save to Calendar</button>
+      <button class="btn-small btn-primary" id="btnSaveToCalendar">Add to Calendar</button>
       <button class="btn-small btn-ghost" id="btnShareToChat">Share to Chat</button>
+      <button class="btn-small btn-ghost" id="btnMarkHere">I’m here</button>
+    </div>
+
+    <div class="presence-section">
+      <strong>People here now</strong>
+      <div class="presence-list" id="presenceList"></div>
+    </div>
+
+    <div class="reviews-section">
+      <strong>Reviews</strong>
+      <div class="reviews-list" id="reviewsList"></div>
+      <div class="review-form">
+        <textarea id="reviewInput" placeholder="Drop a quick review..."></textarea>
+        <button id="reviewSubmit">Post Review</button>
+      </div>
     </div>
   </div>
 </div>
@@ -464,69 +524,11 @@ h.onclick = () => {
   s.classList.toggle("open");
 };
 
-/* FLOATING BUBBLES PONG */
-const bubbleSize = 150;
-const bubbles = [
-  { el: document.getElementById("bubbleChat"), x:60, y:120, vx:1.4, vy:1.1 },
-  { el: document.getElementById("bubbleCalendar"), x:window.innerWidth-220, y:80, vx:-1.3, vy:1.4 },
-  { el: document.getElementById("bubbleDashboard"), x:80, y:window.innerHeight-230, vx:1.6, vy:-1.2 },
-  { el: document.getElementById("bubbleProfile"), x:window.innerWidth-220, y:window.innerHeight-230, vx:-1.5, vy:-1.3 }
-];
-function positionBubbles() {
-  bubbles.forEach(b => {
-    b.el.style.left = b.x + "px";
-    b.el.style.top = b.y + "px";
-  });
-}
-function animateBubbles() {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  bubbles.forEach(b => {
-    b.x += b.vx;
-    b.y += b.vy;
-    if (b.x <= 0 || b.x + bubbleSize >= w) b.vx *= -1;
-    if (b.y <= 0 || b.y + bubbleSize >= h) b.vy *= -1;
-    bubbles.forEach(o => {
-      if (o === b) return;
-      const dx = (b.x + bubbleSize/2) - (o.x + bubbleSize/2);
-      const dy = (b.y + bubbleSize/2) - (o.y + bubbleSize/2);
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist < bubbleSize) {
-        b.vx *= -1;
-        b.vy *= -1;
-      }
-    });
-    b.el.style.left = b.x + "px";
-    b.el.style.top = b.y + "px";
-  });
-  requestAnimationFrame(animateBubbles);
-}
-positionBubbles();
-requestAnimationFrame(animateBubbles);
-
-/* THEME TOGGLE (COSMIC / LIGHT) */
-const themeToggle = document.getElementById("themeToggle");
-function setTheme(mode) {
-  if (mode === "light") {
-    document.body.classList.add("light-mode");
-    themeToggle.textContent = "Light";
-  } else {
-    document.body.classList.remove("light-mode");
-    themeToggle.textContent = "Cosmic";
-  }
-  localStorage.setItem("rn_map_theme", mode);
-  applyMapStyle(mode);
-}
-themeToggle.onclick = () => {
-  const current = localStorage.getItem("rn_map_theme") || "cosmic";
-  setTheme(current === "cosmic" ? "light" : "cosmic");
-};
-
 /* OFFLINE STATUS */
 const statusText = document.getElementById("statusText");
 function updateOnlineStatus() {
   if (navigator.onLine) {
-    statusText.textContent = "Online: Places search + map active. Offline: you can still click the map and create calendar events.";
+    statusText.textContent = "Online: live places around your view. Offline: you can still click the map and create calendar events.";
   } else {
     statusText.textContent = "Offline: map tiles/search may be limited, but you can still click to mark spots and create calendar events.";
   }
@@ -537,23 +539,14 @@ updateOnlineStatus();
 
 /* USER CONTEXT */
 let user = null;
-try {
-  user = JSON.parse(localStorage.getItem("rc_user"));
-} catch(e) {
-  user = null;
-}
-if (!user) {
-  user = { id: "guest_" + Date.now(), username: "Guest" };
-}
+try { user = JSON.parse(localStorage.getItem("rc_user")); } catch(e) { user = null; }
+if (!user) user = { id:"guest_" + Date.now(), username:"Guest" };
 const OWNER_ID = user.id || user.username || "anonymous";
 
 /* CALENDAR + CHAT HELPERS */
 function getCalendarItems() {
-  try {
-    return JSON.parse(localStorage.getItem("rc_calendar_items") || "[]");
-  } catch(e) {
-    return [];
-  }
+  try { return JSON.parse(localStorage.getItem("rc_calendar_items") || "[]"); }
+  catch(e){ return []; }
 }
 function saveCalendarItems(items) {
   localStorage.setItem("rc_calendar_items", JSON.stringify(items));
@@ -577,13 +570,11 @@ function addToCalendar(item) {
   });
   saveCalendarItems(items);
 }
+
 function shareToChat(payload) {
   let drafts = [];
-  try {
-    drafts = JSON.parse(localStorage.getItem("rc_chat_drafts") || "[]");
-  } catch(e) {
-    drafts = [];
-  }
+  try { drafts = JSON.parse(localStorage.getItem("rc_chat_drafts") || "[]"); }
+  catch(e){ drafts = []; }
   drafts.push({
     id: "draft_" + Date.now(),
     ownerId: OWNER_ID,
@@ -594,13 +585,74 @@ function shareToChat(payload) {
   localStorage.setItem("rc_chat_drafts", JSON.stringify(drafts));
 }
 
+/* PRESENCE + REVIEWS HELPERS (LOCAL FOR NOW, BACKEND READY) */
+function getSpotPresence(spotId) {
+  try { return JSON.parse(localStorage.getItem("rc_spot_presence") || "{}")[spotId] || []; }
+  catch(e){ return []; }
+}
+function setSpotPresence(spotId, list) {
+  let all = {};
+  try { all = JSON.parse(localStorage.getItem("rc_spot_presence") || "{}"); }
+  catch(e){ all = {}; }
+  all[spotId] = list;
+  localStorage.setItem("rc_spot_presence", JSON.stringify(all));
+}
+
+function getSpotReviews(spotId) {
+  try { return JSON.parse(localStorage.getItem("rc_spot_reviews") || "{}")[spotId] || []; }
+  catch(e){ return []; }
+}
+function setSpotReviews(spotId, list) {
+  let all = {};
+  try { all = JSON.parse(localStorage.getItem("rc_spot_reviews") || "{}"); }
+  catch(e){ all = {}; }
+  all[spotId] = list;
+  localStorage.setItem("rc_spot_reviews", JSON.stringify(all));
+}
+
 /* CURRENT SPOT STATE */
 let currentSpot = null;
 const currentSpotCard = document.getElementById("currentSpotCard");
 const currentSpotName = document.getElementById("currentSpotName");
 const currentSpotAddress = document.getElementById("currentSpotAddress");
+const presenceList = document.getElementById("presenceList");
+const reviewsList = document.getElementById("reviewsList");
+const reviewInput = document.getElementById("reviewInput");
+const reviewSubmit = document.getElementById("reviewSubmit");
 const btnSaveToCalendar = document.getElementById("btnSaveToCalendar");
 const btnShareToChat = document.getElementById("btnShareToChat");
+const btnMarkHere = document.getElementById("btnMarkHere");
+
+function renderPresence(spotId) {
+  presenceList.innerHTML = "";
+  const presence = getSpotPresence(spotId);
+  if (!presence.length) {
+    presenceList.innerHTML = "<div style='opacity:0.7;'>No one has marked themselves here yet.</div>";
+    return;
+  }
+  presence.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "presence-user";
+    const profileUrl = `profile.html?user=${encodeURIComponent(p.userId)}`;
+    div.innerHTML = `<a href="${profileUrl}">${p.username || "User"}</a> <span style="opacity:0.7;">(${new Date(p.timestamp).toLocaleTimeString()})</span>`;
+    presenceList.appendChild(div);
+  });
+}
+
+function renderReviews(spotId) {
+  reviewsList.innerHTML = "";
+  const reviews = getSpotReviews(spotId);
+  if (!reviews.length) {
+    reviewsList.innerHTML = "<div style='opacity:0.7;'>No reviews yet.</div>";
+    return;
+  }
+  reviews.forEach(r => {
+    const div = document.createElement("div");
+    div.className = "review-item";
+    div.innerHTML = `<strong>${r.username || "User"}:</strong> ${r.text}`;
+    reviewsList.appendChild(div);
+  });
+}
 
 function setCurrentSpot(spot) {
   currentSpot = spot;
@@ -611,6 +663,9 @@ function setCurrentSpot(spot) {
   currentSpotName.textContent = spot.name || "Custom Spot";
   currentSpotAddress.textContent = spot.address || `${spot.lat.toFixed(5)}, ${spot.lng.toFixed(5)}`;
   currentSpotCard.style.display = "block";
+  const spotId = spot.id || `${spot.lat},${spot.lng}`;
+  renderPresence(spotId);
+  renderReviews(spotId);
 }
 
 /* MODAL CONTROL */
@@ -666,14 +721,16 @@ saveEventBtn.onclick = () => {
   const privacy = eventPrivacy.value;
   const groupsStr = eventGroups.value.trim();
   const groups = groupsStr ? groupsStr.split(",").map(x => x.trim()).filter(Boolean) : [];
+  const locString = currentSpot.address || `${currentSpot.lat.toFixed(5)}, ${currentSpot.lng.toFixed(5)}`;
+  const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
 
   addToCalendar({
     type: "spot",
-    refId: currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`,
+    refId: spotId,
     title,
     date,
     time,
-    location: currentSpot.address || `${currentSpot.lat.toFixed(5)}, ${currentSpot.lng.toFixed(5)}`,
+    location: locString,
     notes,
     privacy,
     groups,
@@ -689,52 +746,214 @@ btnShareToChat.onclick = () => {
     alert("Pick a spot first.");
     return;
   }
-  shareToChat({
+  const payload = {
     name: currentSpot.name || "Custom Spot",
     address: currentSpot.address || `${currentSpot.lat.toFixed(5)}, ${currentSpot.lng.toFixed(5)}`,
     lat: currentSpot.lat,
     lng: currentSpot.lng
-  });
+  };
+  shareToChat(payload);
   alert("Spot shared to chat drafts. Open Chatrooms to drop it into a conversation.");
+};
+
+btnMarkHere.onclick = () => {
+  if (!currentSpot) {
+    alert("Pick a spot first.");
+    return;
+  }
+  const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
+  let presence = getSpotPresence(spotId);
+  const existingIndex = presence.findIndex(p => p.userId === OWNER_ID);
+  const entry = {
+    userId: OWNER_ID,
+    username: user.username || "User",
+    timestamp: new Date().toISOString()
+  };
+  if (existingIndex >= 0) presence[existingIndex] = entry;
+  else presence.push(entry);
+  setSpotPresence(spotId, presence);
+  renderPresence(spotId);
+};
+
+/* REVIEW SUBMIT */
+reviewSubmit.onclick = () => {
+  if (!currentSpot) {
+    alert("Pick a spot first.");
+    return;
+  }
+  const text = reviewInput.value.trim();
+  if (!text) return;
+  const spotId = currentSpot.id || `${currentSpot.lat},${currentSpot.lng}`;
+  let reviews = getSpotReviews(spotId);
+  reviews.push({
+    userId: OWNER_ID,
+    username: user.username || "User",
+    text,
+    timestamp: new Date().toISOString()
+  });
+  setSpotReviews(spotId, reviews);
+  reviewInput.value = "";
+  renderReviews(spotId);
 };
 
 /* MAP + COMPONENTS (WEB COMPONENTS) */
 let innerMap = null;
+let placesService = null;
+let currentMarkers = [];
+const resultsList = document.getElementById("resultsList");
+
 const cosmicStyle = [
   { elementType:"geometry", stylers:[{color:"#0a0a0a"}] },
   { elementType:"labels.text.fill", stylers:[{color:"#ffffff"}] },
   { elementType:"labels.text.stroke", stylers:[{color:"#000000"}] },
   { featureType:"poi", stylers:[{visibility:"off"}] },
-  { featureType:"road", stylers:[{color:"#222"}] },
+  { featureType:"road", stylers:[{color:"#111"}] },
+  { featureType:"road", elementType:"labels.icon", stylers:[{visibility:"off"}] },
   { featureType:"water", stylers:[{color:"#111"}] }
 ];
 
-function applyMapStyle(mode) {
-  if (!innerMap || !window.google) return;
-  if (mode === "light") {
-    innerMap.setOptions({styles: null});
-  } else {
-    innerMap.setOptions({styles: cosmicStyle});
-  }
+function clearMarkers() {
+  currentMarkers.forEach(m => m.setMap(null));
+  currentMarkers = [];
 }
 
+function renderResults(results) {
+  resultsList.innerHTML = "";
+  if (!results.length) {
+    resultsList.innerHTML = "<div style='opacity:0.8;'>No spots found here. Try moving the map or changing filters.</div>";
+    return;
+  }
+  results.forEach((r, idx) => {
+    const div = document.createElement("div");
+    div.className = "result-item";
+    div.innerHTML = `
+      <div class="result-name">${r.name}</div>
+      <div class="result-address">${r.vicinity || r.formatted_address || ""}</div>
+    `;
+    div.onclick = () => {
+      if (!innerMap) return;
+      innerMap.panTo(r.geometry.location);
+      innerMap.setZoom(15);
+      const spot = {
+        id: r.place_id || null,
+        name: r.name,
+        address: r.vicinity || r.formatted_address || "",
+        lat: r.geometry.location.lat(),
+        lng: r.geometry.location.lng()
+      };
+      setCurrentSpot(spot);
+    };
+    resultsList.appendChild(div);
+  });
+}
+
+function runCategorySearch(typeKey) {
+  if (!innerMap || !placesService) return;
+  if (!navigator.onLine) {
+    alert("You appear to be offline. Category search needs internet, but you can still click the map.");
+    return;
+  }
+  const center = innerMap.getCenter();
+  const location = { lat: center.lat(), lng: center.lng() };
+
+  let request = {
+    location,
+    radius: 4000,
+    rankBy: google.maps.places.RankBy.PROMINENCE
+  };
+
+  switch (typeKey) {
+    case "skatepark":
+      request.keyword = "skatepark";
+      request.type = "park";
+      break;
+    case "park":
+      request.type = "park";
+      break;
+    case "rink":
+      request.keyword = "roller rink";
+      request.type = "establishment";
+      break;
+    case "trail":
+      request.keyword = "trail";
+      request.type = "park";
+      break;
+    case "parking":
+      request.type = "parking";
+      break;
+    case "plaza":
+      request.keyword = "plaza";
+      request.type = "establishment";
+      break;
+    case "water":
+      request.keyword = "lake OR river OR waterfront";
+      request.type = "tourist_attraction";
+      break;
+    case "food":
+      request.type = "restaurant";
+      break;
+    default:
+      request.type = "point_of_interest";
+  }
+
+  placesService.nearbySearch(request, (results, status) => {
+    if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
+      renderResults([]);
+      return;
+    }
+    clearMarkers();
+    results.forEach(r => {
+      const marker = new google.maps.marker.AdvancedMarkerElement({
+        map: innerMap,
+        position: r.geometry.location,
+        title: r.name
+      });
+      marker.addListener("click", () => {
+        const spot = {
+          id: r.place_id || null,
+          name: r.name,
+          address: r.vicinity || r.formatted_address || "",
+          lat: r.geometry.location.lat(),
+          lng: r.geometry.location.lng()
+        };
+        setCurrentSpot(spot);
+      });
+      currentMarkers.push(marker);
+    });
+    renderResults(results);
+  });
+}
+
+/* MAP INIT */
 customElements.whenDefined("gmp-map").then(() => {
   const mapEl = document.getElementById("rnMap");
   innerMap = mapEl.innerMap;
 
-  // Apply initial theme
-  const storedTheme = localStorage.getItem("rn_map_theme") || "cosmic";
-  setTheme(storedTheme);
+  if (window.google && google.maps && google.maps.places) {
+    placesService = new google.maps.places.PlacesService(innerMap);
+  } else {
+    // Wait for API just in case
+    const wait = setInterval(() => {
+      if (window.google && google.maps && google.maps.places) {
+        placesService = new google.maps.places.PlacesService(innerMap);
+        clearInterval(wait);
+      }
+    }, 200);
+  }
 
-  // Allow click-to-drop custom spot
-  innerMap.addListener("click", (e) => {
+  // Cosmic styling
+  innerMap.setOptions({styles: cosmicStyle, mapTypeId: "roadmap"});
+
+  // Click-to-create custom spot
+  innerMap.addListener("click", e => {
     const lat = e.latLng.lat();
     const lng = e.latLng.lng();
-    new google.maps.marker.AdvancedMarkerElement({
+    const marker = new google.maps.marker.AdvancedMarkerElement({
       map: innerMap,
       position: e.latLng,
       title: "Custom Spot"
     });
+    currentMarkers.push(marker);
     setCurrentSpot({
       id: null,
       name: "Custom Spot",
@@ -743,27 +962,9 @@ customElements.whenDefined("gmp-map").then(() => {
       lng
     });
   });
-
-  // User avatar marker (if profile has avatar)
-  try {
-    const profile = JSON.parse(localStorage.getItem("rc_profile") || "{}");
-    if (profile && profile.homeLat && profile.homeLng) {
-      const el = document.createElement("img");
-      el.src = profile.avatarUrl || "styles/default-avatar.png";
-      el.style.width="50px";
-      el.style.height="50px";
-      el.style.borderRadius="50%";
-      el.style.boxShadow="0 0 15px rgba(255,255,255,0.9)";
-      new google.maps.marker.AdvancedMarkerElement({
-        map: innerMap,
-        position: {lat:profile.homeLat, lng:profile.homeLng},
-        content: el
-      });
-    }
-  } catch(e) {}
 });
 
-/* PLACE PICKER INTEGRATION */
+/* PLACE PICKER */
 customElements.whenDefined("gmpx-place-picker").then(() => {
   const placePicker = document.getElementById("placePicker");
   const selectedMarker = document.getElementById("selectedMarker");
@@ -773,30 +974,57 @@ customElements.whenDefined("gmpx-place-picker").then(() => {
     if (!place || !place.location || !innerMap) return;
 
     innerMap.panTo(place.location);
-    innerMap.setZoom(14);
+    innerMap.setZoom(15);
 
     selectedMarker.position = place.location;
     selectedMarker.title = place.displayName || "Selected Spot";
 
-    setCurrentSpot({
+    const spot = {
       id: place.id || null,
       name: place.displayName || "Selected Spot",
       address: place.formattedAddress || "",
       lat: place.location.lat(),
       lng: place.location.lng()
-    });
+    };
+    setCurrentSpot(spot);
   });
 });
 
-/* CATEGORY SEARCH USING PLACE PICKER QUERY */
+/* CATEGORY BUTTONS */
 document.querySelectorAll(".cat-btn").forEach(btn => {
   btn.onclick = () => {
-    const q = btn.dataset.q;
-    const placePicker = document.getElementById("placePicker");
-    placePicker.value = q;
-    // Let Google handle search UI; user picks a result and gmpx-placechange fires
+    const key = btn.dataset.type;
+    runCategorySearch(key);
   };
 });
+
+/* MAP TYPE SWITCHER */
+const btnTypeStreet = document.getElementById("btnTypeStreet");
+const btnTypeSatellite = document.getElementById("btnTypeSatellite");
+const btnTypeTrail = document.getElementById("btnTypeTrail");
+function setMapType(type) {
+  if (!innerMap) return;
+  btnTypeStreet.classList.remove("active");
+  btnTypeSatellite.classList.remove("active");
+  btnTypeTrail.classList.remove("active");
+
+  if (type === "street") {
+    btnTypeStreet.classList.add("active");
+    innerMap.setMapTypeId("roadmap");
+    innerMap.setOptions({styles: cosmicStyle});
+  } else if (type === "satellite") {
+    btnTypeSatellite.classList.add("active");
+    innerMap.setMapTypeId("satellite");
+    innerMap.setOptions({styles: null});
+  } else if (type === "trail") {
+    btnTypeTrail.classList.add("active");
+    innerMap.setMapTypeId("terrain");
+    innerMap.setOptions({styles: null});
+  }
+}
+btnTypeStreet.onclick = () => setMapType("street");
+btnTypeSatellite.onclick = () => setMapType("satellite");
+btnTypeTrail.onclick = () => setMapType("trail");
 
 /* USE MY LOCATION */
 document.getElementById("locateMe").onclick = () => {
@@ -809,10 +1037,18 @@ document.getElementById("locateMe").onclick = () => {
     if (innerMap) {
       innerMap.panTo({lat:latitude, lng:longitude});
       innerMap.setZoom(14);
-      new google.maps.marker.AdvancedMarkerElement({
+      const marker = new google.maps.marker.AdvancedMarkerElement({
         map: innerMap,
         position: {lat:latitude, lng:longitude},
         title: "You are here"
+      });
+      currentMarkers.push(marker);
+      setCurrentSpot({
+        id: "user:" + OWNER_ID,
+        name: "Current Location",
+        address: null,
+        lat: latitude,
+        lng: longitude
       });
     }
   }, () => {
