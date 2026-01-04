@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversation – Roll ’n Connect</title>
+
+  <style>
+    body { margin:0; padding:0; font-family:system-ui; background:#05050a; color:white; }
+    .hamburger { position:fixed; top:20px; left:20px; width:40px; height:32px; cursor:pointer; z-index:1000; display:flex; flex-direction:column; justify-content:space-between; }
+    .hamburger div { height:6px; background:#4a4aff; border-radius:4px; box-shadow:0 0 12px #4a4aff; }
+    .side-menu { position:fixed; top:0; left:-260px; width:260px; height:100vh; background:#0d0d16; padding:40px 20px; box-shadow:0 0 20px #4a4aff; transition:0.35s; z-index:999; }
+    .side-menu.open { left:0; }
+    .side-menu a { display:block; padding:14px; margin-bottom:14px; background:#14141c; border-radius:10px; text-decoration:none; color:white; font-size:18px; box-shadow:0 0 10px #4a4aff; }
+    .page-container { max-width:900px; margin:0 auto; padding:80px 20px 100px; }
+    h1 { text-shadow:0 0 12px #4a4aff; margin-bottom:8px; }
+    .subtitle { opacity:0.7; margin-bottom:16px; }
+    .messages { max-height:60vh; overflow-y:auto; padding-right:6px; }
+    .bubble { display:inline-block; max-width:70%; padding:10px 14px; border-radius:14px; margin-bottom:8px; font-size:14px; }
+    .mine { background:#4a4aff; color:black; margin-left:auto; display:block; }
+    .theirs { background:#14141c; color:white; display:block; }
+    .input-bar { position:fixed; bottom:0; left:0; right:0; background:#05050a; padding:12px 16px; box-shadow:0 -4px 12px rgba(0,0,0,0.6); }
+    .input-bar-inner { max-width:900px; margin:0 auto; display:flex; gap:10px; }
+    .input-bar input { flex:1; padding:12px; border-radius:10px; border:none; background:#14141c; color:white; }
+    .input-bar button { padding:12px 20px; border-radius:10px; border:none; background:#4a4aff; color:black; cursor:pointer; box-shadow:0 0 10px #4a4aff; }
+  </style>
+
+  <script>
+    function toggleMenu(){ document.querySelector('.side-menu').classList.toggle('open'); }
+
+    function rcGet(key, fallback){ return JSON.parse(localStorage.getItem(key) || fallback); }
+    function rcSet(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+
+    let itemId, otherUser, currentUser, itemTitle;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(location.search);
+      itemId = Number(params.get("itemId"));
+      otherUser = params.get("user");
+
+      const profile = rcGet("rc_profile", "{}");
+      currentUser = profile.username || "Unknown";
+
+      const items = rcGet("rc_market_items", "[]");
+      const item = items.find(i => i.id === itemId);
+      itemTitle = item ? item.title : "Item #" + itemId;
+
+      document.getElementById("title").textContent = itemTitle;
+      document.getElementById("subtitle").textContent = `Chat with ${otherUser}`;
+
+      renderMessages();
+    });
+
+    function renderMessages(){
+      const all = rcGet("rc_market_messages", "[]");
+      const relevant = all.filter(m =>
+        m.itemId === itemId &&
+        ((m.from === currentUser && m.to === otherUser) ||
+         (m.from === otherUser && m.to === currentUser))
+      );
+
+      const box = document.getElementById("messages");
+      box.innerHTML = relevant.map(m => `
+        <div class="bubble ${m.from === currentUser ? "mine" : "theirs"}">
+          ${m.text}
+        </div>
+      `).join("");
+
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function sendMessage(){
+      const input = document.getElementById("msgInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      const msgs = rcGet("rc_market_messages", "[]");
+      msgs.push({
+        id: Date.now(),
+        itemId,
+        itemTitle,
+        from: currentUser,
+        to: otherUser,
+        text,
+        timestamp: Date.now()
+      });
+      rcSet("rc_market_messages", msgs);
+
+      // notification stub
+      const notifs = rcGet("rc_market_notifications", "[]");
+      notifs.push({
+        id: Date.now(),
+        type: "message",
+        to: otherUser,
+        from: currentUser,
+        itemId,
+        itemTitle,
+        text,
+        read: false,
+        timestamp: Date.now()
+      });
+      rcSet("rc_market_notifications", notifs);
+
+      input.value = "";
+      renderMessages();
+    }
+  </script>
+</head>
+
+<body>
+  <div class="hamburger" onclick="toggleMenu()">
+    <div></div><div></div><div></div>
+  </div>
+
+  <div class="side-menu">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="sell-item.html">Sell Item</a>
+    <a href="your-listings.html">Your Listings</a>
+    <a href="giveaways.html">Giveaways</a>
+    <a href="marketplace-messages.html">Messages</a>
+    <a href="marketplace-offers.html">Offers</a>
+    <a href="marketplace-favorites.html">Favorites</a>
+    <a href="marketplace-notifications.html">Notifications</a>
+    <a href="profile.html">Profile</a>
+    <a href="settings.html">Settings</a>
+  </div>
+
+  <div class="page-container">
+    <h1 id="title"></h1>
+    <div id="subtitle" class="subtitle"></div>
+    <div id="messages" class="messages"></div>
+  </div>
+
+  <div class="input-bar">
+    <div class="input-bar-inner">
+      <input id="msgInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMessage()" />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+</body>
+</html>
