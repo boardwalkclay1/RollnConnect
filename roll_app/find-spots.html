@@ -146,6 +146,17 @@
       color:#000;
     }
 
+    .status-pill {
+      margin-top:4px;
+      font-size:0.75rem;
+      padding:4px 8px;
+      border-radius:999px;
+      background:rgba(0,0,0,0.7);
+      border:1px solid rgba(255,255,255,0.25);
+      color:#fff;
+      pointer-events:auto;
+    }
+
     /* DRAWER */
     .drawer-shell {
       position:fixed;
@@ -335,6 +346,77 @@
       background:#fff;
       color:#000;
     }
+
+    /* MODAL */
+    .modal-backdrop {
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.75);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:10000;
+    }
+    .modal {
+      width:90%;
+      max-width:420px;
+      background:#05030a;
+      border-radius:14px;
+      padding:16px 16px 12px;
+      border:1px solid rgba(255,255,255,0.35);
+      box-shadow:0 0 40px rgba(255,255,255,0.25);
+      font-size:0.84rem;
+    }
+    .modal h2 {
+      margin:0 0 6px;
+      font-size:1rem;
+    }
+    .modal label {
+      display:block;
+      margin-top:6px;
+      margin-bottom:2px;
+      font-size:0.75rem;
+      opacity:0.9;
+    }
+    .modal input,
+    .modal textarea,
+    .modal select {
+      width:100%;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,0.4);
+      background:rgba(0,0,0,0.7);
+      color:#fff;
+      padding:4px 6px;
+      font-size:0.78rem;
+      box-sizing:border-box;
+    }
+    .modal textarea {
+      min-height:50px;
+      resize:vertical;
+    }
+    .modal-actions {
+      display:flex;
+      justify-content:flex-end;
+      gap:6px;
+      margin-top:10px;
+    }
+    .modal-cancel,
+    .modal-save {
+      padding:4px 10px;
+      border-radius:999px;
+      border:none;
+      cursor:pointer;
+      font-size:0.8rem;
+    }
+    .modal-cancel {
+      background:rgba(255,255,255,0.12);
+      color:#fff;
+    }
+    .modal-save {
+      background:#fff;
+      color:#000;
+      font-weight:600;
+    }
   </style>
 </head>
 
@@ -454,8 +536,9 @@
       <button class="modal-save" id="saveEventBtn">Save event</button>
     </div>
   </div>
-</div>  
-  <script>
+</div>
+
+<script>
 /* BURGER + SIDEBAR */
 const h = document.getElementById("hamburger");
 const s = document.getElementById("sidebar");
@@ -622,6 +705,10 @@ function categoryTagsFromSpot(spot) {
 
 function setCurrentSpot(spot) {
   currentSpot = spot;
+  if (!spot) {
+    currentSpotCard.style.display = "none";
+    return;
+  }
   currentSpotCard.style.display = "block";
   currentSpotName.textContent = spot.name;
   currentSpotAddress.textContent = spot.address || `${spot.lat}, ${spot.lng}`;
@@ -942,10 +1029,6 @@ const btnTypeCosmic = document.getElementById("btnTypeCosmic");
 const btnTypeStreet = document.getElementById("btnTypeStreet");
 const btnTypeSatellite = document.getElementById("btnTypeSatellite");
 
-function updateMapTypeButtons(type) {
-  [btnTypeCosmic
-<script>
-/* CONTINUE MAP TYPE SWITCHER */
 function updateMapTypeButtons(type) {
   btnTypeCosmic.classList.remove("active");
   btnTypeStreet.classList.remove("active");
