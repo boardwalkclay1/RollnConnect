@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS clip_likes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  clip_id INTEGER NOT NULL,
+  user_id TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  UNIQUE (clip_id, user_id)
+);
+
+CREATE TABLE IF NOT EXISTS clip_comments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  clip_id INTEGER NOT NULL,
+  user_id TEXT NOT NULL,
+  body TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);

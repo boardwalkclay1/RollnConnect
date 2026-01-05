@@ -1,0 +1,11 @@
+{
+  "name": "rollnconnect-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "npx wrangler deploy"
+  },
+  "dependencies": {
+    "wrangler": "^3.97.0"
+  }
+}

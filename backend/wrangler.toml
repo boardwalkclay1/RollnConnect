@@ -1,0 +1,12 @@
+name = "rollnconnect-backend"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "rollnconnect-clips"
+database_id = "<PASTE_D1_DATABASE_ID_HERE>"
+
+[[r2_buckets]]
+binding = "MEDIA_BUCKET"
+bucket_name = "rollnconnect-media"
