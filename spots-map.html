@@ -2,68 +2,646 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Explore – Roll ’n Connect</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="rollnconnect.css" />
+  <title>Explore – Roll 'n Connect</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #000;
+      color: #fff;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* LOCATION OVERLAY */
+    #locOverlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 24px;
+      transition: opacity 0.4s;
+    }
+    #locOverlay.fade-out { opacity: 0; pointer-events: none; }
+    .loc-btn {
+      padding: 12px 30px;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .skip-btn {
+      background: none; border: none;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.78rem; cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      background: rgba(5,5,15,0.97);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      z-index: 10;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .top-bar-title { font-size: 1rem; font-weight: 700; }
+    .top-bar-sub   { font-size: 0.72rem; opacity: 0.4; margin-top: 1px; }
+
+    /* MAP fills remaining space */
+    #map { flex: 1; width: 100%; min-height: 0; }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      padding: 8px 10px;
+      background: rgba(5,5,15,0.97);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      scrollbar-width: none;
+      flex-shrink: 0;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .chip {
+      display: flex; align-items: center; gap: 5px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 0.78rem; white-space: nowrap;
+      cursor: pointer; transition: all 0.18s; font-weight: 500;
+    }
+    .chip.active { background: #fff; color: #000; border-color: #fff; }
+    .chip-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      display: flex;
+      background: rgba(5,5,15,0.98);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      height: 60px;
+      z-index: 200;
+      flex-shrink: 0;
+    }
+    .nav-item {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-decoration: none; color: rgba(255,255,255,0.4);
+      font-size: 0.65rem; gap: 2px; transition: color 0.2s;
+    }
+    .nav-item.active { color: #fff; }
+    .nav-icon { font-size: 1.2rem; }
+
+    /* FABs */
+    #locateBtn {
+      position: fixed; top: 68px; right: 14px;
+      width: 40px; height: 40px;
+      background: rgba(5,5,15,0.92);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%; color: #fff; font-size: 1.1rem;
+      cursor: pointer; z-index: 5;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #spotsBtn {
+      position: fixed; bottom: 130px; right: 14px;
+      background: rgba(5,5,15,0.92);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px; color: #fff;
+      font-size: 0.78rem; padding: 8px 14px;
+      cursor: pointer; z-index: 5; display: none;
+    }
+
+    /* BOTTOM SHEET */
+    .sheet {
+      position: fixed; bottom: 60px; left: 0; right: 0;
+      max-height: 68vh;
+      background: rgba(5,5,15,0.98);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px 20px 0 0;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+      z-index: 100; overflow-y: auto;
+    }
+    .sheet.open { transform: translateY(0); }
+    .sheet-handle {
+      width: 40px; height: 4px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 2px; margin: 10px auto 0;
+    }
+    .sheet-body { padding: 10px 16px 24px; position: relative; }
+    .sheet-close {
+      position: absolute; top: 10px; right: 14px;
+      background: rgba(255,255,255,0.1); border: none;
+      color: #fff; width: 28px; height: 28px;
+      border-radius: 50%; cursor: pointer; font-size: 14px;
+    }
+
+    /* SPOTS LIST (inside sheet) */
+    .spot-item {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+    }
+    .spot-item:last-child { border-bottom: none; }
+    .spot-item-top { display: flex; justify-content: space-between; }
+    .spot-item-name { font-weight: 600; font-size: 0.9rem; }
+    .spot-item-star { font-size: 0.8rem; opacity: 0.7; }
+    .spot-item-addr { font-size: 0.75rem; opacity: 0.45; margin-top: 2px; }
+    .spot-item-tag {
+      display: inline-block; margin-top: 4px;
+      padding: 1px 7px; border-radius: 999px;
+      font-size: 0.67rem; font-weight: 600;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* DETAIL SHEET */
+    .section-title {
+      font-size: 0.78rem; font-weight: 700;
+      margin: 14px 0 8px; padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.6;
+    }
+    .rating-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.82rem; margin-bottom: 4px;
+    }
+    .review-inp {
+      width: 100%; padding: 8px 10px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: #fff; font-size: 0.82rem; margin-bottom: 6px;
+    }
+    .review-inp::placeholder { opacity: 0.4; }
+    .review-sel {
+      width: 100%; padding: 8px 10px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: #fff; font-size: 0.82rem; margin-bottom: 6px;
+      appearance: none;
+    }
+    .review-sel option { background: #111; }
+    .dir-btn {
+      width: 100%; padding: 10px; border: none; border-radius: 8px;
+      background: #4a4aff; color: #fff; font-weight: 700;
+      cursor: pointer; font-size: 0.85rem;
+      box-shadow: 0 0 12px rgba(74,74,255,0.4); margin-bottom: 4px;
+    }
+    .post-btn {
+      width: 100%; padding: 10px; border: none; border-radius: 8px;
+      background: rgba(255,255,255,0.9); color: #000; font-weight: 700;
+      cursor: pointer; font-size: 0.85rem; margin-top: 4px;
+    }
+    .review-card {
+      background: rgba(255,255,255,0.04); border-radius: 8px;
+      padding: 8px 10px; margin-bottom: 6px; font-size: 0.8rem;
+    }
+    .review-author { font-weight: 600; margin-bottom: 2px; }
+    .review-stars  { opacity: 0.55; font-size: 0.72rem; margin-top: 2px; }
+  </style>
 </head>
+
 <body>
-<div class="app-shell">
 
-  <header class="app-header">
-    <div class="app-header-left">
-      <div class="brand-logo">R</div>
-      <div class="brand-name">Roll ’n Connect</div>
-    </div>
-    <div class="app-header-center">
-      <input class="app-search" placeholder="Search spots, cities..." />
-    </div>
-  </header>
-
-  <main class="page">
-    <h1>Explore Spots</h1>
-
-    <div class="card">
-      <p class="card-text">
-        This is where the interactive map will live — showing parks, trails, and smooth routes added by the community.
-      </p>
-      <div style="margin-top:10px; height:320px; border-radius:18px; background:rgba(15,23,42,0.9); border:1px solid rgba(148,163,184,0.6); display:flex; align-items:center; justify-content:center; color:var(--text-soft); font-size:14px;">
-        Map integration coming soon.
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <div class="footer-row">
-      <span>© <span id="year"></span> Roll ’n Connect.</span>
-    </div>
-  </footer>
-
-  <nav class="bottom-nav">
-    <a href="index.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🏠</div>
-      <span>Home</span>
-    </a>
-    <a href="spots-map.html" class="bottom-nav-link bottom-nav-link-active">
-      <div class="bottom-nav-icon">🧭</div>
-      <span>Explore</span>
-    </a>
-    <a href="clips-feed.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">▶</div>
-      <span>Clips</span>
-    </a>
-    <a href="marketplace.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">🛒</div>
-      <span>Market</span>
-    </a>
-    <a href="dashboard.html" class="bottom-nav-link">
-      <div class="bottom-nav-icon">👤</div>
-      <span>Profile</span>
-    </a>
-  </nav>
+<!-- LOCATION OVERLAY -->
+<div id="locOverlay">
+  <div style="font-size:2.5rem">🛹</div>
+  <div style="font-size:1.5rem;font-weight:700;text-align:center;">Find Spots Near You</div>
+  <div style="font-size:0.88rem;opacity:0.5;text-align:center;max-width:300px;line-height:1.5;">
+    Share your location to discover nearby skateparks, trails, rinks, water spots, and more.
+  </div>
+  <button class="loc-btn" id="grantLocBtn">📍 Use My Location</button>
+  <button class="skip-btn" id="skipLocBtn">Skip – browse default area</button>
 </div>
 
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div>
+    <div class="top-bar-title">🧭 Explore Spots</div>
+    <div class="top-bar-sub" id="locLabel">Detecting location…</div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div id="map"></div>
+
+<!-- FABs -->
+<button id="locateBtn" title="Re-center">📍</button>
+<button id="spotsBtn">📋 Spots</button>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="chip active" data-key="skatepark"><span class="chip-dot" style="background:#38bdf8"></span>Skateparks</button>
+  <button class="chip" data-key="roller_rink"><span class="chip-dot" style="background:#a855f7"></span>Rinks</button>
+  <button class="chip" data-key="trail"><span class="chip-dot" style="background:#22c55e"></span>Paved Trails</button>
+  <button class="chip" data-key="water"><span class="chip-dot" style="background:#0ea5e9"></span>Water Spots</button>
+  <button class="chip" data-key="food"><span class="chip-dot" style="background:#f97316"></span>Food</button>
+  <button class="chip" data-key="parking"><span class="chip-dot" style="background:#e5e7eb"></span>Parking</button>
+  <button class="chip" data-key="restroom"><span class="chip-dot" style="background:#4ade80"></span>Restrooms</button>
+</div>
+
+<!-- SPOTS LIST SHEET -->
+<div class="sheet" id="listSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body">
+    <button class="sheet-close" id="listClose">✕</button>
+    <div style="font-weight:700;margin-bottom:10px;padding-top:4px;">Nearby Spots</div>
+    <div id="spotList"></div>
+  </div>
+</div>
+
+<!-- DETAIL SHEET -->
+<div class="sheet" id="detailSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body">
+    <button class="sheet-close" id="detailClose">✕</button>
+    <div style="font-weight:700;font-size:1.1rem;margin-bottom:2px;padding-top:4px;" id="dName"></div>
+    <div style="opacity:0.5;font-size:0.78rem;margin-bottom:6px;" id="dAddr"></div>
+    <div style="font-size:0.85rem;margin-bottom:10px;" id="dRating"></div>
+
+    <button class="dir-btn" id="dDirBtn">Get Directions →</button>
+
+    <div class="section-title">Community Ratings</div>
+    <div class="rating-row"><span>Smoothness</span><span id="avgSmooth">–</span></div>
+    <div class="rating-row"><span>Difficulty</span><span id="avgDiff">–</span></div>
+
+    <div class="section-title">Leave a Review</div>
+    <input class="review-inp" id="rName" placeholder="Your name" />
+    <textarea class="review-inp" id="rText" rows="2" placeholder="Describe the spot…"></textarea>
+    <select class="review-sel" id="rSmooth">
+      <option value="">Smoothness –</option>
+      <option value="1">1 – Rough</option>
+      <option value="2">2</option>
+      <option value="3">3 – OK</option>
+      <option value="4">4</option>
+      <option value="5">5 – Glass</option>
+    </select>
+    <select class="review-sel" id="rDiff">
+      <option value="">Difficulty –</option>
+      <option value="1">1 – Easy</option>
+      <option value="2">2</option>
+      <option value="3">3 – Medium</option>
+      <option value="4">4</option>
+      <option value="5">5 – Hard</option>
+    </select>
+    <button class="post-btn" id="postBtn">Post Review</button>
+
+    <div class="section-title">Reviews</div>
+    <div id="reviewList"></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item"><span class="nav-icon">🏠</span>Home</a>
+  <a href="spots-map.html" class="nav-item active"><span class="nav-icon">🧭</span>Explore</a>
+  <a href="clips.html" class="nav-item"><span class="nav-icon">▶</span>Clips</a>
+  <a href="marketplace.html" class="nav-item"><span class="nav-icon">🛒</span>Market</a>
+  <a href="dashboard.html" class="nav-item"><span class="nav-icon">👤</span>Profile</a>
+</nav>
+
 <script>
-  document.getElementById("year").textContent = new Date().getFullYear();
+  var map, placesService;
+  var allSpots = [];
+  var markers = [];
+  var activeFilters = new Set(["skatepark"]);
+  var userLoc = null;
+  var userMarker = null;
+  var activeSpot = null;
+  var openInfoWindow = null;
+  var DEFAULT_LOC = { lat: 33.8, lng: -84.3 };
+
+  var FILTER_CFG = {
+    skatepark:   { keyword: "skatepark",                    color: "#38bdf8", label: "Skatepark" },
+    roller_rink: { keyword: "roller rink",                  color: "#a855f7", label: "Rink" },
+    trail:       { keyword: "paved trail bike trail",       color: "#22c55e", label: "Trail" },
+    water:       { keyword: "water fountain hydration",     color: "#0ea5e9", label: "Water" },
+    food:        { keyword: "food restaurant",              color: "#f97316", label: "Food", type: "restaurant" },
+    parking:     { keyword: "parking",                      color: "#e5e7eb", label: "Parking", type: "parking" },
+    restroom:    { keyword: "restroom public bathroom",     color: "#4ade80", label: "Restroom" },
+  };
+
+  // ── Location overlay ──────────────────────────────────────────────
+  document.getElementById("grantLocBtn").onclick = function() {
+    if (!navigator.geolocation) { startApp(DEFAULT_LOC); return; }
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        document.getElementById("locLabel").textContent = "Near you";
+        startApp(userLoc);
+      },
+      function() { startApp(DEFAULT_LOC); }
+    );
+  };
+
+  document.getElementById("skipLocBtn").onclick = function() {
+    startApp(DEFAULT_LOC);
+  };
+
+  function hideOverlay() {
+    var el = document.getElementById("locOverlay");
+    el.classList.add("fade-out");
+    setTimeout(function() { el.style.display = "none"; }, 420);
+  }
+
+  // ── Load Maps dynamically ─────────────────────────────────────────
+  function loadMapsScript(apiKey) {
+    return new Promise(function(resolve) {
+      window._mapsLoaded = resolve;
+      var s = document.createElement("script");
+      s.src = "https://maps.googleapis.com/maps/api/js?key=" + apiKey + "&libraries=places&callback=_mapsLoaded";
+      s.async = true; s.defer = true;
+      document.head.appendChild(s);
+    });
+  }
+
+  function startApp(center) {
+    hideOverlay();
+    if (!map) initMap(center);
+    else { map.panTo(center); if (userLoc) placeUserMarker(userLoc); }
+  }
+
+  function initMap(center) {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: center, zoom: 14,
+      styles: [
+        { elementType: "geometry", stylers: [{ color: "#0f0f1a" }] },
+        { elementType: "labels.text.stroke", stylers: [{ color: "#0f0f1a" }] },
+        { elementType: "labels.text.fill",   stylers: [{ color: "#9090b0" }] },
+        { featureType: "road", elementType: "geometry", stylers: [{ color: "#1a1a2e" }] },
+        { featureType: "road.highway", elementType: "geometry", stylers: [{ color: "#1e1e3a" }] },
+        { featureType: "water", elementType: "geometry", stylers: [{ color: "#050a20" }] },
+        { featureType: "poi",   elementType: "geometry", stylers: [{ color: "#131320" }] },
+        { featureType: "transit", elementType: "geometry", stylers: [{ color: "#0f0f1f" }] },
+        { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#1a1a35" }] },
+      ],
+      disableDefaultUI: true, zoomControl: true,
+    });
+    placesService = new google.maps.places.PlacesService(map);
+    if (userLoc) placeUserMarker(userLoc);
+    setupFilters();
+    setupButtons();
+    runSearch();
+    document.getElementById("spotsBtn").style.display = "";
+  }
+
+  // ── Filters ───────────────────────────────────────────────────────
+  function setupFilters() {
+    document.querySelectorAll(".chip").forEach(function(btn) {
+      btn.onclick = function() {
+        var k = btn.dataset.key;
+        if (btn.classList.contains("active")) {
+          btn.classList.remove("active"); activeFilters.delete(k);
+        } else {
+          btn.classList.add("active"); activeFilters.add(k);
+        }
+        runSearch();
+      };
+    });
+  }
+
+  // ── Buttons ───────────────────────────────────────────────────────
+  function setupButtons() {
+    document.getElementById("locateBtn").onclick = function() {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        userLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        map.panTo(userLoc); map.setZoom(15);
+        placeUserMarker(userLoc); runSearch();
+      });
+    };
+
+    document.getElementById("spotsBtn").onclick = function() {
+      document.getElementById("detailSheet").classList.remove("open");
+      document.getElementById("listSheet").classList.toggle("open");
+    };
+
+    document.getElementById("listClose").onclick = function() {
+      document.getElementById("listSheet").classList.remove("open");
+    };
+
+    document.getElementById("detailClose").onclick = function() {
+      document.getElementById("detailSheet").classList.remove("open");
+      if (openInfoWindow) { openInfoWindow.close(); openInfoWindow = null; }
+    };
+
+    document.getElementById("postBtn").onclick = function() {
+      if (!activeSpot) return;
+      var name   = document.getElementById("rName").value.trim() || "Anonymous";
+      var text   = document.getElementById("rText").value.trim();
+      var smooth = document.getElementById("rSmooth").value;
+      var diff   = document.getElementById("rDiff").value;
+      var id = activeSpot.place_id;
+      var reviews = loadReviews(id);
+      reviews.unshift({ name: name, text: text, smoothness: Number(smooth)||null, difficulty: Number(diff)||null }); // newest first
+      saveReviews(id, reviews);
+      document.getElementById("rName").value = "";
+      document.getElementById("rText").value = "";
+      document.getElementById("rSmooth").value = "";
+      document.getElementById("rDiff").value = "";
+      renderReviews(id);
+    };
+  }
+
+  // ── Nearby search ─────────────────────────────────────────────────
+  function runSearch() {
+    if (!placesService) return;
+    clearMarkers(); allSpots = [];
+    var center = userLoc || (map ? map.getCenter() : DEFAULT_LOC);
+    var filters = activeFilters.size > 0 ? Array.from(activeFilters) : ["skatepark"];
+    var pending = filters.length;
+
+    filters.forEach(function(key) {
+      var cfg = FILTER_CFG[key] || { keyword: key, color: "#fff" };
+      var req = { location: center, radius: 10000, keyword: cfg.keyword };
+      if (cfg.type) req.type = cfg.type;
+
+      placesService.nearbySearch(req, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+          results.forEach(function(r) { r._filterKey = key; });
+          allSpots = allSpots.concat(results);
+        }
+        pending--;
+        if (pending === 0) {
+          var seen = new Set();
+          allSpots = allSpots.filter(function(s) {
+            if (seen.has(s.place_id)) return false;
+            seen.add(s.place_id); return true;
+          });
+          renderSpotList();
+          renderMarkers();
+        }
+      });
+    });
+  }
+
+  // ── Spot list (in sheet) ──────────────────────────────────────────
+  function renderSpotList() {
+    var list = document.getElementById("spotList");
+    list.innerHTML = "";
+    allSpots.forEach(function(spot) {
+      var cfg = FILTER_CFG[spot._filterKey] || { color: "#fff", label: "" };
+      var div = document.createElement("div");
+      div.className = "spot-item";
+      div.innerHTML =
+        '<div class="spot-item-top">' +
+          '<div class="spot-item-name">' + spot.name + '</div>' +
+          '<div class="spot-item-star">' + (spot.rating ? "⭐ " + spot.rating.toFixed(1) : "") + '</div>' +
+        '</div>' +
+        '<div class="spot-item-addr">' + (spot.vicinity || "") + '</div>' +
+        '<span class="spot-item-tag" style="color:' + cfg.color + ';">' + cfg.label + '</span>';
+      div.onclick = function() {
+        document.getElementById("listSheet").classList.remove("open");
+        openDetail(spot);
+        map.panTo(spot.geometry.location);
+      };
+      list.appendChild(div);
+    });
+  }
+
+  // ── Markers ───────────────────────────────────────────────────────
+  function clearMarkers() {
+    markers.forEach(function(m) { m.setMap(null); });
+    markers = [];
+    if (openInfoWindow) { openInfoWindow.close(); openInfoWindow = null; }
+  }
+
+  function renderMarkers() {
+    clearMarkers();
+    allSpots.forEach(function(spot) {
+      var cfg = FILTER_CFG[spot._filterKey] || { color: "#fff" };
+      var loc = spot.geometry.location;
+      var reviews = loadReviews(spot.place_id);
+      var avg = function(key) {
+        var vals = reviews.map(function(r){return r[key];}).filter(function(v){return v;});
+        return vals.length ? (vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(1) : "–";
+      };
+      var popupId = "pp_" + spot.place_id;
+      var html =
+        '<div id="' + popupId + '" style="color:#fff;font-family:system-ui;font-size:13px;' +
+        'padding:13px;border-radius:13px;background:linear-gradient(135deg,#0f0f1e,#1a1a30);' +
+        'box-shadow:0 0 18px rgba(80,100,255,0.5);border:1px solid rgba(100,120,255,0.3);' +
+        'width:220px;line-height:1.5;">' +
+          '<div style="font-weight:700;font-size:14px;margin-bottom:3px;">' + spot.name + '</div>' +
+          '<div style="opacity:0.5;font-size:11px;margin-bottom:5px;">' + (spot.vicinity || "") + '</div>' +
+          (spot.rating ? '<div>⭐ ' + spot.rating.toFixed(1) + ' Google (' + (spot.user_ratings_total || 0) + ')</div>' : '') +
+          '<div style="margin:5px 0;font-size:11px;opacity:0.85;">Community – Smooth: ' + avg("smoothness") + ' · Diff: ' + avg("difficulty") + '</div>' +
+          '<a href="https://www.google.com/maps/dir/?api=1&destination=' + loc.lat() + ',' + loc.lng() + '" target="_blank"' +
+          ' style="display:block;text-align:center;padding:6px;background:#4a4aff;color:#fff;border-radius:6px;text-decoration:none;font-weight:600;font-size:12px;box-shadow:0 0 8px rgba(74,74,255,0.5);margin-top:7px;">' +
+          'Directions →</a>' +
+        '</div>';
+
+      var info = new google.maps.InfoWindow({ content: html });
+      var marker = new google.maps.Marker({
+        map: map, position: loc,
+        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 9, fillColor: cfg.color, fillOpacity: 1, strokeWeight: 1.5, strokeColor: "#000" },
+      });
+
+      (function(spot, info, popupId) {
+        marker.addListener("click", function() {
+          if (openInfoWindow) openInfoWindow.close();
+          info.open(map, marker);
+          openInfoWindow = info;
+          openDetail(spot);
+          setTimeout(function() {
+            var popup = document.getElementById(popupId);
+            if (!popup) return;
+            popup.addEventListener("mouseleave", function() {
+              if (openInfoWindow === info) { info.close(); openInfoWindow = null; }
+            });
+          }, 60);
+        });
+      })(spot, info, popupId);
+
+      markers.push(marker);
+    });
+  }
+
+  // ── Detail sheet ──────────────────────────────────────────────────
+  function openDetail(spot) {
+    activeSpot = spot;
+    document.getElementById("dName").textContent = spot.name;
+    document.getElementById("dAddr").textContent = spot.vicinity || spot.formatted_address || "";
+    document.getElementById("dRating").textContent = spot.rating
+      ? ("⭐ " + spot.rating.toFixed(1) + " Google · " + (spot.user_ratings_total || 0) + " reviews")
+      : "No Google rating yet";
+    document.getElementById("dDirBtn").onclick = function() {
+      var lat = spot.geometry.location.lat();
+      var lng = spot.geometry.location.lng();
+      window.open("https://www.google.com/maps/dir/?api=1&destination=" + lat + "," + lng);
+    };
+    renderReviews(spot.place_id);
+    document.getElementById("detailSheet").classList.add("open");
+    document.getElementById("listSheet").classList.remove("open");
+  }
+
+  // ── Reviews ───────────────────────────────────────────────────────
+  function loadReviews(id) { return JSON.parse(localStorage.getItem("rc_reviews_" + id) || "[]"); }
+  function saveReviews(id, data) { localStorage.setItem("rc_reviews_" + id, JSON.stringify(data)); }
+
+  function renderReviews(id) {
+    var list = document.getElementById("reviewList");
+    var reviews = loadReviews(id);
+    list.innerHTML = "";
+    var avg = function(key) {
+      var vals = reviews.map(function(r){return r[key];}).filter(function(v){return v;});
+      return vals.length ? (vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(1) : "–";
+    };
+    document.getElementById("avgSmooth").textContent = avg("smoothness");
+    document.getElementById("avgDiff").textContent = avg("difficulty");
+    if (!reviews.length) {
+      list.innerHTML = '<div style="opacity:0.4;font-size:0.8rem;">No reviews yet – be the first!</div>';
+      return;
+    }
+    reviews.forEach(function(r) {
+      var d = document.createElement("div");
+      d.className = "review-card";
+      d.innerHTML =
+        '<div class="review-author">' + r.name + '</div>' +
+        '<div>' + (r.text || "") + '</div>' +
+        '<div class="review-stars">Smooth: ' + (r.smoothness || "–") + ' · Diff: ' + (r.difficulty || "–") + '</div>';
+      list.appendChild(d);
+    });
+  }
+
+  // ── User marker ───────────────────────────────────────────────────
+  function placeUserMarker(loc) {
+    if (!userMarker) {
+      userMarker = new google.maps.Marker({
+        map: map, position: loc,
+        icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: "#fff", fillOpacity: 1, strokeWeight: 3, strokeColor: "#4a4aff" },
+        zIndex: 999, title: "You are here",
+      });
+    } else {
+      userMarker.setPosition(loc);
+    }
+  }
+
+  // ── Bootstrap ─────────────────────────────────────────────────────
+  fetch("/api/config")
+    .then(function(r) { return r.json(); })
+    .then(function(d) { return loadMapsScript(d.mapsApiKey || ""); })
+    .catch(function() { return loadMapsScript(""); });
+
+
 </script>
 </body>
 </html>
